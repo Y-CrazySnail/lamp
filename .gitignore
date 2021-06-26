@@ -1,0 +1,8 @@
+/.idea/
+/auth-server/auth-server.iml
+/auth-server/target/
+/common/common.iml
+/common/target/
+/chinaybop/chinaybop.iml
+/chinaybop/target/
+/server.iml

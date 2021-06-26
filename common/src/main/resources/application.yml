@@ -1,0 +1,31 @@
+security:
+  oauth2:
+    client:
+#      client-id: app-b
+#      client-secret: app-b-1234
+      user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
+#      access-token-uri: http://127.0.0.1:8080/server/oauth/token
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:8080/server/oauth/token_key
+        key-value: signingKey
+    authorization:
+      check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+server:
+  port: 9091
+  max-http-header-size: 10240000
+  servlet:
+    context-path: /app2
+  address: 0.0.0.0
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://myfirstmysql.mysql.rds.aliyuncs.com:3307/demo?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+#    username: yhs
+#    password: 19980720Meng
+    url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+    username: snail
+    password: 19980720@Meng
+mybatis-plus:
+  mapper-locations: classpath*:mappers/*.xml
+  type-aliases-package: com.snail
