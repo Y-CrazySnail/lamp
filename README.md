@@ -1,7 +1,7 @@
 # Server
 
 ### common
-公共模块
+公共服务模块
 
 ### auth-server
 权限服务
