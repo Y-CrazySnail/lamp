@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>chinaybop</module>
+        <module>xpxl</module>
         <module>proxy</module>
         <module>auth-server</module>
         <module>common</module>
