@@ -2,7 +2,7 @@ package com.snail.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
-@TableName(value = "mr_price", autoResultMap = true)
+@TableName(value = "xpxl_price", autoResultMap = true)
 public class Price extends BaseEntity {
     /**
      * 车型

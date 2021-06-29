@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.time.LocalDateTime;
 
-@TableName(value = "mr_quality", autoResultMap = true)
+@TableName(value = "xpxl_quality", autoResultMap = true)
 public class Quality extends BaseEntity {
     /**
      * 客户姓名

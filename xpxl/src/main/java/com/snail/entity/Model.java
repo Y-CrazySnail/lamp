@@ -2,7 +2,7 @@ package com.snail.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 
-@TableName(value = "mr_model", autoResultMap = true)
+@TableName(value = "xpxl_model", autoResultMap = true)
 public class Model extends BaseEntity {
     private String name;
     private String type;
