@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.conreoller.BaseController;
 import com.snail.entity.Quality;
 import com.snail.service.IQualityService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/quality")
+@Api(value = "质保接口", tags="质保接口")
 public class QualityController extends BaseController<Quality> {
 
     @Autowired
