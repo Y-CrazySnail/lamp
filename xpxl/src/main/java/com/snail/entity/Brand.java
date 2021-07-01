@@ -7,7 +7,7 @@ public class Brand extends BaseEntity {
 
     private String name;
     private String image;
-    private Integer weight;
+    private String firstChar;
 
     public String getName() {
         return name;
@@ -25,11 +25,11 @@ public class Brand extends BaseEntity {
         this.image = image;
     }
 
-    public Integer getWeight() {
-        return weight;
+    public String getFirstChar() {
+        return firstChar;
     }
 
-    public void setWeight(Integer weight) {
-        this.weight = weight;
+    public void setFirstChar(String firstChar) {
+        this.firstChar = firstChar;
     }
 }
