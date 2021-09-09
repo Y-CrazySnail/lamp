@@ -6,11 +6,6 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://myfirstmysql.mysql.rds.aliyuncs.com:3307/demo?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-#    username: yhs
-#    url: jdbc:mysql://127.0.0.1:3306/demo?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-#    username: root
-#    password: 19980720Meng
     url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
     username: snail
     password: 19980720@Meng
