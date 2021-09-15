@@ -24,7 +24,6 @@ public class BrandServiceImpl extends ServiceImpl<BrandMapper, Brand> implements
     public List<Brand> list() {
         QueryWrapper<Brand> queryWrapper = new QueryWrapper<>();
         queryWrapper.orderByDesc("first_char");
-        brandMapper.selectList(queryWrapper);
-        return null;
+        return brandMapper.selectList(queryWrapper);
     }
 }

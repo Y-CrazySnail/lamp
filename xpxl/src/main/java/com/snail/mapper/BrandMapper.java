@@ -6,7 +6,7 @@ import com.snail.entity.Price;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Mapper
 public interface BrandMapper extends BaseMapper<Brand> {
 
 }

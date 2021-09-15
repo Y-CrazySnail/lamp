@@ -14,3 +14,4 @@ mybatis-plus:
   type-aliases-package: com.snail
 access-token-converter:
   signing-key: signingKey
+swagger: http://localhost:9092
