@@ -17,57 +17,49 @@ public class Price extends BaseEntity {
      */
     private String level;
     /**
-     * 总价
+     * 整车
      */
     private Integer price0;
     /**
-     * 车顶盖
+     * 前杠
      */
     private Integer price1;
     /**
-     * 引擎盖
+     * 后杠
      */
     private Integer price2;
     /**
-     * 前保险杠
+     * 机盖
      */
     private Integer price3;
     /**
-     * 后保险杠
+     * 前叶子板
      */
     private Integer price4;
     /**
-     * 双前叶子板
+     * 后叶子板
      */
     private Integer price5;
     /**
-     * 双后叶子板
+     * 车门
      */
     private Integer price6;
     /**
-     * 左门组合
+     * 侧裙
      */
     private Integer price7;
     /**
-     * 右门组合
+     * 车顶
      */
     private Integer price8;
     /**
-     * 左侧裙
+     * 后盖
      */
     private Integer price9;
     /**
-     * 右侧裙
+     * 内饰
      */
     private Integer price10;
-    /**
-     * 双后视镜
-     */
-    private Integer price11;
-    /**
-     * 后备箱盖
-     */
-    private Integer price12;
 
     public String getModel() {
         return model;
@@ -179,21 +171,5 @@ public class Price extends BaseEntity {
 
     public void setPrice10(Integer price10) {
         this.price10 = price10;
-    }
-
-    public Integer getPrice11() {
-        return price11;
-    }
-
-    public void setPrice11(Integer price11) {
-        this.price11 = price11;
-    }
-
-    public Integer getPrice12() {
-        return price12;
-    }
-
-    public void setPrice12(Integer price12) {
-        this.price12 = price12;
     }
 }
