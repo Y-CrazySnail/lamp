@@ -8,6 +8,7 @@ public class Model extends BaseEntity {
     private String type;
     private String image;
     private Long brandId;
+    private String brandName;
 
     public String getName() {
         return name;
@@ -39,5 +40,13 @@ public class Model extends BaseEntity {
 
     public void setBrandId(Long brandId) {
         this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 }
