@@ -36,6 +36,12 @@ public class SubscribeController {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
         memberQueryWrapper.eq("uuid", uuid);
         Member member = memberService.getOne(memberQueryWrapper);
+        if (!member.getMac().equals(1)) {
+            return "异常，请联系管理员";
+        }
+        if (member.getMacNum() > 0) {
+            return "异常，请联系管理员";
+        }
         if (StringUtils.isEmpty(member)) {
             return "已过期，请联系管理员";
         }
@@ -60,6 +66,12 @@ public class SubscribeController {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
         memberQueryWrapper.eq("uuid", uuid);
         Member member = memberService.getOne(memberQueryWrapper);
+        if (!member.getAndroid().equals(1)) {
+            return "异常，请联系管理员";
+        }
+        if (member.getAndroidNum() > 0) {
+            return "异常，请联系管理员";
+        }
         if (StringUtils.isEmpty(member)) {
             return "已过期，请联系管理员";
         }
@@ -84,6 +96,12 @@ public class SubscribeController {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
         memberQueryWrapper.eq("uuid", uuid);
         Member member = memberService.getOne(memberQueryWrapper);
+        if (!member.getWindows().equals(1)) {
+            return "异常，请联系管理员";
+        }
+        if (member.getWindowsNum() > 0) {
+            return "异常，请联系管理员";
+        }
         if (StringUtils.isEmpty(member)) {
             return "已过期，请联系管理员";
         }
@@ -108,6 +126,12 @@ public class SubscribeController {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
         memberQueryWrapper.eq("uuid", uuid);
         Member member = memberService.getOne(memberQueryWrapper);
+        if (!member.getIphone().equals(1)) {
+            return "异常，请联系管理员";
+        }
+        if (member.getIphoneNum() > 0) {
+            return "异常，请联系管理员";
+        }
         if (StringUtils.isEmpty(member)) {
             return "已过期，请联系管理员";
         }

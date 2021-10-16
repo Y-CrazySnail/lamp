@@ -9,6 +9,8 @@ security:
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
 
+swagger: http://localhost:9999
+
 server:
   port: 9999
   max-http-header-size: 10240000
