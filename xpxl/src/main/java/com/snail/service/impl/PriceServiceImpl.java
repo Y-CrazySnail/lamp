@@ -17,7 +17,6 @@ public class PriceServiceImpl extends ServiceImpl<PriceMapper, Price> implements
     @Override
     public Price getByEntity(Price price) {
         QueryWrapper<Price> priceQueryWrapper = new QueryWrapper<>();
-        priceQueryWrapper.eq("type", price.getType());
         priceQueryWrapper.eq("level", price.getLevel());
         return priceMapper.selectOne(priceQueryWrapper);
     }

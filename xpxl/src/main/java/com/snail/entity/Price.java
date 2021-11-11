@@ -9,10 +9,6 @@ public class Price extends BaseEntity {
      */
     private String model;
     /**
-     * 类型
-     */
-    private String type;
-    /**
      * 级别
      */
     private String level;
@@ -67,14 +63,6 @@ public class Price extends BaseEntity {
 
     public void setModel(String model) {
         this.model = model;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getLevel() {

@@ -11,6 +11,11 @@ public class Demo extends BaseEntity {
     private String level;
     private String car_model;
     private String image;
+    private Long brandId;
+    private String brandName;
+    private String brandImage;
+    private Integer browseNumber;
+    private Integer likeNumber;
 
     public String getTitle() {
         return title;
@@ -50,5 +55,45 @@ public class Demo extends BaseEntity {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getBrandImage() {
+        return brandImage;
+    }
+
+    public void setBrandImage(String brandImage) {
+        this.brandImage = brandImage;
+    }
+
+    public Integer getBrowseNumber() {
+        return browseNumber;
+    }
+
+    public void setBrowseNumber(Integer browseNumber) {
+        this.browseNumber = browseNumber;
+    }
+
+    public Integer getLikeNumber() {
+        return likeNumber;
+    }
+
+    public void setLikeNumber(Integer likeNumber) {
+        this.likeNumber = likeNumber;
     }
 }
