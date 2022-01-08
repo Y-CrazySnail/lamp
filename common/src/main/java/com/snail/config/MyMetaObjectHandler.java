@@ -12,16 +12,22 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "createUser", String.class, SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        try {
+            this.strictInsertFill(metaObject, "createUser", String.class, SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+            this.strictInsertFill(metaObject, "updateUser", String.class, SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        } catch (Exception e) {
+        }
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "updateUser", String.class, SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "deleteFlag", Boolean.class, false);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
-        this.strictInsertFill(metaObject, "updateUser", String.class, SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        try {
+            this.strictInsertFill(metaObject, "updateUser", String.class, SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        } catch (Exception e) {
+        }
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
     }
 }

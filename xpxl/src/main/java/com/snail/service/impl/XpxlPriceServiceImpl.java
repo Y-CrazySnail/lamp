@@ -1,22 +1,22 @@
 package com.snail.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.snail.entity.Price;
-import com.snail.mapper.PriceMapper;
+import com.snail.entity.XpxlPrice;
+import com.snail.mapper.XpxlPriceMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.service.IPriceService;
+import com.snail.service.IXpxlPriceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PriceServiceImpl extends ServiceImpl<PriceMapper, Price> implements IPriceService {
+public class XpxlPriceServiceImpl extends ServiceImpl<XpxlPriceMapper, XpxlPrice> implements IXpxlPriceService {
 
     @Autowired
-    private PriceMapper priceMapper;
+    private XpxlPriceMapper priceMapper;
 
     @Override
-    public Price getByEntity(Price price) {
-        QueryWrapper<Price> priceQueryWrapper = new QueryWrapper<>();
+    public XpxlPrice getByEntity(XpxlPrice price) {
+        QueryWrapper<XpxlPrice> priceQueryWrapper = new QueryWrapper<>();
         priceQueryWrapper.eq("level", price.getLevel());
         return priceMapper.selectOne(priceQueryWrapper);
     }

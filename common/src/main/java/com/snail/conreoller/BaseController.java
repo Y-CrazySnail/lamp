@@ -71,7 +71,7 @@ public class BaseController<T extends BaseEntity> {
     @ApiOperation(value = "保存接口")
     public ResponseEntity<Object> save(@RequestBody T entity) {
         service.save(entity);
-        return ResponseEntity.ok("保存成功");
+        return ResponseEntity.ok(entity);
     }
 
     @PutMapping("baseUpdate")

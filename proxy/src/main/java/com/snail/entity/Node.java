@@ -7,35 +7,29 @@ import java.time.LocalDateTime;
 @TableName(value = "proxy_node", autoResultMap = true)
 public class Node extends BaseEntity {
 
-    private String name;
-    private String type;
-    private String url;
+    private Long memberId;
+    private Long serverId;
     private String uuid;
-    private LocalDateTime startTime;
-    private LocalDateTime endTime;
+    private String domain;
+    private Integer port;
+    private String type;
+    private String security;
+    private String path;
 
-    public String getName() {
-        return name;
+    public Long getMemberId() {
+        return memberId;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
     }
 
-    public String getType() {
-        return type;
+    public Long getServerId() {
+        return serverId;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
     }
 
     public String getUuid() {
@@ -46,19 +40,43 @@ public class Node extends BaseEntity {
         this.uuid = uuid;
     }
 
-    public LocalDateTime getStartTime() {
-        return startTime;
+    public String getDomain() {
+        return domain;
     }
 
-    public void setStartTime(LocalDateTime startTime) {
-        this.startTime = startTime;
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 
-    public LocalDateTime getEndTime() {
-        return endTime;
+    public Integer getPort() {
+        return port;
     }
 
-    public void setEndTime(LocalDateTime endTime) {
-        this.endTime = endTime;
+    public void setPort(Integer port) {
+        this.port = port;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getSecurity() {
+        return security;
+    }
+
+    public void setSecurity(String security) {
+        this.security = security;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

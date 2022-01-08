@@ -3,9 +3,10 @@ package com.snail.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 
 @TableName(value = "xpxl_demo", autoResultMap = true)
-public class Demo extends BaseEntity {
+public class XpxlDemo extends BaseEntity {
     private String title;
     private LocalDateTime date;
     private String level;

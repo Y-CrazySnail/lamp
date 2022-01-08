@@ -2,8 +2,8 @@ package com.snail.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.conreoller.BaseController;
-import com.snail.entity.Demo;
-import com.snail.service.IDemoService;
+import com.snail.entity.XpxlDemo;
+import com.snail.service.IXpxlDemoService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +16,16 @@ import java.util.List;
 @RestController
 @RequestMapping("/demo")
 @Api(value = "案例接口", tags = "案例接口")
-public class DemoController extends BaseController<Demo> {
+public class XpxlDemoController extends BaseController<XpxlDemo> {
 
     @Autowired
-    private IDemoService demoService;
+    private IXpxlDemoService demoService;
 
     @PostMapping("getLast")
     public ResponseEntity<Object> getLast() {
-        QueryWrapper<Demo> demoQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<XpxlDemo> demoQueryWrapper = new QueryWrapper<>();
         demoQueryWrapper.orderByDesc("create_time");
-        List<Demo> demoList = demoService.list(demoQueryWrapper);
+        List<XpxlDemo> demoList = demoService.list(demoQueryWrapper);
         return ResponseEntity.ok(demoList.get(0));
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -34,28 +36,15 @@ public class SubscribeController {
     @GetMapping("/mac/{uuid}")
     public String mac(@PathVariable("uuid") String uuid) {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
-        memberQueryWrapper.eq("uuid", uuid);
+        memberQueryWrapper.eq("wechat", Base64.getDecoder().decode(uuid.getBytes())).or().eq("qq", Base64.getDecoder().decode(uuid.getBytes()));
         Member member = memberService.getOne(memberQueryWrapper);
-        if (!member.getMac().equals(1)) {
-            return "异常，请联系管理员";
-        }
-        if (member.getMacNum() > 0) {
-            return "异常，请联系管理员";
-        }
-        if (StringUtils.isEmpty(member)) {
-            return "已过期，请联系管理员";
-        }
-        memberMapper.increaseMacNum(member.getId());
-
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
-        nodeQueryWrapper.le("start_time", member.getEnd());
-        nodeQueryWrapper.ge("end_time", member.getEnd());
+        nodeQueryWrapper.eq("member_id", member.getId());
         List<Node> nodeList = nodeService.list(nodeQueryWrapper);
         if (nodeList.size() == 0) {
             return "已过期，请联系管理员";
         }
-
-        return nodeList.stream().map(Node::getUrl).collect(Collectors.joining("\n"));
+        return "vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB";
     }
 
     /**
@@ -64,28 +53,15 @@ public class SubscribeController {
     @GetMapping("/android/{uuid}")
     public String andriod(@PathVariable("uuid") String uuid) {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
-        memberQueryWrapper.eq("uuid", uuid);
+        memberQueryWrapper.eq("wechat", Base64.getDecoder().decode(uuid.getBytes())).or().eq("qq", Base64.getDecoder().decode(uuid.getBytes()));
         Member member = memberService.getOne(memberQueryWrapper);
-        if (!member.getAndroid().equals(1)) {
-            return "异常，请联系管理员";
-        }
-        if (member.getAndroidNum() > 0) {
-            return "异常，请联系管理员";
-        }
-        if (StringUtils.isEmpty(member)) {
-            return "已过期，请联系管理员";
-        }
-        memberMapper.increaseAndroidNum(member.getId());
-
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
-        nodeQueryWrapper.le("start_time", member.getEnd());
-        nodeQueryWrapper.ge("end_time", member.getEnd());
+        nodeQueryWrapper.eq("member_id", member.getId());
         List<Node> nodeList = nodeService.list(nodeQueryWrapper);
         if (nodeList.size() == 0) {
             return "已过期，请联系管理员";
         }
-
-        return Base64.getEncoder().encodeToString(nodeList.stream().map(Node::getUrl).collect(Collectors.joining("\n")).getBytes());
+        return Base64.getEncoder().encodeToString(("vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB").getBytes());
     }
 
     /**
@@ -94,28 +70,17 @@ public class SubscribeController {
     @GetMapping("/windows/{uuid}")
     public String windows(@PathVariable("uuid") String uuid) {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
-        memberQueryWrapper.eq("uuid", uuid);
+        memberQueryWrapper.eq("wechat", Base64.getDecoder().decode(uuid.getBytes())).or().eq("qq", Base64.getDecoder().decode(uuid.getBytes()));
         Member member = memberService.getOne(memberQueryWrapper);
-        if (!member.getWindows().equals(1)) {
-            return "异常，请联系管理员";
-        }
-        if (member.getWindowsNum() > 0) {
-            return "异常，请联系管理员";
-        }
-        if (StringUtils.isEmpty(member)) {
-            return "已过期，请联系管理员";
-        }
-        memberMapper.increaseWindowsNum(member.getId());
-
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
-        nodeQueryWrapper.le("start_time", member.getEnd());
-        nodeQueryWrapper.ge("end_time", member.getEnd());
+        nodeQueryWrapper.eq("member_id", member.getId());
         List<Node> nodeList = nodeService.list(nodeQueryWrapper);
         if (nodeList.size() == 0) {
             return "已过期，请联系管理员";
         }
+        String a= Base64.getEncoder().encodeToString(("vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB").getBytes());
 
-        return Base64.getEncoder().encodeToString(nodeList.stream().map(Node::getUrl).collect(Collectors.joining("\n")).getBytes());
+        return     a;
     }
 
     /**
@@ -124,27 +89,14 @@ public class SubscribeController {
     @GetMapping("/ios/{uuid}")
     public String ios(@PathVariable("uuid") String uuid) {
         QueryWrapper<Member> memberQueryWrapper = new QueryWrapper<>();
-        memberQueryWrapper.eq("uuid", uuid);
+        memberQueryWrapper.eq("wechat", Base64.getDecoder().decode(uuid.getBytes())).or().eq("qq", Base64.getDecoder().decode(uuid.getBytes()));
         Member member = memberService.getOne(memberQueryWrapper);
-        if (!member.getIphone().equals(1)) {
-            return "异常，请联系管理员";
-        }
-        if (member.getIphoneNum() > 0) {
-            return "异常，请联系管理员";
-        }
-        if (StringUtils.isEmpty(member)) {
-            return "已过期，请联系管理员";
-        }
-        memberMapper.increaseIphoneNum(member.getId());
-
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
-        nodeQueryWrapper.le("start_time", member.getEnd());
-        nodeQueryWrapper.ge("end_time", member.getEnd());
+        nodeQueryWrapper.eq("member_id", member.getId());
         List<Node> nodeList = nodeService.list(nodeQueryWrapper);
         if (nodeList.size() == 0) {
             return "已过期，请联系管理员";
         }
-
-        return Base64.getEncoder().encodeToString(nodeList.stream().map(Node::getUrl).collect(Collectors.joining("\n")).getBytes());
+        return Base64.getEncoder().encodeToString(("vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB").getBytes());
     }
 }

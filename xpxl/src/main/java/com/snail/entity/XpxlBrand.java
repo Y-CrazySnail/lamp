@@ -3,7 +3,7 @@ package com.snail.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 
 @TableName(value = "xpxl_brand", autoResultMap = true)
-public class Brand extends BaseEntity {
+public class XpxlBrand extends BaseEntity {
 
     private String name;
     private String image;

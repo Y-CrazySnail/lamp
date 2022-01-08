@@ -1,10 +1,10 @@
 package com.snail.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.snail.entity.Quality;
+import com.snail.entity.XpxlModel;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface QualityMapper extends BaseMapper<Quality> {
+public interface XpxlModelMapper extends BaseMapper<XpxlModel> {
 
 }
