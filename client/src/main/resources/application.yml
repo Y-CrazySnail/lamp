@@ -1,0 +1,6 @@
+server:
+  port: 19999
+  max-http-header-size: 10240000
+  servlet:
+    context-path: /client
+  address: 0.0.0.0

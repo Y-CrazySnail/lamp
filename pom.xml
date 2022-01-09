@@ -7,6 +7,7 @@
         <module>chinaybop</module>
         <module>xpxl</module>
         <module>proxy</module>
+        <module>client</module>
         <module>auth-server</module>
         <module>common</module>
     </modules>

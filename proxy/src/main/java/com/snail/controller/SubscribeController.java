@@ -78,9 +78,7 @@ public class SubscribeController {
         if (nodeList.size() == 0) {
             return "已过期，请联系管理员";
         }
-        String a= Base64.getEncoder().encodeToString(("vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB").getBytes());
-
-        return     a;
+        return Base64.getEncoder().encodeToString(("vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB").getBytes());
     }
 
     /**
