@@ -12,7 +12,6 @@ public class Member extends BaseEntity {
     private String remark;
     private LocalDateTime end;
     private Long trafficPerMonth;
-    private Long trafficMonth;
     private Long trafficDownMonth;
     private Long trafficUpMonth;
     private Long trafficSurplusMonth;
@@ -55,14 +54,6 @@ public class Member extends BaseEntity {
 
     public void setTrafficPerMonth(Long trafficPerMonth) {
         this.trafficPerMonth = trafficPerMonth;
-    }
-
-    public Long getTrafficMonth() {
-        return trafficMonth;
-    }
-
-    public void setTrafficMonth(Long trafficMonth) {
-        this.trafficMonth = trafficMonth;
     }
 
     public Long getTrafficDownMonth() {

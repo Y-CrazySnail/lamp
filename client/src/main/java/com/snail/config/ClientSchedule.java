@@ -36,7 +36,7 @@ public class ClientSchedule {
                 out.close();
                 String status = Executor.execute("xray api statsquery --server=127.0.0.1:10085  'pattern: \"\" reset: true'");
                 BufferedWriter out1 = new BufferedWriter(new FileWriter("/usr/local/etc/xray/1.json", false));
-                out1.write(configuration);
+                out1.write(status);
                 out1.close();
                 StringEntity stringEntity = new StringEntity(status, "UTF-8");
                 httpPost.setEntity(stringEntity);
