@@ -37,31 +37,12 @@ public class BaseController<T extends BaseEntity> {
     @ApiOperation(value = "分页查询接口")
     public ResponseEntity<Object> getPage(Integer current,
                                           Integer size,
-                                          String order,
-                                          String column1,
-                                          String value1,
-                                          String column2,
-                                          String value2,
-                                          String column3,
-                                          String value3,
                                           QueryWrapper<T> queryWrapper) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
         if (StringUtils.isEmpty(size)) {
             size = 10;
-        }
-        if (!StringUtils.isEmpty(order)) {
-            queryWrapper.orderByAsc(order);
-        }
-        if (!StringUtils.isEmpty(column1) && !StringUtils.isEmpty(value1)) {
-            queryWrapper.like(column1, value1);
-        }
-        if (!StringUtils.isEmpty(column2) && !StringUtils.isEmpty(value2)) {
-            queryWrapper.like(column2, value2);
-        }
-        if (!StringUtils.isEmpty(column3) && !StringUtils.isEmpty(value3)) {
-            queryWrapper.like(column3, value3);
         }
         IPage<T> page = new Page<>(current, size);
         return ResponseEntity.ok(service.page(page, queryWrapper));
