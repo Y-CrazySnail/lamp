@@ -4,12 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>chinaybop</module>
-        <module>xpxl</module>
+        <module>common</module>
+        <module>auth-server</module>
         <module>proxy</module>
         <module>client</module>
-        <module>auth-server</module>
-        <module>common</module>
+        <module>e-car</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

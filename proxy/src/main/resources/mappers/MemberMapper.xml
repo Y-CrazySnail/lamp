@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.snail.mapper.MemberMapper">
+<mapper namespace="com.snail.chinaybop.mapper.MemberMapper">
     <update id="increaseMacNum" parameterType="java.lang.Long">
         update proxy_member
         set mac_num = mac_num + 1

@@ -1,14 +1,14 @@
 package com.snail.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.snail.entity.Member;
-import com.snail.entity.Node;
-import com.snail.entity.Server;
-import com.snail.entity.Traffic;
-import com.snail.mapper.MemberMapper;
-import com.snail.mapper.NodeMapper;
-import com.snail.mapper.ServerMapper;
-import com.snail.mapper.TrafficMapper;
+import com.snail.chinaybop.entity.Member;
+import com.snail.chinaybop.entity.Node;
+import com.snail.chinaybop.entity.Server;
+import com.snail.chinaybop.entity.Traffic;
+import com.snail.chinaybop.mapper.MemberMapper;
+import com.snail.chinaybop.mapper.NodeMapper;
+import com.snail.chinaybop.mapper.ServerMapper;
+import com.snail.chinaybop.mapper.TrafficMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
