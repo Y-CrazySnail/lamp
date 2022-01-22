@@ -1,10 +1,10 @@
 package com.snail.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.snail.chinaybop.entity.Permission;
-import com.snail.chinaybop.mapper.PermissionMapper;
-import com.snail.chinaybop.mapper.UserMapper;
-import com.snail.chinaybop.entity.User;
+import com.snail.entity.Permission;
+import com.snail.mapper.PermissionMapper;
+import com.snail.mapper.UserMapper;
+import com.snail.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.core.authority.AuthorityUtils;

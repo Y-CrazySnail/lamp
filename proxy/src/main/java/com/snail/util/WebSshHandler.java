@@ -3,7 +3,7 @@ package com.snail.util;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
-import com.snail.chinaybop.entity.Server;
+import com.snail.entity.Server;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.OnClose;

@@ -1,24 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.snail.chinaybop.mapper.MemberMapper">
-    <update id="increaseMacNum" parameterType="java.lang.Long">
+<mapper namespace="com.snail.mapper.MemberMapper">
+    <update id="resetTraffic">
         update proxy_member
-        set mac_num = mac_num + 1
-        where id = #{id}
-    </update>
-    <update id="increaseWindowsNum" parameterType="java.lang.Long">
-        update proxy_member
-        set windows_num = windows_num + 1
-        where id = #{id}
-    </update>
-    <update id="increaseAndroidNum" parameterType="java.lang.Long">
-        update proxy_member
-        set android_num = android_num + 1
-        where id = #{id}
-    </update>
-    <update id="increaseIphoneNum" parameterType="java.lang.Long">
-        update proxy_member
-        set iphone_num = iphone_num + 1
-        where id = #{id}
+        set traffic_down_month = 0,
+        traffic_up_month = 0,
+        traffic_surplus_month = traffic_per_month * 1024 * 1024 * 1024
     </update>
 </mapper>
