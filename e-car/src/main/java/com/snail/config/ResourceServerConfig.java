@@ -13,7 +13,21 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/chinaybop-brand/getAll", "/chinaybop-model/getAll", "/chinaybop-price/getAll", "/chinaybop-quality/getByCondition", "/chinaybop-news/getAll", "/chinaybop-news/getById", "/chinaybop-message/baseSave", "/xpxl-brand/getAll", "/xpxl-model/getAll", "/xpxl-price/getAll", "/xpxl-quality/getByCondition", "/xpxl-demo/getLast", "/xpxl-demo/getAll")
+                .antMatchers(
+                        "/chinaybop-brand/getAll",
+                        "/chinaybop-model/getAll",
+                        "/chinaybop-price/getAll",
+                        "/chinaybop-quality/getByCondition",
+                        "/chinaybop-news/getAll",
+                        "/chinaybop-news/getById",
+                        "/chinaybop-message/baseSave",
+                        "/xpxl-brand/getAll",
+                        "/xpxl-model/getAll",
+                        "/xpxl-price/getAll",
+                        "/xpxl-quality/getByCondition",
+                        "/xpxl-demo/getLast",
+                        "/xpxl-demo/getAll",
+                        "/aili-quality/getByCondition")
                 .permitAll()
                 .antMatchers("/v2/api-docs",
                         "/swagger-resources",
