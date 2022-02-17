@@ -53,6 +53,10 @@ public class ChinaybopQuality extends BaseEntity {
 
     private String qualityCardId;
 
+    private String rollNumber;
+
+    private String boxNumber;
+
     public String getName() {
         return name;
     }
@@ -147,5 +151,21 @@ public class ChinaybopQuality extends BaseEntity {
 
     public void setQualityCardId(String qualityCardId) {
         this.qualityCardId = qualityCardId;
+    }
+
+    public String getRollNumber() {
+        return rollNumber;
+    }
+
+    public void setRollNumber(String rollNumber) {
+        this.rollNumber = rollNumber;
+    }
+
+    public String getBoxNumber() {
+        return boxNumber;
+    }
+
+    public void setBoxNumber(String boxNumber) {
+        this.boxNumber = boxNumber;
     }
 }
