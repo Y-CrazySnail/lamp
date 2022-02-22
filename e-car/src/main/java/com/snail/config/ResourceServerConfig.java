@@ -27,6 +27,12 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/xpxl-quality/getByCondition",
                         "/xpxl-demo/getLast",
                         "/xpxl-demo/getAll",
+                        "/tank-brand/getAll",
+                        "/tank-model/getAll",
+                        "/tank-price/getAll",
+                        "/tank-quality/getByCondition",
+                        "/tank-demo/getLast",
+                        "/tank-demo/getAll",
                         "/aili-quality/getByCondition")
                 .permitAll()
                 .antMatchers("/v2/api-docs",
