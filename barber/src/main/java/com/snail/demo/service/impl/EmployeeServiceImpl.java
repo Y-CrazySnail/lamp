@@ -1,9 +1,9 @@
-package com.snail.service.impl;
+package com.snail.demo.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.entity.Employee;
-import com.snail.mapper.EmployeeMapper;
-import com.snail.service.IEmployeeService;
+import com.snail.demo.entity.Employee;
+import com.snail.demo.mapper.EmployeeMapper;
+import com.snail.demo.service.IEmployeeService;
 import org.springframework.stereotype.Service;
 
 @Service

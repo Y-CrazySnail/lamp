@@ -1,9 +1,9 @@
-package com.snail.controller;
+package com.snail.demo.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.conreoller.BaseController;
-import com.snail.entity.Employee;
-import com.snail.service.IEmployeeService;
+import com.snail.demo.entity.Employee;
+import com.snail.demo.service.IEmployeeService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

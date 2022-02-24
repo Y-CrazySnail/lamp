@@ -1,4 +1,4 @@
-package com.snail.entity;
+package com.snail.demo.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.chinaybop.entity.BaseEntity;
