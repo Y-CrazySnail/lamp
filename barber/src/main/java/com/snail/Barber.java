@@ -8,8 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableOAuth2Sso
 @SpringBootApplication
 @EnableScheduling
-public class Star {
+public class Barber {
     public static void main(String[] args) {
-        new SpringApplicationBuilder(Star.class).run(args);
+        new SpringApplicationBuilder(Barber.class).run(args);
     }
 }

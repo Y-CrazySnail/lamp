@@ -9,7 +9,7 @@
         <module>proxy</module>
         <module>client</module>
         <module>e-car</module>
-        <module>star</module>
+        <module>barber</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

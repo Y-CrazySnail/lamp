@@ -3,8 +3,6 @@ package com.snail.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.chinaybop.entity.BaseEntity;
 
-import java.time.LocalDateTime;
-
 @TableName(value = "star_employee", autoResultMap = true)
 public class Employee extends BaseEntity {
 
