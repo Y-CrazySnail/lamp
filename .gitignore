@@ -1,14 +1,3 @@
 /.idea/
-/server.iml
-/auth-server/auth-server.iml
-/auth-server/target/
-/common/common.iml
-/common/target/
-/e-car/chinaybop.iml
-/e-car/target/
-/proxy/target/
-/proxy/proxy.iml
-/xpxl/target/
-/xpxl/xpxl.iml
-/client/target/
-/barber/target/
+/*/target/
+*.iml
