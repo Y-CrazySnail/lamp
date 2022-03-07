@@ -39,7 +39,7 @@ public class SubscribeController {
         if (nodeList.size() == 0) {
             return "已过期，请联系管理员";
         }
-        return "vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB";
+        return "vless://" + nodeList.get(0).getUuid() + "@" + nodeList.get(0).getDomain() + ":" + nodeList.get(0).getPort() + "?type=ws&encryption=none&flow=&security=tls&path=%2Fc5fa7e2466516a1%2F&sni=" + nodeList.get(0).getDomain() + "#USA_" + BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue() + "GB";
     }
 
     /**
