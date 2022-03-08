@@ -6,17 +6,26 @@ import com.snail.chinaybop.entity.BaseEntity;
 @TableName(value = "demo_employee", autoResultMap = true)
 public class Employee extends BaseEntity {
 
-    private String shopId;
+    private Long barbershopId;
+    private String barbershopName;
     private String name;
     private String phone;
-    private String type;
+    private Integer barberPrice;
 
-    public String getShopId() {
-        return shopId;
+    public Long getBarbershopId() {
+        return barbershopId;
     }
 
-    public void setShopId(String shopId) {
-        this.shopId = shopId;
+    public void setBarbershopId(Long barbershopId) {
+        this.barbershopId = barbershopId;
+    }
+
+    public String getBarbershopName() {
+        return barbershopName;
+    }
+
+    public void setBarbershopName(String barbershopName) {
+        this.barbershopName = barbershopName;
     }
 
     public String getName() {
@@ -35,11 +44,11 @@ public class Employee extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getType() {
-        return type;
+    public Integer getBarberPrice() {
+        return barberPrice;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setBarberPrice(Integer barberPrice) {
+        this.barberPrice = barberPrice;
     }
 }
