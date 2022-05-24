@@ -34,6 +34,8 @@ public class XpxlQualityController extends BaseController<XpxlQuality> {
             qualityQueryWrapper.eq("car_shelf_number", quality.getCarShelfNumber());
         } else if (!StringUtils.isEmpty(quality.getQualityCardId())) {
             qualityQueryWrapper.eq("quality_card_id", quality.getQualityCardId());
+        } else if (!StringUtils.isEmpty(quality.getRollNumber())) {
+            qualityQueryWrapper.eq("roll_number", quality.getRollNumber());
         } else {
             return ResponseEntity.badRequest().body(null);
         }

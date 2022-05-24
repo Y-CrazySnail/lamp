@@ -5,13 +5,12 @@ import com.snail.tank.entity.TankQuality;
 import com.snail.tank.service.ITankQualityService;
 import com.snail.conreoller.BaseController;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tank-quality")
@@ -30,6 +29,8 @@ public class TankQualityController extends BaseController<TankQuality> {
             qualityQueryWrapper.eq("car_shelf_number", quality.getCarShelfNumber());
         } else if (!StringUtils.isEmpty(quality.getQualityCardId())) {
             qualityQueryWrapper.eq("quality_card_id", quality.getQualityCardId());
+        } else if (!StringUtils.isEmpty(quality.getRollNumber())) {
+            qualityQueryWrapper.eq("roll_number", quality.getRollNumber());
         } else {
             return ResponseEntity.badRequest().body(null);
         }
@@ -38,5 +39,14 @@ public class TankQualityController extends BaseController<TankQuality> {
             return ResponseEntity.badRequest().body(null);
         }
         return ResponseEntity.ok(quality);
+    }
+
+    @GetMapping("pageByCreateUser")
+    @ApiOperation(value = "分页查询接口")
+    public ResponseEntity<Object> getPageByCreateUser(Integer current,
+                                                      Integer size) {
+        QueryWrapper<TankQuality> tankQualityQueryWrapper = new QueryWrapper<>();
+        tankQualityQueryWrapper.eq("create_user", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return super.getPage(current, size, tankQualityQueryWrapper);
     }
 }
