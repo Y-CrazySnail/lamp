@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/command")
 public class CommandController extends BaseController<Command> {
@@ -17,8 +19,8 @@ public class CommandController extends BaseController<Command> {
 
     @GetMapping("get")
     @ApiOperation(value = "查询未执行命令接口")
-    public ResponseEntity<Object> get() {
-        Command command = commandService.get();
+    public ResponseEntity<Object> get(@RequestParam("ip") String ip) {
+        Command command = commandService.get(ip);
         return ResponseEntity.ok(command);
     }
 }

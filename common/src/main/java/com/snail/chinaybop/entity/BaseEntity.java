@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 public class BaseEntity implements Serializable {
 
-    @TableId(value = "id",type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     @TableField(fill = FieldFill.INSERT)
@@ -73,5 +73,23 @@ public class BaseEntity implements Serializable {
 
     public void setDeleteFlag(Boolean deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public enum BaseField {
+        ID("id"),
+        CREATE_USER("createUser"),
+        CREATE_TIME("createTime"),
+        UPDATE_USER("updateUser"),
+        UPDATE_TIME("updateTime"),
+        DELETE_FLAG("deleteFlag");
+        private final String name;
+
+        BaseField(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 }
