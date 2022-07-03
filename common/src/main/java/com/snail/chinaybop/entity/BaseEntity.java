@@ -77,11 +77,11 @@ public class BaseEntity implements Serializable {
 
     public enum BaseField {
         ID("id"),
-        CREATE_USER("createUser"),
-        CREATE_TIME("createTime"),
-        UPDATE_USER("updateUser"),
-        UPDATE_TIME("updateTime"),
-        DELETE_FLAG("deleteFlag");
+        CREATE_USER("create_user"),
+        CREATE_TIME("create_time"),
+        UPDATE_USER("update_user"),
+        UPDATE_TIME("update_time"),
+        DELETE_FLAG("delete_flag");
         private final String name;
 
         BaseField(String name) {
