@@ -6,13 +6,12 @@ import com.snail.xpxl.mapper.XpxlQualityMapper;
 import com.snail.xpxl.service.IXpxlQualityService;
 import com.snail.conreoller.BaseController;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/xpxl-quality")
@@ -44,5 +43,14 @@ public class XpxlQualityController extends BaseController<XpxlQuality> {
             return ResponseEntity.badRequest().body(null);
         }
         return ResponseEntity.ok(quality);
+    }
+
+    @GetMapping("pageByCreateUser")
+    @ApiOperation(value = "分页查询接口")
+    public ResponseEntity<Object> getPageByCreateUser(Integer current,
+                                                      Integer size) {
+        QueryWrapper<XpxlQuality> xpxlQualityQueryWrapper = new QueryWrapper<>();
+        xpxlQualityQueryWrapper.eq("create_user", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return super.getPage(current, size, xpxlQualityQueryWrapper);
     }
 }
