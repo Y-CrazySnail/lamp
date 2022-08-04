@@ -3,12 +3,21 @@ package com.snail.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.chinaybop.entity.BaseEntity;
 
-@TableName(value = "proxy_command", autoResultMap = true)
-public class Command extends BaseEntity {
+@TableName(value = "proxy_command_record", autoResultMap = true)
+public class CommandRecord extends BaseEntity {
+    private String type;
     private String ip;
     private String command;
     private Integer flag;
     private String result;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getIp() {
         return ip;
