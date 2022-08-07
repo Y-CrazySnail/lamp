@@ -1,7 +1,10 @@
 package com.snail.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.snail.chinaybop.entity.BaseEntity;
+
+import java.time.LocalDateTime;
 
 @TableName(value = "proxy_command_record", autoResultMap = true)
 public class CommandRecord extends BaseEntity {
@@ -10,6 +13,10 @@ public class CommandRecord extends BaseEntity {
     private String command;
     private Integer flag;
     private String result;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime executeStartTime;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSS")
+    private LocalDateTime executeEndTime;
 
     public String getType() {
         return type;
@@ -51,9 +58,27 @@ public class CommandRecord extends BaseEntity {
         this.result = result;
     }
 
+    public LocalDateTime getExecuteStartTime() {
+        return executeStartTime;
+    }
+
+    public void setExecuteStartTime(LocalDateTime executeStartTime) {
+        this.executeStartTime = executeStartTime;
+    }
+
+    public LocalDateTime getExecuteEndTime() {
+        return executeEndTime;
+    }
+
+    public void setExecuteEndTime(LocalDateTime executeEndTime) {
+        this.executeEndTime = executeEndTime;
+    }
+
     public enum Field {
         IP("ip"),
-        FLAG("flag");
+        FLAG("flag"),
+        EXECUTE_START_TIME("executeStartTime"),
+        EXECUTE_END_TIME("executeEndTime");
         private String name;
 
         Field(String name) {

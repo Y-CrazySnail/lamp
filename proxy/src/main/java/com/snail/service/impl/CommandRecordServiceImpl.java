@@ -39,6 +39,7 @@ public class CommandRecordServiceImpl extends ServiceImpl<CommandRecordMapper, C
             UpdateWrapper<CommandRecord> updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq(BaseEntity.BaseField.ID.getName(), commandRecord.getId());
             updateWrapper.set(CommandRecord.Field.FLAG.getName(), 0);
+            updateWrapper.set(CommandRecord.Field.EXECUTE_START_TIME.getName(), LocalDateTime.now());
             updateWrapper.set(BaseEntity.BaseField.UPDATE_TIME.getName(), LocalDateTime.now());
             super.update(updateWrapper);
             return commandRecord;
