@@ -5,4 +5,5 @@ import com.snail.entity.Server;
 
 public interface IServerService extends IService<Server> {
 
+    void refreshXray();
 }

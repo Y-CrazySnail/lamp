@@ -77,8 +77,8 @@ public class CommandRecord extends BaseEntity {
     public enum Field {
         IP("ip"),
         FLAG("flag"),
-        EXECUTE_START_TIME("executeStartTime"),
-        EXECUTE_END_TIME("executeEndTime");
+        EXECUTE_START_TIME("execute_start_time"),
+        EXECUTE_END_TIME("execute_end_time");
         private String name;
 
         Field(String name) {

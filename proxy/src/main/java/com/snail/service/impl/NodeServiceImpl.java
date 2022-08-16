@@ -1,22 +1,37 @@
 package com.snail.service.impl;
 
+import cn.hutool.core.io.file.FileWriter;
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.entity.Member;
-import com.snail.entity.Node;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snail.entity.*;
 import com.snail.mapper.MemberMapper;
 import com.snail.mapper.NodeMapper;
+import com.snail.mapper.ServerMapper;
+import com.snail.service.ICommandRecordService;
 import com.snail.service.INodeService;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.util.StringUtils;
 
+import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements INodeService {
+
+    @Autowired
+    private ICommandRecordService commandRecordService;
 
     String template = "{\n" +
             "    \"log\": {\n" +
@@ -143,6 +158,9 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
     @Autowired
     private NodeMapper nodeMapper;
 
+    @Autowired
+    private ServerMapper serverMapper;
+
     @Override
     public String getConfiguration() {
         QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
@@ -162,5 +180,71 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
         });
         String clients = stringBuilder.substring(0, stringBuilder.length() - 2);
         return template.replace("$clients", clients);
+    }
+
+    @Override
+    public String refresh() {
+        List<Server> serverList = serverMapper.selectList(new QueryWrapper<>());
+
+        QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lt("end", LocalDateTime.now()).or().lt("traffic_surplus_month", 0);
+        List<Member> memberList = memberMapper.selectList(queryWrapper);
+        List<Long> invalidMemberIdList = memberList.stream().map(Member::getId).collect(Collectors.toList());
+
+        List<Node> nodeList = nodeMapper.selectList(new QueryWrapper<>());
+
+        for (Server server : serverList) {
+            List<Map<String, Object>> clientList = new ArrayList<>();
+            nodeList.forEach(node -> {
+                if (!invalidMemberIdList.contains(node.getMemberId())) {
+                    Map<String, Object> client = new HashMap<>();
+                    client.put("id", node.getUuid());
+                    client.put("flow", "xtls-rprx-direct");
+                    client.put("level", 1);
+                    client.put("email", cn.hutool.core.codec.Base64.encode(node.getMemberId().toString().getBytes(StandardCharsets.UTF_8)).replace("=", "") + "@" + server.getXrayDomain());
+                    clientList.add(client);
+                }
+            });
+            try {
+                // 创建配置类
+                Configuration configuration = new Configuration(Configuration.getVersion());
+                configuration.setDirectoryForTemplateLoading(new File("/usr/snail/config/template/"));
+                // 设置字符集
+                configuration.setDefaultEncoding("utf-8");
+                // 加载模板
+                Template template = configuration.getTemplate("xray_config.ftl");
+                // 数据模型
+                Map<String, Object> map = new HashMap<>();
+                ObjectMapper objectMapper = new ObjectMapper();
+                map.put("clients", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(clientList));
+                map.put("xray_domain", server.getXrayDomain());
+                map.put("xray_access_log", server.getXrayAccessLog());
+                map.put("xray_error_log", server.getXrayErrorLog());
+                map.put("xray_ws_path", server.getXrayWsPath());
+                map.put("xray_certificate_file", server.getXrayCertificateFile());
+                map.put("xray_key_file", server.getXrayKeyFile());
+                String content = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+                String uuid = UUID.fastUUID().toString();
+                String basePath = "/usr/snail/webapps/file/config/";
+                String baseUrl = "https://edreamroom.com/file/config/";
+                String relativePath = uuid + "/config.json";
+                FileWriter fileWriter = new FileWriter(basePath + relativePath);
+                fileWriter.write(content);
+                CommandRecord commandRecord = new CommandRecord();
+                commandRecord.setIp(server.getXrayDomain());
+                commandRecord.setFlag(-1);
+                StringBuilder command = new StringBuilder();
+                command.append("wget ").append(baseUrl).append(relativePath).append(" -O /usr/local/etc/xray/config.json;");
+                command.append("\n");
+                command.append("systemctl restart xray");
+                command.append("\n");
+                commandRecord.setCommand(command.toString());
+                commandRecord.setType("test");
+                commandRecordService.save(commandRecord);
+            } catch (Exception e) {
+                log.error("解析模版异常:", e);
+            }
+        }
+        return "";
     }
 }

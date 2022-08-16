@@ -1,6 +1,5 @@
 package com.snail.config;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.IdUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snail.utils.Executor;
@@ -23,7 +22,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Map;
 
 @Slf4j
@@ -90,7 +88,7 @@ public class ClientSchedule {
     public void command() {
         CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         HttpGet httpGet = new HttpGet(COMMAND_SERVER + "/command_record/get?ip=" + COMMAND_CLIENT);
-        HttpPut httpPut = new HttpPut(COMMAND_SERVER + "/command_record/baseUpdate");
+        HttpPut httpPut = new HttpPut(COMMAND_SERVER + "/command_record/finish");
         CloseableHttpResponse response = null;
         try {
             response = httpClient.execute(httpGet);
@@ -115,16 +113,17 @@ public class ClientSchedule {
                         String result = Executor.execute("sh " + shellFile);
                         commandMap.put("flag", 1);
                         commandMap.put("result", result);
-                        commandMap.put("executeEndTime", LocalDateTime.now());
+                        log.info("return command execute result request：{}", commandMap);
                         StringEntity stringEntity = new StringEntity(objectMapper.writeValueAsString(commandMap), "UTF-8");
                         httpPut.setEntity(stringEntity);
                         httpPut.setHeader("Content-Type", "application/json;charset=utf8");
-                        httpClient.execute(httpPut);
+                        CloseableHttpResponse putResponse = httpClient.execute(httpPut);
+                        log.info("return command execute result response:{}", putResponse);
                     }
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("execute command error：", e);
         } finally {
             if (httpClient != null) {
                 try {

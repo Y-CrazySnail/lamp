@@ -1,22 +1,33 @@
 package com.snail.config;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.snail.entity.Member;
-import com.snail.entity.Node;
-import com.snail.entity.Server;
-import com.snail.entity.Traffic;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snail.entity.*;
 import com.snail.mapper.MemberMapper;
 import com.snail.mapper.NodeMapper;
 import com.snail.mapper.ServerMapper;
 import com.snail.mapper.TrafficMapper;
+import com.snail.service.ICommandRecordService;
+import com.snail.service.INodeService;
+import com.snail.service.IServerService;
+import com.snail.service.ITrafficService;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Component
 public class ProxySchedule {
 
@@ -31,6 +42,9 @@ public class ProxySchedule {
 
     @Autowired
     private MemberMapper memberMapper;
+
+    @Autowired
+    private IServerService serverService;
 
     @Scheduled(cron = "0 5 1 * * ?")
     public void schedule() {
@@ -94,5 +108,10 @@ public class ProxySchedule {
             nodeMapper.insert(node);
             length++;
         }
+    }
+
+    @Scheduled(cron = "0 0 2 * * ?")
+    public void refreshXray() {
+        serverService.refreshXray();
     }
 }

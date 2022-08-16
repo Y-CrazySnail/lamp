@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+
 @RestController
 @RequestMapping("/command_record")
 public class CommandRecordController extends BaseController<CommandRecord> {
@@ -31,5 +33,12 @@ public class CommandRecordController extends BaseController<CommandRecord> {
                                           QueryWrapper<CommandRecord> queryWrapper) {
         queryWrapper.orderByDesc(String.valueOf(BaseEntity.BaseField.ID));
         return super.getPage(current, size, queryWrapper);
+    }
+
+    @PutMapping("finish")
+    @ApiOperation(value = "完成执行任务")
+    public ResponseEntity<Object> update(@RequestBody CommandRecord entity) {
+        entity.setExecuteEndTime(LocalDateTime.now());
+        return super.update(entity);
     }
 }

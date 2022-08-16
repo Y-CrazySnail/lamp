@@ -25,7 +25,7 @@ public class TrafficController extends BaseController<Traffic> {
         List<Map<String, Object>> infoList = (List<Map<String, Object>>) map.get("stat");
         infoList.forEach(info -> {
             String name = (String) info.get("name");
-            if (name.contains("@vhfugv.com")) {
+            if (name.contains("@")) {
                 String id = new String(Base64.decodeBase64(name.split(">>>")[1].split("@")[0]));
                 String type = name.split(">>>")[3];
                 Long value = Long.valueOf(String.valueOf(info.get("value")));

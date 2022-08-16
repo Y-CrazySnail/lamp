@@ -13,7 +13,15 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/command_record/get", "/command_record/baseUpdate", "/subscribe/**", "/ssh/**", "/traffic/save", "/node/getConfiguration")
+                .antMatchers(
+                        "/command_record/get",
+                        "/command_record/finish",
+                        "/subscribe/**",
+                        "/ssh/**",
+                        "/traffic/save",
+                        "/node/getConfiguration",
+                        "/node/test",
+                        "/server/refresh")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
