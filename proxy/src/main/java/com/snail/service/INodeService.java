@@ -5,6 +5,4 @@ import com.snail.entity.Node;
 
 public interface INodeService extends IService<Node> {
     String getConfiguration();
-
-    String refresh();
 }

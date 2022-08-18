@@ -16,27 +16,4 @@ import java.util.Map;
 @RequestMapping("/traffic")
 public class TrafficController extends BaseController<Traffic> {
 
-    @Autowired
-    private ITrafficService trafficService;
-
-    @PostMapping("save")
-    @ApiOperation(value = "保存接口")
-    public ResponseEntity<Object> save(@RequestBody Map<String, Object> map) {
-        List<Map<String, Object>> infoList = (List<Map<String, Object>>) map.get("stat");
-        infoList.forEach(info -> {
-            String name = (String) info.get("name");
-            if (name.contains("@")) {
-                String id = new String(Base64.decodeBase64(name.split(">>>")[1].split("@")[0]));
-                String type = name.split(">>>")[3];
-                Long value = Long.valueOf(String.valueOf(info.get("value")));
-                Traffic traffic = new Traffic();
-                traffic.setTraffic(value);
-                traffic.setMemberId(Long.valueOf(id));
-                traffic.setType(type);
-                traffic.setFlag(0);
-                trafficService.save(traffic);
-            }
-        });
-        return ResponseEntity.ok("success");
-    }
 }

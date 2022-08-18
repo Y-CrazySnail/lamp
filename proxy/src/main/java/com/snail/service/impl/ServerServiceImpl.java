@@ -1,20 +1,24 @@
 package com.snail.service.impl;
 
+import cn.hutool.core.io.file.FileWriter;
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snail.entity.CommandRecord;
-import com.snail.entity.Member;
-import com.snail.entity.Server;
-import com.snail.entity.Traffic;
+import com.snail.entity.*;
 import com.snail.mapper.ServerMapper;
 import com.snail.service.*;
+import com.snail.util.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -37,7 +41,6 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
     @Override
     public void refreshXray() {
         List<Server> serverList = serverMapper.selectList(new QueryWrapper<>());
-        serverList = serverList.stream().filter(item -> !item.getIp().equals("vhfugv.buzz")).collect(Collectors.toList());
         for (Server server : serverList) {
             String uuid = cn.hutool.core.lang.UUID.fastUUID().toString();
 
@@ -106,7 +109,58 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
         }
         calculateTraffic();
         // 4、生成config.json配置文件 重启
-        nodeService.refresh();
+        QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lt("end", LocalDateTime.now()).or().lt("traffic_surplus_month", 0);
+        List<Member> memberList = memberService.list(queryWrapper);
+        List<Long> invalidMemberIdList = memberList.stream().map(Member::getId).collect(Collectors.toList());
+
+        List<Node> nodeList = nodeService.list(new QueryWrapper<>());
+
+        for (Server server : serverList) {
+            List<Map<String, Object>> clientList = new ArrayList<>();
+            nodeList.forEach(node -> {
+                if (!invalidMemberIdList.contains(node.getMemberId())) {
+                    Map<String, Object> client = new HashMap<>();
+                    client.put("id", node.getUuid());
+                    client.put("flow", "xtls-rprx-direct");
+                    client.put("level", 1);
+                    client.put("email", cn.hutool.core.codec.Base64.encode(node.getMemberId().toString().getBytes(StandardCharsets.UTF_8)).replace("=", "") + "@" + server.getXrayDomain());
+                    clientList.add(client);
+                }
+            });
+            try {
+                // 数据模型
+                Map<String, Object> map = new HashMap<>();
+                ObjectMapper objectMapper = new ObjectMapper();
+                map.put("clients", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(clientList));
+                map.put("xray_domain", server.getXrayDomain());
+                map.put("xray_access_log", server.getXrayAccessLog());
+                map.put("xray_error_log", server.getXrayErrorLog());
+                map.put("xray_ws_path", server.getXrayWsPath());
+                map.put("xray_certificate_file", server.getXrayCertificateFile());
+                map.put("xray_key_file", server.getXrayKeyFile());
+                String content = FreeMakerUtils.getContent("xray_config.ftl", map);
+                String uuid = UUID.fastUUID().toString();
+                String basePath = "/usr/snail/webapps/file/config/";
+                String baseUrl = "https://edreamroom.com/file/config/";
+                String relativePath = uuid + "/config.json";
+                FileWriter fileWriter = new FileWriter(basePath + relativePath);
+                fileWriter.write(content);
+                CommandRecord commandRecord = new CommandRecord();
+                commandRecord.setIp(server.getXrayDomain());
+                commandRecord.setFlag(-1);
+                StringBuilder command = new StringBuilder();
+                command.append("wget ").append(baseUrl).append(relativePath).append(" -O /usr/local/etc/xray/config.json;");
+                command.append("\n");
+                command.append("systemctl restart xray");
+                command.append("\n");
+                commandRecord.setCommand(command.toString());
+                commandRecord.setType("test");
+                commandRecordService.save(commandRecord);
+            } catch (Exception e) {
+                log.error("解析模版异常:", e);
+            }
+        }
     }
 
     private void calculateTraffic() {

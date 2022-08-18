@@ -44,17 +44,4 @@ public class NodeController extends BaseController<Node> {
         nodeService.remove(nodeQueryWrapper);
         return ResponseEntity.ok("删除成功");
     }
-
-    @GetMapping("getConfiguration")
-    @ApiOperation(value = "获取配置文件接口")
-    public ResponseEntity<Object> getConfiguration() {
-        String config;
-        try {
-            config = nodeService.getConfiguration();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body("获取配置文件异常");
-        }
-        return ResponseEntity.ok(config);
-    }
 }

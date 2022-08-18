@@ -13,9 +13,11 @@ public class Server extends BaseEntity {
     private String username;
     private String password;
     private String xrayDomain;
+    private String xrayPort;
     private String xrayAccessLog;
     private String xrayErrorLog;
     private String xrayWsPath;
     private String xrayCertificateFile;
     private String xrayKeyFile;
+    private String region;
 }
