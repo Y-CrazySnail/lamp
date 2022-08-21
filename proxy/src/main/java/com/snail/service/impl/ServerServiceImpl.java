@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snail.entity.*;
 import com.snail.mapper.ServerMapper;
 import com.snail.service.*;
-import com.snail.util.FreeMakerUtils;
+import com.snail.utils.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -139,7 +139,7 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
                 map.put("xray_ws_path", server.getXrayWsPath());
                 map.put("xray_certificate_file", server.getXrayCertificateFile());
                 map.put("xray_key_file", server.getXrayKeyFile());
-                String content = FreeMakerUtils.getContent("xray_config.ftl", map);
+                String content = FreeMakerUtils.getContent("/usr/snail/config/template/", "xray_config.ftl", map);
                 String uuid = UUID.fastUUID().toString();
                 String basePath = "/usr/snail/webapps/file/config/";
                 String baseUrl = "https://edreamroom.com/file/config/";

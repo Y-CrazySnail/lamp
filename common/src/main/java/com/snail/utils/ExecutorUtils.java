@@ -3,7 +3,7 @@ package com.snail.utils;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class Executor {
+public class ExecutorUtils {
     public static String execute(String command) {
         Runtime runtime = Runtime.getRuntime();
         StringBuilder result = new StringBuilder();

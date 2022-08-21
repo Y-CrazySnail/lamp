@@ -2,7 +2,7 @@ package com.snail.config;
 
 import cn.hutool.core.util.IdUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snail.utils.Executor;
+import com.snail.utils.ExecutorUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -63,7 +63,7 @@ public class ClientSchedule {
                         String shellFile = path + File.separator + uuid + ".sh";
                         cn.hutool.core.io.file.FileWriter fileWriter = new cn.hutool.core.io.file.FileWriter(shellFile);
                         fileWriter.write(String.valueOf(commandMap.get("command")));
-                        String result = Executor.execute("sh " + shellFile);
+                        String result = ExecutorUtils.execute("sh " + shellFile);
                         commandMap.put("flag", 1);
                         commandMap.put("result", result);
                         log.info("return command execute result request：{}", commandMap);

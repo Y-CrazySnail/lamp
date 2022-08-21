@@ -12,6 +12,12 @@
     <artifactId>client</artifactId>
     <dependencies>
         <dependency>
+            <groupId>com.snail</groupId>
+            <artifactId>common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.5</version>
