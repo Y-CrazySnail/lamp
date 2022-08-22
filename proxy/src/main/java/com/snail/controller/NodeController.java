@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.conreoller.BaseController;
 import com.snail.entity.Node;
 import com.snail.service.INodeService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,6 @@ public class NodeController extends BaseController<Node> {
     private INodeService nodeService;
 
     @GetMapping("getValid")
-    @ApiOperation(value = "有效节点查询接口")
     public ResponseEntity<Object> getById(Long id) {
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
         nodeQueryWrapper.le("member_id", 0);
@@ -28,7 +26,6 @@ public class NodeController extends BaseController<Node> {
     }
 
     @GetMapping("getByMemberId")
-    @ApiOperation(value = "根据会员ID查询接口")
     public ResponseEntity<Object> getByMemberId(Long id) {
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
         nodeQueryWrapper.eq("member_id", id);
@@ -37,7 +34,6 @@ public class NodeController extends BaseController<Node> {
     }
 
     @DeleteMapping("deleteByMemberId")
-    @ApiOperation(value = "根据会员ID删除接口")
     public ResponseEntity<Object> deleteByMemberId(@RequestBody Node entity) {
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
         nodeQueryWrapper.eq("member_id", entity.getMemberId());

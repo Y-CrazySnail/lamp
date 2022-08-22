@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.snail.conreoller.BaseController;
 import com.snail.entity.GameCampaignDetail;
 import com.snail.service.IGameCampaignDetailService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -78,7 +77,6 @@ public class GameCampaignDetailController extends BaseController<GameCampaignDet
     }
 
     @GetMapping("pageByCondition")
-    @ApiOperation(value = "分页查询接口")
     public ResponseEntity<Object> getPage(Integer current,
                                           Integer size,
                                           Long groupId,
@@ -102,7 +100,6 @@ public class GameCampaignDetailController extends BaseController<GameCampaignDet
     }
 
     @PostMapping("save")
-    @ApiOperation(value = "保存接口")
     public ResponseEntity<Object> save(@RequestBody GameCampaignDetail entity) {
         QueryWrapper<GameCampaignDetail> gameCampaignDetailQueryWrapper = new QueryWrapper<>();
         gameCampaignDetailQueryWrapper.eq("CAMPAIGN_ID", entity.getCampaignId());
@@ -128,7 +125,6 @@ public class GameCampaignDetailController extends BaseController<GameCampaignDet
     }
 
     @GetMapping("get")
-    @ApiOperation(value = "根据接口")
     public ResponseEntity<Object> get(String campaignName, String groupName, String userName) {
         QueryWrapper<GameCampaignDetail> gameCampaignDetailQueryWrapper = new QueryWrapper<>();
         gameCampaignDetailQueryWrapper.eq("CAMPAIGN_NAME", campaignName);

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.conreoller.BaseController;
 import com.snail.entity.Member;
 import com.snail.service.IMemberService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -18,7 +17,6 @@ public class MemberController extends BaseController<Member> {
     private IMemberService memberService;
 
     @GetMapping("memberPage")
-    @ApiOperation(value = "分页查询接口")
     public ResponseEntity<Object> getPage(Integer current,
                                           Integer size,
                                           String wechat,

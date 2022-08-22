@@ -155,7 +155,7 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
                 command.append("systemctl restart xray");
                 command.append("\n");
                 commandRecord.setCommand(command.toString());
-                commandRecord.setType("test");
+                commandRecord.setType("xray");
                 commandRecordService.save(commandRecord);
             } catch (Exception e) {
                 log.error("解析模版异常:", e);

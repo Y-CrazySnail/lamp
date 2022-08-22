@@ -5,8 +5,6 @@ import com.snail.xpxl.entity.XpxlQuality;
 import com.snail.xpxl.mapper.XpxlQualityMapper;
 import com.snail.xpxl.service.IXpxlQualityService;
 import com.snail.conreoller.BaseController;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/xpxl-quality")
-@Api(value = "质保接口", tags = "质保接口")
 public class XpxlQualityController extends BaseController<XpxlQuality> {
 
     @Autowired
@@ -46,7 +43,6 @@ public class XpxlQualityController extends BaseController<XpxlQuality> {
     }
 
     @GetMapping("pageByCreateUser")
-    @ApiOperation(value = "分页查询接口")
     public ResponseEntity<Object> getPageByCreateUser(Integer current,
                                                       Integer size) {
         QueryWrapper<XpxlQuality> xpxlQualityQueryWrapper = new QueryWrapper<>();

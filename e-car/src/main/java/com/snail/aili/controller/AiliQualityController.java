@@ -3,10 +3,7 @@ package com.snail.aili.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.aili.entity.AiliQuality;
 import com.snail.aili.service.IAiliQualityService;
-import com.snail.xpxl.entity.XpxlQuality;
-import com.snail.xpxl.service.IXpxlQualityService;
 import com.snail.conreoller.BaseController;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -17,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/aili-quality")
-@Api(value = "质保接口", tags = "质保接口")
 public class AiliQualityController extends BaseController<AiliQuality> {
 
     @Autowired

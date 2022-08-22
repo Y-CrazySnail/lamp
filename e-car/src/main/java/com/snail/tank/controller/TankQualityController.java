@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.tank.entity.TankQuality;
 import com.snail.tank.service.ITankQualityService;
 import com.snail.conreoller.BaseController;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tank-quality")
-@Api(value = "质保接口", tags = "质保接口")
 public class TankQualityController extends BaseController<TankQuality> {
 
     @Autowired
@@ -42,7 +39,6 @@ public class TankQualityController extends BaseController<TankQuality> {
     }
 
     @GetMapping("pageByCreateUser")
-    @ApiOperation(value = "分页查询接口")
     public ResponseEntity<Object> getPageByCreateUser(Integer current,
                                                       Integer size) {
         QueryWrapper<TankQuality> tankQualityQueryWrapper = new QueryWrapper<>();

@@ -7,7 +7,7 @@ import com.snail.entity.Server;
 import com.snail.service.IMemberService;
 import com.snail.service.INodeService;
 import com.snail.service.IServerService;
-import com.snail.util.FreeMakerUtils;
+import com.snail.utils.FreeMakerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -84,7 +84,7 @@ public class SubscribeController {
             replaceMap.put("xray_ws_path", server.getXrayWsPath());
             replaceMap.put("region", server.getRegion());
             replaceMap.put("traffic", BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            subscribe.append(FreeMakerUtils.getContent("xray_subscribe.ftl", replaceMap));
+            subscribe.append(FreeMakerUtils.getContent("/usr/snail/config/template/", "xray_subscribe.ftl", replaceMap));
             subscribe.append("\n");
         });
         return subscribe.toString();

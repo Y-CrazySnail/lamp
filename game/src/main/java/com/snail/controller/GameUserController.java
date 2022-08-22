@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.snail.conreoller.BaseController;
 import com.snail.entity.GameUser;
 import com.snail.service.IGameUserService;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,6 @@ public class GameUserController extends BaseController<GameUser> {
     private IGameUserService gameUserService;
 
     @GetMapping("getByGroupId")
-    @ApiOperation(value = "根据分组ID查询接口")
     public ResponseEntity<Object> getBy(@RequestParam("groupId") Long groupId) {
         QueryWrapper<GameUser> gameUserQueryWrapper = new QueryWrapper<>();
         gameUserQueryWrapper.eq("GROUP_ID", groupId);
