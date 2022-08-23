@@ -22,6 +22,7 @@ public class MemberController extends BaseController<Member> {
                                           String wechat,
                                           String qq,
                                           String createUser,
+                                          String dataOver,
                                           Long id) {
         QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(wechat)) {
@@ -35,6 +36,12 @@ public class MemberController extends BaseController<Member> {
         }
         if (!StringUtils.isEmpty(id)) {
             queryWrapper.eq("id", id);
+        }
+        if ("1".equals(dataOver)) {
+            queryWrapper.lt("traffic_surplus_month", 0);
+        }
+        if ("0".equals(dataOver)) {
+            queryWrapper.gt("traffic_surplus_month", 0);
         }
         queryWrapper.orderByAsc("end");
         return super.getPage(current, size, queryWrapper);
