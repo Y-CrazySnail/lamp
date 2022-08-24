@@ -42,7 +42,7 @@ public class SubscribeController {
         try {
             return generateSubscribe(uuid);
         } catch (Exception e) {
-            log.info("更新订阅异常：", e);
+            log.info("更新订阅异常：{}", uuid, e);
             return null;
         }
     }
@@ -56,7 +56,7 @@ public class SubscribeController {
             String subscribe = generateSubscribe(uuid);
             return Base64.encodeBase64String(subscribe.getBytes());
         } catch (Exception e) {
-            log.info("更新订阅异常：", e);
+            log.info("更新订阅异常：{}", uuid, e);
             return null;
         }
     }
@@ -70,7 +70,7 @@ public class SubscribeController {
             String subscribe = generateSubscribe(uuid);
             return Base64.encodeBase64String(subscribe.getBytes());
         } catch (Exception e) {
-            log.info("更新订阅异常：", e);
+            log.info("更新订阅异常：{}", uuid, e);
             return null;
         }
     }
@@ -84,7 +84,7 @@ public class SubscribeController {
             String subscribe = generateSubscribe(uuid);
             return Base64.encodeBase64String(subscribe.getBytes());
         } catch (Exception e) {
-            log.info("更新订阅异常：", e);
+            log.info("更新订阅异常：{}", uuid, e);
             return null;
         }
     }
