@@ -8,6 +8,7 @@ import com.snail.service.IMemberService;
 import com.snail.service.INodeService;
 import com.snail.service.IServerService;
 import com.snail.utils.FreeMakerUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/subscribe")
 public class SubscribeController {
@@ -37,7 +39,12 @@ public class SubscribeController {
      */
     @GetMapping("/mac/{uuid}")
     public String mac(@PathVariable("uuid") String uuid) {
-        return generateSubscribe(uuid);
+        try {
+            return generateSubscribe(uuid);
+        } catch (Exception e) {
+            log.info("更新订阅异常：", e);
+            return null;
+        }
     }
 
     /**
@@ -45,8 +52,13 @@ public class SubscribeController {
      */
     @GetMapping("/android/{uuid}")
     public String android(@PathVariable("uuid") String uuid) {
-        String subscribe = generateSubscribe(uuid);
-        return Base64.encodeBase64String(subscribe.getBytes());
+        try {
+            String subscribe = generateSubscribe(uuid);
+            return Base64.encodeBase64String(subscribe.getBytes());
+        } catch (Exception e) {
+            log.info("更新订阅异常：", e);
+            return null;
+        }
     }
 
     /**
@@ -54,8 +66,13 @@ public class SubscribeController {
      */
     @GetMapping("/windows/{uuid}")
     public String windows(@PathVariable("uuid") String uuid) {
-        String subscribe = generateSubscribe(uuid);
-        return Base64.encodeBase64String(subscribe.getBytes());
+        try {
+            String subscribe = generateSubscribe(uuid);
+            return Base64.encodeBase64String(subscribe.getBytes());
+        } catch (Exception e) {
+            log.info("更新订阅异常：", e);
+            return null;
+        }
     }
 
     /**
@@ -63,8 +80,13 @@ public class SubscribeController {
      */
     @GetMapping("/ios/{uuid}")
     public String ios(@PathVariable("uuid") String uuid) {
-        String subscribe = generateSubscribe(uuid);
-        return Base64.encodeBase64String(subscribe.getBytes());
+        try {
+            String subscribe = generateSubscribe(uuid);
+            return Base64.encodeBase64String(subscribe.getBytes());
+        } catch (Exception e) {
+            log.info("更新订阅异常：", e);
+            return null;
+        }
     }
 
     private String generateSubscribe(String uuid) {
