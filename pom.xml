@@ -10,6 +10,7 @@
         <module>client</module>
         <module>e-car</module>
         <module>game</module>
+        <module>pet</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
