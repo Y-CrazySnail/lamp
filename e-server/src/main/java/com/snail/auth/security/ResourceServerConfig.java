@@ -37,6 +37,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/aili-model/getAll",
                         "/aili-price/getAll",
                         "/aili-quality/getByCondition",
+                        "/aili-message/baseSave",
+                        "/aili-quality/baseSave",
                         "/command_record/get",
                         "/command_record/finish",
                         "/subscribe/**",
