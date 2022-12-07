@@ -7,4 +7,47 @@
         traffic_up_month = 0,
         traffic_surplus_month = traffic_per_month * 1024 * 1024 * 1024
     </update>
+
+    <update id="calculateData">
+        update
+            proxy_member t
+        set
+            t.traffic_down_month = (
+                select
+                    sum(traffic) s
+                from
+                    proxy_traffic pt
+                where
+                    create_time > STR_TO_DATE(CONCAT('01,', MONTH(CURDATE()), ',', YEAR(CURDATE())), '%d,%m,%Y')
+                    and pt.`type` = 'downlink'
+                    and t.id = pt.member_id
+                group by
+                    pt.member_id ,
+                    pt.`type`
+            ),
+            t.traffic_up_month = (
+                select
+                    sum(traffic) s
+                from
+                    proxy_traffic pt
+                where
+                    create_time > STR_TO_DATE(CONCAT('01,', MONTH(CURDATE()), ',', YEAR(CURDATE())), '%d,%m,%Y')
+                    and pt.`type` = 'uplink'
+                    and t.id = pt.member_id
+                group by
+                    pt.member_id ,
+                    pt.`type`
+            ),
+            t.traffic_surplus_month = t.traffic_per_month * 1024 * 1024 * 1024 - (
+                select
+                    sum(traffic) s
+                from
+                    proxy_traffic pt
+                where
+                    create_time > STR_TO_DATE(CONCAT('01,', MONTH(CURDATE()), ',', YEAR(CURDATE())), '%d,%m,%Y')
+                    and t.id = pt.member_id
+                group by
+                    pt.member_id
+            )
+    </update>
 </mapper>

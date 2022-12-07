@@ -5,4 +5,6 @@ import com.snail.proxy.entity.Member;
 
 public interface IMemberService extends IService<Member> {
     void resetMemberData();
+
+    void calculateData();
 }

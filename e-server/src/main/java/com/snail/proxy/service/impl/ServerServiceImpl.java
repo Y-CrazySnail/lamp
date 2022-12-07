@@ -43,7 +43,6 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
         List<Server> serverList = serverMapper.selectList(new QueryWrapper<>());
         for (Server server : serverList) {
             String uuid = cn.hutool.core.lang.UUID.fastUUID().toString();
-
             // 1、服务器生成流量使用情况文件
             CommandRecord statusCommandRecord = new CommandRecord();
             statusCommandRecord.setIp(server.getIp());
@@ -107,7 +106,8 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
                 e.printStackTrace();
             }
         }
-        calculateTraffic();
+        memberService.calculateData();
+
         // 4、生成config.json配置文件 重启
         QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
         queryWrapper.lt("end", LocalDateTime.now()).or().lt("traffic_surplus_month", 0);
@@ -161,26 +161,5 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
                 log.error("解析模版异常:", e);
             }
         }
-    }
-
-    private void calculateTraffic() {
-        QueryWrapper<Traffic> trafficQueryWrapper = new QueryWrapper<>();
-        trafficQueryWrapper.eq("flag", 0);
-        List<Traffic> trafficList = trafficService.list(trafficQueryWrapper);
-        trafficList.forEach(traffic -> {
-            Member member = memberService.getById(traffic.getMemberId());
-            if (member != null) {
-                if (traffic.getType().equals("downlink")) {
-                    member.setTrafficDownMonth(member.getTrafficDownMonth() + traffic.getTraffic());
-                }
-                if (traffic.getType().equals("uplink")) {
-                    member.setTrafficUpMonth(member.getTrafficUpMonth() + traffic.getTraffic());
-                }
-                member.setTrafficSurplusMonth(member.getTrafficSurplusMonth() - traffic.getTraffic());
-                memberService.updateById(member);
-            }
-            traffic.setFlag(1);
-            trafficService.updateById(traffic);
-        });
     }
 }

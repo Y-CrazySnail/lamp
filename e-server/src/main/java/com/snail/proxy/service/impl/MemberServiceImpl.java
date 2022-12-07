@@ -17,4 +17,9 @@ public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> impleme
     public void resetMemberData() {
         memberMapper.resetMemberData();
     }
+
+    @Override
+    public void calculateData() {
+        memberMapper.calculateData();
+    }
 }

@@ -46,6 +46,11 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
             node.setUpdateUser("system");
             node.setUpdateTime(LocalDateTime.now());
             nodeMapper.insert(node);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             length++;
         }
     }
