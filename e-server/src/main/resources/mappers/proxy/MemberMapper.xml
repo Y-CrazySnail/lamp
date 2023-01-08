@@ -12,7 +12,7 @@
         update
             proxy_member t
         set
-            t.traffic_down_month = (
+            t.traffic_down_month = ifnull((
                 select
                     sum(traffic) s
                 from
@@ -24,8 +24,8 @@
                 group by
                     pt.member_id ,
                     pt.`type`
-            ),
-            t.traffic_up_month = (
+            ), 0),
+            t.traffic_up_month = ifnull((
                 select
                     sum(traffic) s
                 from
@@ -37,8 +37,8 @@
                 group by
                     pt.member_id ,
                     pt.`type`
-            ),
-            t.traffic_surplus_month = t.traffic_per_month * 1024 * 1024 * 1024 - (
+            ), 0),
+            t.traffic_surplus_month = t.traffic_per_month * 1024 * 1024 * 1024 - ifnull((
                 select
                     sum(traffic) s
                 from
@@ -48,6 +48,6 @@
                     and t.id = pt.member_id
                 group by
                     pt.member_id
-            )
+            ), 0)
     </update>
 </mapper>
