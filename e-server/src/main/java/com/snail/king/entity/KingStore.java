@@ -1,8 +1,9 @@
 package com.snail.king.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.snail.entity.BaseEntity;
 
 @TableName(value = "king_store", autoResultMap = true)
-public class KingStore {
+public class KingStore extends BaseEntity {
     private String name;
     private String province;
     private String city;
