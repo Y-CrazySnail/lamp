@@ -1,11 +1,14 @@
 package com.snail.chinaybop.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.snail.conreoller.BaseController;
 import com.snail.chinaybop.entity.ChinaybopQuality;
 import com.snail.chinaybop.service.IChinaybopQualityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +38,20 @@ public class ChinaybopQualityController extends BaseController<ChinaybopQuality>
             return ResponseEntity.badRequest().body(null);
         }
         return ResponseEntity.ok(quality);
+    }
+
+    @GetMapping("quality-page")
+    public ResponseEntity<Object> qualityPage(Integer current, Integer size) {
+        if (StringUtils.isEmpty(current)) {
+            current = 1;
+        }
+        if (StringUtils.isEmpty(size)) {
+            size = 10;
+        }
+        QueryWrapper<ChinaybopQuality> chinaybopQualityQueryWrapper = new QueryWrapper<>();
+        if (!"chinaybop".equals(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())) {
+            chinaybopQualityQueryWrapper.eq("create_user", SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        }
+        return super.getPage(current, size, chinaybopQualityQueryWrapper);
     }
 }

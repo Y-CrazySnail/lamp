@@ -1,4 +1,5 @@
 package com.snail.king.entity;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.entity.BaseEntity;
 
@@ -9,8 +10,13 @@ public class KingStore extends BaseEntity {
     private String city;
     private String county;
     private String address;
-    private String longitude;
-    private String latitude;
+    private double longitude;
+    private double latitude;
+    private String contactName;
+    private String contactPhone;
+
+    @TableField(exist = false)
+    private double distance;
 
     public String getName() {
         return name;
@@ -52,19 +58,43 @@ public class KingStore extends BaseEntity {
         this.address = address;
     }
 
-    public String getLongitude() {
+    public double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(String longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public String getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(String latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
+
+    public String getContactName() {
+        return contactName;
+    }
+
+    public void setContactName(String contactName) {
+        this.contactName = contactName;
+    }
+
+    public String getContactPhone() {
+        return contactPhone;
+    }
+
+    public void setContactPhone(String contactPhone) {
+        this.contactPhone = contactPhone;
     }
 }

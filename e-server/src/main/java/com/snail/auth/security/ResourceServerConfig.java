@@ -37,6 +37,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/king-model/getAll",
                         "/king-price/getAll",
                         "/king-store/get",
+                        "/king-store/getClose",
                         "/king-technician/get",
                         "/king-quality/get",
                         "/aili-brand/getAll",

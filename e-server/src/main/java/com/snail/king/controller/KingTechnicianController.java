@@ -8,6 +8,7 @@ import com.snail.king.service.IKingStoreService;
 import com.snail.king.service.IKingTechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,9 +24,15 @@ public class KingTechnicianController extends BaseController<KingTechnician> {
     @GetMapping("get")
     public ResponseEntity<Object> get(KingTechnician kingTechnician) {
         QueryWrapper<KingTechnician> kingTechnicianQueryWrapper = new QueryWrapper<>();
-        kingTechnicianQueryWrapper.eq("province", kingTechnician.getProvince());
-        kingTechnicianQueryWrapper.eq("city", kingTechnician.getCity());
-        kingTechnicianQueryWrapper.eq("county", kingTechnician.getCounty());
+        if (!StringUtils.isEmpty(kingTechnician.getProvince())) {
+            kingTechnicianQueryWrapper.eq("province", kingTechnician.getProvince());
+        }
+        if (!StringUtils.isEmpty(kingTechnician.getCity())) {
+            kingTechnicianQueryWrapper.eq("city", kingTechnician.getCity());
+        }
+        if (!StringUtils.isEmpty(kingTechnician.getCounty())) {
+            kingTechnicianQueryWrapper.eq("county", kingTechnician.getCounty());
+        }
         List<KingTechnician> kingTechnicianList = technicianService.list(kingTechnicianQueryWrapper);
         return ResponseEntity.ok(kingTechnicianList);
     }
