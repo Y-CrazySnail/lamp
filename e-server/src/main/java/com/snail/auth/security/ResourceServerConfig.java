@@ -53,15 +53,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/traffic/save",
                         "/node/getConfiguration",
                         "/node/test",
-                        "/server/refresh")
-                .permitAll()
-                .antMatchers("/v2/api-docs",
-                        "/swagger-resources",
-                        "/swagger-resources/**",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui.html/**",
-                        "/webjars/**")
+                        "/server/refresh",
+                        "/role/getPermissionIdList")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

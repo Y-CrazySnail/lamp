@@ -1,27 +1,3 @@
-server:
-  port: 8080
-  servlet:
-    context-path: /server
-  address: 0.0.0.0
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: snail
-    password: 19980720@Meng
-mybatis-plus:
-  mapper-locations: classpath*:mappers/**/*.xml
-  type-aliases-package: com.snail
-access-token-converter:
-  signing-key: signingKey
-swagger: http://localhost:9092
-security:
-  oauth2:
-    client:
-      user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
-    resource:
-      jwt:
-        key-uri: http://127.0.0.1:8080/server/oauth/token_key
-        key-value: signingKey
-    authorization:
-      check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+  profiles:
+    active: dev

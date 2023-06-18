@@ -1,0 +1,38 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /server
+  address: 0.0.0.0
+spring:
+  datasource:
+    auth:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+      username: auth_dev
+      password: auth_dev
+    aili:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+      username: zero_cloud_dev
+      password: zero_cloud_dev
+    zero_cloud:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+      username: zero_cloud_dev
+      password: zero_cloud_dev
+mybatis-plus:
+  mapper-locations: classpath*:mappers/**/*.xml
+  type-aliases-package: com.snail
+
+access-token-converter:
+  signing-key: signingKey
+security:
+  oauth2:
+    client:
+      user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:8080/server/oauth/token_key
+        key-value: signingKey
+    authorization:
+      check-token-access: http://127.0.0.1:8080/server/oauth/check_token
