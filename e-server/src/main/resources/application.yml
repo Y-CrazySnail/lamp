@@ -1,3 +1,19 @@
 spring:
   profiles:
     active: dev
+mybatis-plus:
+  mapper-locations: classpath*:mappers/**/*.xml
+  type-aliases-package: com.snail
+
+access-token-converter:
+  signing-key: signingKey
+security:
+  oauth2:
+    client:
+      user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:8080/server/oauth/token_key
+        key-value: signingKey
+    authorization:
+      check-token-access: http://127.0.0.1:8080/server/oauth/check_token
