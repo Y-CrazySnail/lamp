@@ -3,18 +3,55 @@ server:
   servlet:
     context-path: /server
   address: 0.0.0.0
+
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-    username: snail
-    password: 19980720@Meng
+    dynamic:
+      primary: auth
+      datasource:
+        auth:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:LYLPv023n8jJatTly70XsA==
+          password: mpw:YSQdMIBf8XQvZRCbNexaag==
+        aili:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/aili_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:v8hx8llUd8tD9CCJ1H4zMQ==
+          password: mpw:VoyTo3Lfad4961QCp/dnFQ==
+        chinaybop:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/chinaybop_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:LETfZ30AlQw0bPtsT1+fTQ==
+          password: mpw:JXco33IdLbu1V8mMWatwqCdUSIYMWjZL5GiafIgDKLs=
+        king:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/king_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:OT659X5Rt3hmYEjrLlKh5Q==
+          password: mpw:pA5kGlOQauLdyInSWvakKA==
+        proxy:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/proxy_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:e4pNeFcVgdzDFmUoEtcTNw==
+          password: mpw:pNRpqdxa7fRTMuakLVOJFQ==
+        xpxl:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/xpxl_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:lSI53nGgRpvREtQutiT8+g==
+          password: mpw:K/ZHmZjdrLtB5Qv7x+zyFw==
+        tank:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/tank_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:5HpfGdTzjJ/kCKQpy3A29g==
+          password: mpw:Ln3AEy8npQsYK+TegG7sNg==
+
 mybatis-plus:
   mapper-locations: classpath*:mappers/**/*.xml
   type-aliases-package: com.snail
+
 access-token-converter:
   signing-key: signingKey
-swagger: http://localhost:9092
+
 security:
   oauth2:
     client:

@@ -54,7 +54,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/node/getConfiguration",
                         "/node/test",
                         "/server/refresh",
-                        "/role/getPermissionIdList")
+                        "/role/getPermissionIdList",
+                        "/zero-login/login")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

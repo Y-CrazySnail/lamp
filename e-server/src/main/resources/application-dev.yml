@@ -4,44 +4,72 @@ server:
     context-path: /server
   address: 0.0.0.0
 spring:
+  autoconfigure:
+    #自动化配置 例外处理
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     dynamic:
       primary: auth
       datasource:
         auth:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: mpw:qZ04hL2mW8pCdjnpy5wUX/jhOwfTbPAg3gdGEqD9qwQN7yxh8JFn1ulvAWL160keRShnL7K2P6WW/JF6So1foNBblm4wZjOpnLLFhLhHSL5D5+3S/cD6QKQIAZUbi3aIUs7xS0XP2b4sNcgskkK2SA==
-          username: snail
-          password: 19980720@Meng
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: auth_dev
+          password: auth_dev
         aili:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: zero_cloud_dev
-          password: zero_cloud_dev
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/aili_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: aili_dev
+          password: aili_dev
         chinaybop:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: mpw:qZ04hL2mW8pCdjnpy5wUX/jhOwfTbPAg3gdGEqD9qwQN7yxh8JFn1ulvAWL160keRShnL7K2P6WW/JF6So1foNBblm4wZjOpnLLFhLhHSL5D5+3S/cD6QKQIAZUbi3aIUs7xS0XP2b4sNcgskkK2SA==
-          username: snail
-          password: 19980720@Meng
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/chinaybop_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: chinaybop_dev
+          password: chinaybop_dev
         king:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: snail
-          password: 19980720@Meng
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/king_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: king_dev
+          password: king_dev
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: snail
-          password: 19980720@Meng
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/proxy_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: proxy_dev
+          password: proxy_dev
         xpxl:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: snail
-          password: 19980720@Meng
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-#      username: auth_dev
-#      password: auth_dev
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/xpxl_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: xpxl_dev
+          password: xpxl_dev
+        tank:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/tank_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: tank_dev
+          password: tank_dev
+      druid:
+        initialSize: 5
+        minIdle: 5
+        maxActive: 30
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        filters: stat,wall,slf4j,config
+        useGlobalDataSourceStat: true
+        stat:
+          log-slow-sql: true
+          merge-sql: true
+          slow-sql-millis: 10000
+  #      driver-class-name: com.mysql.cj.jdbc.Driver
+  #      url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+  #      username: auth_dev
+  #      password: auth_dev
   #jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
   #snail
   #19980720@Meng
