@@ -1,4 +1,4 @@
-package com.snail.zero.entity;
+package com.snail.auth.dto;
 
 import lombok.Data;
 

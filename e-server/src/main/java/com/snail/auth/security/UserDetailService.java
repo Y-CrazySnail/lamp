@@ -32,7 +32,6 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 查询用户
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
-        user.setPassword(new BCryptPasswordEncoder().encode("111111"));
         // 设置用户权限
         List<Permission> permissionList = permissionMapper.permissionListByUserId(user.getId());
         user.setAuthorities(AuthorityUtils.createAuthorityList(permissionList.stream().map(Permission::getUrl).toArray(String[]::new)));

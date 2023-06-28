@@ -89,3 +89,11 @@ security:
         key-value: signingKey
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+oauth-client-details:
+  zero:
+    client-id: zero_dev
+    client-secret: 123456
+wechat:
+  zero:
+    app-id: wx9cb140f2eacb6870
+    app-secret: b873d35be8357186fc8f90c48edb24a9
