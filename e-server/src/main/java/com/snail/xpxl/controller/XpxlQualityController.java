@@ -11,6 +11,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/xpxl-quality")
 public class XpxlQualityController extends BaseController<XpxlQuality> {
@@ -35,11 +37,11 @@ public class XpxlQualityController extends BaseController<XpxlQuality> {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
-        quality = qualityService.getOne(qualityQueryWrapper);
-        if (StringUtils.isEmpty(quality)) {
+        List<XpxlQuality> qualityList = qualityService.list(qualityQueryWrapper);
+        if (qualityList.isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(quality);
+        return ResponseEntity.ok(qualityList);
     }
 
     @GetMapping("pageByCreateUser")

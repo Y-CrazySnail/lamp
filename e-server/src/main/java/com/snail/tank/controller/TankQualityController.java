@@ -10,6 +10,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tank-quality")
 public class TankQualityController extends BaseController<TankQuality> {
@@ -31,11 +33,11 @@ public class TankQualityController extends BaseController<TankQuality> {
         } else {
             return ResponseEntity.badRequest().body(null);
         }
-        quality = qualityService.getOne(qualityQueryWrapper);
-        if (StringUtils.isEmpty(quality)) {
+        List<TankQuality> qualityList = qualityService.list(qualityQueryWrapper);
+        if (qualityList.isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(quality);
+        return ResponseEntity.ok(qualityList);
     }
 
     @GetMapping("pageByCreateUser")

@@ -55,7 +55,7 @@ public class ZeroAuthService implements IZeroAuthService {
     private IUserService userService;
 
     @Override
-    public void signupOrLogin(WxLoginDTO wxLoginDTO) {
+    public String signupOrLogin(WxLoginDTO wxLoginDTO) {
         String openId = null;
         String wxLoginUrl = "https://api.weixin.qq.com/sns/jscode2session" +
                 "?appid=" + appId +
@@ -75,24 +75,26 @@ public class ZeroAuthService implements IZeroAuthService {
         if (StringUtils.isEmpty(openId)) {
             throw new RuntimeException("get openId error");
         }
-        // todo 校验当前openId是否注册
-        // 未注册执行注册逻辑
-        User checkUser = usersService.getOne(new QueryWrapper<User>().eq("username", user.getUsername()));
-        if (!StringUtils.isEmpty(checkUser)) {
-            return new ResponseEntity<>("用户名重复", HttpStatus.EXPECTATION_FAILED);
+        String username = appId + "_" + openId;
+        String password = appId + "_" + openId;
+        User checkUser = userService.getOne(new QueryWrapper<User>().eq("username", username));
+        if (StringUtils.isEmpty(checkUser)) {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(new BCryptPasswordEncoder().encode(password));
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setEnabled(true);
+            user.setCredentialsNonExpired(true);
+            userService.save(user);
         }
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setEnabled(true);
-        user.setCredentialsNonExpired(true);
-        usersService.save(user);
         String auth = "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
         String authUrl = oauthTokenUrl
                 + "?grant_type=password&scope=all"
-                + "&username=" + appId + "_" + openId
-                + "&password=" + openId;
+                + "&username=" + username
+                + "&password=" + password;
         HttpResponse httpResponse = HttpRequest.post(authUrl)
                 .header("Authorization", auth).execute();
+        return httpResponse.body();
     }
 }

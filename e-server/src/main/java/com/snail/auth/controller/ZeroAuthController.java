@@ -28,13 +28,15 @@ public class ZeroAuthController {
 
     @Autowired
     private IZeroAuthService zeroAuthService;
+
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody WxLoginDTO wxLoginDTO) {
+        String response;
         try {
-            zeroAuthService.signupOrLogin(wxLoginDTO);
+            response = zeroAuthService.signupOrLogin(wxLoginDTO);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return ResponseEntity.ok(httpResponse.body());
+        return ResponseEntity.ok(response);
     }
 }
