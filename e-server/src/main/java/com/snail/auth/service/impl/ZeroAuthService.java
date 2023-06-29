@@ -3,32 +3,26 @@ package com.snail.auth.service.impl;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.snail.auth.dto.PhoneNumberDTO;
+import com.snail.dto.PhoneNumberDTO;
 import com.snail.auth.dto.WxLoginDTO;
-import com.snail.auth.dto.WxLoginResponse;
+import com.snail.dto.WxLoginResponse;
 import com.snail.auth.entity.User;
 import com.snail.auth.entity.UserExtra;
 import com.snail.auth.service.IUserExtraService;
 import com.snail.auth.service.IUserService;
 import com.snail.auth.service.IZeroAuthService;
+import com.snail.utils.WechatUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import java.io.IOException;
-import java.util.Base64;
 
 @Slf4j
 @Service
@@ -78,33 +72,27 @@ public class ZeroAuthService implements IZeroAuthService {
         String openId = null;
         String sessionKey = null;
         String phoneNumber = null;
-        String wxLoginUrl = "https://api.weixin.qq.com/sns/jscode2session" +
-                "?appid=" + appId +
-                "&secret=" + appSecret +
-                "&js_code=" + wxLoginDTO.getCode() +
-                "&grant_type=authorization_code";
-        log.info("request wx login api url:{}", wxLoginUrl);
-        String wxLoginApiResponse = HttpRequest.get(wxLoginUrl).execute().body();
-        ObjectMapper objectMapper = new ObjectMapper();
         try {
-            WxLoginResponse wxLoginResponse = objectMapper.readValue(wxLoginApiResponse, WxLoginResponse.class);
+            WxLoginResponse wxLoginResponse = WechatUtil.getWxLoginResponse(appId, appSecret, wxLoginDTO.getCode());
             log.info("wx login api response:{}", wxLoginResponse.getOpenid());
             openId = wxLoginResponse.getOpenid();
             sessionKey = wxLoginResponse.getSession_key();
+            log.info("openId:{}", openId);
+            log.info("sessionKey:{}", sessionKey);
         } catch (IOException e) {
             log.error("wx login api error：", e);
         }
         if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(sessionKey)) {
-            throw new RuntimeException("get openId error");
+            throw new RuntimeException("get openId and sessionKey error");
         }
-        log.info("openId:{}", openId);
-        log.info("sessionKey:{}", sessionKey);
-        String phoneNumberStr = decryptPhoneNumber(sessionKey, wxLoginDTO.getEncryptedData(), wxLoginDTO.getIv());
         try {
-            PhoneNumberDTO phoneNumberDTO = objectMapper.readValue(phoneNumberStr, PhoneNumberDTO.class);
+            PhoneNumberDTO phoneNumberDTO = WechatUtil.decryptPhoneNumber(sessionKey, wxLoginDTO.getEncryptedData(), wxLoginDTO.getIv());
             phoneNumber = phoneNumberDTO.getPhoneNumber();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("decryption phone number error:", e);
+        }
+        if (StringUtils.isEmpty(phoneNumber)) {
+            throw new RuntimeException("decryption phone number error");
         }
         String username = appId + "_" + openId;
         String password = appId + "_" + openId;
@@ -128,12 +116,8 @@ public class ZeroAuthService implements IZeroAuthService {
             userExtraService.save(userExtra);
         }
         String auth = "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
-        String authUrl = oauthTokenUrl
-                + "?grant_type=password&scope=all"
-                + "&username=" + username
-                + "&password=" + password;
-        HttpResponse httpResponse = HttpRequest.post(authUrl)
-                .header("Authorization", auth).execute();
+        String authUrl = oauthTokenUrl + "?grant_type=password&scope=all" + "&username=" + username + "&password=" + password;
+        HttpResponse httpResponse = HttpRequest.post(authUrl).header("Authorization", auth).execute();
         return httpResponse.body();
     }
 
@@ -153,22 +137,5 @@ public class ZeroAuthService implements IZeroAuthService {
             throw new RuntimeException("get user info error");
         }
         return userExtra;
-    }
-
-    public String decryptPhoneNumber(String sessionKey, String encryptedData, String iv) {
-        try {
-            byte[] sessionKeyBytes = Base64.getDecoder().decode(sessionKey);
-            byte[] encryptedDataBytes = Base64.getDecoder().decode(encryptedData);
-            byte[] ivBytes = Base64.getDecoder().decode(iv);
-            SecretKeySpec secretKeySpec = new SecretKeySpec(sessionKeyBytes, "AES");
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
-            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-            byte[] decryptedDataBytes = cipher.doFinal(encryptedDataBytes);
-            return new String(decryptedDataBytes, StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
     }
 }
