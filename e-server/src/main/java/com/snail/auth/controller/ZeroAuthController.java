@@ -1,7 +1,6 @@
 package com.snail.auth.controller;
 
 import com.snail.auth.dto.WxLoginDTO;
-import com.snail.auth.entity.User;
 import com.snail.auth.entity.UserExtra;
 import com.snail.auth.service.IZeroAuthService;
 import lombok.extern.slf4j.Slf4j;

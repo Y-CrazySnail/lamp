@@ -47,6 +47,11 @@ spring:
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/tank_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: tank_dev
           password: tank_dev
+        zero:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: zero_dev
+          password: zero_dev
       druid:
         initialSize: 5
         minIdle: 5
