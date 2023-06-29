@@ -4,6 +4,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.snail.auth.dto.PhoneNumberDTO;
 import com.snail.auth.dto.WxLoginDTO;
 import com.snail.auth.dto.WxLoginResponse;
 import com.snail.auth.entity.User;
@@ -19,6 +20,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -69,6 +76,8 @@ public class ZeroAuthService implements IZeroAuthService {
     @Transactional
     public String signupOrLogin(WxLoginDTO wxLoginDTO) {
         String openId = null;
+        String sessionKey = null;
+        String phoneNumber = null;
         String wxLoginUrl = "https://api.weixin.qq.com/sns/jscode2session" +
                 "?appid=" + appId +
                 "&secret=" + appSecret +
@@ -81,11 +90,21 @@ public class ZeroAuthService implements IZeroAuthService {
             WxLoginResponse wxLoginResponse = objectMapper.readValue(wxLoginApiResponse, WxLoginResponse.class);
             log.info("wx login api response:{}", wxLoginResponse.getOpenid());
             openId = wxLoginResponse.getOpenid();
+            sessionKey = wxLoginResponse.getSession_key();
         } catch (IOException e) {
             log.error("wx login api error：", e);
         }
-        if (StringUtils.isEmpty(openId)) {
+        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(sessionKey)) {
             throw new RuntimeException("get openId error");
+        }
+        log.info("openId:{}", openId);
+        log.info("sessionKey:{}", sessionKey);
+        String phoneNumberStr = decryptPhoneNumber(sessionKey, wxLoginDTO.getEncryptedData(), wxLoginDTO.getIv());
+        try {
+            PhoneNumberDTO phoneNumberDTO = objectMapper.readValue(phoneNumberStr, PhoneNumberDTO.class);
+            phoneNumber = phoneNumberDTO.getPhoneNumber();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
         String username = appId + "_" + openId;
         String password = appId + "_" + openId;
@@ -105,6 +124,7 @@ public class ZeroAuthService implements IZeroAuthService {
             userExtra.setNickName(wxLoginDTO.getNickName());
             userExtra.setAvatarUrl(wxLoginDTO.getAvatarUrl());
             userExtra.setGender(wxLoginDTO.getGender());
+            userExtra.setPhoneNumber(phoneNumber);
             userExtraService.save(userExtra);
         }
         String auth = "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
@@ -133,5 +153,22 @@ public class ZeroAuthService implements IZeroAuthService {
             throw new RuntimeException("get user info error");
         }
         return userExtra;
+    }
+
+    public String decryptPhoneNumber(String sessionKey, String encryptedData, String iv) {
+        try {
+            byte[] sessionKeyBytes = Base64.getDecoder().decode(sessionKey);
+            byte[] encryptedDataBytes = Base64.getDecoder().decode(encryptedData);
+            byte[] ivBytes = Base64.getDecoder().decode(iv);
+            SecretKeySpec secretKeySpec = new SecretKeySpec(sessionKeyBytes, "AES");
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
+            cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
+            byte[] decryptedDataBytes = cipher.doFinal(encryptedDataBytes);
+            return new String(decryptedDataBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

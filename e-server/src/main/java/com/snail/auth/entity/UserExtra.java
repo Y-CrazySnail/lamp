@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "user_extra", autoResultMap = true)
-public class UserExtra extends BaseEntity{
+public class UserExtra extends BaseEntity {
     /**
      * 用户ID
      */
@@ -29,4 +29,8 @@ public class UserExtra extends BaseEntity{
      * 性别 0未知 1男 2女
      */
     private Integer gender;
+    /**
+     * 手机号
+     */
+    private String phoneNumber;
 }

@@ -25,6 +25,7 @@ public class ZeroAuthController {
         try {
             response = zeroAuthService.signupOrLogin(wxLoginDTO);
         } catch (Exception e) {
+            log.error("zero login error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(response);
@@ -34,12 +35,14 @@ public class ZeroAuthController {
     public ResponseEntity<Object> info() {
         String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
         if (StringUtils.isEmpty(username)) {
+            log.error("get username error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("get username error");
         }
         UserExtra userExtra;
         try {
             userExtra = zeroAuthService.info(username);
         } catch (Exception e) {
+            log.error("get user extra info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(userExtra);

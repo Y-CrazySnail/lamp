@@ -20,4 +20,12 @@ public class WxLoginDTO {
      * 微信昵称
      */
     private String nickName;
+    /**
+     * 获取手机号Iv
+     */
+    private String iv;
+    /**
+     * 获取手机号加密信息
+     */
+    private String encryptedData;
 }

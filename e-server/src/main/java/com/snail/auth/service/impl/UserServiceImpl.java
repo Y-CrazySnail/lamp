@@ -9,6 +9,7 @@ import com.snail.auth.entity.User;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
@@ -22,12 +23,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public boolean save(User entity) {
         userMapper.insert(entity);
-        entity.getRoleIdList().forEach(roleId -> {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(entity.getId());
-            userRole.setRoleId(roleId);
-            userRoleMapper.insert(userRole);
-        });
+        if (!StringUtils.isEmpty(entity.getRoleIdList()) && !entity.getRoleIdList().isEmpty()) {
+            entity.getRoleIdList().forEach(roleId -> {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(entity.getId());
+                userRole.setRoleId(roleId);
+                userRoleMapper.insert(userRole);
+            });
+        }
         return true;
     }
 
