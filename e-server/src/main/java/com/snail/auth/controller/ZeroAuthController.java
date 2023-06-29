@@ -1,25 +1,16 @@
 package com.snail.auth.controller;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snail.auth.dto.WxLoginDTO;
-import com.snail.auth.dto.WxLoginResponse;
+import com.snail.auth.entity.User;
+import com.snail.auth.entity.UserExtra;
 import com.snail.auth.service.IZeroAuthService;
-import com.snail.auth.service.impl.ZeroAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
-import java.util.Base64;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -38,5 +29,20 @@ public class ZeroAuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("info")
+    public ResponseEntity<Object> info() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        if (StringUtils.isEmpty(username)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("get username error");
+        }
+        UserExtra userExtra;
+        try {
+            userExtra = zeroAuthService.info(username);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return ResponseEntity.ok(userExtra);
     }
 }

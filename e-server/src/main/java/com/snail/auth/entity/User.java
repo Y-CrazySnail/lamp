@@ -37,6 +37,9 @@ public class User extends BaseEntity implements UserDetails {
     private boolean enabled;
 
     @TableField(exist = false)
+    private UserExtra userExtra;
+
+    @TableField(exist = false)
     private List<GrantedAuthority> authorities;
 
     @TableField(exist = false)
@@ -106,6 +109,14 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public UserExtra getUserExtra() {
+        return userExtra;
+    }
+
+    public void setUserExtra(UserExtra userExtra) {
+        this.userExtra = userExtra;
     }
 
     public List<Role> getRoles() {

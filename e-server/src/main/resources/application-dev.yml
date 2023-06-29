@@ -81,6 +81,7 @@ access-token-converter:
   signing-key: signingKey
 security:
   oauth2:
+    login-uri: http://127.0.0.1:8080/server/oauth/token
     client:
       user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
     resource:
@@ -89,10 +90,12 @@ security:
         key-value: signingKey
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+
 oauth-client-details:
   zero:
     client-id: zero_dev
     client-secret: 123456
+
 wechat:
   zero:
     app-id: wx9cb140f2eacb6870

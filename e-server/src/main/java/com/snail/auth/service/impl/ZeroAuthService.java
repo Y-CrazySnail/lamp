@@ -7,15 +7,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snail.auth.dto.WxLoginDTO;
 import com.snail.auth.dto.WxLoginResponse;
 import com.snail.auth.entity.User;
+import com.snail.auth.entity.UserExtra;
+import com.snail.auth.service.IUserExtraService;
 import com.snail.auth.service.IUserService;
 import com.snail.auth.service.IZeroAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
@@ -48,13 +50,23 @@ public class ZeroAuthService implements IZeroAuthService {
     /**
      * 获取Token地址
      */
-    @Value("${security.oauth2.resource.jwt.key-uri}")
+    @Value("${security.oauth2.login-uri}")
     private String oauthTokenUrl;
 
     @Autowired
     private IUserService userService;
 
+    @Autowired
+    private IUserExtraService userExtraService;
+
+    /**
+     * WeChat login or signup
+     *
+     * @param wxLoginDTO wxLoginDto
+     * @return login token info
+     */
     @Override
+    @Transactional
     public String signupOrLogin(WxLoginDTO wxLoginDTO) {
         String openId = null;
         String wxLoginUrl = "https://api.weixin.qq.com/sns/jscode2session" +
@@ -87,6 +99,13 @@ public class ZeroAuthService implements IZeroAuthService {
             user.setEnabled(true);
             user.setCredentialsNonExpired(true);
             userService.save(user);
+            UserExtra userExtra = new UserExtra();
+            userExtra.setUserId(user.getId());
+            userExtra.setUsername(username);
+            userExtra.setNickName(wxLoginDTO.getNickName());
+            userExtra.setAvatarUrl(wxLoginDTO.getAvatarUrl());
+            userExtra.setGender(wxLoginDTO.getGender());
+            userExtraService.save(userExtra);
         }
         String auth = "Basic " + Base64.getEncoder().encodeToString((clientId + ":" + clientSecret).getBytes());
         String authUrl = oauthTokenUrl
@@ -96,5 +115,23 @@ public class ZeroAuthService implements IZeroAuthService {
         HttpResponse httpResponse = HttpRequest.post(authUrl)
                 .header("Authorization", auth).execute();
         return httpResponse.body();
+    }
+
+    /**
+     * Get user info
+     *
+     * @param username username
+     * @return user info
+     */
+    @Override
+    public UserExtra info(String username) {
+        log.info("get user info. username:{}", username);
+        QueryWrapper<UserExtra> userExtraQueryWrapper = new QueryWrapper<>();
+        userExtraQueryWrapper.eq("username", username);
+        UserExtra userExtra = userExtraService.getOne(userExtraQueryWrapper);
+        if (StringUtils.isEmpty(userExtra)) {
+            throw new RuntimeException("get user info error");
+        }
+        return userExtra;
     }
 }

@@ -13,9 +13,9 @@ public class WxLoginDTO {
      */
     private String avatarUrl;
     /**
-     * 微信性别
+     * 微信性别 0未知 1男 2女
      */
-    private String gender;
+    private Integer gender;
     /**
      * 微信昵称
      */
