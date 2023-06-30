@@ -1,8 +1,8 @@
-package com.snail.auth.service;
+package com.snail.zero.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.snail.auth.entity.UserExtra;
+import com.snail.zero.entity.UserExtra;
 
 public interface IUserExtraService extends IService<UserExtra> {
-
+    UserExtra info(String username);
 }

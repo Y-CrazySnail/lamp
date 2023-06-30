@@ -3,6 +3,7 @@ package com.snail.auth.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.entity.BaseEntity;
+import com.snail.zero.entity.UserExtra;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -35,9 +36,6 @@ public class User extends BaseEntity implements UserDetails {
      * 可用
      */
     private boolean enabled;
-
-    @TableField(exist = false)
-    private UserExtra userExtra;
 
     @TableField(exist = false)
     private List<GrantedAuthority> authorities;
@@ -109,14 +107,6 @@ public class User extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
-    }
-
-    public UserExtra getUserExtra() {
-        return userExtra;
-    }
-
-    public void setUserExtra(UserExtra userExtra) {
-        this.userExtra = userExtra;
     }
 
     public List<Role> getRoles() {

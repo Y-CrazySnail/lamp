@@ -1,8 +1,5 @@
 package com.snail.auth.dto;
 
-import lombok.Data;
-
-@Data
 public class WxLoginDTO {
     /**
      * 微信Code
@@ -28,4 +25,52 @@ public class WxLoginDTO {
      * 获取手机号加密信息
      */
     private String encryptedData;
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public Integer getGender() {
+        return gender;
+    }
+
+    public void setGender(Integer gender) {
+        this.gender = gender;
+    }
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
+    }
+
+    public String getIv() {
+        return iv;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
+    }
+
+    public String getEncryptedData() {
+        return encryptedData;
+    }
+
+    public void setEncryptedData(String encryptedData) {
+        this.encryptedData = encryptedData;
+    }
 }
