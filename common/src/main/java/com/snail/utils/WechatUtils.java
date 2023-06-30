@@ -20,7 +20,15 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
 
 @Slf4j
-public class WechatUtil {
+public class WechatUtils {
+    /**
+     * 获取OpenId
+     * @param appId
+     * @param appSecret
+     * @param code
+     * @return
+     * @throws IOException
+     */
     public static WxLoginResponse getWxLoginResponse(String appId, String appSecret, String code) throws IOException {
         String wxLoginUrl = "https://api.weixin.qq.com/sns/jscode2session" +
                 "?appid=" + appId +
@@ -35,7 +43,15 @@ public class WechatUtil {
         return wxLoginResponse;
     }
 
-    public static PhoneNumberDTO decryptPhoneNumber(String sessionKey, String encryptedData, String iv) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, IOException {
+    /**
+     * 获取手机号
+     * @param sessionKey sessionKey
+     * @param encryptedData encryptedData
+     * @param iv iv
+     * @return phone number
+     * @throws Exception e
+     */
+    public static PhoneNumberDTO decryptPhoneNumber(String sessionKey, String encryptedData, String iv) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         byte[] sessionKeyBytes = Base64.getDecoder().decode(sessionKey);
         byte[] encryptedDataBytes = Base64.getDecoder().decode(encryptedData);

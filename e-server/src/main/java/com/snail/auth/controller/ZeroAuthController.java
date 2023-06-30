@@ -1,7 +1,7 @@
 package com.snail.auth.controller;
 
 import com.snail.auth.dto.WxLoginDTO;
-import com.snail.zero.entity.UserExtra;
+import com.snail.zero.entity.ZeroUserExtra;
 import com.snail.auth.service.IZeroAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

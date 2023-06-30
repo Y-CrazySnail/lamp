@@ -3,8 +3,8 @@ package com.snail.zero.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.entity.BaseEntity;
 
-@TableName(value = "user_extra", autoResultMap = true)
-public class UserExtra extends BaseEntity {
+@TableName(value = "zero_user_extra", autoResultMap = true)
+public class ZeroUserExtra extends BaseEntity {
     /**
      * 用户ID
      */

@@ -3,9 +3,9 @@ package com.snail.zero.service.impl;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.snail.zero.entity.UserExtra;
-import com.snail.zero.mapper.UserExtraMapper;
-import com.snail.zero.service.IUserExtraService;
+import com.snail.zero.entity.ZeroUserExtra;
+import com.snail.zero.mapper.ZeroUserExtraMapper;
+import com.snail.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,15 +15,15 @@ import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
-@DS("zero")
-public class UserExtraServiceImpl extends ServiceImpl<UserExtraMapper, UserExtra> implements IUserExtraService {
+public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, ZeroUserExtra> implements IZeroUserExtraService {
 
     @Autowired
-    private UserExtraMapper userExtraMapper;
+    private ZeroUserExtraMapper zeroUserExtraMapper;
 
+    @DS("zero")
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public boolean save(UserExtra entity) {
+    public boolean save(ZeroUserExtra entity) {
         return super.save(entity);
     }
 
@@ -34,11 +34,11 @@ public class UserExtraServiceImpl extends ServiceImpl<UserExtraMapper, UserExtra
      * @return user info
      */
     @Override
-    public UserExtra info(String username) {
+    public ZeroUserExtra info(String username) {
         log.info("get user info. username:{}", username);
-        QueryWrapper<UserExtra> userExtraQueryWrapper = new QueryWrapper<>();
+        QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
         userExtraQueryWrapper.eq("username", username);
-        UserExtra userExtra = userExtraMapper.selectOne(userExtraQueryWrapper);
+        ZeroUserExtra userExtra = zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
         if (StringUtils.isEmpty(userExtra)) {
             throw new RuntimeException("get user info error");
         }
