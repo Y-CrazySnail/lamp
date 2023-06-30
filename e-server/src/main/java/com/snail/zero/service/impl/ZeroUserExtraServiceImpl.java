@@ -2,7 +2,10 @@ package com.snail.zero.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.snail.utils.OauthUtils;
 import com.snail.zero.entity.ZeroUserExtra;
 import com.snail.zero.mapper.ZeroUserExtraMapper;
 import com.snail.zero.service.IZeroUserExtraService;
@@ -34,7 +37,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
      * @return user info
      */
     @Override
-    public ZeroUserExtra info(String username) {
+    public ZeroUserExtra get(String username) {
         log.info("get user info. username:{}", username);
         QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
         userExtraQueryWrapper.eq("username", username);
@@ -43,5 +46,19 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
             throw new RuntimeException("get user info error");
         }
         return userExtra;
+    }
+
+    /**
+     * Update user info
+     *
+     * @param zeroUserExtra user info
+     * @return status
+     */
+    @Override
+    public ZeroUserExtra update(ZeroUserExtra zeroUserExtra) {
+        UpdateWrapper<ZeroUserExtra> zeroUserExtraUpdateWrapper = new UpdateWrapper<>();
+        zeroUserExtraUpdateWrapper.eq("username", OauthUtils.getUsername());
+        zeroUserExtraMapper.update(zeroUserExtra, zeroUserExtraUpdateWrapper);
+        return zeroUserExtra;
     }
 }
