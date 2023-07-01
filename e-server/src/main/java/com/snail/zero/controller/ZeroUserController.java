@@ -20,7 +20,7 @@ public class ZeroUserController extends BaseController<ZeroUserExtra> {
     private IZeroUserExtraService zeroUserExtraService;
 
     @GetMapping("get")
-    public ResponseEntity<Object> info() {
+    public ResponseEntity<Object> get() {
         String username = OauthUtils.getUsername();
         if (StringUtils.isEmpty(username)) {
             log.error("get username error");
@@ -38,13 +38,13 @@ public class ZeroUserController extends BaseController<ZeroUserExtra> {
 
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody ZeroUserExtra entity) {
-        ZeroUserExtra zeroUserExtra = new ZeroUserExtra();
+        ZeroUserExtra zeroUserExtra;
         try {
-            zeroUserExtraService.update(entity);
+            zeroUserExtra = zeroUserExtraService.update(entity);
         } catch (Exception e) {
             log.error("update user extra info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-        return ResponseEntity.ok("update user extra info success");
+        return ResponseEntity.ok(zeroUserExtra);
     }
 }
