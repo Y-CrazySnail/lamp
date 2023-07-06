@@ -57,6 +57,15 @@ public class XpxlQuality extends BaseEntity {
     private String rollNumber;
 
     private String boxNumber;
+    private String price;
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
 
     public String getName() {
         return name;
