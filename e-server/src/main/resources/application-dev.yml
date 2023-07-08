@@ -71,13 +71,6 @@ spring:
           log-slow-sql: true
           merge-sql: true
           slow-sql-millis: 10000
-  #      driver-class-name: com.mysql.cj.jdbc.Driver
-  #      url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-  #      username: auth_dev
-  #      password: auth_dev
-  #jdbc:mysql://42.192.164.50:3306/star?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-  #snail
-  #19980720@Meng
 mybatis-plus:
   mapper-locations: classpath*:mappers/**/*.xml
   type-aliases-package: com.snail

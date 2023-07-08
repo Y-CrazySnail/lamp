@@ -5,45 +5,72 @@ server:
   address: 0.0.0.0
 
 spring:
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     dynamic:
       primary: auth
       datasource:
         auth:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:LYLPv023n8jJatTly70XsA==
-          password: mpw:YSQdMIBf8XQvZRCbNexaag==
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:LM8nARWXfZxfoQmjcy3akQ==
+          password: mpw:6eP7Qky/AVELy+xz2kLFOQ==
         aili:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/aili_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:v8hx8llUd8tD9CCJ1H4zMQ==
-          password: mpw:VoyTo3Lfad4961QCp/dnFQ==
+          username: mpw:us8Yz3gAAV2wbyNzqcUF1A==
+          password: mpw:XNigqMQGjFznlmhk4t1B3A==
         chinaybop:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/chinaybop_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:LETfZ30AlQw0bPtsT1+fTQ==
-          password: mpw:JXco33IdLbu1V8mMWatwqCdUSIYMWjZL5GiafIgDKLs=
+          username: mpw:PVcp8y7KF6X+mPE7sZcXdg==
+          password: mpw:msFF/aonDY+iJF+sPFXa+qzrFDvaJZiZbf8MpfJDYPM=
         king:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/king_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:OT659X5Rt3hmYEjrLlKh5Q==
-          password: mpw:pA5kGlOQauLdyInSWvakKA==
+          username: mpw:aQz+KIBz3H1uWEQXTO0KQg==
+          password: mpw:UeO9VpBDcQPcKHNBSA8FUA==
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/proxy_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:e4pNeFcVgdzDFmUoEtcTNw==
-          password: mpw:pNRpqdxa7fRTMuakLVOJFQ==
+          username: mpw:xnmTEHzyhjeQyCShzeK/UA==
+          password: mpw:meINMh6nA7na6T6XG7t26g==
         xpxl:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/xpxl_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:lSI53nGgRpvREtQutiT8+g==
-          password: mpw:K/ZHmZjdrLtB5Qv7x+zyFw==
+          username: mpw:5CojpeI3vm3xZYRa8dUbIw==
+          password: mpw:IDUWNUuxFodTuUlle+p1Ww==
         tank:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/tank_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:5HpfGdTzjJ/kCKQpy3A29g==
-          password: mpw:Ln3AEy8npQsYK+TegG7sNg==
+          username: mpw:di3HgvsiCTG/V8mqrA3GGg==
+          password: mpw:rDV9/H95uDWtf50KNnToqQ==
+        zero:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_cloud?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:9OUPNSbfHG2SG2TNkTVuOg==
+          password: mpw:bwmDC8O96xYWdqEpuZFXMA==
+      druid:
+        initialSize: 5
+        minIdle: 5
+        maxActive: 30
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        filters: stat,wall,slf4j,config
+        useGlobalDataSourceStat: true
+        stat:
+          log-slow-sql: true
+          merge-sql: true
+          slow-sql-millis: 10000
 
 mybatis-plus:
   mapper-locations: classpath*:mappers/**/*.xml
@@ -54,6 +81,7 @@ access-token-converter:
 
 security:
   oauth2:
+    login-uri: http://127.0.0.1:8080/server/oauth/token
     client:
       user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
     resource:
@@ -62,3 +90,13 @@ security:
         key-value: signingKey
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+
+oauth-client-details:
+  zero:
+    client-id: zero_dev
+    client-secret: 123456
+
+wechat:
+  zero:
+    app-id: wx9cb140f2eacb6870
+    app-secret: b873d35be8357186fc8f90c48edb24a9
