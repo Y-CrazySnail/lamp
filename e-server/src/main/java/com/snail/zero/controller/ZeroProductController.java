@@ -49,16 +49,13 @@ public class ZeroProductController extends BaseController<ZeroProduct> {
     public ResponseEntity<Object> update(@RequestBody ZeroProduct zeroProduct) {
         try {
             if (StringUtils.isEmpty(zeroProduct.getName())) {
-                log.error("商品ID:{},商品名为空", zeroProduct.getId());
+                log.error("商品ID:{}, [商品名]为空", zeroProduct.getId());
                 throw new RuntimeException();
             }
             if (!StringUtils.isEmpty(zeroProduct.getPrice())) {
-
             }
             if (!StringUtils.isEmpty(zeroProduct.getStock())) {
-
             }
-
             zeroProductService.updateProduct(zeroProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
