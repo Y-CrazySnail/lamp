@@ -1,5 +1,6 @@
 package com.snail.zero.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.zero.entity.ZeroProductImage;
 import com.snail.zero.mapper.ZeroProductImageMapper;
@@ -8,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -27,5 +29,17 @@ public class ZeroProductImageServiceImpl extends ServiceImpl<ZeroProductImageMap
     @Override
     public List<ZeroProductImage> listByProductIdAndType(Long productId, Integer type) {
         return zeroProductImageMapper.selectByProductIdAndType(productId, type);
+    }
+
+    @Override
+    @DS("zero")
+    public boolean saveBatch(Collection<ZeroProductImage> entityList) {
+        return super.saveBatch(entityList);
+    }
+
+    @Override
+    @DS("zero")
+    public boolean updateBatchById(Collection<ZeroProductImage> entityList) {
+        return super.updateBatchById(entityList);
     }
 }

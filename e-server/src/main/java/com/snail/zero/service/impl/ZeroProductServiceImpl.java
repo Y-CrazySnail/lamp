@@ -40,4 +40,46 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         }
         return zeroProductList;
     }
+
+    @Override
+    public ZeroProduct getById(Long id) {
+        ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
+        List<ZeroProductImage> zeroProductImageShowList = zeroProductImageService
+                .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_SHOW.getType());
+        zeroProduct.setZeroProductImageShowList(zeroProductImageShowList);
+        List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageService
+                .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_SWIPER.getType());
+        zeroProduct.setZeroProductImageSwiperList(zeroProductImageSwiperList);
+        List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageService
+                .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_DETAIL.getType());
+        zeroProduct.setZeroProductImageDetailList(zeroProductImageDetailList);
+        return zeroProduct;
+    }
+
+    @Override
+    public void addProduct(ZeroProduct zeroProduct) {
+        zeroProductMapper.insert(zeroProduct);
+//        for (ZeroProductImage zeroProductImage : zeroProduct.getZeroProductImageSwiperList()) {
+//          zeroProductImageService.save(zeroProductImage);
+//        }
+        zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageShowList());
+//        zeroProduct.getZeroProductImageDetailList().forEach(zeroProductImage -> {
+//            zeroProductImageService.save(zeroProductImage);
+//        }
+//        );
+        zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageSwiperList());
+//       zeroProduct.getZeroProductImageShowList().forEach(zeroProductImage -> {
+//           zeroProductImageService.save(zeroProductImage);
+//       });
+        zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageDetailList());
+//       });
+    }
+
+    @Override
+    public void updateProduct(ZeroProduct zeroProduct) {
+        zeroProductMapper.updateById(zeroProduct);
+        zeroProductImageService.updateBatchById(zeroProduct.getZeroProductImageShowList());
+        zeroProductImageService.updateBatchById(zeroProduct.getZeroProductImageSwiperList());
+        zeroProductImageService.updateBatchById(zeroProduct.getZeroProductImageDetailList());
+    }
 }

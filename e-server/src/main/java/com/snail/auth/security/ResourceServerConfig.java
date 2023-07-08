@@ -14,6 +14,9 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(
+                        "/zero-product/update",
+                        "/zero-product/save",
+                        "/zero-product/get",
                         "/chinaybop-brand/getAll",
                         "/chinaybop-model/getAll",
                         "/chinaybop-price/getAll",
