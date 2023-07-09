@@ -21,5 +21,15 @@ public interface IZeroProductService extends IService<ZeroProduct> {
      */
     void addProduct(ZeroProduct zeroProduct);
 
+    /**
+     * 更新商品
+     * @param zeroProduct 产品信息
+     */
     void updateProduct(ZeroProduct zeroProduct);
+
+    /**
+     * 软删除商品
+     * @param id 产品信息id
+     */
+    void deleteProduct(Long id);
 }

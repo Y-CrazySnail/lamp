@@ -1,8 +1,10 @@
 package com.snail.zero.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.zero.entity.ZeroProduct;
 import com.snail.zero.entity.ZeroProductImage;
+import com.snail.zero.mapper.ZeroProductImageMapper;
 import com.snail.zero.mapper.ZeroProductMapper;
 import com.snail.zero.service.IZeroProductImageService;
 import com.snail.zero.service.IZeroProductService;
@@ -21,6 +23,9 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
 
     @Autowired
     private IZeroProductImageService zeroProductImageService;
+
+    @Autowired
+    private ZeroProductImageMapper zeroProductImageMapper;
 
     @Override
     public List<ZeroProduct> listByCategoryId(Long categoryId) {
@@ -59,20 +64,9 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     @Override
     public void addProduct(ZeroProduct zeroProduct) {
         zeroProductMapper.insert(zeroProduct);
-//        for (ZeroProductImage zeroProductImage : zeroProduct.getZeroProductImageSwiperList()) {
-//          zeroProductImageService.save(zeroProductImage);
-//        }
         zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageShowList());
-//        zeroProduct.getZeroProductImageDetailList().forEach(zeroProductImage -> {
-//            zeroProductImageService.save(zeroProductImage);
-//        }
-//        );
         zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageSwiperList());
-//       zeroProduct.getZeroProductImageShowList().forEach(zeroProductImage -> {
-//           zeroProductImageService.save(zeroProductImage);
-//       });
         zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageDetailList());
-//       });
     }
 
     @Override
@@ -81,5 +75,21 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         zeroProductImageService.updateBatchById(zeroProduct.getZeroProductImageShowList());
         zeroProductImageService.updateBatchById(zeroProduct.getZeroProductImageSwiperList());
         zeroProductImageService.updateBatchById(zeroProduct.getZeroProductImageDetailList());
+    }
+
+    /**
+     * 软删除
+     * @param id 产品信息
+     */
+
+    @Override
+    public void deleteProduct(Long id) {
+        ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
+        UpdateWrapper<ZeroProduct> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq("id",id).set("delete_flag", true);
+        zeroProductMapper.update(null, updateWrapper);
+        UpdateWrapper<ZeroProductImage> updateWrapperImg = new UpdateWrapper<>();
+        updateWrapperImg.eq("product_id",zeroProduct.getId()).set("delete_flag", true);
+        zeroProductImageMapper.update(null,updateWrapperImg);
     }
 }
