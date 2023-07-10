@@ -42,6 +42,7 @@ public class ClientSchedule {
 
     @Scheduled(cron = "0/5 * * * * ?")
     public void responseCommand() {
+        log.info("执行定时任务");
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             if (Global.WAIT_BACK_RESULT.size() > 0) {

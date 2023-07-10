@@ -58,6 +58,8 @@ public class TankQuality extends BaseEntity {
 
     private String boxNumber;
 
+    private String price;
+
     public String getName() {
         return name;
     }
@@ -168,5 +170,13 @@ public class TankQuality extends BaseEntity {
 
     public void setBoxNumber(String boxNumber) {
         this.boxNumber = boxNumber;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
     }
 }
