@@ -14,44 +14,44 @@ spring:
       datasource:
         auth:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: auth_dev
-          password: auth_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         aili:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/aili_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: aili_dev
-          password: aili_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/aili_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         chinaybop:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/chinaybop_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: chinaybop_dev
-          password: chinaybop_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/chinaybop_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         king:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/king_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: king_dev
-          password: king_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/king_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/proxy_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: proxy_dev
-          password: proxy_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/proxy_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         xpxl:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/xpxl_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: xpxl_dev
-          password: xpxl_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/xpxl_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         tank:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/tank_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: tank_dev
-          password: tank_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/tank_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
         zero:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: zero_cloud_dev
-          password: zero_cloud_dev
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
       druid:
         initialSize: 5
         minIdle: 5

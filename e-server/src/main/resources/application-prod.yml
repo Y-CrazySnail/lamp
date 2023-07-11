@@ -14,44 +14,44 @@ spring:
       datasource:
         auth:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/auth?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:LM8nARWXfZxfoQmjcy3akQ==
-          password: mpw:6eP7Qky/AVELy+xz2kLFOQ==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/auth?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         aili:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/aili_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:us8Yz3gAAV2wbyNzqcUF1A==
-          password: mpw:XNigqMQGjFznlmhk4t1B3A==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/aili_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         chinaybop:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/chinaybop_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:PVcp8y7KF6X+mPE7sZcXdg==
-          password: mpw:msFF/aonDY+iJF+sPFXa+qzrFDvaJZiZbf8MpfJDYPM=
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/chinaybop_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         king:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/king_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:aQz+KIBz3H1uWEQXTO0KQg==
-          password: mpw:UeO9VpBDcQPcKHNBSA8FUA==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/king_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/proxy_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:xnmTEHzyhjeQyCShzeK/UA==
-          password: mpw:meINMh6nA7na6T6XG7t26g==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/proxy_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         xpxl:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/xpxl_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:5CojpeI3vm3xZYRa8dUbIw==
-          password: mpw:IDUWNUuxFodTuUlle+p1Ww==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/xpxl_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         tank:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/tank_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:di3HgvsiCTG/V8mqrA3GGg==
-          password: mpw:rDV9/H95uDWtf50KNnToqQ==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/tank_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
         zero:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-54-223-205-20.cn-north-1.compute.amazonaws.com.cn:3306/zero_cloud?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: mpw:9OUPNSbfHG2SG2TNkTVuOg==
-          password: mpw:bwmDC8O96xYWdqEpuZFXMA==
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
       druid:
         initialSize: 5
         minIdle: 5

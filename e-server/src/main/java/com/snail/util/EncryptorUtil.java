@@ -7,7 +7,7 @@ public class EncryptorUtil {
 //        System.out.println(AES.generateRandomKey());
 //        String key = "4ae128ddba39376c";
 //        System.out.println(key);
-//        System.out.println(AES.encrypt(username, key));
-//        System.out.println(AES.encrypt(password, key));
+//        System.out.println(AES.encrypt("", key));
+//        System.out.println(AES.encrypt("", key));
     }
 }
