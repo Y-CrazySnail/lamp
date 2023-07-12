@@ -29,7 +29,7 @@ public interface IZeroProductService extends IService<ZeroProduct> {
 
     /**
      * 软删除商品
-     * @param id 产品信息id
+     * @param zeroProduct 产品信息id
      */
-    void deleteProduct(Long id);
+    void removeProduct(ZeroProduct zeroProduct);
 }

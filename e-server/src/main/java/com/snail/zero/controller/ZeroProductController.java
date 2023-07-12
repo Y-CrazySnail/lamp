@@ -68,9 +68,9 @@ public class ZeroProductController extends BaseController<ZeroProduct> {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestParam("id") Long id){
+    public ResponseEntity<Object> remove(@RequestBody ZeroProduct zeroProduct){
         try {
-            zeroProductService.deleteProduct(id);
+            zeroProductService.removeProduct(zeroProduct);
             return ResponseEntity.ok(" ");
         }catch (Exception e){
          return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");

@@ -54,7 +54,7 @@ spring:
           password: yeem_dev
         car-film-saas:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/saas_car_film_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: yeem_dev
           password: yeem_dev
       druid:

@@ -24,8 +24,6 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     @Autowired
     private IZeroProductImageService zeroProductImageService;
 
-    @Autowired
-    private ZeroProductImageMapper zeroProductImageMapper;
 
     @Override
     public List<ZeroProduct> listByCategoryId(Long categoryId) {
@@ -79,17 +77,16 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
 
     /**
      * 软删除
-     * @param id 产品信息
+     * @param zeroProduct 产品信息
      */
 
     @Override
-    public void deleteProduct(Long id) {
-        ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
+    public void removeProduct(ZeroProduct zeroProduct) {
         UpdateWrapper<ZeroProduct> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id",id).set("delete_flag", true);
+        updateWrapper.eq("id",zeroProduct.getId()).set("delete_flag", true);
         zeroProductMapper.update(null, updateWrapper);
         UpdateWrapper<ZeroProductImage> updateWrapperImg = new UpdateWrapper<>();
         updateWrapperImg.eq("product_id",zeroProduct.getId()).set("delete_flag", true);
-        zeroProductImageMapper.update(null,updateWrapperImg);
+        zeroProductImageService.update(null,updateWrapperImg);
     }
 }
