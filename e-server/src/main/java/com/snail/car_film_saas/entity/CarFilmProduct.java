@@ -1,10 +1,11 @@
 package com.snail.car_film_saas.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.entity.BaseEntity;
 
 import java.util.Date;
 
-
+@TableName(value = "car_film_product")
 public class CarFilmProduct extends BaseEntity {
     /**
      * 产品代码
