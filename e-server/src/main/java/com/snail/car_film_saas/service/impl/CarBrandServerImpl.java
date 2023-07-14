@@ -1,5 +1,6 @@
 package com.snail.car_film_saas.service.impl;
 
+import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -59,6 +60,18 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
     }
 
     /**
+     * 分页模糊查询
+     * @param current
+     * @param size
+     * @param brandName
+     * @return
+     */
+    @Override
+    public List<CarBrand> listLikeBrandPage(int current, int size, String brandName) {
+        return carBrandMapper.selectPage(new Page<CarBrand>(current,size),new QueryWrapper<CarBrand>().eq("delete_flag", 0).like("name",brandName)).getRecords();
+    }
+
+    /**
      * 按id查询
      *
      * @param id
@@ -91,7 +104,8 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
      */
     @Override
     public void updateBrand(CarBrand carBrand) {
-        carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getNameEn()));
+        carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
+        carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
         carBrandMapper.updateById(carBrand);
     }
 
@@ -100,7 +114,8 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
      */
     @Override
     public void saveBrand(CarBrand carBrand) {
-        carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getNameEn()));
+        carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
+        carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
         carBrandMapper.insert(carBrand);
     }
 }

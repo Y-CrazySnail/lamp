@@ -43,6 +43,22 @@ public class CarBrandController extends BaseController<CarBrand> {
     }
 
     /**
+     * 分页模糊查询
+     * @param current
+     * @param size
+     * @param brandName
+     * @return
+     */
+    @GetMapping("/likepage")
+    public ResponseEntity<Object> listLikeBrandPage(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam("brandName") String brandName){
+        try{
+            return ResponseEntity.ok(carBrandServer.listLikeBrandPage(current,size,brandName));
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页模糊查询失败");
+        }
+    }
+
+    /**
      * id查单个
      * @param id
      * @return
@@ -60,6 +76,11 @@ public class CarBrandController extends BaseController<CarBrand> {
         }
     }
 
+    /**
+     * 删除
+     * @param carBrand
+     * @return
+     */
     @DeleteMapping("/delete")
     public ResponseEntity<Object> removeBrand(@RequestBody CarBrand carBrand){
         try {
@@ -78,6 +99,12 @@ public class CarBrandController extends BaseController<CarBrand> {
     @PutMapping("/update")
     public ResponseEntity<Object> updateBrand(@RequestBody CarBrand carBrand){
         try {
+            if (carBrand.getName().isEmpty()){
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("品牌名为空");
+            }
+            if (carBrand.getLogoPath().isEmpty()){
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("log文件路径为空");
+            }
             carBrandServer.updateBrand(carBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
@@ -85,9 +112,20 @@ public class CarBrandController extends BaseController<CarBrand> {
         }
     }
 
+    /**
+     * 新增
+     * @param carBrand
+     * @return
+     */
     @PostMapping("/save")
     public ResponseEntity<Object> saveBrand(@RequestBody CarBrand carBrand){
         try {
+            if (carBrand.getName().isEmpty()){
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("品牌名为空");
+            }
+            if (carBrand.getLogoPath().isEmpty()){
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("log文件路径为空");
+            }
             carBrandServer.saveBrand(carBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {

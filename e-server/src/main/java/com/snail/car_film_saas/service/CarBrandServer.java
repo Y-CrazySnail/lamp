@@ -20,6 +20,8 @@ public interface CarBrandServer extends IService<CarBrand> {
      */
     List<CarBrand> listBrandPage(int current,int size);
 
+    List<CarBrand> listLikeBrandPage(int current,int size,String brandName);
+
     /**
      * id单独查询
      * @param id

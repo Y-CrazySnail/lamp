@@ -22,6 +22,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/carmodel/getall",
 
                         "/carbrand/save",
+                        "/carbrand/likepage",
                         "/carbrand/update",
                         "/carbrand/delete",
                         "/carbrand/pagegetall",
