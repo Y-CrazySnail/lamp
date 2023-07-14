@@ -12,6 +12,13 @@
     <artifactId>e-server</artifactId>
 
     <dependencies>
+<!--拼音转换工具-->
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.1</version>
+        </dependency>
+
         <dependency>
             <groupId>com.snail</groupId>
             <artifactId>common</artifactId>

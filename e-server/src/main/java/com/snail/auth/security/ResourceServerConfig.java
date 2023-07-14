@@ -14,6 +14,13 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers(
+                        "/carmodel/save",
+                        "/carmodel/update",
+                        "/carmodel/delete",
+                        "/carmodel/pagegetall",
+                        "/carmodel/getid",
+                        "/carmodel/getall",
+
                         "/carbrand/save",
                         "/carbrand/update",
                         "/carbrand/delete",

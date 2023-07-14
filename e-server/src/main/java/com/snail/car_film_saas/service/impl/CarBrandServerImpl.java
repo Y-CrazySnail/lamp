@@ -1,5 +1,6 @@
 package com.snail.car_film_saas.service.impl;
 
+import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -35,7 +36,7 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
 //        便利出来
         for (CarBrand carBrand : carBrandList) {
 //            找到对应的数据 放进carBrand中
-            carBrand.setListcarModel(carModelService.listModelById(carBrand.getId()));
+            carBrand.setListcarModel(carModelService.listModelByBrandId(carBrand.getId()));
         }
         return carBrandList;
     }
@@ -52,7 +53,7 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
         Page<CarBrand> page = new Page<>(current, size);
         List<CarBrand> records = carBrandMapper.selectPage(page, new QueryWrapper<CarBrand>().eq("delete_flag", 0)).getRecords();
         for (CarBrand record : records) {
-            record.setListcarModel(carModelService.listModelById(record.getId()));
+            record.setListcarModel(carModelService.listModelByBrandId(record.getId()));
         }
         return records;
     }
@@ -65,7 +66,7 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
      */
     @Override
     public CarBrand BrandById(Long id) {
-        List<CarModel> carModels = carModelService.listModelById(id);
+        List<CarModel> carModels = carModelService.listModelByBrandId(id);
         CarBrand carBrand = carBrandMapper.selectById(id);
         carBrand.setListcarModel(carModels);
         return carBrand;
@@ -73,26 +74,25 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
 
     /**
      * 软删除
+     *
      * @param carBrand
      */
     @Override
     public void remove(CarBrand carBrand) {
-
         carModelService.remove(carBrand.getId());
-     carBrand.setDeleteFlag(true);
-     carBrandMapper.updateById(carBrand);
-
+        carBrand.setDeleteFlag(true);
+        carBrandMapper.updateById(carBrand);
     }
 
     /**
      * 更改
+     *
      * @param carBrand
      */
     @Override
     public void updateBrand(CarBrand carBrand) {
+        carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getNameEn()));
         carBrandMapper.updateById(carBrand);
-        carModelService.updateBatchById(carBrand.getListcarModel());
-
     }
 
     /**
@@ -100,7 +100,7 @@ public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> im
      */
     @Override
     public void saveBrand(CarBrand carBrand) {
-        carModelService.saveBatch(carBrand.getListcarModel());
+        carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getNameEn()));
         carBrandMapper.insert(carBrand);
     }
 }
