@@ -14,6 +14,10 @@ public class ZeroUserExtra extends BaseEntity {
      */
     private String username;
     /**
+     * 推荐人-用户名
+     */
+    private String referrerUsername;
+    /**
      * 昵称
      */
     private String nickName;
@@ -44,6 +48,14 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getReferrerUsername() {
+        return referrerUsername;
+    }
+
+    public void setReferrerUsername(String referrerUsername) {
+        this.referrerUsername = referrerUsername;
     }
 
     public String getNickName() {
