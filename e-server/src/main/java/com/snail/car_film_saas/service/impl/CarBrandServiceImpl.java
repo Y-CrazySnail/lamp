@@ -3,26 +3,24 @@ package com.snail.car_film_saas.service.impl;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.car_film_saas.entity.CarBrand;
 import com.snail.car_film_saas.entity.CarModel;
 import com.snail.car_film_saas.mapper.CarBrandMapper;
-import com.snail.car_film_saas.service.CarBrandServer;
-import com.snail.car_film_saas.service.CarModelServer;
+import com.snail.car_film_saas.service.CarBrandService;
+import com.snail.car_film_saas.service.CarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CarBrandServerImpl extends ServiceImpl<CarBrandMapper, CarBrand> implements CarBrandServer {
+public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> implements CarBrandService {
     @Autowired
     private CarBrandMapper carBrandMapper;
     @Autowired
-    private CarModelServer carModelService;
+    private CarModelService carModelService;
 
 
     /**

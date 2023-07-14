@@ -2,28 +2,28 @@ package com.snail.car_film_saas.controller;
 
 import cn.hutool.http.HttpStatus;
 import com.snail.car_film_saas.entity.CarFilmProduct;
-import com.snail.car_film_saas.service.CarFilmProductServer;
+import com.snail.car_film_saas.service.CarFilmProductService;
 import com.snail.conreoller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/carfilmproduct")
+@RequestMapping("/car-film-product")
 
 public class CarFilmProductController extends BaseController<CarFilmProduct> {
     @Autowired
-    private CarFilmProductServer carFilmProductServer;
+    private CarFilmProductService carFilmProductService;
 
     /**
      * 查询不被软删除的数据
      *
      * @return
      */
-    @GetMapping("/getall")
-    public ResponseEntity<Object> listProduct() {
+    @GetMapping("/list")
+    public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(carFilmProductServer.listProduct());
+            return ResponseEntity.ok(carFilmProductService.listProduct());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
         }
@@ -36,10 +36,10 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param size
      * @return
      */
-    @GetMapping("/pageget")
-    public ResponseEntity<Object> listProductPage(@RequestParam("current") int current, @RequestParam("size") int size) {
+    @GetMapping("/page")
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
         try {
-            return ResponseEntity.ok(carFilmProductServer.listProductPage(current, size));
+            return ResponseEntity.ok(carFilmProductService.listProductPage(current, size));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
@@ -51,12 +51,12 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param id
      * @return
      */
-    @GetMapping("/getid")
-    public ResponseEntity<Object> listProductById(@RequestParam("id") Long id) {
+    @GetMapping("/getById")
+    public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
             //flag不是ture 可以显示
-            if (!carFilmProductServer.listProductById(id).getDeleteFlag()) {
-                return ResponseEntity.ok(carFilmProductServer.listProductById(id));
+            if (!carFilmProductService.listProductById(id).getDeleteFlag()) {
+                return ResponseEntity.ok(carFilmProductService.listProductById(id));
             } else {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可以查询到软删除的用户");
             }
@@ -72,9 +72,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> removeProduct(@RequestBody CarFilmProduct carFilmProduct) {
+    public ResponseEntity<Object> delete(@RequestBody CarFilmProduct carFilmProduct) {
         try {
-            carFilmProductServer.removeProduct(carFilmProduct);
+            carFilmProductService.removeProduct(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
@@ -89,9 +89,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> saveProduct(@RequestBody CarFilmProduct carFilmProduct) {
+    public ResponseEntity<Object> save(@RequestBody CarFilmProduct carFilmProduct) {
         try {
-            carFilmProductServer.saveProduct(carFilmProduct);
+            carFilmProductService.saveProduct(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("增加失败");
@@ -105,9 +105,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> updateProduct(@RequestBody CarFilmProduct carFilmProduct) {
+    public ResponseEntity<Object> update(@RequestBody CarFilmProduct carFilmProduct) {
         try {
-            carFilmProductServer.updateProduct(carFilmProduct);
+            carFilmProductService.updateProduct(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更改失败");

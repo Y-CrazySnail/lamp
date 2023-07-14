@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.car_film_saas.entity.CarModel;
 import com.snail.car_film_saas.mapper.CarModelMapper;
-import com.snail.car_film_saas.service.CarModelServer;
+import com.snail.car_film_saas.service.CarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Service
-public class CarModelServerImpl extends ServiceImpl<CarModelMapper, CarModel> implements CarModelServer {
+public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> implements CarModelService {
     @Autowired
     private CarModelMapper carModelMapper;
 

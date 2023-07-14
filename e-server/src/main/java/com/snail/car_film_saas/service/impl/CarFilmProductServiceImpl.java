@@ -1,19 +1,17 @@
 package com.snail.car_film_saas.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.car_film_saas.entity.CarFilmProduct;
 import com.snail.car_film_saas.mapper.CarFilmProductMapper;
-import com.snail.car_film_saas.service.CarFilmProductServer;
+import com.snail.car_film_saas.service.CarFilmProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class CarFilmProductServerImpl extends ServiceImpl<CarFilmProductMapper, CarFilmProduct> implements CarFilmProductServer{
+public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper, CarFilmProduct> implements CarFilmProductService {
 
     @Autowired
     private CarFilmProductMapper carFilmProductMapper;

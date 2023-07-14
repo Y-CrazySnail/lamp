@@ -5,7 +5,7 @@ import com.snail.car_film_saas.entity.CarBrand;
 
 import java.util.List;
 
-public interface CarBrandServer extends IService<CarBrand> {
+public interface CarBrandService extends IService<CarBrand> {
     /**
      * 查询所有不被软删除的数据
      * @return

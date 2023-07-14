@@ -5,7 +5,7 @@ import com.snail.car_film_saas.entity.CarModel;
 
 import java.util.List;
 
-public interface CarModelServer extends IService<CarModel> {
+public interface CarModelService extends IService<CarModel> {
     /**
      * id查询所有
      *
