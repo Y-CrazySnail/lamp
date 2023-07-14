@@ -1,5 +1,6 @@
 package com.snail.car_film_saas.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -9,6 +10,7 @@ import com.snail.car_film_saas.service.CarModelServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Service
@@ -49,5 +51,11 @@ public class CarModelServerImpl extends ServiceImpl<CarModelMapper, CarModel> im
         wrapper.eq("brand_id", id).set("delete_flag", true);
         carModelMapper.update(null, wrapper);
 
+    }
+
+    @Override
+    @DS("car-film-saas")
+    public boolean updateBatchById(Collection<CarModel> entityList) {
+        return super.updateBatchById(entityList);
     }
 }

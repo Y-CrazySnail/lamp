@@ -37,7 +37,7 @@ public class TankQualityController extends BaseController<TankQuality> {
         if (qualityList.isEmpty()) {
             return ResponseEntity.badRequest().body(null);
         }
-        return ResponseEntity.ok(qualityList);
+        return ResponseEntity.ok(qualityList.get(0));
     }
 
     @GetMapping("pageByCreateUser")
