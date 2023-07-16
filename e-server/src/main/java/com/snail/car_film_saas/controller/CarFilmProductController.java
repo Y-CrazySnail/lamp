@@ -36,7 +36,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param size
      * @return
      */
-    @GetMapping("/page")
+    @GetMapping("/pages")
     public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
         try {
             return ResponseEntity.ok(carFilmProductService.listProductPage(current, size));
