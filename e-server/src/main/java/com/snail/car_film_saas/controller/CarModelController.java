@@ -34,8 +34,13 @@ public class CarModelController extends BaseController<CarBrand> {
      * @param size
      * @return
      */
+<<<<<<< HEAD
     @GetMapping("/page")
     public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size,@RequestParam("name") String name) {
+=======
+    @GetMapping("/pages")
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
+>>>>>>> a8f0e212e61f8a31c2b848b3362dcbc62625e360
         try {
             return ResponseEntity.ok(ICarModelService.page(current, size,name));
         } catch (Exception e) {

@@ -33,6 +33,25 @@ public class CarBrandController extends BaseController<CarBrand> {
     }
 
     /**
+<<<<<<< HEAD
+=======
+     * 分页查所有
+     *
+     * @param current
+     * @param size
+     * @return
+     */
+    @GetMapping("/pages")
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
+        try {
+            return ResponseEntity.ok(carBrandService.listBrandPage(current, size));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
+        }
+    }
+
+    /**
+>>>>>>> a8f0e212e61f8a31c2b848b3362dcbc62625e360
      * 分页模糊查询
      *
      * @param current
