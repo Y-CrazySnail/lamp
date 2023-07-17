@@ -1,6 +1,7 @@
 package com.snail.car_film_saas.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.snail.entity.BaseEntity;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Date;
 public class CarFilmProduct extends BaseEntity {
     private String productNo;  // 产品代码
     private String productName;  // 产品名称
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date publishDate;  // 产品成立日期
     private String operationPrice;  // 产品运营维护价格
     private String companyName;  // 企业名称
