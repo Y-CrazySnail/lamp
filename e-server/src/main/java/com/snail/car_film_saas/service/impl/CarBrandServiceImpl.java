@@ -43,15 +43,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
         return carBrandList;
     }
 
-    /**
-     * 分页查询
-     *
-     * @param current
-     * @param size
-     * @return
-     */
-
-    /**
+     /**
      * 分页模糊查询
      *
      * @param current

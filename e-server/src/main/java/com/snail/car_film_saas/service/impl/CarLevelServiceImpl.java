@@ -18,12 +18,16 @@ public class CarLevelServiceImpl extends ServiceImpl<CarLevelMapper, CarLevel> i
 @Autowired
 private CarLevelMapper carLevelMapper;
 
-
+    /**
+     * 按levelNo查询levelName
+     * @param levelNo
+     * @return
+     */
     @Override
-    public String queryCarLevel(String levelNo) {
+    public CarLevel queryCarLevel(String levelNo) {
         QueryWrapper<CarLevel> carLevelQueryWrapper=new QueryWrapper<>();
         carLevelQueryWrapper.eq("level_no",levelNo);
-     return carLevelMapper.selectOne(carLevelQueryWrapper).toString();
+     return carLevelMapper.selectOne(carLevelQueryWrapper);
 
     }
 }

@@ -3,6 +3,7 @@ package com.snail.car_film_saas.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.snail.car_film_saas.entity.CarFilmProduct;
 import com.snail.car_film_saas.mapper.CarFilmProductMapper;
 import com.snail.car_film_saas.service.ICarFilmProductService;
@@ -57,7 +58,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      * @param carFilmProduct
      */
     @Override
-    public void removeProduct(CarFilmProduct carFilmProduct) {
+    public void remove(CarFilmProduct carFilmProduct) {
         carFilmProduct.setDeleteFlag(true);
         carFilmProductMapper.updateById(carFilmProduct);
     }
@@ -67,8 +68,8 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      * @param carFilmProduct
      */
     @Override
-    public void saveProduct(CarFilmProduct carFilmProduct) {
-        carFilmProductMapper.insert(carFilmProduct);
+    public boolean save(CarFilmProduct carFilmProduct) {
+        return SqlHelper.retBool( carFilmProductMapper.insert(carFilmProduct));
     }
 
     /**
@@ -76,7 +77,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      * @param carFilmProduct
      */
     @Override
-    public void updateProduct(CarFilmProduct carFilmProduct) {
+    public void update(CarFilmProduct carFilmProduct) {
         carFilmProductMapper.updateById(carFilmProduct);
     }
 }

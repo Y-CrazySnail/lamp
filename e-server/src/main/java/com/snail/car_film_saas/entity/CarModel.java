@@ -1,5 +1,6 @@
 package com.snail.car_film_saas.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.entity.BaseEntity;
 
@@ -14,6 +15,7 @@ public class CarModel extends BaseEntity {
 
     private String levelNo;
 
+    @TableField(exist = false)
     private String levelName;
 
     public CarModel() {

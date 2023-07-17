@@ -22,15 +22,22 @@ import java.util.List;
 public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> implements ICarModelService {
     @Autowired
     private CarModelMapper carModelMapper;
+    @Autowired
+    private CarLevelServiceImpl carLevelService;
 
     /**
-     * 按id查询
+     * 查询全部
      *
      * @return
      */
     @Override
     public List<CarModel> list() {
-        return carModelMapper.selectList(new QueryWrapper<CarModel>().eq("delete_flag", 0));
+        List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("delete_flag", 0));
+       //用carLevelService里的查询CarLevel方法 得到levelName 加入每个CarModel里
+        for (CarModel carModel : carModels) {
+            carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+        }
+        return carModels;
     }
 
     /**
@@ -41,11 +48,15 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      */
     @Override
     public List<CarModel> listByBrandId(Long id) {
-        return carModelMapper.selectList(new QueryWrapper<CarModel>().eq("brand_id", id).eq("delete_flag", 0));
+        List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("brand_id", id).eq("delete_flag", 0));
+        for (CarModel carModel : carModels) {
+            carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+        }
+        return carModels;
     }
 
     /**
-     * 分页查询
+     * 分页模糊查询
      *
      * @param current
      * @param size
@@ -57,8 +68,14 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
        if (!StringUtils.isEmpty(name)){
            carModelQueryWrapper.like("name",name);
        }
+       carModelQueryWrapper.eq("delete_flag", 0);
        Page<CarModel> page=new Page<>(current,size);
-       return carModelMapper.selectPage(page,carModelQueryWrapper);
+        Page<CarModel> carModelPage = carModelMapper.selectPage(page, carModelQueryWrapper);
+        List<CarModel> records = carModelPage.getRecords();
+        for (CarModel carModel : records) {
+            carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+        }
+        return carModelPage;
     }
 
     /**
@@ -69,7 +86,9 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      */
     @Override
     public CarModel getById(Long id) {
-        return carModelMapper.selectById(id);
+        CarModel carModel = carModelMapper.selectById(id);
+        carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+        return carModel;
     }
 
     /**

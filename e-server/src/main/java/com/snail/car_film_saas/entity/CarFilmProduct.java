@@ -7,51 +7,17 @@ import java.util.Date;
 
 @TableName(value = "car_film_product")
 public class CarFilmProduct extends BaseEntity {
-    /**
-     * 产品代码
-     */
-    private String productNo;
-
-    /**
-     * 产品名称
-     */
-    private String productName;
-    /**
-     * 产品成立日期
-     */
-
-    private Date publishDate;
-
-    public CarFilmProduct(String productNo, String productName, Date publishDate) {
-        this.productNo = productNo;
-        this.productName = productName;
-        this.publishDate = publishDate;
-    }
-
-    public CarFilmProduct() {
-    }
-
-    public String getProductNo() {
-        return productNo;
-    }
-
-    public void setProductNo(String productNo) {
-        this.productNo = productNo;
-    }
-
-    public String getProductName() {
-        return productName;
-    }
-
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public Date getPublishDate() {
-        return publishDate;
-    }
-
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
-    }
+    private String productNo;  // 产品代码
+    private String productName;  // 产品名称
+    private Date publishDate;  // 产品成立日期
+    private String operationPrice;  // 产品运营维护价格
+    private String companyName;  // 企业名称
+    private String companyNo;  // 企业营业执照-统一社会信用代码
+    private String managerName;  // 管理人姓名
+    private String managerPhone;  // 管理人手机号
+    private String managerEmail;  // 管理人邮箱
+    private String miniProgramFlag;  // 开通小程序 0否1是
+    private String miniProgramName;  // 微信小程序名称
+    private String officialWebsiteFlag;  // 官方网站 0否1是
+    private String officialWebsiteDomain;  // 官方网站域名}
 }

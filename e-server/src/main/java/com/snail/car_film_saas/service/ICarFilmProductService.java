@@ -30,17 +30,17 @@ public interface ICarFilmProductService extends IService<CarFilmProduct> {
      * 软删除商品
      * @param
      */
-    void removeProduct(CarFilmProduct carFilmProduct);
+    void remove(CarFilmProduct carFilmProduct);
 
     /**
      * 新增商品
      * @param carFilmProduct
      */
-    void saveProduct(CarFilmProduct carFilmProduct);
+    boolean save(CarFilmProduct carFilmProduct);
 
     /**
      * 更改商品
      * @param carFilmProduct
      */
-    void updateProduct(CarFilmProduct carFilmProduct);
+    void update(CarFilmProduct carFilmProduct);
 }

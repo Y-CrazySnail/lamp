@@ -74,7 +74,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarFilmProduct carFilmProduct) {
         try {
-            ICarFilmProductService.removeProduct(carFilmProduct);
+            ICarFilmProductService.remove(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
@@ -91,7 +91,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarFilmProduct carFilmProduct) {
         try {
-            ICarFilmProductService.saveProduct(carFilmProduct);
+            ICarFilmProductService.save(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("增加失败");
@@ -107,7 +107,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarFilmProduct carFilmProduct) {
         try {
-            ICarFilmProductService.updateProduct(carFilmProduct);
+            ICarFilmProductService.update(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更改失败");
