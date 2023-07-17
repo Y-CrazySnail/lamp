@@ -13,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/car-model")
 public class CarModelController extends BaseController<CarBrand> {
     @Autowired
-   private ICarModelService ICarModelService;
+    private ICarModelService ICarModelService;
 
     /**
      * 查询所有
+     *
      * @return
      */
     @GetMapping("/list")
@@ -30,19 +31,15 @@ public class CarModelController extends BaseController<CarBrand> {
 
     /**
      * 分页模糊查询
+     *
      * @param current
      * @param size
      * @return
      */
-<<<<<<< HEAD
-    @GetMapping("/page")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size,@RequestParam("name") String name) {
-=======
     @GetMapping("/pages")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
->>>>>>> a8f0e212e61f8a31c2b848b3362dcbc62625e360
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam("name") String name) {
         try {
-            return ResponseEntity.ok(ICarModelService.page(current, size,name));
+            return ResponseEntity.ok(ICarModelService.page(current, size, name));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
@@ -50,15 +47,16 @@ public class CarModelController extends BaseController<CarBrand> {
 
     /**
      * id查单个
+     *
      * @param id
      * @return
      */
     @GetMapping("/getById")
-    public ResponseEntity<Object> getById(@RequestParam("id") Long id){
+    public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
-            if (!ICarModelService.getById(id).getDeleteFlag()){
+            if (!ICarModelService.getById(id).getDeleteFlag()) {
                 return ResponseEntity.ok(ICarModelService.getById(id));
-            }else {
+            } else {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可查询软删除用户");
             }
         } catch (Exception e) {
@@ -68,14 +66,15 @@ public class CarModelController extends BaseController<CarBrand> {
 
     /**
      * 根据brand_id删除
+     *
      * @param carModel
      * @return
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> removeByBrandId(@RequestBody CarModel carModel){
+    public ResponseEntity<Object> removeByBrandId(@RequestBody CarModel carModel) {
         try {
             ICarModelService.removeByBrandId(carModel.getId());
-                return ResponseEntity.ok(" ");
+            return ResponseEntity.ok(" ");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("软删除失败");
         }
@@ -83,11 +82,12 @@ public class CarModelController extends BaseController<CarBrand> {
 
     /**
      * 更改
+     *
      * @param carModel
      * @return
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody CarModel carModel){
+    public ResponseEntity<Object> update(@RequestBody CarModel carModel) {
         try {
             ICarModelService.update(carModel);
             return ResponseEntity.ok(" ");
@@ -98,11 +98,12 @@ public class CarModelController extends BaseController<CarBrand> {
 
     /**
      * 增加
+     *
      * @param carModel
      * @return
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody CarModel carModel){
+    public ResponseEntity<Object> save(@RequestBody CarModel carModel) {
         try {
             ICarModelService.save(carModel);
             return ResponseEntity.ok(" ");
