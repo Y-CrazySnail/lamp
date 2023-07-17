@@ -27,7 +27,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      * @return
      */
     @Override
-    public List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone) {
+    public List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone, String miniProgramFlag, String officialWebsiteFlag) {
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.like("product_no", productNo);
@@ -46,20 +46,32 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
         }
         if (!StringUtils.isEmpty(managerPhone)) {
             wrapper.like("manager_phone", managerPhone);
+        }
+        if (!StringUtils.isEmpty(miniProgramFlag)) {
+            wrapper.eq("mini_program_flag", miniProgramFlag);
+        }
+        if (!StringUtils.isEmpty(officialWebsiteFlag)) {
+            wrapper.eq("official_website_flag", officialWebsiteFlag);
         }
         QueryWrapper<CarFilmProduct> deleteFlag = wrapper.eq("delete_flag", 0);
         return carFilmProductMapper.selectList(deleteFlag);
     }
 
     /**
-     * 分页查询所有不被软删除的数据
+     * 分页查询所有不被软删除的数据 外加模糊查询
      *
-     * @param current 页数
-     * @param size    条数
+     * @param current
+     * @param size
+     * @param productNo
+     * @param productName
+     * @param companyName
+     * @param companyNo
+     * @param managerName
+     * @param managerPhone
      * @return
      */
     @Override
-    public IPage<CarFilmProduct> page(int current, int size, String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone) {
+    public IPage<CarFilmProduct> page(int current, int size, String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone, String miniProgramFlag, String officialWebsiteFlag) {
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.like("product_no", productNo);
@@ -78,6 +90,12 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
         }
         if (!StringUtils.isEmpty(managerPhone)) {
             wrapper.like("manager_phone", managerPhone);
+        }
+        if (!StringUtils.isEmpty(miniProgramFlag)) {
+            wrapper.eq("mini_program_flag", miniProgramFlag);
+        }
+        if (!StringUtils.isEmpty(officialWebsiteFlag)) {
+            wrapper.eq("official_website_flag", officialWebsiteFlag);
         }
         QueryWrapper<CarFilmProduct> deleteFlag = wrapper.eq("delete_flag", 0);
         Page<CarFilmProduct> page = new Page<>(current, size);

@@ -13,14 +13,14 @@ public interface ICarFilmProductService extends IService<CarFilmProduct> {
      *
      * @return
      */
-    List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone);
+    List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone ,String  miniProgramFlag,String officialWebsiteFlag);
 
     /**
      * 分页查询
      *
      * @return
      */
-    IPage<CarFilmProduct> page(int current, int size, String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone);
+    IPage<CarFilmProduct> page(int current, int size, String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone ,String  miniProgramFlag,String officialWebsiteFlag );
 
     /**
      * 按id查询

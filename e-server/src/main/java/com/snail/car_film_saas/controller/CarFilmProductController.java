@@ -21,9 +21,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productName", required = false) String productName, @RequestParam(value = "companyName", required = false) String companyName, @RequestParam(value = "companyNo", required = false) String companyNo, @RequestParam(value = "managerName", required = false) String managerName, @RequestParam(value = "managerPhone", required = false) String managerPhone) {
+    public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productName", required = false) String productName, @RequestParam(value = "companyName", required = false) String companyName, @RequestParam(value = "companyNo", required = false) String companyNo, @RequestParam(value = "managerName", required = false) String managerName, @RequestParam(value = "managerPhone", required = false) String managerPhone,@RequestParam(value = "miniProgramFlag", required = false)String miniProgramFlag,@RequestParam(value = "officialWebsiteFlag",required = false) String officialWebsiteFlag) {
         try {
-            return ResponseEntity.ok(ICarFilmProductService.list());
+            return ResponseEntity.ok(ICarFilmProductService.list( productNo, productName, companyName,  companyNo, managerName, managerPhone ,  miniProgramFlag,officialWebsiteFlag));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
         }
@@ -37,9 +37,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @GetMapping("/pages")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productName", required = false) String productName, @RequestParam(value = "companyName", required = false) String companyName, @RequestParam(value = "companyNo", required = false) String companyNo, @RequestParam(value = "managerName", required = false) String managerName, @RequestParam(value = "managerPhone", required = false) String managerPhone) {
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productName", required = false) String productName, @RequestParam(value = "companyName", required = false) String companyName, @RequestParam(value = "companyNo", required = false) String companyNo, @RequestParam(value = "managerName", required = false) String managerName, @RequestParam(value = "managerPhone", required = false) String managerPhone, @RequestParam(value = "miniProgramFlag", required = false)String miniProgramFlag,@RequestParam(value = "officialWebsiteFlag",required = false) String officialWebsiteFlag) {
         try {
-            return ResponseEntity.ok(ICarFilmProductService.page(current, size, productNo, productName, companyName, companyNo, managerName, managerPhone));
+            return ResponseEntity.ok(ICarFilmProductService.page(current, size, productNo, productName, companyName, companyNo, managerName, managerPhone,miniProgramFlag,officialWebsiteFlag));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
