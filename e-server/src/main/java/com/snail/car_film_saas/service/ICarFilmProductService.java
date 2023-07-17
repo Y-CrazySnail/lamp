@@ -6,7 +6,7 @@ import com.snail.car_film_saas.entity.CarFilmProduct;
 import java.util.List;
 
 
-public interface CarFilmProductService extends IService<CarFilmProduct> {
+public interface ICarFilmProductService extends IService<CarFilmProduct> {
     /**
      * 查询所有不被软删除的数据
      * @return

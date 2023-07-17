@@ -12,16 +12,19 @@ public class CarModel extends BaseEntity {
 
     private Long brandId;
 
-    private String level;
+    private String levelNo;
 
-    public CarModel(String name, String nameEn, Long brandId, String level) {
+    private String levelName;
+
+    public CarModel() {
+    }
+
+    public CarModel(String name, String nameEn, Long brandId, String levelNo, String levelName) {
         this.name = name;
         this.nameEn = nameEn;
         this.brandId = brandId;
-        this.level = level;
-    }
-
-    public CarModel() {
+        this.levelNo = levelNo;
+        this.levelName = levelName;
     }
 
     public String getName() {
@@ -32,11 +35,11 @@ public class CarModel extends BaseEntity {
         this.name = name;
     }
 
-    public String getnameEn() {
+    public String getNameEn() {
         return nameEn;
     }
 
-    public void setnameEn(String nameEn) {
+    public void setNameEn(String nameEn) {
         this.nameEn = nameEn;
     }
 
@@ -48,11 +51,19 @@ public class CarModel extends BaseEntity {
         this.brandId = brandId;
     }
 
-    public String getLevel() {
-        return level;
+    public String getLevelNo() {
+        return levelNo;
     }
 
-    public void setLevel(String level) {
-        this.level = level;
+    public void setLevelNo(String levelNo) {
+        this.levelNo = levelNo;
+    }
+
+    public String getLevelName() {
+        return levelName;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
     }
 }

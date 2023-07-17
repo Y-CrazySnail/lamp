@@ -5,13 +5,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.snail.car_film_saas.entity.CarFilmProduct;
 import com.snail.car_film_saas.mapper.CarFilmProductMapper;
-import com.snail.car_film_saas.service.CarFilmProductService;
+import com.snail.car_film_saas.service.ICarFilmProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 @Service
-public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper, CarFilmProduct> implements CarFilmProductService {
+public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper, CarFilmProduct> implements ICarFilmProductService {
 
     @Autowired
     private CarFilmProductMapper carFilmProductMapper;

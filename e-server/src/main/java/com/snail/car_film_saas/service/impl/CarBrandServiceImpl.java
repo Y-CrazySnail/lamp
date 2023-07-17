@@ -3,24 +3,27 @@ package com.snail.car_film_saas.service.impl;
 import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.snail.car_film_saas.entity.CarBrand;
 import com.snail.car_film_saas.entity.CarModel;
 import com.snail.car_film_saas.mapper.CarBrandMapper;
-import com.snail.car_film_saas.service.CarBrandService;
-import com.snail.car_film_saas.service.CarModelService;
+import com.snail.car_film_saas.service.ICarBrandService;
+import com.snail.car_film_saas.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 @Service
-public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> implements CarBrandService {
+public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> implements ICarBrandService {
     @Autowired
     private CarBrandMapper carBrandMapper;
     @Autowired
-    private CarModelService carModelService;
+    private ICarModelService ICarModelService;
 
 
     /**
@@ -29,13 +32,13 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @return
      */
     @Override
-    public List<CarBrand> listBrand() {
+    public List<CarBrand> list() {
 //        拿到Brand表中没被软删除的
         List<CarBrand> carBrandList = carBrandMapper.selectList(new QueryWrapper<CarBrand>().eq("delete_flag", 0));
 //        便利出来
         for (CarBrand carBrand : carBrandList) {
 //            找到对应的数据 放进carBrand中
-            carBrand.setListcarModel(carModelService.listModelByBrandId(carBrand.getId()));
+            carBrand.setListcarModel(ICarModelService.listByBrandId(carBrand.getId()));
         }
         return carBrandList;
     }
@@ -47,26 +50,23 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @param size
      * @return
      */
-    @Override
-    public List<CarBrand> listBrandPage(int current, int size) {
-        Page<CarBrand> page = new Page<>(current, size);
-        List<CarBrand> records = carBrandMapper.selectPage(page, new QueryWrapper<CarBrand>().eq("delete_flag", 0)).getRecords();
-        for (CarBrand record : records) {
-            record.setListcarModel(carModelService.listModelByBrandId(record.getId()));
-        }
-        return records;
-    }
 
     /**
      * 分页模糊查询
+     *
      * @param current
      * @param size
      * @param brandName
      * @return
      */
     @Override
-    public List<CarBrand> listLikeBrandPage(int current, int size, String brandName) {
-        return carBrandMapper.selectPage(new Page<CarBrand>(current,size),new QueryWrapper<CarBrand>().eq("delete_flag", 0).like("name",brandName)).getRecords();
+    public IPage<CarBrand> page(int current, int size, String brandName) {
+        QueryWrapper<CarBrand> carBrandQueryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(brandName)) {
+            carBrandQueryWrapper.like("name", brandName);
+        }
+        IPage<CarBrand> page = new Page<>(current, size);
+        return carBrandMapper.selectPage(page, carBrandQueryWrapper);
     }
 
     /**
@@ -76,10 +76,15 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @return
      */
     @Override
-    public CarBrand BrandById(Long id) {
-        List<CarModel> carModels = carModelService.listModelByBrandId(id);
-        CarBrand carBrand = carBrandMapper.selectById(id);
-        carBrand.setListcarModel(carModels);
+    public CarBrand getById(Long id) {
+        QueryWrapper<CarBrand> carBrandQueryWrapper = new QueryWrapper<>();
+        carBrandQueryWrapper.eq("delete_flag", 0).eq("id", id);
+        CarBrand carBrand = carBrandMapper.selectOne(carBrandQueryWrapper);
+        if (StringUtils.isEmpty(carBrand)) {
+            return null;
+        }
+        List<CarModel> carModelist = ICarModelService.listByBrandId(id);
+        carBrand.setListcarModel(carModelist);
         return carBrand;
     }
 
@@ -90,7 +95,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      */
     @Override
     public void remove(CarBrand carBrand) {
-        carModelService.remove(carBrand.getId());
+        ICarModelService.removeByBrandId(carBrand.getId());
         carBrand.setDeleteFlag(true);
         carBrandMapper.updateById(carBrand);
     }
@@ -101,19 +106,21 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @param carBrand
      */
     @Override
-    public void updateBrand(CarBrand carBrand) {
+    public void update(CarBrand carBrand) {
         carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
         carBrandMapper.updateById(carBrand);
     }
 
     /**
-     * 增加
+     * 新增
+     * @param carBrand
+     * @return
      */
     @Override
-    public void saveBrand(CarBrand carBrand) {
+    public boolean save(CarBrand carBrand) {
         carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
-        carBrandMapper.insert(carBrand);
+      return SqlHelper.retBool(carBrandMapper.insert(carBrand)) ;
     }
 }

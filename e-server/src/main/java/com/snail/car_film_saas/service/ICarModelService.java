@@ -1,56 +1,63 @@
 package com.snail.car_film_saas.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.snail.car_film_saas.entity.CarModel;
 
 import java.util.List;
 
-public interface CarModelService extends IService<CarModel> {
+public interface ICarModelService extends IService<CarModel> {
     /**
      * id查询所有
      *
      * @return
      */
-    List<CarModel> listModelBy();
+    List<CarModel> list();
 
     /**
      * Id查询所有不被软删除的数据
+     *
      * @return
      */
-    List<CarModel> listModelByBrandId(Long id);
+    List<CarModel> listByBrandId(Long id);
 
     /**
      * 分页查询
+     *
      * @param current
      * @param size
      * @return
      */
-    List<CarModel> listModelByPage(int current ,int size);
+    IPage<CarModel> page(int current, int size, String name);
 
 
     /**
      * id单独查询
+     *
      * @param id
      * @return
      */
-    CarModel ModelById(Long id);
+    CarModel getById(Long id);
 
     /**
      * 删除
+     *
      * @param id
      */
-    void remove(Long id);
+    void removeByBrandId(Long id);
 
     /**
      * 增加
+     *
      * @param carModel
      */
-    void saveCarModel(CarModel carModel);
+    boolean save(CarModel carModel);
 
     /**
      * 修改
+     *
      * @param carModel
      */
-    void updateCarModel(CarModel carModel);
+    void update(CarModel carModel);
 
 }

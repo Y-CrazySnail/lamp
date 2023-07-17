@@ -4,19 +4,22 @@ import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.snail.car_film_saas.entity.CarModel;
 import com.snail.car_film_saas.mapper.CarModelMapper;
-import com.snail.car_film_saas.service.CarModelService;
+import com.snail.car_film_saas.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Collection;
 import java.util.List;
 
 @Service
-public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> implements CarModelService {
+public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> implements ICarModelService {
     @Autowired
     private CarModelMapper carModelMapper;
 
@@ -26,7 +29,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public List<CarModel> listModelBy() {
+    public List<CarModel> list() {
         return carModelMapper.selectList(new QueryWrapper<CarModel>().eq("delete_flag", 0));
     }
 
@@ -37,7 +40,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public List<CarModel> listModelByBrandId(Long id) {
+    public List<CarModel> listByBrandId(Long id) {
         return carModelMapper.selectList(new QueryWrapper<CarModel>().eq("brand_id", id).eq("delete_flag", 0));
     }
 
@@ -49,8 +52,13 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public List<CarModel> listModelByPage(int current, int size) {
-        return carModelMapper.selectPage(new Page<>(current, size), new QueryWrapper<CarModel>().eq("delete_flag", 0)).getRecords();
+    public IPage<CarModel> page(int current, int size, String name) {
+       QueryWrapper<CarModel> carModelQueryWrapper=new QueryWrapper<>();
+       if (!StringUtils.isEmpty(name)){
+           carModelQueryWrapper.like("name",name);
+       }
+       Page<CarModel> page=new Page<>(current,size);
+       return carModelMapper.selectPage(page,carModelQueryWrapper);
     }
 
     /**
@@ -60,38 +68,41 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public CarModel ModelById(Long id) {
+    public CarModel getById(Long id) {
         return carModelMapper.selectById(id);
     }
 
     /**
      * 软删除
+     *
      * @param id
      */
     @Override
-    public void remove(Long id) {
+    public void removeByBrandId(Long id) {
         UpdateWrapper<CarModel> wrapper = new UpdateWrapper<>();
-        wrapper.eq("id", id).set("delete_flag", true);
+        wrapper.eq("brand_id", id).set("delete_flag", true);
         carModelMapper.update(null, wrapper);
     }
 
     /**
      * 新增
+     *
      * @param carModel
      */
     @Override
-    public void saveCarModel(CarModel carModel) {
-     carModel.setnameEn(PinyinUtil.getPinyin(carModel.getnameEn()));
-        carModelMapper.insert(carModel);
+    public boolean save(CarModel carModel) {
+        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getNameEn()));
+        return SqlHelper.retBool(carModelMapper.insert(carModel));
     }
 
     /**
      * 更新
+     *
      * @param carModel
      */
     @Override
-    public void updateCarModel(CarModel carModel) {
-        carModel.setnameEn(PinyinUtil.getPinyin(carModel.getnameEn()));
+    public void update(CarModel carModel) {
+        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getNameEn()));
         carModelMapper.updateById(carModel);
     }
 

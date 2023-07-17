@@ -2,17 +2,20 @@ package com.snail.car_film_saas.controller;
 
 import cn.hutool.http.HttpStatus;
 import com.snail.car_film_saas.entity.CarBrand;
-import com.snail.car_film_saas.service.CarBrandService;
+import com.snail.car_film_saas.service.ICarBrandService;
 import com.snail.conreoller.BaseController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/car-brand")
 public class CarBrandController extends BaseController<CarBrand> {
     @Autowired
-    private CarBrandService carBrandService;
+    private ICarBrandService carBrandService;
 
     /**
      * 查询所有
@@ -22,25 +25,10 @@ public class CarBrandController extends BaseController<CarBrand> {
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(carBrandService.listBrand());
+            return ResponseEntity.ok(carBrandService.list());
         } catch (Exception e) {
+            log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
-        }
-    }
-
-    /**
-     * 分页查所有
-     *
-     * @param current
-     * @param size
-     * @return
-     */
-    @GetMapping("/page")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
-        try {
-            return ResponseEntity.ok(carBrandService.listBrandPage(current, size));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
     }
 
@@ -52,11 +40,12 @@ public class CarBrandController extends BaseController<CarBrand> {
      * @param brandName
      * @return
      */
-    @GetMapping("/like")
-    public ResponseEntity<Object> like(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam("brandName") String brandName) {
+    @GetMapping("/page")
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam("brandName") String brandName) {
         try {
-            return ResponseEntity.ok(carBrandService.listLikeBrandPage(current, size, brandName));
+            return ResponseEntity.ok(carBrandService.page(current, size, brandName));
         } catch (Exception e) {
+            log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页模糊查询失败");
         }
     }
@@ -70,12 +59,12 @@ public class CarBrandController extends BaseController<CarBrand> {
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
-            if (!carBrandService.BrandById(id).getDeleteFlag()) {
-                return ResponseEntity.ok(carBrandService.BrandById(id));
-            } else {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可查询软删除用户");
+            if (StringUtils.isEmpty(id)) {
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
+            return ResponseEntity.ok(carBrandService.getById(id));
         } catch (Exception e) {
+            log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
         }
     }
@@ -92,6 +81,7 @@ public class CarBrandController extends BaseController<CarBrand> {
             carBrandService.remove(carBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
+            log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("软删除失败");
         }
     }
@@ -111,9 +101,10 @@ public class CarBrandController extends BaseController<CarBrand> {
             if (carBrand.getLogoPath().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("log文件路径为空");
             }
-            carBrandService.updateBrand(carBrand);
+            carBrandService.update(carBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
+            log.error("update方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("修改失败");
         }
     }
@@ -133,9 +124,10 @@ public class CarBrandController extends BaseController<CarBrand> {
             if (carBrand.getLogoPath().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("log文件路径为空");
             }
-            carBrandService.saveBrand(carBrand);
+            carBrandService.save(carBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
+            log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("add失败");
         }
     }
