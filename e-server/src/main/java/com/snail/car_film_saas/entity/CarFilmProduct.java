@@ -20,4 +20,127 @@ public class CarFilmProduct extends BaseEntity {
     private String miniProgramName;  // 微信小程序名称
     private String officialWebsiteFlag;  // 官方网站 0否1是
     private String officialWebsiteDomain;  // 官方网站域名}
+
+    public CarFilmProduct() {
+    }
+
+    public CarFilmProduct(String productNo, String productName, Date publishDate, String operationPrice, String companyName, String companyNo, String managerName, String managerPhone, String managerEmail, String miniProgramFlag, String miniProgramName, String officialWebsiteFlag, String officialWebsiteDomain) {
+        this.productNo = productNo;
+        this.productName = productName;
+        this.publishDate = publishDate;
+        this.operationPrice = operationPrice;
+        this.companyName = companyName;
+        this.companyNo = companyNo;
+        this.managerName = managerName;
+        this.managerPhone = managerPhone;
+        this.managerEmail = managerEmail;
+        this.miniProgramFlag = miniProgramFlag;
+        this.miniProgramName = miniProgramName;
+        this.officialWebsiteFlag = officialWebsiteFlag;
+        this.officialWebsiteDomain = officialWebsiteDomain;
+    }
+
+    public String getProductNo() {
+        return productNo;
+    }
+
+    public void setProductNo(String productNo) {
+        this.productNo = productNo;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
+    }
+
+    public String getOperationPrice() {
+        return operationPrice;
+    }
+
+    public void setOperationPrice(String operationPrice) {
+        this.operationPrice = operationPrice;
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
+    }
+
+    public String getCompanyNo() {
+        return companyNo;
+    }
+
+    public void setCompanyNo(String companyNo) {
+        this.companyNo = companyNo;
+    }
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public String getManagerPhone() {
+        return managerPhone;
+    }
+
+    public void setManagerPhone(String managerPhone) {
+        this.managerPhone = managerPhone;
+    }
+
+    public String getManagerEmail() {
+        return managerEmail;
+    }
+
+    public void setManagerEmail(String managerEmail) {
+        this.managerEmail = managerEmail;
+    }
+
+    public String getMiniProgramFlag() {
+        return miniProgramFlag;
+    }
+
+    public void setMiniProgramFlag(String miniProgramFlag) {
+        this.miniProgramFlag = miniProgramFlag;
+    }
+
+    public String getMiniProgramName() {
+        return miniProgramName;
+    }
+
+    public void setMiniProgramName(String miniProgramName) {
+        this.miniProgramName = miniProgramName;
+    }
+
+    public String getOfficialWebsiteFlag() {
+        return officialWebsiteFlag;
+    }
+
+    public void setOfficialWebsiteFlag(String officialWebsiteFlag) {
+        this.officialWebsiteFlag = officialWebsiteFlag;
+    }
+
+    public String getOfficialWebsiteDomain() {
+        return officialWebsiteDomain;
+    }
+
+    public void setOfficialWebsiteDomain(String officialWebsiteDomain) {
+        this.officialWebsiteDomain = officialWebsiteDomain;
+    }
 }

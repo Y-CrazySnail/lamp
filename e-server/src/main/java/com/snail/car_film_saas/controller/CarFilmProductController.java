@@ -21,9 +21,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @GetMapping("/list")
-    public ResponseEntity<Object> list() {
+    public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productName", required = false) String productName, @RequestParam(value = "companyName", required = false) String companyName, @RequestParam(value = "companyNo", required = false) String companyNo, @RequestParam(value = "managerName", required = false) String managerName, @RequestParam(value = "managerPhone", required = false) String managerPhone) {
         try {
-            return ResponseEntity.ok(ICarFilmProductService.listProduct());
+            return ResponseEntity.ok(ICarFilmProductService.list());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
         }
@@ -37,9 +37,9 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @return
      */
     @GetMapping("/pages")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size) {
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productName", required = false) String productName, @RequestParam(value = "companyName", required = false) String companyName, @RequestParam(value = "companyNo", required = false) String companyNo, @RequestParam(value = "managerName", required = false) String managerName, @RequestParam(value = "managerPhone", required = false) String managerPhone) {
         try {
-            return ResponseEntity.ok(ICarFilmProductService.listProductPage(current, size));
+            return ResponseEntity.ok(ICarFilmProductService.page(current, size, productNo, productName, companyName, companyNo, managerName, managerPhone));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
@@ -55,8 +55,8 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
             //flag不是ture 可以显示
-            if (!ICarFilmProductService.listProductById(id).getDeleteFlag()) {
-                return ResponseEntity.ok(ICarFilmProductService.listProductById(id));
+            if (!ICarFilmProductService.getById(id).getDeleteFlag()) {
+                return ResponseEntity.ok(ICarFilmProductService.getById(id));
             } else {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可以查询到软删除的用户");
             }
