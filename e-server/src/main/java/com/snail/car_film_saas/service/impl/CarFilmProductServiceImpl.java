@@ -68,10 +68,33 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
     @Override
     public IPage<CarFilmProduct> pages(int current, int size, CarFilmProduct carFilmProduct) {
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
-
-        QueryWrapper<CarFilmProduct> deleteFlag = wrapper.eq("delete_flag", 0);
+        if (!StringUtils.isEmpty(carFilmProduct.getProductNo())) {
+            wrapper.like("product_no", carFilmProduct.getProductNo());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getProductName())) {
+            wrapper.like("product_name", carFilmProduct.getProductName());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getCompanyName())) {
+            wrapper.like("company_name", carFilmProduct.getCompanyName());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getCompanyNo())) {
+            wrapper.like("company_no", carFilmProduct.getCompanyNo());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getManagerName())) {
+            wrapper.like("manager_name", carFilmProduct.getManagerName());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getManagerPhone())) {
+            wrapper.like("manager_phone", carFilmProduct.getManagerPhone());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getMiniProgramFlag())) {
+            wrapper.eq("mini_program_flag", carFilmProduct.getMiniProgramFlag());
+        }
+        if (!StringUtils.isEmpty(carFilmProduct.getOfficialWebsiteFlag())) {
+            wrapper.eq("official_website_flag", carFilmProduct.getOfficialWebsiteFlag());
+        }
+        wrapper.eq("delete_flag", 0);
         Page<CarFilmProduct> page = new Page<>(current, size);
-        return carFilmProductMapper.selectPage(page, deleteFlag);
+        return carFilmProductMapper.selectPage(page, wrapper);
     }
 
     /**
@@ -82,7 +105,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      */
     @Override
     public CarFilmProduct getById(Long id) {
-        return carFilmProductMapper.selectById(id);
+        return carFilmProductMapper.selectOne(new QueryWrapper<CarFilmProduct>().eq("delete_flag", 0));
     }
 
     /**
