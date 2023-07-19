@@ -1,6 +1,7 @@
 package com.snail.car_film_saas.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.snail.entity.BaseEntity;
 
 import java.math.BigDecimal;
@@ -17,7 +18,9 @@ public class CarFilmQuality extends BaseEntity {
     private BigDecimal price; // 价格
     private String carModel; // 汽车型号
     private String carColor; // 汽车颜色
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date workDate; // 施工时间
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date validityDate; // 质保有效期
     private String workCompany; // 施工单位
     private String workStaff; // 施工技师

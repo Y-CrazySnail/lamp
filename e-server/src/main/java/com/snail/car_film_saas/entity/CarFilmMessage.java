@@ -1,6 +1,7 @@
 package com.snail.car_film_saas.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.snail.entity.BaseEntity;
 
 import java.util.Date;
@@ -14,6 +15,7 @@ public class CarFilmMessage extends BaseEntity {
     private String email;  // 邮箱
     private String content;  // 留言内容
     private String sendStatus;  // 是否发送 0未发送 -1发送失败 1已发送
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date sendDatetime;  // 发送时间
     private String sendResult;  // 发送结果
 
