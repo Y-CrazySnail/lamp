@@ -21,32 +21,32 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
     private CarFilmPriceMapper carFilmPriceMapper;
 
     @Override
-    public List<CarFilmPrice> list(CarFilmPrice carFilmPrice) {
+    public List<CarFilmPrice> list(String productNo,String productLevelNo,String carLevelNo) {
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
-        if (StringUtils.isEmpty(carFilmPrice.getProductNo())) {
-            carFilmPriceQueryWrapper.eq("product_no", carFilmPrice.getProductNo());
+        if (StringUtils.isEmpty(productNo)) {
+            carFilmPriceQueryWrapper.eq("product_no", productNo);
         }
-        if (StringUtils.isEmpty(carFilmPrice.getProductLevelNo())) {
-            carFilmPriceQueryWrapper.eq("product_level_no", carFilmPrice.getProductLevelNo());
+        if (StringUtils.isEmpty(productLevelNo)) {
+            carFilmPriceQueryWrapper.eq("product_level_no", productLevelNo);
         }
-        if (StringUtils.isEmpty(carFilmPrice.getCarLevelNo())) {
-            carFilmPriceQueryWrapper.eq("car_level_no", carFilmPrice.getCarLevelNo());
+        if (StringUtils.isEmpty(carLevelNo)) {
+            carFilmPriceQueryWrapper.eq("car_level_no", carLevelNo);
         }
         carFilmPriceQueryWrapper.eq("delete_flag", 0);
         return carFilmPriceMapper.selectList(carFilmPriceQueryWrapper);
     }
 
     @Override
-    public IPage<CarFilmPrice> pages(int current, int size, CarFilmPrice carFilmPrice) {
+    public IPage<CarFilmPrice> pages(int current, int size, String productNo,String productLevelNo,String carLevelNo) {
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
-        if (StringUtils.isEmpty(carFilmPrice.getProductNo())) {
-            carFilmPriceQueryWrapper.eq("product_no", carFilmPrice.getProductNo());
+        if (StringUtils.isEmpty(productNo)) {
+            carFilmPriceQueryWrapper.eq("product_no", productNo);
         }
-        if (StringUtils.isEmpty(carFilmPrice.getProductLevelNo())) {
-            carFilmPriceQueryWrapper.eq("product_level_no", carFilmPrice.getProductLevelNo());
+        if (StringUtils.isEmpty(productLevelNo)) {
+            carFilmPriceQueryWrapper.eq("product_level_no", productLevelNo);
         }
-        if (StringUtils.isEmpty(carFilmPrice.getCarLevelNo())) {
-            carFilmPriceQueryWrapper.eq("car_level_no", carFilmPrice.getCarLevelNo());
+        if (StringUtils.isEmpty(carLevelNo)) {
+            carFilmPriceQueryWrapper.eq("car_level_no", carLevelNo);
         }
         carFilmPriceQueryWrapper.eq("delete_flag", 0);
         Page<CarFilmPrice> page = new Page<>(current, size);

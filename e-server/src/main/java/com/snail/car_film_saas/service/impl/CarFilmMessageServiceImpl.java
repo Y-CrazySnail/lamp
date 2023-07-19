@@ -22,36 +22,35 @@ public class CarFilmMessageServiceImpl extends ServiceImpl<CarFilmMessageMapper,
 
     /**
      * 查询全部
-     * @param carFilmMessage
      * @return
      */
     @Override
-    public List<CarFilmMessage> list(CarFilmMessage carFilmMessage) {
+    public List<CarFilmMessage> list(String productNo,String sendStatus,String name) {
         QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper=new QueryWrapper<>();
-        if (StringUtils.isEmpty(carFilmMessage.getProductNo())){
-            carFilmMessageQueryWrapper.eq("product_no",carFilmMessage.getProductNo());
+        if (StringUtils.isEmpty(productNo)){
+            carFilmMessageQueryWrapper.eq("product_no",productNo);
         }
-        if (StringUtils.isEmpty(carFilmMessage.getSendStatus())){
-            carFilmMessageQueryWrapper.eq("send_status",carFilmMessage.getSendStatus());
+        if (StringUtils.isEmpty(sendStatus)){
+            carFilmMessageQueryWrapper.eq("send_status",sendStatus);
         }
-        if (StringUtils.isEmpty(carFilmMessage.getName())){
-            carFilmMessageQueryWrapper.like("name",carFilmMessage.getName());
+        if (StringUtils.isEmpty(name)){
+            carFilmMessageQueryWrapper.like("name",name);
         }
         carFilmMessageQueryWrapper.eq("delete_flag", 0);
         return carFilmMessageMapper.selectList(carFilmMessageQueryWrapper);
     }
 
     @Override
-    public IPage<CarFilmMessage> pages(int current, int size, CarFilmMessage carFilmMessage) {
+    public IPage<CarFilmMessage> pages(int current, int size, String productNo,String sendStatus,String name) {
         QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper=new QueryWrapper<>();
-        if (StringUtils.isEmpty(carFilmMessage.getProductNo())){
-            carFilmMessageQueryWrapper.eq("product_no",carFilmMessage.getProductNo());
+        if (StringUtils.isEmpty(productNo)){
+            carFilmMessageQueryWrapper.eq("product_no",productNo);
         }
-        if (StringUtils.isEmpty(carFilmMessage.getSendStatus())){
-            carFilmMessageQueryWrapper.eq("send_status",carFilmMessage.getSendStatus());
+        if (StringUtils.isEmpty(sendStatus)){
+            carFilmMessageQueryWrapper.eq("send_status",sendStatus);
         }
-        if (StringUtils.isEmpty(carFilmMessage.getName())){
-            carFilmMessageQueryWrapper.like("name",carFilmMessage.getName());
+        if (StringUtils.isEmpty(name)){
+            carFilmMessageQueryWrapper.like("name",name);
         }
         Page<CarFilmMessage> page=new Page<>(current,size);
         return carFilmMessageMapper.selectPage(page,carFilmMessageQueryWrapper);

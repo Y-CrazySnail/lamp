@@ -10,20 +10,17 @@ import java.util.List;
 public interface ICarFilmMessageService extends IService<CarFilmMessage> {
     /**
      * 查询全部
-     *
-     * @param carFilmMessage
      * @return
      */
-    List<CarFilmMessage> list(CarFilmMessage carFilmMessage);
+    List<CarFilmMessage> list(String productNo,String sendStatus,String name);
 
     /**
      * 分页查询
      * @param current
      * @param size
-     * @param carFilmMessage
      * @return
      */
-    IPage<CarFilmMessage> pages(int current, int size, CarFilmMessage carFilmMessage);
+    IPage<CarFilmMessage> pages(int current, int size, String productNo,String sendStatus,String name);
 
     /**
      * 根据id查询

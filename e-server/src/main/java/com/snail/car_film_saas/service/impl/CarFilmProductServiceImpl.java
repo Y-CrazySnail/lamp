@@ -27,34 +27,33 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      * @return
      */
     @Override
-    public List<CarFilmProduct> list(CarFilmProduct carFilmProduct) {
+    public List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone ,String  miniProgramFlag,String officialWebsiteFlag) {
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(carFilmProduct.getProductNo())) {
-            wrapper.like("product_no", carFilmProduct.getProductNo());
+        if (!StringUtils.isEmpty(productNo)) {
+            wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getProductName())) {
-            wrapper.like("product_name", carFilmProduct.getProductName());
+        if (!StringUtils.isEmpty(productName)) {
+            wrapper.like("product_name", productName);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getCompanyName())) {
-            wrapper.like("company_name", carFilmProduct.getCompanyName());
+        if (!StringUtils.isEmpty(companyName)) {
+            wrapper.like("company_name", companyName);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getCompanyNo())) {
-            wrapper.like("company_no", carFilmProduct.getCompanyNo());
+        if (!StringUtils.isEmpty(companyNo)) {
+            wrapper.like("company_no", companyNo);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getManagerName())) {
-            wrapper.like("manager_name", carFilmProduct.getManagerName());
+        if (!StringUtils.isEmpty(managerName)) {
+            wrapper.like("manager_name", managerName);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getManagerPhone())) {
-            wrapper.like("manager_phone", carFilmProduct.getManagerPhone());
+        if (!StringUtils.isEmpty(managerPhone)) {
+            wrapper.like("manager_phone", managerPhone);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getMiniProgramFlag())) {
-            wrapper.eq("mini_program_flag", carFilmProduct.getMiniProgramFlag());
+        if (!StringUtils.isEmpty(miniProgramFlag)) {
+            wrapper.eq("mini_program_flag", miniProgramFlag);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getOfficialWebsiteFlag())) {
-            wrapper.eq("official_website_flag", carFilmProduct.getOfficialWebsiteFlag());
-        }
-        QueryWrapper<CarFilmProduct> deleteFlag = wrapper.eq("delete_flag", 0);
-        return carFilmProductMapper.selectList(deleteFlag);
+        if (!StringUtils.isEmpty(officialWebsiteFlag)) {
+            wrapper.eq("official_website_flag", officialWebsiteFlag);
+        }    wrapper.eq("delete_flag", 0);
+        return carFilmProductMapper.selectList(wrapper);
     }
 
     /**
@@ -62,35 +61,34 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      *
      * @param current
      * @param size
-     * @param carFilmProduct
      * @return
      */
     @Override
-    public IPage<CarFilmProduct> pages(int current, int size, CarFilmProduct carFilmProduct) {
+    public IPage<CarFilmProduct> pages(int current, int size, String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone, String miniProgramFlag, String officialWebsiteFlag) {
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(carFilmProduct.getProductNo())) {
-            wrapper.like("product_no", carFilmProduct.getProductNo());
+        if (!StringUtils.isEmpty(productNo)) {
+            wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getProductName())) {
-            wrapper.like("product_name", carFilmProduct.getProductName());
+        if (!StringUtils.isEmpty(productName)) {
+            wrapper.like("product_name", productName);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getCompanyName())) {
-            wrapper.like("company_name", carFilmProduct.getCompanyName());
+        if (!StringUtils.isEmpty(companyName)) {
+            wrapper.like("company_name", companyName);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getCompanyNo())) {
-            wrapper.like("company_no", carFilmProduct.getCompanyNo());
+        if (!StringUtils.isEmpty(companyNo)) {
+            wrapper.like("company_no", companyNo);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getManagerName())) {
-            wrapper.like("manager_name", carFilmProduct.getManagerName());
+        if (!StringUtils.isEmpty(managerName)) {
+            wrapper.like("manager_name", managerName);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getManagerPhone())) {
-            wrapper.like("manager_phone", carFilmProduct.getManagerPhone());
+        if (!StringUtils.isEmpty(managerPhone)) {
+            wrapper.like("manager_phone", managerPhone);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getMiniProgramFlag())) {
-            wrapper.eq("mini_program_flag", carFilmProduct.getMiniProgramFlag());
+        if (!StringUtils.isEmpty(miniProgramFlag)) {
+            wrapper.eq("mini_program_flag", miniProgramFlag);
         }
-        if (!StringUtils.isEmpty(carFilmProduct.getOfficialWebsiteFlag())) {
-            wrapper.eq("official_website_flag", carFilmProduct.getOfficialWebsiteFlag());
+        if (!StringUtils.isEmpty(officialWebsiteFlag)) {
+            wrapper.eq("official_website_flag", officialWebsiteFlag);
         }
         wrapper.eq("delete_flag", 0);
         Page<CarFilmProduct> page = new Page<>(current, size);
@@ -105,7 +103,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      */
     @Override
     public CarFilmProduct getById(Long id) {
-        return carFilmProductMapper.selectOne(new QueryWrapper<CarFilmProduct>().eq("delete_flag", 0));
+        return carFilmProductMapper.selectOne(new QueryWrapper<CarFilmProduct>().eq("delete_flag", 0).eq("id",id));
     }
 
     /**
