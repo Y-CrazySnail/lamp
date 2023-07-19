@@ -5,19 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.snail.dto.PhoneNumberDTO;
 import com.snail.dto.WxLoginResponse;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
+import org.springframework.util.Base64Utils;
+import java.security.spec.AlgorithmParameterSpec;
 
 @Slf4j
 public class WechatUtils {
@@ -53,15 +47,21 @@ public class WechatUtils {
      */
     public static PhoneNumberDTO decryptPhoneNumber(String sessionKey, String encryptedData, String iv) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        byte[] sessionKeyBytes = Base64.getDecoder().decode(sessionKey);
-        byte[] encryptedDataBytes = Base64.getDecoder().decode(encryptedData);
-        byte[] ivBytes = Base64.getDecoder().decode(iv);
-        SecretKeySpec secretKeySpec = new SecretKeySpec(sessionKeyBytes, "AES");
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        IvParameterSpec ivParameterSpec = new IvParameterSpec(ivBytes);
-        cipher.init(Cipher.DECRYPT_MODE, secretKeySpec, ivParameterSpec);
-        byte[] decryptedDataBytes = cipher.doFinal(encryptedDataBytes);
-        String phoneNumberStr = new String(decryptedDataBytes, StandardCharsets.UTF_8);
-        return objectMapper.readValue(phoneNumberStr, PhoneNumberDTO.class);
+        byte[] encrypData = Base64Utils.decodeFromString(encryptedData);
+        byte[] ivData = Base64Utils.decodeFromString(iv);
+        byte[] sessionKeyByte = Base64Utils.decodeFromString(sessionKey);
+        String resultString = null;
+        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivData);
+        SecretKeySpec keySpec = new SecretKeySpec(sessionKeyByte, "AES");
+        try {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+            resultString = new String(cipher.doFinal(encrypData), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
+            resultString = new String(cipher.doFinal(encrypData), StandardCharsets.UTF_8);
+        }
+        return objectMapper.readValue(resultString, PhoneNumberDTO.class);
     }
 }

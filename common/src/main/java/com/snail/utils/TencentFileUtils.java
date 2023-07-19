@@ -17,5 +17,4 @@ public class TencentFileUtils {
     ClientConfig clientConfig = new ClientConfig(region);
     // 3 生成 cos 客户端
     COSClient cosClient = new COSClient(cred, clientConfig);
-
 }

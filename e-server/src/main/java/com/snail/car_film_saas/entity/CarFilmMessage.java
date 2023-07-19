@@ -14,20 +14,22 @@ public class CarFilmMessage extends BaseEntity {
     private String phone;  // 手机｜电话
     private String email;  // 邮箱
     private String content;  // 留言内容
+    private Date datetime; // 留言时间
     private String sendStatus;  // 是否发送 0未发送 -1发送失败 1已发送
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date sendDatetime;  // 发送时间
     private String sendResult;  // 发送结果
 
     public CarFilmMessage() {
     }
 
-    public CarFilmMessage(String productNo, String name, String phone, String email, String content, String sendStatus, Date sendDatetime, String sendResult) {
+    public CarFilmMessage(String productNo, String name, String phone, String email, String content, Date datetime, String sendStatus, Date sendDatetime, String sendResult) {
         this.productNo = productNo;
         this.name = name;
         this.phone = phone;
         this.email = email;
         this.content = content;
+        this.datetime = datetime;
         this.sendStatus = sendStatus;
         this.sendDatetime = sendDatetime;
         this.sendResult = sendResult;
@@ -71,6 +73,14 @@ public class CarFilmMessage extends BaseEntity {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Date getDatetime() {
+        return datetime;
+    }
+
+    public void setDatetime(Date datetime) {
+        this.datetime = datetime;
     }
 
     public String getSendStatus() {
