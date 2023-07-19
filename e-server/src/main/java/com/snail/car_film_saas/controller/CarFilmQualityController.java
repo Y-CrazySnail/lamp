@@ -14,7 +14,6 @@ public class CarFilmQualityController {
 
     @Autowired
     private ICarFilmQualityService carFilmQualityService;
-
     @GetMapping("/list")
     public ResponseEntity<Object> list(@RequestParam(value = "name",required = false) String name, @RequestParam(value = "productNo",required = false) String productNo, @RequestParam(value = "phone",required = false) String phone, @RequestParam(value = "qualityCardNo",required = false) String qualityCardNo, @RequestParam(value = "plateNo",required = false) String plateNo, @RequestParam(value = "vin",required = false) String vin, @RequestParam(value = "likePhone",required = false) String likePhone, @RequestParam(value = "likeQualityCardNo",required = false) String likeQualityCardNo, @RequestParam(value = "likePlateNo",required = false) String likePlateNo, @RequestParam(value = "likeVin",required = false) String likeVin) {
         try {

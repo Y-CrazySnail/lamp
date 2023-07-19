@@ -13,7 +13,7 @@ public class CarFilmProductLevelController {
     @Autowired
     private ICarFilmProductLevelService carFilmProductLevelService;
     @GetMapping("/list")
-    public ResponseEntity<Object> list(@RequestParam("productNo") String productNo, @RequestParam(value = "productLevelName",required = false)String productLevelName,@RequestParam(value = "status",required = false) String status) {
+    public ResponseEntity<Object> list(@RequestParam(value = "productNo",required = false) String productNo, @RequestParam(value = "productLevelName",required = false)String productLevelName,@RequestParam(value = "status",required = false) String status) {
         try {
             return ResponseEntity.ok(carFilmProductLevelService.list(productNo, productLevelName, status));
         } catch (Exception e) {

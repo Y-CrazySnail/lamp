@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/car-film-product")
-
 public class CarFilmProductController extends BaseController<CarFilmProduct> {
     @Autowired
     private ICarFilmProductService ICarFilmProductService;
