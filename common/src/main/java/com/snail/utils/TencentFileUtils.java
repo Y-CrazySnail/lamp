@@ -135,61 +135,19 @@ public class TencentFileUtils {
             // 密钥的权限列表。必须在这里指定本次临时密钥所需要的权限。
             // 简单上传、表单上传和分块上传需要以下的权限，其他权限列表请参见 https://cloud.tencent.com/document/product/436/31923
             String[] allowActions = new String[] {
-                    // 简单上传
                     "name/cos:PutObject",
-                    // 表单上传、小程序上传
                     "name/cos:PostObject",
-                    // 分块上传
                     "name/cos:InitiateMultipartUpload",
                     "name/cos:ListMultipartUploads",
                     "name/cos:ListParts",
                     "name/cos:UploadPart",
                     "name/cos:CompleteMultipartUpload",
-
-                    "name/cos:GetBucketACL"
+                    "name/cos:GetBucketACL",
+                    "name/cos:GetBucket",
+                    "name/cos:GetService"
             };
             config.put("allowActions", allowActions);
-            /**
-             * 设置condition（如有需要）
-             //# 临时密钥生效条件，关于condition的详细设置规则和COS支持的condition类型可以参考 https://cloud.tencent.com/document/product/436/71307
-             final String raw_policy = "{\n" +
-             "  \"version\":\"2.0\",\n" +
-             "  \"statement\":[\n" +
-             "    {\n" +
-             "      \"effect\":\"allow\",\n" +
-             "      \"action\":[\n" +
-             "          \"name/cos:PutObject\",\n" +
-             "          \"name/cos:PostObject\",\n" +
-             "          \"name/cos:InitiateMultipartUpload\",\n" +
-             "          \"name/cos:ListMultipartUploads\",\n" +
-             "          \"name/cos:ListParts\",\n" +
-             "          \"name/cos:UploadPart\",\n" +
-             "          \"name/cos:CompleteMultipartUpload\"\n" +
-             "        ],\n" +
-             "      \"resource\":[\n" +
-             "          \"qcs::cos:ap-shanghai:uid/1250000000:examplebucket-1250000000/*\"\n" +
-             "      ],\n" +
-             "      \"condition\": {\n" +
-             "        \"ip_equal\": {\n" +
-             "            \"qcs:ip\": [\n" +
-             "                \"192.168.1.0/24\",\n" +
-             "                \"101.226.100.185\",\n" +
-             "                \"101.226.100.186\"\n" +
-             "            ]\n" +
-             "        }\n" +
-             "      }\n" +
-             "    }\n" +
-             "  ]\n" +
-             "}";
-
-
-             config.put("policy", raw_policy);
-             */
-            Response response = CosStsClient.getCredential(config);
-            System.out.println(response.credentials.tmpSecretId);
-            System.out.println(response.credentials.tmpSecretKey);
-            System.out.println(response.credentials.sessionToken);
-            return response;
+            return CosStsClient.getCredential(config);
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("no valid secret !");
