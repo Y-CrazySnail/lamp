@@ -5,20 +5,28 @@ import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicSessionCredentials;
 import com.qcloud.cos.exception.CosClientException;
 import com.qcloud.cos.exception.CosServiceException;
-import com.qcloud.cos.model.Bucket;
-import com.qcloud.cos.model.COSObjectSummary;
-import com.qcloud.cos.model.ListObjectsRequest;
-import com.qcloud.cos.model.ObjectListing;
+import com.qcloud.cos.model.*;
 import com.qcloud.cos.region.Region;
 import com.qcloud.cos.*;
+import com.qcloud.cos.transfer.TransferManager;
+import com.qcloud.cos.transfer.TransferManagerConfiguration;
+import com.qcloud.cos.transfer.Upload;
 import com.tencent.cloud.CosStsClient;
 import com.tencent.cloud.Response;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static com.qcloud.cos.demo.BucketReplicationDemo.createCOSClient;
 
 public class TencentFileUtils {
     // 1 传入获取到的临时密钥 (tmpSecretId, tmpSecretKey, sessionToken)
+
     /**
      *
      */
@@ -37,65 +45,68 @@ public class TencentFileUtils {
         ClientConfig clientConfig = new ClientConfig(region);
         // 3 生成 cos 客户端
         COSClient cosClient = new COSClient(cred, clientConfig);
-        List<Bucket> buckets = cosClient.listBuckets();
-        for(Bucket bucketElement : buckets){
-            String bucketName = bucketElement.getName();
-            String bucketLocation = bucketElement.getLocation();
-            System.out.println(bucketName);
-            System.out.println(bucketLocation);
+
+
+        // 自定义线程池大小，建议在客户端与 COS 网络充足（例如使用腾讯云的 CVM，同地域上传 COS）的情况下，设置成16或32即可，可较充分的利用网络资源
+        // 对于使用公网传输且网络带宽质量不高的情况，建议减小该值，避免因网速过慢，造成请求超时。
+        ExecutorService threadPool = Executors.newFixedThreadPool(32);
+
+
+        // 传入一个 threadpool, 若不传入线程池，默认 TransferManager 中会生成一个单线程的线程池。
+        TransferManager transferManager = new TransferManager(cosClient, threadPool);
+
+
+        // 设置高级接口的配置项
+        // 分块上传阈值和分块大小分别为 5MB 和 1MB
+        TransferManagerConfiguration transferManagerConfiguration = new TransferManagerConfiguration();
+        transferManagerConfiguration.setMultipartUploadThreshold(5 * 1024 * 1024);
+        transferManagerConfiguration.setMinimumUploadPartSize(1 * 1024 * 1024);
+        transferManager.setConfiguration(transferManagerConfiguration);
+
+
+        // 存储桶的命名格式为 BucketName-APPID，此处填写的存储桶名称必须为此格式
+        String bucketName = "ed-fs-1301197907";
+        // 对象键(Key)是对象在存储桶中的唯一标识。
+        String key = "test.txt";
+        // 本地文件路径
+        String localFilePath = "C:\\Users\\dell\\Desktop\\test\\test.txt";
+        File localFile = new File(localFilePath);
+
+
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, key, localFile);
+
+
+        // 设置存储类型（如有需要，不需要请忽略此行代码）, 默认是标准(Standard), 低频(standard_ia)
+        // 更多存储类型请参见 https://cloud.tencent.com/document/product/436/33417
+        putObjectRequest.setStorageClass(StorageClass.Standard_IA);
+
+
+        //若需要设置对象的自定义 Headers 可参照下列代码,若不需要可省略下面这几行,对象自定义 Headers 的详细信息可参考 https://cloud.tencent.com/document/product/436/13361
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+
+        //若设置 Content-Type、Cache-Control、Content-Disposition、Content-Encoding、Expires 这五个字自定义 Headers，推荐采用 objectMetadata.setHeader()
+        //        objectMetadata.setHeader(key, "value");
+        //若要设置 “x-cos-meta-[自定义后缀]” 这样的自定义 Header，推荐采用
+        Map<String, String> userMeta = new HashMap<String, String>();
+        userMeta.put("x-cos-meta-yeem", "yeem");
+        objectMetadata.setUserMetadata(userMeta);
+
+        putObjectRequest.withMetadata(objectMetadata);
+
+
+        try {
+            // 高级接口会返回一个异步结果Upload
+            // 可同步地调用 waitForUploadResult 方法等待上传完成，成功返回 UploadResult, 失败抛出异常
+            Upload upload = transferManager.upload(putObjectRequest);
+            UploadResult uploadResult = upload.waitForUploadResult();
+        } catch (CosClientException | InterruptedException e) {
+            e.printStackTrace();
         }
-
-//
-//        // Bucket 的命名格式为 BucketName-APPID ，此处填写的存储桶名称必须为此格式
-//        String bucketName = "ed-fs-1301197907";
-//        ListObjectsRequest listObjectsRequest = new ListObjectsRequest();
-//        // 设置 bucket 名称
-//        listObjectsRequest.setBucketName(bucketName);
-//        // prefix 表示列出的 object 的 key 以 prefix 开始
-//        listObjectsRequest.setPrefix("images/");
-//        // deliter 表示分隔符, 设置为/表示列出当前目录下的 object, 设置为空表示列出所有的 object
-//        listObjectsRequest.setDelimiter("/");
-//        // 设置最大遍历出多少个对象, 一次 listobject 最大支持1000
-//        listObjectsRequest.setMaxKeys(1000);
-//        ObjectListing objectListing = null;
-//        do {
-//            try {
-//                objectListing = cosClient.listObjects(listObjectsRequest);
-//            } catch (CosServiceException e) {
-//                e.printStackTrace();
-//                return;
-//            } catch (CosClientException e) {
-//                e.printStackTrace();
-//                return;
-//            }
-//            // common prefix 表示被 delimiter 截断的路径, 如 delimter 设置为/, common prefix 则表示所有子目录的路径
-//            List<String> commonPrefixs = objectListing.getCommonPrefixes();
-//
-//
-//            // object summary 表示所有列出的 object 列表
-//            List<COSObjectSummary> cosObjectSummaries = objectListing.getObjectSummaries();
-//            for (COSObjectSummary cosObjectSummary : cosObjectSummaries) {
-//                // 文件的路径 key
-//                String key = cosObjectSummary.getKey();
-//                // 文件的 etag
-//                String etag = cosObjectSummary.getETag();
-//                // 文件的长度
-//                long fileSize = cosObjectSummary.getSize();
-//                // 文件的存储类型
-//                String storageClasses = cosObjectSummary.getStorageClass();
-//            }
-//
-//
-//            String nextMarker = objectListing.getNextMarker();
-//            listObjectsRequest.setMarker(nextMarker);
-//        } while (objectListing.isTruncated());
-
+        transferManager.shutdownNow(true);
     }
 
     public static Response get() {
         TreeMap<String, Object> config = new TreeMap<String, Object>();
-
-
         try {
             //这里的 SecretId 和 SecretKey 代表了用于申请临时密钥的永久身份（主账号、子账号等），子账号需要具有操作存储桶的权限。
             String secretId = "AKIDb9UbVAcomW1HI5edPyKT4QXQ6XkjY9Vc";//用户的 SecretId，建议使用子账号密钥，授权遵循最小权限指引，降低使用风险。子账号密钥获取可参见 https://cloud.tencent.com/document/product/598/37140
@@ -127,14 +138,14 @@ public class TencentFileUtils {
             // 2、允许访问指定的对象："a/a1.txt", "b/b1.txt"
             // 3、允许访问指定前缀的对象："a*", "a/*", "b/*"
             // 如果填写了“*”，将允许用户访问所有资源；除非业务需要，否则请按照最小权限原则授予用户相应的访问权限范围。
-            config.put("allowPrefixes", new String[] {
+            config.put("allowPrefixes", new String[]{
                     "*"
             });
 
 
             // 密钥的权限列表。必须在这里指定本次临时密钥所需要的权限。
             // 简单上传、表单上传和分块上传需要以下的权限，其他权限列表请参见 https://cloud.tencent.com/document/product/436/31923
-            String[] allowActions = new String[] {
+            String[] allowActions = new String[]{
                     "name/cos:PutObject",
                     "name/cos:PostObject",
                     "name/cos:InitiateMultipartUpload",
@@ -153,4 +164,5 @@ public class TencentFileUtils {
             throw new IllegalArgumentException("no valid secret !");
         }
     }
+
 }
