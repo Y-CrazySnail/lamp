@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.snail.zero.mapper.ZeroAddressMapper">
-
+    <select id="listByUsername" resultType="com.snail.zero.entity.ZeroAddress">
+        SELECT
+            za.id,
+            za.user_id,
+            za.name,
+            za.phone,
+            za.province,
+            za.city,
+            za.county,
+            za.address,
+            za.default_flag
+        FROM zero_address za
+        LEFT JOIN zero_user_extra zue ON za.user_id =zue.user_id
+        WHERE za.delete_flag = 0 and zue.delete_flag = 0 and zue.username = #{username}
+    </select>
 </mapper>
