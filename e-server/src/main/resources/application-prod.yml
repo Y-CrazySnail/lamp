@@ -74,7 +74,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:mappers/**/*.xml
-  type-aliases-package: com.snail
+  type-aliases-package: com.yeem
 
 access-token-converter:
   signing-key: signingKey

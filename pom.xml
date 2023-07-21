@@ -14,7 +14,7 @@
         <version>2.1.6.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.snail</groupId>
+    <groupId>com.yeem</groupId>
     <artifactId>server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>server</name>

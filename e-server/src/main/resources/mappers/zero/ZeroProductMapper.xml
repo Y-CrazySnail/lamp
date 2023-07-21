@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.snail.zero.mapper.ZeroProductMapper">
-    <select id="selectByCategoryId" resultType="com.snail.zero.entity.ZeroProduct">
+<mapper namespace="com.yeem.zero.mapper.ZeroProductMapper">
+    <select id="selectByCategoryId" resultType="com.yeem.zero.entity.ZeroProduct">
         select zp.* from zero_product zp
         left join zero_product_category zpc on zp.id = zpc.product_id
         where zp.delete_flag = 0 and zpc.category_id = #{categoryId}
