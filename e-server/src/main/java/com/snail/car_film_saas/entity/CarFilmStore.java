@@ -1,5 +1,6 @@
 package com.snail.car_film_saas.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.snail.entity.BaseEntity;
 
@@ -15,11 +16,13 @@ public class CarFilmStore extends BaseEntity {
     private Double latitude; // 纬度
     private String contactName; // 联系人姓名
     private String contactPhone; // 联系人手机号
+    @TableField(exist=false)
+    private String distance;//距离
 
     public CarFilmStore() {
     }
 
-    public CarFilmStore(String productNo, String name, String province, String city, String county, String address, Double longitude, Double latitude, String contactName, String contactPhone) {
+    public CarFilmStore(String productNo, String name, String province, String city, String county, String address, Double longitude, Double latitude, String contactName, String contactPhone, String distance) {
         this.productNo = productNo;
         this.name = name;
         this.province = province;
@@ -30,6 +33,7 @@ public class CarFilmStore extends BaseEntity {
         this.latitude = latitude;
         this.contactName = contactName;
         this.contactPhone = contactPhone;
+        this.distance = distance;
     }
 
     public String getProductNo() {
@@ -110,5 +114,13 @@ public class CarFilmStore extends BaseEntity {
 
     public void setContactPhone(String contactPhone) {
         this.contactPhone = contactPhone;
+    }
+
+    public String getDistance() {
+        return distance;
+    }
+
+    public void setDistance(String distance) {
+        this.distance = distance;
     }
 }

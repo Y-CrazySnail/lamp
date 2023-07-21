@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.snail.car_film_saas.entity.CarFilmProduct;
 import com.snail.car_film_saas.entity.CarFilmQuality;
 import com.snail.car_film_saas.mapper.CarFilmQualityMapper;
 import com.snail.car_film_saas.service.ICarFilmQualityService;
@@ -22,7 +21,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     private CarFilmQualityMapper carFilmQualityMapper;
 
     @Override
-    public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
+    public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin,String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
@@ -39,8 +38,8 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         if (!StringUtils.isEmpty(vin)) {
             wrapper.eq("vin", vin);
         }
-        if (!StringUtils.isEmpty(name)) {
-            wrapper.like("name", name);
+        if (!StringUtils.isEmpty(likeName)) {
+            wrapper.like("name", likeName);
         }
         if (!StringUtils.isEmpty(likePhone)) {
             wrapper.like("phone", likePhone);
@@ -60,7 +59,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
 
 
     @Override
-    public IPage<CarFilmQuality> pages(int current, int size, String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
+    public IPage<CarFilmQuality> pages(int current, int size, String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin,String likeName,String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
@@ -77,8 +76,8 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         if (!StringUtils.isEmpty(vin)) {
             wrapper.eq("vin", vin);
         }
-        if (!StringUtils.isEmpty(name)) {
-            wrapper.like("name", name);
+        if (!StringUtils.isEmpty(likeName)) {
+            wrapper.like("name", likeName);
         }
         if (!StringUtils.isEmpty(likePhone)) {
             wrapper.like("phone", likePhone);
