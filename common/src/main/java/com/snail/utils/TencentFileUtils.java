@@ -30,33 +30,23 @@ public class TencentFileUtils {
 
     public static final String BUCKET_NAME = "ed-fs-1301197907";
 
+    public static final String SECRET_ID = "AKIDb9UbVAcomW1HI5edPyKT4QXQ6XkjY9Vc";
+
+    public static final String SECRET_KEY = "00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA";
+
+    public static final String REGION = "ap-shanghai";
+
     public static void main(String[] args) {
-        Response response = get();
-        String tmpSecretId = response.credentials.tmpSecretId;
-        String tmpSecretKey = response.credentials.tmpSecretKey;
-        String sessionToken = response.credentials.sessionToken;
-        COSCredentials cred = new BasicSessionCredentials(tmpSecretId, tmpSecretKey, sessionToken);
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.setRegion(new Region("ap-shanghai"));
-        clientConfig.setHttpProtocol(HttpProtocol.https);
-        clientConfig.setSocketTimeout(30 * 1000);
-        clientConfig.setConnectionTimeout(30 * 1000);
-        COSClient cosClient = new COSClient(cred, clientConfig);
-        String key = "/test/testhjklasdhjkasd1.txt";
-        Date expirationDate = new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 10);
-        URL url = cosClient.generatePresignedUrl(BUCKET_NAME, key, expirationDate);
-        log.info("{}", url);
+
     }
-    public static Response get() {
+    public static Response getCredential() {
         TreeMap<String, Object> config = new TreeMap<>();
         try {
-            String secretId = "AKIDb9UbVAcomW1HI5edPyKT4QXQ6XkjY9Vc";
-            String secretKey = "00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA";
-            config.put("secretId", secretId);
-            config.put("secretKey", secretKey);
+            config.put("secretId", SECRET_ID);
+            config.put("secretKey", SECRET_KEY);
             config.put("durationSeconds", 1800);
-            config.put("bucket", "ed-fs-1301197907");
-            config.put("region", "ap-shanghai");
+            config.put("bucket", BUCKET_NAME);
+            config.put("region", REGION);
             config.put("allowPrefixes", new String[]{"*"});
             String[] allowActions = new String[]{"name/cos:PutObject", "name/cos:PostObject",
                     "name/cos:InitiateMultipartUpload", "name/cos:ListMultipartUploads",
@@ -69,10 +59,8 @@ public class TencentFileUtils {
         }
     }
 
-
-
     public static COSClient createCOSClient() {
-        Response response = get();
+        Response response = getCredential();
         String tmpSecretId = response.credentials.tmpSecretId;
         String tmpSecretKey = response.credentials.tmpSecretKey;
         String sessionToken = response.credentials.sessionToken;
@@ -85,16 +73,16 @@ public class TencentFileUtils {
         return new COSClient(cred, clientConfig);
     }
 
-    public static void upload() {
+    public static void generatePresignedUrl() {
+        COSClient cosClient = createCOSClient();
+        String key = "/test/testhjklasdhjkasd1.txt";
+        Date expirationDate = new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 10);
+        URL url = cosClient.generatePresignedUrl(BUCKET_NAME, key, expirationDate);
+        log.info("{}", url);
+    }
 
-        Response response = get();
-        String tmpSecretId = response.credentials.tmpSecretId;
-        String tmpSecretKey = response.credentials.tmpSecretKey;
-        String sessionToken = response.credentials.sessionToken;
-        BasicSessionCredentials cred = new BasicSessionCredentials(tmpSecretId, tmpSecretKey, sessionToken);
-        Region region = new Region("ap-shanghai"); //COS_REGION 参数：配置成存储桶 bucket 的实际地域，例如 ap-beijing，更多 COS 地域的简称请参见 https://cloud.tencent.com/document/product/436/6224
-        ClientConfig clientConfig = new ClientConfig(region);
-        COSClient cosClient = new COSClient(cred, clientConfig);
+    public static void upload() {
+        COSClient cosClient = createCOSClient();
         ExecutorService threadPool = Executors.newFixedThreadPool(32);
         TransferManager transferManager = new TransferManager(cosClient, threadPool);
         TransferManagerConfiguration transferManagerConfiguration = new TransferManagerConfiguration();
@@ -104,31 +92,13 @@ public class TencentFileUtils {
         String key = "/test/testhjklasdhjkasd1.txt";
         String localFilePath = "C:\\Users\\dell\\Desktop\\test\\test.txt";
         File localFile = new File(localFilePath);
-
-
         PutObjectRequest putObjectRequest = new PutObjectRequest(BUCKET_NAME, key, localFile);
-
-
-        // 设置存储类型（如有需要，不需要请忽略此行代码）, 默认是标准(Standard), 低频(standard_ia)
-        // 更多存储类型请参见 https://cloud.tencent.com/document/product/436/33417
         putObjectRequest.setStorageClass(StorageClass.Standard_IA);
-
-
-        //若需要设置对象的自定义 Headers 可参照下列代码,若不需要可省略下面这几行,对象自定义 Headers 的详细信息可参考 https://cloud.tencent.com/document/product/436/13361
         ObjectMetadata objectMetadata = new ObjectMetadata();
-
-        //若设置 Content-Type、Cache-Control、Content-Disposition、Content-Encoding、Expires 这五个字自定义 Headers，推荐采用 objectMetadata.setHeader()
-        //        objectMetadata.setHeader(key, "value");
-        //若要设置 “x-cos-meta-[自定义后缀]” 这样的自定义 Header，推荐采用
         Map<String, String> userMeta = new HashMap<>();
         objectMetadata.setUserMetadata(userMeta);
-
         putObjectRequest.withMetadata(objectMetadata);
-
-
         try {
-            // 高级接口会返回一个异步结果Upload
-            // 可同步地调用 waitForUploadResult 方法等待上传完成，成功返回 UploadResult, 失败抛出异常
             Upload upload = transferManager.upload(putObjectRequest);
             UploadResult uploadResult = upload.waitForUploadResult();
             log.info("{}", uploadResult);
