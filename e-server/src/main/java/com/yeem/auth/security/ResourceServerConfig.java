@@ -114,7 +114,8 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
                         "/node/test",
                         "/server/refresh",
                         "/role/getPermissionIdList",
-                        "/zero-auth/login")
+                        "/zero-auth/login",
+                        "/zero-address/test")
                 .permitAll()
                 .anyRequest()
                 .authenticated()
