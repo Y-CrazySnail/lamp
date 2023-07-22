@@ -24,7 +24,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
         try {
             return ResponseEntity.ok(ICarFilmProductService.list(productNo, productName, companyName,  companyNo, managerName, managerPhone ,  miniProgramFlag,officialWebsiteFlag));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("k查询所有失败");
         }
     }
 
