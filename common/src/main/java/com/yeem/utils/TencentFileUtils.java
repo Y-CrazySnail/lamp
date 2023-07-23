@@ -63,7 +63,7 @@ public class TencentFileUtils {
      * @param key         文件Key
      * @param inputStream 文件输入流
      */
-    public static void upload(String bucketName, String secretId, String secretKey, String region, String key, InputStream inputStream) {
+    public static UploadResult upload(String bucketName, String secretId, String secretKey, String region, String key, InputStream inputStream) {
         COSClient cosClient = createCOSClient(bucketName, secretId, secretKey, region);
         ExecutorService threadPool = Executors.newFixedThreadPool(32);
         TransferManager transferManager = new TransferManager(cosClient, threadPool);
@@ -82,13 +82,14 @@ public class TencentFileUtils {
             putObjectRequest.setStorageClass(StorageClass.Standard);
 
             Upload upload = transferManager.upload(putObjectRequest);
-            UploadResult uploadResult = upload.waitForUploadResult();
-            log.info("{}", uploadResult);
+            return upload.waitForUploadResult();
         } catch (InterruptedException | IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("upload file to tencent cos error:{}", e);
+        } finally {
+            transferManager.shutdownNow(true);
+            cosClient.shutdown();
         }
-        transferManager.shutdownNow(true);
-        cosClient.shutdown();
     }
 
     /**
