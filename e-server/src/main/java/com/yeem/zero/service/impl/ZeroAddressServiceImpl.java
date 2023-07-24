@@ -1,5 +1,6 @@
 package com.yeem.zero.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.utils.OauthUtils;
@@ -32,6 +33,7 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
         return zeroAddressMapper.listByUsername(username);
     }
 
+    @DS("zero")
     @Override
     @Transactional
     public boolean save(ZeroAddress zeroAddress) {
@@ -44,12 +46,14 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
         return SqlHelper.retBool(zeroAddressMapper.insert(zeroAddress));
     }
 
+    @DS("zero")
     @Override
     @Transactional
     public boolean update(ZeroAddress zeroAddress) {
         return SqlHelper.retBool(zeroAddressMapper.updateById(zeroAddress));
     }
 
+    @DS("zero")
     @Override
     @Transactional
     public boolean removeById(ZeroAddress zeroAddress) {
