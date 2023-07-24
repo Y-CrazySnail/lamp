@@ -31,6 +31,10 @@ public class ZeroAddress extends BaseEntity {
      */
     private String address;
     /**
+     * 地址标签
+     */
+    private String label;
+    /**
      * 默认标识 0否 1是
      */
     private Integer defaultFlag;
@@ -89,6 +93,14 @@ public class ZeroAddress extends BaseEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public Integer getDefaultFlag() {
