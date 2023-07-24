@@ -4,10 +4,12 @@ import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmProduct;
 import com.yeem.car_film_saas.service.ICarFilmProductService;
 import com.yeem.conreoller.BaseController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/car-film-product")
 public class CarFilmProductController extends BaseController<CarFilmProduct> {
@@ -26,12 +28,13 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
                                        @RequestParam(value = "companyNo", required = false) String companyNo,
                                        @RequestParam(value = "managerName", required = false) String managerName,
                                        @RequestParam(value = "managerPhone", required = false) String managerPhone,
-                                       @RequestParam(value = "miniProgramFlag", required = false)String miniProgramFlag,
-                                       @RequestParam(value = "officialWebsiteFlag",required = false) String officialWebsiteFlag) {
+                                       @RequestParam(value = "miniProgramFlag", required = false) String miniProgramFlag,
+                                       @RequestParam(value = "officialWebsiteFlag", required = false) String officialWebsiteFlag) {
         try {
             return ResponseEntity.ok(ICarFilmProductService.list(productNo, productName, companyName,
-                    companyNo, managerName, managerPhone ,  miniProgramFlag,officialWebsiteFlag));
+                    companyNo, managerName, managerPhone, miniProgramFlag, officialWebsiteFlag));
         } catch (Exception e) {
+            log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("k查询所有失败");
         }
     }
@@ -52,12 +55,13 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
                                         @RequestParam(value = "companyNo", required = false) String companyNo,
                                         @RequestParam(value = "managerName", required = false) String managerName,
                                         @RequestParam(value = "managerPhone", required = false) String managerPhone,
-                                        @RequestParam(value = "miniProgramFlag", required = false)String miniProgramFlag,
-                                        @RequestParam(value = "officialWebsiteFlag",required = false) String officialWebsiteFlag){
+                                        @RequestParam(value = "miniProgramFlag", required = false) String miniProgramFlag,
+                                        @RequestParam(value = "officialWebsiteFlag", required = false) String officialWebsiteFlag) {
         try {
             return ResponseEntity.ok(ICarFilmProductService.pages(current, size, productNo, productName,
-                    companyName, companyNo, managerName, managerPhone,miniProgramFlag,officialWebsiteFlag));
+                    companyName, companyNo, managerName, managerPhone, miniProgramFlag, officialWebsiteFlag));
         } catch (Exception e) {
+            log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
     }
@@ -78,6 +82,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可以查询到软删除的用户");
             }
         } catch (Exception e) {
+            log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
         }
     }
@@ -94,6 +99,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
             ICarFilmProductService.remove(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
@@ -110,6 +116,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
             ICarFilmProductService.save(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("增加失败");
         }
     }
@@ -126,6 +133,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
             ICarFilmProductService.update(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("update方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更改失败");
         }
     }

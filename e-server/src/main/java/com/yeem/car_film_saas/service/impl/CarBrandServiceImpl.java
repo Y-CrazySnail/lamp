@@ -33,17 +33,17 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      */
     @Override
     public List<CarBrand> list() {
-//        拿到Brand表中没被软删除的
+//  拿到Brand表中没被软删除的
         List<CarBrand> carBrandList = carBrandMapper.selectList(new QueryWrapper<CarBrand>().eq("delete_flag", 0));
-//        便利出来
+//  便利出来
         for (CarBrand carBrand : carBrandList) {
-//            找到对应的数据 放进carBrand中
+//  找到对应的数据 放进carBrand中
             carBrand.setListcarModel(ICarModelService.listByBrandId(carBrand.getId()));
         }
         return carBrandList;
     }
 
-     /**
+    /**
      * 分页模糊查询
      *
      * @param current
@@ -106,6 +106,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
 
     /**
      * 新增
+     *
      * @param carBrand
      * @return
      */
@@ -113,6 +114,6 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
     public boolean save(CarBrand carBrand) {
         carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
-      return SqlHelper.retBool(carBrandMapper.insert(carBrand)) ;
+        return SqlHelper.retBool(carBrandMapper.insert(carBrand));
     }
 }

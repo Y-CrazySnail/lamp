@@ -27,7 +27,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      * @return
      */
     @Override
-    public List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone ,String  miniProgramFlag,String officialWebsiteFlag) {
+    public List<CarFilmProduct> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone, String miniProgramFlag, String officialWebsiteFlag) {
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
@@ -52,7 +52,8 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
         }
         if (!StringUtils.isEmpty(officialWebsiteFlag)) {
             wrapper.eq("official_website_flag", officialWebsiteFlag);
-        }    wrapper.eq("delete_flag", 0);
+        }
+        wrapper.eq("delete_flag", 0);
         return carFilmProductMapper.selectList(wrapper);
     }
 
@@ -103,7 +104,7 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
      */
     @Override
     public CarFilmProduct getById(Long id) {
-        return carFilmProductMapper.selectOne(new QueryWrapper<CarFilmProduct>().eq("delete_flag", 0).eq("id",id));
+        return carFilmProductMapper.selectOne(new QueryWrapper<CarFilmProduct>().eq("delete_flag", 0).eq("id", id));
     }
 
     /**

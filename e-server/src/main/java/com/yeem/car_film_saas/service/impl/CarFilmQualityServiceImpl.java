@@ -21,7 +21,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     private CarFilmQualityMapper carFilmQualityMapper;
 
     @Override
-    public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin,String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
+    public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
@@ -59,7 +59,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
 
 
     @Override
-    public IPage<CarFilmQuality> pages(int current, int size, String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin,String likeName,String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
+    public IPage<CarFilmQuality> pages(int current, int size, String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);

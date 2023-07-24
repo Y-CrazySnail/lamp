@@ -5,10 +5,12 @@ import com.yeem.car_film_saas.entity.CarBrand;
 import com.yeem.car_film_saas.entity.CarModel;
 import com.yeem.car_film_saas.service.ICarModelService;
 import com.yeem.conreoller.BaseController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/car-model")
 public class CarModelController extends BaseController<CarBrand> {
@@ -25,6 +27,7 @@ public class CarModelController extends BaseController<CarBrand> {
         try {
             return ResponseEntity.ok(ICarModelService.list());
         } catch (Exception e) {
+            log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
         }
     }
@@ -37,10 +40,11 @@ public class CarModelController extends BaseController<CarBrand> {
      * @return
      */
     @GetMapping("/pages")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "name",required=false)  String name) {
+    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "name", required = false) String name) {
         try {
             return ResponseEntity.ok(ICarModelService.page(current, size, name));
         } catch (Exception e) {
+            log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
     }
@@ -60,6 +64,7 @@ public class CarModelController extends BaseController<CarBrand> {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可查询软删除用户");
             }
         } catch (Exception e) {
+            log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
         }
     }
@@ -76,6 +81,7 @@ public class CarModelController extends BaseController<CarBrand> {
             ICarModelService.removeByBrandId(carModel.getId());
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
+            log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("软删除失败");
         }
     }
@@ -92,6 +98,7 @@ public class CarModelController extends BaseController<CarBrand> {
             ICarModelService.update(carModel);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
+            log.error("update方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("修改失败");
         }
     }
@@ -108,6 +115,7 @@ public class CarModelController extends BaseController<CarBrand> {
             ICarModelService.save(carModel);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
+            log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("add失败");
         }
     }

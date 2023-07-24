@@ -5,12 +5,14 @@ import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmStore;
 import com.yeem.car_film_saas.service.ICarFilmStoreService;
 import com.yeem.car_film_saas.service.impl.CarFilmStoreServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/car-file-store")
 public class CarFilmStoreController {
@@ -25,6 +27,7 @@ public class CarFilmStoreController {
         try {
             return ResponseEntity.ok(carFilmStoreService.list(productNo, name, province, city, county, contactName, contactPhone));
         } catch (Exception e) {
+            log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
         }
     }
@@ -34,6 +37,7 @@ public class CarFilmStoreController {
         try {
             return ResponseEntity.ok(carFilmStoreService.pages(current, size, productNo, name, province, city, county, contactName, contactPhone));
         } catch (Exception e) {
+            log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
     }
@@ -43,6 +47,7 @@ public class CarFilmStoreController {
         try {
             return ResponseEntity.ok(carFilmStoreService.getById(id));
         } catch (Exception e) {
+            log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
         }
     }
@@ -53,6 +58,7 @@ public class CarFilmStoreController {
             carFilmStoreService.remove(carFilmStore);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
@@ -63,6 +69,7 @@ public class CarFilmStoreController {
             carFilmStoreService.save(carFilmStore);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("增加失败");
         }
     }
@@ -73,11 +80,18 @@ public class CarFilmStoreController {
             carFilmStoreService.update(carFilmStore);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("update方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更改失败");
         }
     }
+
     @GetMapping("/distance")
-    public List<CarFilmStore> tete(@RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude){
-     return carFilmStoreServiceI.selectAddress(latitude,longitude);
+    public ResponseEntity<Object> tete(@RequestParam("latitude") String latitude, @RequestParam("longitude") String longitude) {
+        try {
+            return ResponseEntity.ok(carFilmStoreServiceI.selectAddress(latitude, longitude));
+        } catch (Exception e) {
+            log.error("distance方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("经纬度查询距离失败");
+        }
     }
 }

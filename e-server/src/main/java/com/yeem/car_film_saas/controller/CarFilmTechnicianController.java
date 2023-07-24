@@ -3,10 +3,12 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmTechnician;
 import com.yeem.car_film_saas.service.ICarFilmTechnicianService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/car-file-technician")
 public class CarFilmTechnicianController {
@@ -20,6 +22,7 @@ public class CarFilmTechnicianController {
         try {
             return ResponseEntity.ok(carFilmTechnicianService.list(productNo, name, province, city, county, level));
         } catch (Exception e) {
+            log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");
         }
     }
@@ -29,6 +32,7 @@ public class CarFilmTechnicianController {
         try {
             return ResponseEntity.ok(carFilmTechnicianService.pages(current, size, productNo, name, province, city, county, level));
         } catch (Exception e) {
+            log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
         }
     }
@@ -38,6 +42,7 @@ public class CarFilmTechnicianController {
         try {
             return ResponseEntity.ok(carFilmTechnicianService.getById(id));
         } catch (Exception e) {
+            log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
         }
     }
@@ -48,6 +53,7 @@ public class CarFilmTechnicianController {
             carFilmTechnicianService.remove(carFilmTechnician);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
@@ -58,6 +64,7 @@ public class CarFilmTechnicianController {
             carFilmTechnicianService.save(carFilmTechnician);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("增加失败");
         }
     }
@@ -68,6 +75,7 @@ public class CarFilmTechnicianController {
             carFilmTechnicianService.update(carFilmTechnician);
             return ResponseEntity.ok("");
         } catch (Exception e) {
+            log.error("update方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更改失败");
         }
     }
