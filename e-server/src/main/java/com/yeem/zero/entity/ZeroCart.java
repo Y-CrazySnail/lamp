@@ -1,5 +1,6 @@
 package com.yeem.zero.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.entity.BaseEntity;
 
@@ -17,6 +18,9 @@ public class ZeroCart extends BaseEntity {
      * 数量
      */
     private int quantity;
+
+    @TableField(exist = false)
+    private ZeroProduct zeroProduct;
 
     public Long getUserId() {
         return userId;
@@ -40,5 +44,13 @@ public class ZeroCart extends BaseEntity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public ZeroProduct getZeroProduct() {
+        return zeroProduct;
+    }
+
+    public void setZeroProduct(ZeroProduct zeroProduct) {
+        this.zeroProduct = zeroProduct;
     }
 }
