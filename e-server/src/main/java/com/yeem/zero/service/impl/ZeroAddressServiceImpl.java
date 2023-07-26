@@ -1,6 +1,8 @@
 package com.yeem.zero.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.utils.OauthUtils;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Slf4j
@@ -43,6 +46,13 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
             throw new RuntimeException("user info is null when save address");
         }
         zeroAddress.setUserId(zeroUserExtra.getUserId());
+        QueryWrapper<ZeroAddress> zeroAddressQueryWrapper = new QueryWrapper<>();
+        zeroAddressQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroAddressQueryWrapper.eq("default_flag", 1);
+        int count = zeroAddressMapper.selectCount(zeroAddressQueryWrapper);
+        if (count == 0) {
+            zeroAddress.setDefaultFlag(1);
+        }
         return SqlHelper.retBool(zeroAddressMapper.insert(zeroAddress));
     }
 
@@ -50,6 +60,13 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
     @Override
     @Transactional
     public boolean update(ZeroAddress zeroAddress) {
+        if (Objects.equals(zeroAddress.getDefaultFlag(), 1)) {
+            UpdateWrapper<ZeroAddress> zeroAddressUpdateWrapper = new UpdateWrapper<>();
+            zeroAddressUpdateWrapper.eq("user_id", zeroAddress.getUserId());
+            zeroAddressUpdateWrapper.ne("id", zeroAddress.getId());
+            zeroAddressUpdateWrapper.set("default_flag", 0);
+            zeroAddressMapper.update(null, zeroAddressUpdateWrapper);
+        }
         return SqlHelper.retBool(zeroAddressMapper.updateById(zeroAddress));
     }
 
