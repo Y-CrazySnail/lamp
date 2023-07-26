@@ -18,17 +18,17 @@ public class CarBrand extends BaseEntity {
 
     private  String logoName;
     @TableField(exist = false)
-    private List<CarModel> listcarModel;
+    private List<CarModel> carModelList;
 
-    public CarBrand(String name, String nameEn, String logoPath, String logoName, List<CarModel> listcarModel) {
+    public CarBrand() {
+    }
+
+    public CarBrand(String name, String nameEn, String logoPath, String logoName, List<CarModel> carModelList) {
         this.name = name;
         this.nameEn = nameEn;
         this.logoPath = logoPath;
         this.logoName = logoName;
-        this.listcarModel = listcarModel;
-    }
-
-    public CarBrand() {
+        this.carModelList = carModelList;
     }
 
     public String getName() {
@@ -63,11 +63,11 @@ public class CarBrand extends BaseEntity {
         this.logoName = logoName;
     }
 
-    public List<CarModel> getListcarModel() {
-        return listcarModel;
+    public List<CarModel> getCarModelList() {
+        return carModelList;
     }
 
-    public void setListcarModel(List<CarModel> listcarModel) {
-        this.listcarModel = listcarModel;
+    public void setCarModelList(List<CarModel> carModelList) {
+        this.carModelList = carModelList;
     }
 }

@@ -49,15 +49,15 @@ public interface ICarModelService extends IService<CarModel> {
     /**
      * 增加
      *
-     * @param carModel
+     * @param carModelList
      */
-    boolean save(CarModel carModel);
+    boolean save(List<CarModel> carModelList,Long brandId);
 
     /**
      * 修改
      *
-     * @param carModel
+     * @param carModelList
      */
-    void update(CarModel carModel);
+    void update(List<CarModel> carModelList);
 
 }

@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/car-model")
@@ -89,13 +91,13 @@ public class CarModelController extends BaseController<CarBrand> {
     /**
      * 更改
      *
-     * @param carModel
+     * @param carModelList
      * @return
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody CarModel carModel) {
+    public ResponseEntity<Object> update(@RequestBody List<CarModel> carModelList) {
         try {
-            ICarModelService.update(carModel);
+            ICarModelService.update(carModelList);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);

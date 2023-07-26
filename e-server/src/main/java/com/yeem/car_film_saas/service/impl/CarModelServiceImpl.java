@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.yeem.car_film_saas.entity.CarLevel;
 import com.yeem.car_film_saas.entity.CarModel;
 import com.yeem.car_film_saas.mapper.CarModelMapper;
 import com.yeem.car_film_saas.service.ICarModelService;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> implements ICarModelService {
@@ -24,6 +27,9 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     private CarModelMapper carModelMapper;
     @Autowired
     private CarLevelServiceImpl carLevelService;
+
+    @Autowired
+    CarBrandServiceImpl carBrandService;
 
     /**
      * 查询全部
@@ -33,9 +39,13 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     public List<CarModel> list() {
         List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("delete_flag", 0));
-       //用carLevelService里的查询CarLevel方法 得到levelName 加入每个CarModel里
+        List<CarLevel> carLevels = carLevelService.queryCarLevel();
         for (CarModel carModel : carModels) {
-            carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+            for (CarLevel carLevel : carLevels) {
+                if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
+                    carModel.setLevelName(carLevel.getLevelName());
+                }
+            }
         }
         return carModels;
     }
@@ -49,8 +59,13 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     public List<CarModel> listByBrandId(Long id) {
         List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("brand_id", id).eq("delete_flag", 0));
+        List<CarLevel> carLevels = carLevelService.queryCarLevel();
         for (CarModel carModel : carModels) {
-            carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+            for (CarLevel carLevel : carLevels) {
+                if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
+                    carModel.setLevelName(carLevel.getLevelName());
+                }
+            }
         }
         return carModels;
     }
@@ -64,16 +79,21 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      */
     @Override
     public IPage<CarModel> page(int current, int size, String name) {
-       QueryWrapper<CarModel> carModelQueryWrapper=new QueryWrapper<>();
-       if (!StringUtils.isEmpty(name)){
-           carModelQueryWrapper.like("name",name);
-       }
-       carModelQueryWrapper.eq("delete_flag", 0);
-       Page<CarModel> page=new Page<>(current,size);
+        QueryWrapper<CarModel> carModelQueryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(name)) {
+            carModelQueryWrapper.like("name", name);
+        }
+        carModelQueryWrapper.eq("delete_flag", 0);
+        Page<CarModel> page = new Page<>(current, size);
         Page<CarModel> carModelPage = carModelMapper.selectPage(page, carModelQueryWrapper);
         List<CarModel> records = carModelPage.getRecords();
+        List<CarLevel> carLevels = carLevelService.queryCarLevel();
         for (CarModel carModel : records) {
-            carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+            for (CarLevel carLevel : carLevels) {
+                if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
+                    carModel.setLevelName(carLevel.getLevelName());
+                }
+            }
         }
         return carModelPage;
     }
@@ -87,7 +107,11 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     public CarModel getById(Long id) {
         CarModel carModel = carModelMapper.selectById(id);
-        carModel.setLevelName(carLevelService.queryCarLevel(carModel.getLevelNo()).getLevelName());
+        for (CarLevel carLevel : carLevelService.queryCarLevel()) {
+            if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
+                carModel.setLevelName(carLevel.getLevelName());
+            }
+        }
         return carModel;
     }
 
@@ -106,23 +130,30 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     /**
      * 新增
      *
-     * @param carModel
+     * @param carModelList
      */
     @Override
-    public boolean save(CarModel carModel) {
-        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getNameEn()));
-        return SqlHelper.retBool(carModelMapper.insert(carModel));
+    public boolean save(List<CarModel> carModelList,Long brandId) {
+        boolean flag=false;
+        for (CarModel carModel : carModelList) {
+            carModel.setBrandId(brandId);
+            carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
+          flag=  SqlHelper.retBool(carModelMapper.insert(carModel));
+        }
+        return flag;
     }
 
     /**
      * 更新
      *
-     * @param carModel
+     * @param carModelList
      */
     @Override
-    public void update(CarModel carModel) {
-        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getNameEn()));
-        carModelMapper.updateById(carModel);
+    public void update(List<CarModel> carModelList) {
+        for (CarModel carModel : carModelList) {
+            carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
+            carModelMapper.updateById(carModel);
+        }
     }
 
     @Override

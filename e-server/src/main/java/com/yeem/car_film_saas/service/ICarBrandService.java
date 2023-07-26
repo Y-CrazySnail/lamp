@@ -3,6 +3,7 @@ package com.yeem.car_film_saas.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yeem.car_film_saas.entity.CarBrand;
+import com.yeem.car_film_saas.entity.CarModel;
 
 import java.util.List;
 
