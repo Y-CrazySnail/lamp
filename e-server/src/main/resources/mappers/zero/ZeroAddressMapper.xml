@@ -11,6 +11,7 @@
             za.city,
             za.county,
             za.address,
+            za.label,
             za.default_flag
         FROM zero_address za
         LEFT JOIN zero_user_extra zue ON za.user_id =zue.user_id
