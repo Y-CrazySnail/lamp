@@ -99,26 +99,52 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      */
     @Override
     public void update(CarBrand carBrand) {
-// 此车牌的全部数据
-        CarBrand carBrandgGet = carBrandMapper.selectOne(new QueryWrapper<CarBrand>().eq("delete_flag", 0).eq("id", carBrand.getId()));
-//        车牌里的车型
-        List<CarModel> carModelList1 = carBrandgGet.getCarModelList();
-        // 前端传进来的车型数据
-        List<CarModel> carModelList = carBrand.getCarModelList();
-            // 前端传进来的数据里的model没id 为新增项目
-            for (CarModel model : carModelList) {
-                if (StringUtils.isEmpty(model.getId())){
-                    // 更新新增项目
-                    carModelService.update(carModelList);
-                }
-            }
-
-
+        // 设置车牌的名称拼音和文件截取文件
         carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
+        // 更新汽车品牌
         carBrandMapper.updateById(carBrand);
-        carModelService.update(carBrand.getCarModelList());
+        // 此车牌的全部车型
+        List<CarModel> carBrandById_The_ModelList = this.getById(carBrand.getId()).getCarModelList();
+        // 前端传进来的车型数据
+        List<CarModel> carModelList = carBrand.getCarModelList();
+        // 前端传进来的数据里的model没id 为新增项目
+        for (CarModel model : carModelList) {
+            // 有就更新一下
+            if (!StringUtils.isEmpty(model.getId())) {
+                // 更新车型
+                model.setBrandId(carBrand.getId());
+                System.out.println("走到了update");
+//                carModelService.updateBatchById(carBrandById_The_ModelList);
+                carModelService.updateById(model);
+            }
+            // 没有就新增
+            if (StringUtils.isEmpty(model.getId())) {
+                // 新增车型
+//                carModelService.save(carModelList, carBrand.getId());
+                model.setBrandId(carBrand.getId());
+                carModelService.insert(model);
+                System.out.println("走到了save");
 
+            }
+        }
+        List<CarModel> xuhuanhoucarModelList = this.getById(carBrand.getId()).getCarModelList();
+        // 遍历此车牌的全部车型
+        for (CarModel DbModel : carBrandById_The_ModelList) {
+            boolean flag = false;
+            // 遍历前端传来的
+            for (CarModel VueModel : xuhuanhoucarModelList) {
+                // 如果前端传来的跟数据库中的对应不上
+                if (!(DbModel.getId().equals(VueModel.getId()))) {
+                    System.out.println("比较了");
+                    flag = true;
+                }
+            }
+            if (flag) {
+                System.out.println("删除了");
+                carModelService.remove(DbModel.getId());
+            }
+        }
     }
 
     /**

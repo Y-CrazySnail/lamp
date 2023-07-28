@@ -46,12 +46,16 @@ public interface ICarModelService extends IService<CarModel> {
      */
     void removeByBrandId(Long id);
 
+    void remove(Long id);
+
     /**
      * 增加
      *
      * @param carModelList
      */
     boolean save(List<CarModel> carModelList,Long brandId);
+
+    void insert(CarModel carModel);
 
     /**
      * 修改

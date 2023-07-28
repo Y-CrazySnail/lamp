@@ -127,6 +127,13 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
         carModelMapper.update(null, wrapper);
     }
 
+    @Override
+    public void remove(Long id) {
+        UpdateWrapper<CarModel> wrapper = new UpdateWrapper<>();
+        wrapper.eq("id", id).set("delete_flag", true);
+        carModelMapper.update(null, wrapper);
+    }
+
     /**
      * 新增
      *
@@ -141,6 +148,12 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
           flag=  SqlHelper.retBool(carModelMapper.insert(carModel));
         }
         return flag;
+    }
+
+    @Override
+    public void insert(CarModel carModel) {
+        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
+        carModelMapper.insert(carModel);
     }
 
     /**
@@ -161,4 +174,5 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     public boolean updateBatchById(Collection<CarModel> entityList) {
         return super.updateBatchById(entityList);
     }
+
 }
