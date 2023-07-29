@@ -1,0 +1,67 @@
+server:
+  port: 8000
+  servlet:
+    context-path: /server
+  address: 0.0.0.0
+
+spring:
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    dynamic:
+      primary: zero
+      datasource:
+        zero:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/zero_cloud_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
+      druid:
+        initialSize: 5
+        minIdle: 5
+        maxActive: 30
+        maxWait: 60000
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: SELECT 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxPoolPreparedStatementPerConnectionSize: 20
+        filters: stat,wall,slf4j,config
+        useGlobalDataSourceStat: true
+        stat:
+          log-slow-sql: true
+          merge-sql: true
+          slow-sql-millis: 10000
+
+mybatis-plus:
+  mapper-locations: classpath*:mappers/**/*.xml
+  type-aliases-package: com.yeem
+
+access-token-converter:
+  signing-key: signingKey
+
+security:
+  oauth2:
+    login-uri: http://127.0.0.1:8080/server/oauth/token
+    client:
+      user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:8080/server/oauth/token_key
+        key-value: signingKey
+    authorization:
+      check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+
+oauth-client-details:
+  zero:
+    client-id: zero_dev
+    client-secret: 123456
+
+wechat:
+  zero:
+    app-id: wx9cb140f2eacb6870
+    app-secret: b873d35be8357186fc8f90c48edb24a9

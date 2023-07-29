@@ -1,0 +1,1 @@
+vless://${uuid}@${xray_domain}:${xray_port}?flow=&security=tls&encryption=none&type=ws&host=&path=${xray_ws_path}&sni=${xray_domain}#${region}_${traffic}GB
