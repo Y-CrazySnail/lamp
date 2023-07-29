@@ -8,7 +8,6 @@
         <module>yeem-auth</module>
         <module>yeem-car-film</module>
         <module>yeem-car-old</module>
-        <module>yeem-star</module>
         <module>yeem-zero</module>
         <module>client</module>
     </modules>
