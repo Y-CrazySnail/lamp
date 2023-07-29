@@ -1,6 +1,6 @@
 package com.yeem.zero.controller;
 
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroCategory;
 import com.yeem.zero.service.IZeroCategoryService;
 import lombok.extern.slf4j.Slf4j;

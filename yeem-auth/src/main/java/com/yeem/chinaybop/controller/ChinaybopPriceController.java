@@ -1,6 +1,6 @@
 package com.yeem.chinaybop.controller;
 
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.chinaybop.entity.ChinaybopPrice;
 import com.yeem.chinaybop.service.IChinaybopPriceService;
 import org.springframework.beans.factory.annotation.Autowired;

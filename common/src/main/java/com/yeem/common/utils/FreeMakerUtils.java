@@ -1,4 +1,4 @@
-package com.yeem.utils;
+package com.yeem.common.utils;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

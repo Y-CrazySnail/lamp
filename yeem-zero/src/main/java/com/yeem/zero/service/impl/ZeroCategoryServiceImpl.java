@@ -2,7 +2,7 @@ package com.yeem.zero.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.zero.entity.ZeroCategory;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.mapper.ZeroCategoryMapper;

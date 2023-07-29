@@ -1,7 +1,7 @@
 package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "zero_tencent_cos", autoResultMap = true)
 public class ZeroTencentCos extends BaseEntity {

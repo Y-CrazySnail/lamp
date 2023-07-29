@@ -1,29 +1,14 @@
 package com.yeem.auth.service.impl;
 
-import cn.hutool.http.HttpRequest;
-import cn.hutool.http.HttpResponse;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yeem.auth.dto.WxLoginDTO;
-import com.yeem.auth.entity.User;
 import com.yeem.auth.service.IAuthService;
 import com.yeem.auth.service.IUserService;
-import com.yeem.dto.PhoneNumberDTO;
-import com.yeem.dto.WxLoginResponse;
-import com.yeem.utils.WechatUtils;
-import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.util.StringUtils;
-
-import java.io.IOException;
-import java.util.Base64;
 
 @Slf4j
 @Service

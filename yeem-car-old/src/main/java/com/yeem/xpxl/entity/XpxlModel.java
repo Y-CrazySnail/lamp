@@ -1,7 +1,7 @@
 package com.yeem.xpxl.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "xpxl_model", autoResultMap = true)
 public class XpxlModel extends BaseEntity {

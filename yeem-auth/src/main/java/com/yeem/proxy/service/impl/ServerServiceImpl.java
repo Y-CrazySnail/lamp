@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.proxy.entity.*;
 import com.yeem.proxy.mapper.ServerMapper;
 import com.yeem.proxy.service.*;
-import com.yeem.utils.FreeMakerUtils;
+import com.yeem.common.utils.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

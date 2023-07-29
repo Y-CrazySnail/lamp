@@ -2,7 +2,7 @@ package com.yeem.xpxl.controller;
 
 import com.yeem.xpxl.entity.XpxlPrice;
 import com.yeem.xpxl.service.IXpxlPriceService;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

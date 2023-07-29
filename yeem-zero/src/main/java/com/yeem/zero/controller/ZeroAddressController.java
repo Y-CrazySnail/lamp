@@ -1,10 +1,8 @@
 package com.yeem.zero.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.yeem.conreoller.BaseController;
-import com.yeem.utils.OauthUtils;
-import com.yeem.utils.TencentFileUtils;
+import com.yeem.common.conreoller.BaseController;
+import com.yeem.common.utils.OauthUtils;
+import com.yeem.common.utils.TencentFileUtils;
 import com.yeem.zero.entity.ZeroAddress;
 import com.yeem.zero.service.IZeroAddressService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +17,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Objects;
 
 @Slf4j
 @RestController

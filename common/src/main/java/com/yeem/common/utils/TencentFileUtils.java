@@ -1,4 +1,4 @@
-package com.yeem.utils;
+package com.yeem.common.utils;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;

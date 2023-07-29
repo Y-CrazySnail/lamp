@@ -2,7 +2,7 @@ package com.yeem.car_film_saas.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 import java.util.Date;
 

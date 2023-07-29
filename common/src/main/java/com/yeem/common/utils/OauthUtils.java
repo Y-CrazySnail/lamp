@@ -1,4 +1,4 @@
-package com.yeem.utils;
+package com.yeem.common.utils;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 

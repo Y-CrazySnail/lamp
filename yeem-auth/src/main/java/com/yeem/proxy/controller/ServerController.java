@@ -1,6 +1,6 @@
 package com.yeem.proxy.controller;
 
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.proxy.entity.Server;
 import com.yeem.proxy.service.IServerService;
 import com.yeem.proxy.util.WebSshHandler;

@@ -1,7 +1,7 @@
 package com.yeem.chinaybop.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.chinaybop.entity.ChinaybopQuality;
 import com.yeem.chinaybop.service.IChinaybopQualityService;
 import org.springframework.beans.factory.annotation.Autowired;

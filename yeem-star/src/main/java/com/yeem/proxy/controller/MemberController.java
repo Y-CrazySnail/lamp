@@ -1,7 +1,7 @@
 package com.yeem.proxy.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.proxy.entity.Member;
 import com.yeem.proxy.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;

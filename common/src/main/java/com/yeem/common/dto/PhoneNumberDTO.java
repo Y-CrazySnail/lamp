@@ -1,4 +1,4 @@
-package com.yeem.dto;
+package com.yeem.common.dto;
 
 import lombok.Data;
 

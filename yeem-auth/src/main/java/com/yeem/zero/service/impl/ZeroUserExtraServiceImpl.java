@@ -4,7 +4,7 @@ import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yeem.utils.OauthUtils;
+import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.mapper.ZeroUserExtraMapper;
 import com.yeem.zero.service.IZeroUserExtraService;

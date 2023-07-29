@@ -2,7 +2,7 @@ package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "zero_cart", autoResultMap = true)
 public class ZeroCart extends BaseEntity {

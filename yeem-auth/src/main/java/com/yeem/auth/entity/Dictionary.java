@@ -1,7 +1,7 @@
 package com.yeem.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "sys_dictionary", autoResultMap = true)
 public class Dictionary extends BaseEntity {

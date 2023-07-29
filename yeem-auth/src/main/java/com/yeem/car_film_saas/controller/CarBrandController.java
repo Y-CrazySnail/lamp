@@ -2,16 +2,13 @@ package com.yeem.car_film_saas.controller;
 
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarBrand;
-import com.yeem.car_film_saas.entity.CarModel;
 import com.yeem.car_film_saas.service.ICarBrandService;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController

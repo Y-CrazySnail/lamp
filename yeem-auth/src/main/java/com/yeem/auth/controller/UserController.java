@@ -1,7 +1,7 @@
 package com.yeem.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.auth.entity.User;
 import com.yeem.auth.entity.UserRole;
 import com.yeem.auth.mapper.UserRoleMapper;

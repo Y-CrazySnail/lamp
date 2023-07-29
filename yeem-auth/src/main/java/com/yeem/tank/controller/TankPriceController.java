@@ -2,7 +2,7 @@ package com.yeem.tank.controller;
 
 import com.yeem.tank.entity.TankPrice;
 import com.yeem.tank.service.ITankPriceService;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

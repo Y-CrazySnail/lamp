@@ -1,7 +1,7 @@
 package com.yeem.tank.controller;
 
 import com.yeem.tank.entity.TankBrand;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

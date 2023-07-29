@@ -1,4 +1,4 @@
-package com.yeem.entity;
+package com.yeem.common.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;

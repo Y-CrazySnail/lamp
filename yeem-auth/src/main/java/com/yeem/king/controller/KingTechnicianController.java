@@ -1,7 +1,7 @@
 package com.yeem.king.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.king.entity.KingTechnician;
 import com.yeem.king.service.IKingTechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;

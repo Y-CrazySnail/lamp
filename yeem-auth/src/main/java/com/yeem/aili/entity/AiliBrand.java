@@ -1,7 +1,7 @@
 package com.yeem.aili.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "aili_brand", autoResultMap = true)
 public class AiliBrand extends BaseEntity {

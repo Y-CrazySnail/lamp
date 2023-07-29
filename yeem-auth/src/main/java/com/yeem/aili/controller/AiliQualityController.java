@@ -3,7 +3,7 @@ package com.yeem.aili.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yeem.aili.entity.AiliQuality;
 import com.yeem.aili.service.IAiliQualityService;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yeem.xpxl.entity.XpxlQuality;
 import com.yeem.xpxl.mapper.XpxlQualityMapper;
 import com.yeem.xpxl.service.IXpxlQualityService;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;

@@ -1,7 +1,7 @@
 package com.yeem.car_film_saas.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "base_car_level")
 public class CarLevel extends BaseEntity {

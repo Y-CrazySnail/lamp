@@ -1,7 +1,7 @@
 package com.yeem.auth.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "sys_permission", autoResultMap = true)
 public class Permission extends BaseEntity {

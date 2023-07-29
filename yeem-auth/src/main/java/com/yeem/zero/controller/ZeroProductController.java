@@ -1,7 +1,7 @@
 package com.yeem.zero.controller;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;

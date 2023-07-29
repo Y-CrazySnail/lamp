@@ -1,7 +1,7 @@
 package com.yeem.chinaybop.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "mr_price", autoResultMap = true)
 public class ChinaybopPrice extends BaseEntity {

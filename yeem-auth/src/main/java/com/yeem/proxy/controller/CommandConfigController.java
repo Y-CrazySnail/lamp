@@ -1,8 +1,8 @@
 package com.yeem.proxy.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.yeem.entity.BaseEntity;
-import com.yeem.conreoller.BaseController;
+import com.yeem.common.entity.BaseEntity;
+import com.yeem.common.conreoller.BaseController;
 import com.yeem.proxy.entity.CommandConfig;
 import com.yeem.proxy.entity.CommandRecord;
 import com.yeem.proxy.service.ICommandRecordService;

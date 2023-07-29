@@ -3,7 +3,7 @@ package com.yeem.proxy.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.proxy.entity.CommandRecord;
 import com.yeem.proxy.mapper.CommandRecordMapper;
 import com.yeem.proxy.service.ICommandRecordService;

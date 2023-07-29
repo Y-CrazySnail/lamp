@@ -1,9 +1,9 @@
-package com.yeem.utils;
+package com.yeem.common.utils;
 
 import cn.hutool.http.HttpRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yeem.dto.PhoneNumberDTO;
-import com.yeem.dto.WxLoginResponse;
+import com.yeem.common.dto.PhoneNumberDTO;
+import com.yeem.common.dto.WxLoginResponse;
 import lombok.extern.slf4j.Slf4j;
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;

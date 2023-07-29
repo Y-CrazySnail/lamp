@@ -11,7 +11,7 @@ import com.yeem.proxy.service.IMemberService;
 import com.yeem.proxy.service.INodeService;
 import com.yeem.proxy.service.IServerService;
 import com.yeem.proxy.service.IShareNodeService;
-import com.yeem.utils.FreeMakerUtils;
+import com.yeem.common.utils.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.commons.codec.binary.Base64;

@@ -1,7 +1,7 @@
 package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "zero_order_after_sale_image", autoResultMap = true)
 public class ZeroOrderAfterSaleImage extends BaseEntity {

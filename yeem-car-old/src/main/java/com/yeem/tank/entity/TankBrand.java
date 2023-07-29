@@ -1,7 +1,7 @@
 package com.yeem.tank.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.entity.BaseEntity;
+import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "tank_brand", autoResultMap = true)
 public class TankBrand extends BaseEntity {

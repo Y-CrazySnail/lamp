@@ -1,4 +1,4 @@
-package com.yeem.utils;
+package com.yeem.common.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
