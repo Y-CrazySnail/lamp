@@ -1,6 +1,9 @@
 package com.yeem.auth.security;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.yeem.auth.entity.Permission;
 import com.yeem.auth.mapper.PermissionMapper;
 import com.yeem.auth.mapper.UserMapper;
@@ -11,8 +14,12 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 用户信息服务
@@ -31,6 +38,11 @@ public class UserDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 查询用户
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        String verificationCode = VerificationCodeCache.get(username);
+        if (!StringUtils.isEmpty(verificationCode)) {
+            VerificationCodeCache.delete(username);
+            user.setPassword(new BCryptPasswordEncoder().encode(verificationCode));
+        }
         // 设置用户权限
         List<Permission> permissionList = permissionMapper.permissionListByUserId(user.getId());
         user.setAuthorities(AuthorityUtils.createAuthorityList(permissionList.stream().map(Permission::getUrl).toArray(String[]::new)));

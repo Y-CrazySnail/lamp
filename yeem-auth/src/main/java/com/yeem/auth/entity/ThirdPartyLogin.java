@@ -6,16 +6,25 @@ import com.yeem.common.entity.BaseEntity;
 @TableName(value = "third_party_login", autoResultMap = true)
 public class ThirdPartyLogin extends BaseEntity {
 
-    private String userId;
+    private Long userId;
+    private String application;
     private String loginType;
     private String loginName;
 
-    public String getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
     }
 
     public String getLoginType() {

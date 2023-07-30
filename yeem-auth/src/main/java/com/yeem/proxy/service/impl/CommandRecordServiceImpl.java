@@ -1,5 +1,6 @@
 package com.yeem.proxy.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 public class CommandRecordServiceImpl extends ServiceImpl<CommandRecordMapper, CommandRecord> implements ICommandRecordService {
 
+    @DS("proxy")
     @Override
     public CommandRecord get(String ip) {
         // 查询该IP是否有执行中的命令，如果有执行中的命令，不下派新命令

@@ -1,6 +1,12 @@
-package com.yeem.auth.dto;
+package com.yeem.common.dto;
 
-public class WxLoginDTO {
+public class WechatMiniProgramDTO {
+    private Long userId;
+    private String username;
+    /**
+     * 应用
+     */
+    private String application;
     /**
      * 微信Code
      */
@@ -25,6 +31,32 @@ public class WxLoginDTO {
      * 获取手机号加密信息
      */
     private String encryptedData;
+    private String phoneNumber;
+    private String response;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getApplication() {
+        return application;
+    }
+
+    public void setApplication(String application) {
+        this.application = application;
+    }
 
     public String getCode() {
         return code;
@@ -72,5 +104,21 @@ public class WxLoginDTO {
 
     public void setEncryptedData(String encryptedData) {
         this.encryptedData = encryptedData;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 }

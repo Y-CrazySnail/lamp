@@ -1,5 +1,6 @@
 package com.yeem.proxy.service.impl;
 
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.proxy.entity.Node;
@@ -24,6 +25,7 @@ public class NodeServiceImpl extends ServiceImpl<NodeMapper, Node> implements IN
     @Autowired
     private IServerService serverService;
 
+    @DS("proxy")
     public void generateNode() {
         QueryWrapper<Node> nodeQueryWrapper = new QueryWrapper<>();
         nodeQueryWrapper.le("member_id", 0);

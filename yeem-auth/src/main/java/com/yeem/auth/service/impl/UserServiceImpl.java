@@ -36,13 +36,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public boolean updateById(User entity) {
-        userRoleMapper.delete(new QueryWrapper<UserRole>().eq("user_id", entity.getId()));
-        entity.getRoleIdList().forEach(roleId -> {
-            UserRole userRole = new UserRole();
-            userRole.setUserId(entity.getId());
-            userRole.setRoleId(roleId);
-            userRoleMapper.insert(userRole);
-        });
+        if (!StringUtils.isEmpty(entity.getRoleIdList())) {
+            userRoleMapper.delete(new QueryWrapper<UserRole>().eq("user_id", entity.getId()));
+            entity.getRoleIdList().forEach(roleId -> {
+                UserRole userRole = new UserRole();
+                userRole.setUserId(entity.getId());
+                userRole.setRoleId(roleId);
+                userRoleMapper.insert(userRole);
+            });
+        }
         userMapper.updateById(entity);
         return true;
     }

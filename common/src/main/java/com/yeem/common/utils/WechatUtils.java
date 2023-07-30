@@ -47,21 +47,7 @@ public class WechatUtils {
      */
     public static PhoneNumberDTO decryptPhoneNumber(String sessionKey, String encryptedData, String iv) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        byte[] encrypData = Base64Utils.decodeFromString(encryptedData);
-        byte[] ivData = Base64Utils.decodeFromString(iv);
-        byte[] sessionKeyByte = Base64Utils.decodeFromString(sessionKey);
-        String resultString = null;
-        AlgorithmParameterSpec ivSpec = new IvParameterSpec(ivData);
-        SecretKeySpec keySpec = new SecretKeySpec(sessionKeyByte, "AES");
-        try {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-            resultString = new String(cipher.doFinal(encrypData), StandardCharsets.UTF_8);
-        } catch (Exception e) {
-            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
-            cipher.init(Cipher.DECRYPT_MODE, keySpec, ivSpec);
-            resultString = new String(cipher.doFinal(encrypData), StandardCharsets.UTF_8);
-        }
+        String resultString = AESUtils.decrypt(encryptedData, sessionKey, iv);
         return objectMapper.readValue(resultString, PhoneNumberDTO.class);
     }
 }

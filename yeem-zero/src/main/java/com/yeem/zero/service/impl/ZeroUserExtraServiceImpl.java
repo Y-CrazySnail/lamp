@@ -41,9 +41,6 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
         userExtraQueryWrapper.eq("username", username);
         ZeroUserExtra userExtra = zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
-        if (StringUtils.isEmpty(userExtra)) {
-            throw new RuntimeException("get user info error");
-        }
         return userExtra;
     }
 

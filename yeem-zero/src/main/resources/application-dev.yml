@@ -82,3 +82,6 @@ tencent:
     secret-key: 00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA
     # 地区
     region: ap-shanghai
+
+auth:
+  wechat-mini-program: http://127.0.0.1:8080/server/auth/wechat-mini-program

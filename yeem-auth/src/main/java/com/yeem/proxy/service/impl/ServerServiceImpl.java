@@ -2,6 +2,7 @@ package com.yeem.proxy.service.impl;
 
 import cn.hutool.core.io.file.FileWriter;
 import cn.hutool.core.lang.UUID;
+import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -38,6 +39,7 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
     @Autowired
     private IMemberService memberService;
 
+    @DS("proxy")
     @Override
     public void refreshXray() {
         List<Server> serverList = serverMapper.selectList(new QueryWrapper<>());
