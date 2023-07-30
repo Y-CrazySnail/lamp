@@ -2,7 +2,6 @@ package com.yeem.auth.service.impl;
 
 import com.yeem.auth.service.IAuthService;
 import com.yeem.auth.service.IUserService;
-import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,9 +41,9 @@ public class AuthService implements IAuthService {
 
     @Autowired
     private IUserService userService;
-
-    @Autowired
-    private IZeroUserExtraService zeroUserExtraService;
+//
+//    @Autowired
+//    private IZeroUserExtraService zeroUserExtraService;
 
     @Autowired
     DataSourceTransactionManager dataSourceTransactionManager;
