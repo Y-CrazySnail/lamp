@@ -33,7 +33,7 @@ public class AESUtils {
      */
     public static String decrypt(@NotNull String content, @NotNull String key, @NotNull String iv) {
         try {
-            Cipher cipher = Cipher.getInstance(ALGORITHM);
+            Cipher cipher = Cipher.getInstance(ALGORITHM, "BC");
             byte[] sessionKey = java.util.Base64.getDecoder().decode(key);
             SecretKeySpec keySpec = new SecretKeySpec(sessionKey, AES_NAME);
             byte[] ivByte = java.util.Base64.getDecoder().decode(iv);
