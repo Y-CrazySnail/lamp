@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>e-server</artifactId>
+    <artifactId>yeem-auth</artifactId>
 
     <dependencies>
 <!--拼音转换工具-->

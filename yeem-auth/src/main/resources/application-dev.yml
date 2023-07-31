@@ -17,6 +17,11 @@ spring:
           url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
           username: yeem_dev
           password: yeem_dev
+        proxy:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/proxy_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          username: yeem_dev
+          password: yeem_dev
       druid:
         initialSize: 5
         minIdle: 5
