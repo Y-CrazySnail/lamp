@@ -20,6 +20,11 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
     @Autowired
     private IZeroOrderService zeroOrderService;
 
+    /**
+     * 下单
+     * @param zeroOrder 入参对象
+     * @return 下单状态
+     */
     @PostMapping("order")
     public ResponseEntity<Object> order(@RequestBody ZeroOrder zeroOrder) {
         try {

@@ -1,10 +1,12 @@
 package com.yeem.zero.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @TableName(value = "zero_order", autoResultMap = true)
 public class ZeroOrder extends BaseEntity {
@@ -21,6 +23,9 @@ public class ZeroOrder extends BaseEntity {
     private Date completeTime;
     private Date refundFlag;
     private String remark;
+    @TableField(exist = false)
+    private List<ZeroOrderItem> zeroOrderItemList;
+
     public Long getUserId() {
         return userId;
     }
@@ -123,5 +128,13 @@ public class ZeroOrder extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public List<ZeroOrderItem> getZeroOrderItemList() {
+        return zeroOrderItemList;
+    }
+
+    public void setZeroOrderItemList(List<ZeroOrderItem> zeroOrderItemList) {
+        this.zeroOrderItemList = zeroOrderItemList;
     }
 }
