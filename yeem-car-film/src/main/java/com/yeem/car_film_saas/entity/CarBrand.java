@@ -20,6 +20,9 @@ public class CarBrand extends BaseEntity {
     @TableField(exist = false)
     private List<CarModel> carModelList;
 
+    @TableField(exist = false)
+    private Integer carModelCount;
+
     public CarBrand() {
     }
 
@@ -29,6 +32,14 @@ public class CarBrand extends BaseEntity {
         this.logoPath = logoPath;
         this.logoName = logoName;
         this.carModelList = carModelList;
+    }
+
+    public Integer getCarModelCount() {
+        return carModelCount;
+    }
+
+    public void setCarModelCount(Integer carModelCount) {
+        this.carModelCount = carModelCount;
     }
 
     public String getName() {

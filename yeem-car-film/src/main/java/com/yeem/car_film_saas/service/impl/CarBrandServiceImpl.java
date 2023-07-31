@@ -57,6 +57,11 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
             carBrandQueryWrapper.like("name", brandName);
         }
         IPage<CarBrand> page = new Page<>(current, size);
+        IPage<CarBrand> pages = carBrandMapper.selectPage(page, carBrandQueryWrapper);
+        for (CarBrand record : pages.getRecords()) {
+            int count = carModelService.count();//10
+            record.setCarModelCount(count);
+        }
         return carBrandMapper.selectPage(page, carBrandQueryWrapper);
     }
 
