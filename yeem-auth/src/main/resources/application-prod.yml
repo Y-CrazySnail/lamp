@@ -20,8 +20,8 @@ spring:
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
           url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/proxy_database?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
-          username: proxy
-          password: Proxy20230620
+          username: mpw:uFwBLyKLvQp87L2J7q10IA==
+          password: mpw:GJW0yaEXStIQFNEhSj0rMg==
       druid:
         initialSize: 5
         minIdle: 5
