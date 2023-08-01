@@ -10,21 +10,64 @@ import java.util.List;
 
 @TableName(value = "zero_order", autoResultMap = true)
 public class ZeroOrder extends BaseEntity {
+    /**
+     * 用户ID
+     */
     private Long userId;
+    /**
+     * 地址ID
+     */
     private Long addressId;
+    /**
+     * 订单编号
+     */
     private String orderNo;
+    /**
+     * 运单号
+     */
     private String waybillNo;
+    /**
+     * 运费
+     */
     private BigDecimal deliveryCharge;
+    /**
+     * 订单总价
+     */
     private BigDecimal amount;
+    /**
+     * 状态 1已下单|待付款 2已付款|待发货 3已发货|待收货 4已收货|待评价 5已完成 0交易关闭 -1退款中
+     */
     private String status;
+    /**
+     * 下单时间
+     */
     private Date orderTime;
+    /**
+     * 付款时间
+     */
     private Date paymentTime;
+    /**
+     * 发货时间
+     */
     private Date shipmentTime;
+    /**
+     * 成交时间
+     */
     private Date completeTime;
+    /**
+     * 0未退款 1已退款
+     */
     private Date refundFlag;
+    /**
+     * 订单备注
+     */
     private String remark;
     @TableField(exist = false)
-    private List<ZeroOrderItem> zeroOrderItemList;
+    private List<ZeroOrderItem> orderItemList;
+    @TableField(exist = false)
+    private ZeroAddress address;
+    @TableField(exist = false)
+    private List<ZeroCart> cartList;
 
     public Long getUserId() {
         return userId;
@@ -130,11 +173,27 @@ public class ZeroOrder extends BaseEntity {
         this.remark = remark;
     }
 
-    public List<ZeroOrderItem> getZeroOrderItemList() {
-        return zeroOrderItemList;
+    public List<ZeroOrderItem> getOrderItemList() {
+        return orderItemList;
     }
 
-    public void setZeroOrderItemList(List<ZeroOrderItem> zeroOrderItemList) {
-        this.zeroOrderItemList = zeroOrderItemList;
+    public void setOrderItemList(List<ZeroOrderItem> orderItemList) {
+        this.orderItemList = orderItemList;
+    }
+
+    public ZeroAddress getAddress() {
+        return address;
+    }
+
+    public void setAddress(ZeroAddress address) {
+        this.address = address;
+    }
+
+    public List<ZeroCart> getCartList() {
+        return cartList;
+    }
+
+    public void setCartList(List<ZeroCart> cartList) {
+        this.cartList = cartList;
     }
 }

@@ -12,6 +12,7 @@ public class ZeroOrderItem extends BaseEntity {
     private int quantity;
     private BigDecimal price;
     private BigDecimal amount;
+    private ZeroProduct product;
 
     public Long getOrderId() {
         return orderId;
@@ -51,5 +52,13 @@ public class ZeroOrderItem extends BaseEntity {
 
     public void setAmount(BigDecimal amount) {
         this.amount = amount;
+    }
+
+    public ZeroProduct getProduct() {
+        return product;
+    }
+
+    public void setProduct(ZeroProduct product) {
+        this.product = product;
     }
 }
