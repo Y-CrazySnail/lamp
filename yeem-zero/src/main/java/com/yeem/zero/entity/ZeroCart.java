@@ -18,6 +18,10 @@ public class ZeroCart extends BaseEntity {
      * 数量
      */
     private int quantity;
+    /**
+     * 选中标识 0未选中 1选中
+     */
+    private Boolean checkFlag;
 
     @TableField(exist = false)
     private ZeroProduct zeroProduct;
@@ -44,6 +48,14 @@ public class ZeroCart extends BaseEntity {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public Boolean getCheckFlag() {
+        return checkFlag;
+    }
+
+    public void setCheckFlag(Boolean checkFlag) {
+        this.checkFlag = checkFlag;
     }
 
     public ZeroProduct getZeroProduct() {

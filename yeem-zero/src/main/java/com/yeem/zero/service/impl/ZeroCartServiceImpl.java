@@ -80,7 +80,8 @@ public class ZeroCartServiceImpl extends ServiceImpl<ZeroCartMapper, ZeroCart> i
     public List<ZeroCart> listByIdList(List<Long> cartIdList) {
         List<ZeroCart> zeroCartList = zeroCartMapper.selectBatchIds(cartIdList);
         zeroCartList.forEach(zeroCart -> {
-
+            ZeroProduct zeroProduct = zeroProductService.getById(zeroCart.getProductId());
+            zeroCart.setZeroProduct(zeroProduct);
         });
         return zeroCartList;
     }
