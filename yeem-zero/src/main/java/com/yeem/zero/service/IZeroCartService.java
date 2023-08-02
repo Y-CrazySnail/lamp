@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface IZeroCartService extends IService<ZeroCart> {
     List<ZeroCart> listByUsername();
+    List<ZeroCart> listByIdList(List<Long> cartIdList);
     boolean remove(ZeroCart zeroCart);
 }

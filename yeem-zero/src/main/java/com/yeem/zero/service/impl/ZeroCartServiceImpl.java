@@ -77,6 +77,15 @@ public class ZeroCartServiceImpl extends ServiceImpl<ZeroCartMapper, ZeroCart> i
     }
 
     @Override
+    public List<ZeroCart> listByIdList(List<Long> cartIdList) {
+        List<ZeroCart> zeroCartList = zeroCartMapper.selectBatchIds(cartIdList);
+        zeroCartList.forEach(zeroCart -> {
+
+        });
+        return zeroCartList;
+    }
+
+    @Override
     public boolean remove(ZeroCart zeroCart) {
         zeroCart.setDeleteFlag(true);
         return SqlHelper.retBool(zeroCartMapper.updateById(zeroCart));
