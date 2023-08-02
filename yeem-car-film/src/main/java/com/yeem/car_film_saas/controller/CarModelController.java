@@ -42,9 +42,9 @@ public class CarModelController extends BaseController<CarBrand> {
      * @return
      */
     @GetMapping("/pages")
-    public ResponseEntity<Object> page(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "name", required = false) String name) {
+    public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "name", required = false) String name) {
         try {
-            return ResponseEntity.ok(ICarModelService.page(current, size, name));
+            return ResponseEntity.ok(ICarModelService.pages(current, size, name));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");

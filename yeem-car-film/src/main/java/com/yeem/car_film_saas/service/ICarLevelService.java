@@ -9,9 +9,8 @@ public interface ICarLevelService extends IService<CarLevel> {
     /**
      * 传进levelNo 查询  levelName
      *
-     * @param levelNo
      * @return
      */
-    List<CarLevel> queryCarLevel();
+    List<CarLevel> list();
 
 }

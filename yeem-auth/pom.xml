@@ -12,7 +12,6 @@
     <artifactId>yeem-auth</artifactId>
 
     <dependencies>
-<!--拼音转换工具-->
         <dependency>
             <groupId>com.belerweb</groupId>
             <artifactId>pinyin4j</artifactId>

@@ -51,7 +51,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @return
      */
     @Override
-    public IPage<CarBrand> page(int current, int size, String brandName) {
+    public IPage<CarBrand> pages(int current, int size, String brandName) {
         QueryWrapper<CarBrand> carBrandQueryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(brandName)) {
             carBrandQueryWrapper.like("name", brandName);
@@ -59,7 +59,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
         IPage<CarBrand> page = new Page<>(current, size);
         IPage<CarBrand> pages = carBrandMapper.selectPage(page, carBrandQueryWrapper);
         for (CarBrand record : pages.getRecords()) {
-            int count = carModelService.count();//10
+            int count = carModelService.count();
             record.setCarModelCount(count);
         }
         return carBrandMapper.selectPage(page, carBrandQueryWrapper);
@@ -107,7 +107,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
         carBrandMapper.updateById(carBrand);
         // 数据库-车型
-        List<CarModel> databaseCarModelList = this.getById(carBrand.getId()).getCarModelList();
+         List<CarModel> databaseCarModelList = this.getById(carBrand.getId()).getCarModelList();
         // 前端-车型
         List<CarModel> carModelList = carBrand.getCarModelList();
         carModelList.forEach(carModel -> {
