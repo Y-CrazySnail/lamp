@@ -28,7 +28,7 @@ public interface ICarModelService extends IService<CarModel> {
      * @param size
      * @return
      */
-    IPage<CarModel> page(int current, int size, String name);
+    IPage<CarModel> pages(int current, int size, String name);
 
 
     /**

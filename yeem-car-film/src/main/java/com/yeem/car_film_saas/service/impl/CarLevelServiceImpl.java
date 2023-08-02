@@ -21,11 +21,11 @@ private CarLevelMapper carLevelMapper;
     /**
      * 按levelNo查询levelName
      *
-     * @param levelNo
+
      * @return
      */
     @Override
-    public List<CarLevel> queryCarLevel() {
+    public List<CarLevel> list() {
         return carLevelMapper.selectList(null);
     }
 }

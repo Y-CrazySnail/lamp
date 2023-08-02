@@ -21,7 +21,7 @@ public interface ICarBrandService extends IService<CarBrand> {
      */
 
 
-   IPage<CarBrand> page(int current, int size, String brandName);
+   IPage<CarBrand> pages(int current, int size, String brandName);
 
     /**
      * id单独查询

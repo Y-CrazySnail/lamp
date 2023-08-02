@@ -37,7 +37,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     public List<CarModel> list() {
         List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("delete_flag", 0));
-        List<CarLevel> carLevels = carLevelService.queryCarLevel();
+        List<CarLevel> carLevels = carLevelService.list();
         for (CarModel carModel : carModels) {
             for (CarLevel carLevel : carLevels) {
                 if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
@@ -57,7 +57,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     public List<CarModel> listByBrandId(Long id) {
         List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("brand_id", id).eq("delete_flag", 0));
-        List<CarLevel> carLevels = carLevelService.queryCarLevel();
+        List<CarLevel> carLevels = carLevelService.list();
         for (CarModel carModel : carModels) {
             for (CarLevel carLevel : carLevels) {
                 if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
@@ -76,7 +76,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public IPage<CarModel> page(int current, int size, String name) {
+    public IPage<CarModel> pages(int current, int size, String name) {
         QueryWrapper<CarModel> carModelQueryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(name)) {
             carModelQueryWrapper.like("name", name);
@@ -85,7 +85,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
         Page<CarModel> page = new Page<>(current, size);
         Page<CarModel> carModelPage = carModelMapper.selectPage(page, carModelQueryWrapper);
         List<CarModel> records = carModelPage.getRecords();
-        List<CarLevel> carLevels = carLevelService.queryCarLevel();
+        List<CarLevel> carLevels = carLevelService.list();
         for (CarModel carModel : records) {
             for (CarLevel carLevel : carLevels) {
                 if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
@@ -105,7 +105,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     public CarModel getById(Long id) {
         CarModel carModel = carModelMapper.selectById(id);
-        for (CarLevel carLevel : carLevelService.queryCarLevel()) {
+        for (CarLevel carLevel : carLevelService.list()) {
             if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
                 carModel.setLevelName(carLevel.getLevelName());
             }
@@ -165,6 +165,18 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
             carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
             carModelMapper.updateById(carModel);
         }
+    }
+
+    @Override
+    public boolean save(CarModel carModel) {
+        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
+        return super.save(carModel);
+    }
+
+    @Override
+    public boolean updateById(CarModel carModel) {
+        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
+        return super.updateById(carModel);
     }
 
     @Override
