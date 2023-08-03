@@ -46,6 +46,11 @@
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
         </dependency>
+        <dependency>
+            <groupId>cn.hangsman.operationlog</groupId>
+            <artifactId>operation-log-spring-boot-starter</artifactId>
+            <version>1.0.1</version>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

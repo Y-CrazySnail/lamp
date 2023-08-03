@@ -3,12 +3,15 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarBrand;
 import com.yeem.car_film_saas.service.ICarBrandService;
+import com.yeem.car_film_saas.utils.OperLog;
 import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import javax.xml.transform.Result;
 
 @Slf4j
 @RestController
@@ -22,6 +25,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      *
      * @return
      */
+    @OperLog(operModul = "Brand模块", operType = "list查询" ,operDesc = "描述:查询Brand全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
@@ -131,4 +135,5 @@ public class CarBrandController extends BaseController<CarBrand> {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("add失败");
         }
     }
+
 }
