@@ -57,9 +57,6 @@ public class SysLog implements Serializable {
     /** 操作时间 **/
     private Date createTime;
 
-    /** 用户id **/
-    private String userId;
-
     /** 用户名 **/
     private String userName;
 

@@ -3,6 +3,7 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmProductLevel;
 import com.yeem.car_film_saas.service.ICarFilmProductLevelService;
+import com.yeem.car_film_saas.utils.OperLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class CarFilmProductLevelController {
     @Autowired
     private ICarFilmProductLevelService carFilmProductLevelService;
 
+    @OperLog(operModul = "product-level模块", operType = "list查询", operDesc = "描述:查询product-level全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productLevelName", required = false) String productLevelName, @RequestParam(value = "status", required = false) String status) {
         try {
@@ -25,6 +27,7 @@ public class CarFilmProductLevelController {
         }
     }
 
+    @OperLog(operModul = "product-level模块", operType = "pages查询", operDesc = "描述:分页查询product-level全部信息")
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productLevelName", required = false) String productLevelName, @RequestParam(value = "status", required = false) String status) {
         try {
@@ -35,6 +38,7 @@ public class CarFilmProductLevelController {
         }
     }
 
+    @OperLog(operModul = "product-level模块", operType = "getById查询", operDesc = "描述:ID查询product-level全部信息")
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
@@ -45,6 +49,7 @@ public class CarFilmProductLevelController {
         }
     }
 
+    @OperLog(operModul = "product-level模块", operType = "delete", operDesc = "描述:软删除product-level全部信息")
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarFilmProductLevel carFilmProductLevel) {
         try {
@@ -56,6 +61,7 @@ public class CarFilmProductLevelController {
         }
     }
 
+    @OperLog(operModul = "product-level模块", operType = "save", operDesc = "描述:保存product-level全部信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarFilmProductLevel carFilmProductLevel) {
         try {
@@ -67,6 +73,7 @@ public class CarFilmProductLevelController {
         }
     }
 
+    @OperLog(operModul = "product-level模块", operType = "update", operDesc = "描述:修改product-level全部信息")
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarFilmProductLevel carFilmProductLevel) {
         try {

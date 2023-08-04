@@ -1,5 +1,4 @@
 permit-url:
-  - /car-brand/selectByName
   - /car-file-technician/save
   - /car-file-technician/update
   - /car-file-technician/delete

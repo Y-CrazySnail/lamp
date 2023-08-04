@@ -1,6 +1,7 @@
 package com.yeem.car_film_saas.utils;
 
 import com.alibaba.fastjson.JSON;
+import com.yeem.common.utils.OauthUtils;
 import io.micrometer.core.instrument.util.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -30,14 +31,12 @@ public class OperateLogAspect {
     public void operatePointCut() {
     }
 
-
     /**
      * 设置操作异常切入点记录异常日志 扫描所有controller包下操作
      */
     @Pointcut("execution(* com.yeem.car_film_saas.controller..*.*(..))")
     public void operateExceptionPoinCut() {
     }
-
 
     /**
      * 前置通知
@@ -71,7 +70,6 @@ public class OperateLogAspect {
         saveLogInfo(joinPoint, null, e);
     }
 
-
     /**
      * 保存日志信息
      *
@@ -101,9 +99,7 @@ public class OperateLogAspect {
             Map<String, String> rtnMap = converMap(request.getParameterMap());
             // 将参数所在的数组转换成json
             String params = JSON.toJSONString(rtnMap);
-
             // 获取操作
-
             OperLog opLog = method.getAnnotation(OperLog.class);
             if (opLog != null) {
                 String operModul = opLog.operModul();
@@ -113,27 +109,24 @@ public class OperateLogAspect {
                 sysLog.setOperateType(operType);
                 sysLog.setOperateDesc(operDesc);
             }
-
             if (e != null) {
                 // 异常名称
                 sysLog.setExceptionName(e.getClass().getName());
                 // 异常信息
                 sysLog.setExceptionMessage(stackTraceToString(e.getClass().getName(), e.getMessage(), e.getStackTrace()));
             }
-
-            //获取线程id
+            // 获取线程id
             int threadId = (int) Thread.currentThread().getId();
             sysLog.setThread(threadId);
             sysLog.setRequestParam(params);
             sysLog.setResponseParam(JSON.toJSONString(keys));
-            sysLog.setUserId("1");    // 这边自己公司的工具类
-            sysLog.setUserName("qimou");// 你们可把用户信息放在Request中获取
+            sysLog.setUserName(OauthUtils.getUsername());// 你们可把用户信息放在Request中获取
             sysLog.setIp(getIpAddressa(request));
             sysLog.setUri(request.getRequestURI());
             sysLog.setCreateTime(new Date());
             sysLog.setRequestState(e == null ? 1 : 2);
             sysLog.setSessionTime((int) ((System.currentTimeMillis() - startTime.get()) / 1000));
-            //插入数据到数据库
+            // 插入数据到数据库
             sysLogMapper.insert(sysLog);
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -169,7 +162,6 @@ public class OperateLogAspect {
         return message;
     }
 
-
     /**
      * 获取IP
      *
@@ -179,8 +171,7 @@ public class OperateLogAspect {
     public static String getIpAddressa(HttpServletRequest request) {
         String Xip = request.getHeader("X-Real-IP");
         String XFor = request.getHeader("X-Forwarded-For");
-
-        //多次反向代理后会有多个ip值，第一个ip才是真实ip
+        // 多次反向代理后会有多个ip值，第一个ip才是真实ip
         if (StringUtils.isNotEmpty(XFor) && !"unKnown".equalsIgnoreCase(XFor)) {
             int index = XFor.indexOf(",");
             if (index != -1) {
@@ -210,6 +201,4 @@ public class OperateLogAspect {
 
         return "0:0:0:0:0:0:0:1".equals(XFor) ? "127.0.0.1" : XFor;
     }
-
-
 }

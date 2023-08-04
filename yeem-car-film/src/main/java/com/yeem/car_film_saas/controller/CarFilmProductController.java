@@ -3,6 +3,7 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmProduct;
 import com.yeem.car_film_saas.service.ICarFilmProductService;
+import com.yeem.car_film_saas.utils.OperLog;
 import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      *
      * @return
      */
+    @OperLog(operModul = "product模块", operType = "list查询", operDesc = "描述:查询product全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo,
                                        @RequestParam(value = "productName", required = false) String productName,
@@ -46,6 +48,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param size
      * @return
      */
+    @OperLog(operModul = "product模块", operType = "pages查询", operDesc = "描述:分页查询product全部信息")
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
                                         @RequestParam("size") int size,
@@ -72,6 +75,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param id
      * @return
      */
+    @OperLog(operModul = "product模块", operType = "getById查询", operDesc = "描述:ID查询product全部信息")
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
@@ -93,6 +97,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param carFilmProduct
      * @return
      */
+    @OperLog(operModul = "product模块", operType = "delete", operDesc = "描述:软删除product全部信息")
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarFilmProduct carFilmProduct) {
         try {
@@ -110,6 +115,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param carFilmProduct
      * @return
      */
+    @OperLog(operModul = "product模块", operType = "save", operDesc = "描述:保存product全部信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarFilmProduct carFilmProduct) {
         try {
@@ -127,6 +133,7 @@ public class CarFilmProductController extends BaseController<CarFilmProduct> {
      * @param carFilmProduct
      * @return
      */
+    @OperLog(operModul = "product模块", operType = "update", operDesc = "描述:修改product全部信息")
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarFilmProduct carFilmProduct) {
         try {

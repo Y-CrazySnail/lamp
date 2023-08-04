@@ -3,6 +3,7 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmMessage;
 import com.yeem.car_film_saas.service.ICarFilmMessageService;
+import com.yeem.car_film_saas.utils.OperLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ public class CarFilmMessageController {
     @Autowired
     private ICarFilmMessageService iCarFilmMessageService;
 
+    @OperLog(operModul = "message模块", operType = "list查询", operDesc = "描述:查询message全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "sendStatus", required = false) String sendStatus, @RequestParam(value = "name", required = false) String name) {
         try {
@@ -25,6 +27,7 @@ public class CarFilmMessageController {
         }
     }
 
+    @OperLog(operModul = "message模块", operType = "pages查询", operDesc = "描述:分页查询message全部信息")
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "sendStatus", required = false) String sendStatus, @RequestParam(value = "name", required = false) String name) {
         try {
@@ -35,6 +38,7 @@ public class CarFilmMessageController {
         }
     }
 
+    @OperLog(operModul = "message模块", operType = "getById查询", operDesc = "描述:ID查询message全部信息")
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
@@ -45,6 +49,7 @@ public class CarFilmMessageController {
         }
     }
 
+    @OperLog(operModul = "message模块", operType = "delete", operDesc = "描述:软删除message全部信息")
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarFilmMessage carFilmMessage) {
         try {
@@ -56,6 +61,7 @@ public class CarFilmMessageController {
         }
     }
 
+    @OperLog(operModul = "message模块", operType = "save", operDesc = "描述:保存message全部信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarFilmMessage carFilmMessage) {
         try {
@@ -67,6 +73,7 @@ public class CarFilmMessageController {
         }
     }
 
+    @OperLog(operModul = "message模块", operType = "update", operDesc = "描述:修改message全部信息")
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarFilmMessage carFilmMessage) {
         try {
