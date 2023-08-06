@@ -64,7 +64,7 @@ public class ZeroOrder extends BaseEntity {
      */
     private String remark;
     /**
-     * 直接下单direct 购物车下单cart
+     * 直接下单direct 购物车下单indirect
      */
     @TableField(exist = false)
     private String type;
