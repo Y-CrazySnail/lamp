@@ -33,6 +33,10 @@ public class ZeroUserExtra extends BaseEntity {
      * 手机号
      */
     private String phoneNumber;
+    /**
+     * 微信OpenId
+     */
+    private String wechatOpenId;
 
     public Long getUserId() {
         return userId;
@@ -88,5 +92,13 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getWechatOpenId() {
+        return wechatOpenId;
+    }
+
+    public void setWechatOpenId(String wechatOpenId) {
+        this.wechatOpenId = wechatOpenId;
     }
 }

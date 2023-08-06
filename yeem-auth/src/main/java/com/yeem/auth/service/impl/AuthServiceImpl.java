@@ -98,6 +98,7 @@ public class AuthServiceImpl implements IAuthService {
         wechatMiniProgramDTO.setUsername(user.getUsername());
         wechatMiniProgramDTO.setPhoneNumber(phoneNumber);
         wechatMiniProgramDTO.setResponse(httpResponse.body());
+        wechatMiniProgramDTO.setWechatOpenId(openId);
         return wechatMiniProgramDTO;
     }
 }

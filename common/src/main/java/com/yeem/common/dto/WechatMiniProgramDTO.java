@@ -33,6 +33,7 @@ public class WechatMiniProgramDTO {
     private String encryptedData;
     private String phoneNumber;
     private String response;
+    private String wechatOpenId;
 
     public Long getUserId() {
         return userId;
@@ -120,5 +121,13 @@ public class WechatMiniProgramDTO {
 
     public void setResponse(String response) {
         this.response = response;
+    }
+
+    public String getWechatOpenId() {
+        return wechatOpenId;
+    }
+
+    public void setWechatOpenId(String wechatOpenId) {
+        this.wechatOpenId = wechatOpenId;
     }
 }

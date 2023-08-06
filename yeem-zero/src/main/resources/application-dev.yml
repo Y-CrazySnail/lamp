@@ -39,6 +39,9 @@ spring:
 mybatis-plus:
   mapper-locations: classpath*:mappers/**/*.xml
   type-aliases-package: com.yeem
+  configuration:
+    logging:
+      enableSqlLog: true
 
 # Oauth2信息
 access-token-converter:
@@ -70,6 +73,10 @@ wechat:
     app-id: wx9cb140f2eacb6870
     # appSecret
     app-secret: b873d35be8357186fc8f90c48edb24a9
+    merchant-id: 1647282072
+    private-key-path: /Users/snail/Desktop/1647282072_20230803_cert/apiclient_key.pem
+    merchant-serial-number: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
+    api-v3-key: d67i4K3rgJNGIs8YU2x1R783joOhlVDq
 
 # 腾讯云COS存储
 tencent:

@@ -55,7 +55,7 @@ public class ZeroAuthServiceImpl implements IZeroAuthService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        log.info("{}", wechatMiniProgramDTO);
+        log.info("wechat mini program login info：{}", wechatMiniProgramDTO);
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(wechatMiniProgramDTO.getUsername());
         if (StringUtils.isEmpty(zeroUserExtra)) {
             zeroUserExtra = new ZeroUserExtra();
@@ -65,6 +65,7 @@ public class ZeroAuthServiceImpl implements IZeroAuthService {
             zeroUserExtra.setAvatarUrl(wechatMiniProgramDTO.getAvatarUrl());
             zeroUserExtra.setGender(wechatMiniProgramDTO.getGender());
             zeroUserExtra.setPhoneNumber(wechatMiniProgramDTO.getPhoneNumber());
+            zeroUserExtra.setWechatOpenId(wechatMiniProgramDTO.getWechatOpenId());
             zeroUserExtraService.save(zeroUserExtra);
         }
         return wechatMiniProgramDTO.getResponse();

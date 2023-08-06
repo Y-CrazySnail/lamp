@@ -2,6 +2,7 @@ package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.entity.BaseEntity;
 
 import java.math.BigDecimal;
@@ -62,12 +63,19 @@ public class ZeroOrder extends BaseEntity {
      * 订单备注
      */
     private String remark;
+    /**
+     * 直接下单direct 购物车下单cart
+     */
+    @TableField(exist = false)
+    private String type;
     @TableField(exist = false)
     private List<ZeroOrderItem> orderItemList;
     @TableField(exist = false)
     private ZeroAddress address;
     @TableField(exist = false)
     private List<ZeroCart> cartList;
+    @TableField(exist = false)
+    private PrepayWithRequestPaymentResponse prepayWithRequestPaymentResponse;
 
     public Long getUserId() {
         return userId;
@@ -195,5 +203,21 @@ public class ZeroOrder extends BaseEntity {
 
     public void setCartList(List<ZeroCart> cartList) {
         this.cartList = cartList;
+    }
+
+    public PrepayWithRequestPaymentResponse getPrepayWithRequestPaymentResponse() {
+        return prepayWithRequestPaymentResponse;
+    }
+
+    public void setPrepayWithRequestPaymentResponse(PrepayWithRequestPaymentResponse prepayWithRequestPaymentResponse) {
+        this.prepayWithRequestPaymentResponse = prepayWithRequestPaymentResponse;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }
