@@ -1,9 +1,8 @@
 package com.yeem.zero.service.impl;
 
 import cn.hutool.core.lang.UUID;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
-import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.config.Constant;
@@ -12,12 +11,8 @@ import com.yeem.zero.mapper.ZeroOrderMapper;
 import com.yeem.zero.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import com.wechat.pay.java.core.RSAAutoCertificateConfig;
-import com.wechat.pay.java.service.payments.jsapi.model.Amount;
-import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -75,6 +70,22 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
 
         return zeroOrder;
+    }
+
+    @Override
+    public List<ZeroOrder> list(String status) {
+        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
+        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(status)) {
+            zeroOrderQueryWrapper.eq("status", status);
+        }
+        zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
+        if (!zeroOrderList.isEmpty()) {
+            zeroOrderList.forEach(e -> {
+            });
+        }
+        return zeroOrderList;
     }
 
     /**

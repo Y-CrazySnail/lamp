@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -38,6 +35,16 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
         } catch (Exception e) {
             log.error("order error", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("order error");
+        }
+    }
+
+    @GetMapping("list")
+    public ResponseEntity<Object> list(@RequestParam String status) {
+        try {
+            return ResponseEntity.ok(zeroOrderService.list(status));
+        } catch (Exception e) {
+            log.error("list order error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("list order error");
         }
     }
 }
