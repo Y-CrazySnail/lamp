@@ -10,6 +10,7 @@ import com.yeem.car_film_saas.mapper.CarFilmTechnicianMapper;
 import com.yeem.car_film_saas.service.ICarFilmTechnicianService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -76,17 +77,20 @@ public class CarFilmTechnicianServiceImpl extends ServiceImpl<CarFilmTechnicianM
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmTechnician carFilmTechnician) {
         carFilmTechnician.setDeleteFlag(true);
         carFilmTechnicianMapper.updateById(carFilmTechnician);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmTechnician carFilmTechnician) {
         return SqlHelper.retBool(carFilmTechnicianMapper.insert(carFilmTechnician));
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmTechnician carFilmTechnician) {
         carFilmTechnicianMapper.updateById(carFilmTechnician);
     }

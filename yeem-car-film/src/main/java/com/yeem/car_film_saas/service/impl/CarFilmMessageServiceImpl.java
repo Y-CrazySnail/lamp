@@ -10,6 +10,7 @@ import com.yeem.car_film_saas.mapper.CarFilmMessageMapper;
 import com.yeem.car_film_saas.service.ICarFilmMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -22,57 +23,61 @@ public class CarFilmMessageServiceImpl extends ServiceImpl<CarFilmMessageMapper,
 
     /**
      * 查询全部
+     *
      * @return
      */
     @Override
-    public List<CarFilmMessage> list(String productNo,String sendStatus,String name) {
-        QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper=new QueryWrapper<>();
-        if (StringUtils.isEmpty(productNo)){
-            carFilmMessageQueryWrapper.eq("product_no",productNo);
+    public List<CarFilmMessage> list(String productNo, String sendStatus, String name) {
+        QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper = new QueryWrapper<>();
+        if (StringUtils.isEmpty(productNo)) {
+            carFilmMessageQueryWrapper.eq("product_no", productNo);
         }
-        if (StringUtils.isEmpty(sendStatus)){
-            carFilmMessageQueryWrapper.eq("send_status",sendStatus);
+        if (StringUtils.isEmpty(sendStatus)) {
+            carFilmMessageQueryWrapper.eq("send_status", sendStatus);
         }
-        if (StringUtils.isEmpty(name)){
-            carFilmMessageQueryWrapper.like("name",name);
+        if (StringUtils.isEmpty(name)) {
+            carFilmMessageQueryWrapper.like("name", name);
         }
         carFilmMessageQueryWrapper.eq("delete_flag", 0);
         return carFilmMessageMapper.selectList(carFilmMessageQueryWrapper);
     }
 
     @Override
-    public IPage<CarFilmMessage> pages(int current, int size, String productNo,String sendStatus,String name) {
-        QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper=new QueryWrapper<>();
-        if (StringUtils.isEmpty(productNo)){
-            carFilmMessageQueryWrapper.eq("product_no",productNo);
+    public IPage<CarFilmMessage> pages(int current, int size, String productNo, String sendStatus, String name) {
+        QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper = new QueryWrapper<>();
+        if (StringUtils.isEmpty(productNo)) {
+            carFilmMessageQueryWrapper.eq("product_no", productNo);
         }
-        if (StringUtils.isEmpty(sendStatus)){
-            carFilmMessageQueryWrapper.eq("send_status",sendStatus);
+        if (StringUtils.isEmpty(sendStatus)) {
+            carFilmMessageQueryWrapper.eq("send_status", sendStatus);
         }
-        if (StringUtils.isEmpty(name)){
-            carFilmMessageQueryWrapper.like("name",name);
+        if (StringUtils.isEmpty(name)) {
+            carFilmMessageQueryWrapper.like("name", name);
         }
-        Page<CarFilmMessage> page=new Page<>(current,size);
-        return carFilmMessageMapper.selectPage(page,carFilmMessageQueryWrapper);
+        Page<CarFilmMessage> page = new Page<>(current, size);
+        return carFilmMessageMapper.selectPage(page, carFilmMessageQueryWrapper);
     }
 
     @Override
     public CarFilmMessage getById(Long id) {
-        return carFilmMessageMapper.selectOne(new QueryWrapper<CarFilmMessage>().eq("delete_flag", 0).eq("id",id));
+        return carFilmMessageMapper.selectOne(new QueryWrapper<CarFilmMessage>().eq("delete_flag", 0).eq("id", id));
     }
 
-
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void remove(CarFilmMessage carFilmMessage) {
-    carFilmMessage.setDeleteFlag(true);
-    carFilmMessageMapper.updateById(carFilmMessage);
+        carFilmMessage.setDeleteFlag(true);
+        carFilmMessageMapper.updateById(carFilmMessage);
+        throw new RuntimeException("???");
     }
 
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public boolean save(CarFilmMessage carFilmMessage) {
-       return SqlHelper.retBool(carFilmMessageMapper.insert(carFilmMessage));
+        return SqlHelper.retBool(carFilmMessageMapper.insert(carFilmMessage));
     }
 
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void update(CarFilmMessage carFilmMessage) {
         carFilmMessageMapper.updateById(carFilmMessage);

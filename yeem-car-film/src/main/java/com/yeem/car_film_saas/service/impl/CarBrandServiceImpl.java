@@ -13,6 +13,7 @@ import com.yeem.car_film_saas.service.ICarBrandService;
 import com.yeem.car_film_saas.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -90,6 +91,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @param carBrand
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void remove(CarBrand carBrand) {
         carModelService.removeByBrandId(carBrand.getId());
         carBrand.setDeleteFlag(true);
@@ -102,6 +104,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @param carBrand
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(CarBrand carBrand) {
         carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));
@@ -146,6 +149,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      * @return
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarBrand carBrand) {
         carBrand.setNameEn(PinyinUtil.getPinyin(carBrand.getName()));
         carBrand.setLogoName(FileNameUtil.getName(carBrand.getLogoPath()));

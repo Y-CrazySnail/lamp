@@ -10,6 +10,7 @@ import com.yeem.car_film_saas.service.ICarLevelService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -25,6 +26,7 @@ private CarLevelMapper carLevelMapper;
      * @return
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public List<CarLevel> list() {
         return carLevelMapper.selectList(null);
     }

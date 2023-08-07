@@ -10,6 +10,7 @@ import com.yeem.car_film_saas.mapper.CarFilmProductLevelMapper;
 import com.yeem.car_film_saas.service.ICarFilmProductLevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -59,17 +60,20 @@ public class CarFilmProductLevelServiceImpl extends ServiceImpl<CarFilmProductLe
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmProductLevel carFilmProductLevel) {
         carFilmProductLevel.setDeleteFlag(true);
         carFilmProductLevelMapper.updateById(carFilmProductLevel);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmProductLevel carFilmProductLevel) {
         return SqlHelper.retBool(carFilmProductLevelMapper.insert(carFilmProductLevel));
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmProductLevel carFilmProductLevel) {
         carFilmProductLevelMapper.updateById(carFilmProductLevel);
     }

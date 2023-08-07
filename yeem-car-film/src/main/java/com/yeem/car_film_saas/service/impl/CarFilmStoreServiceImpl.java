@@ -10,6 +10,7 @@ import com.yeem.car_film_saas.mapper.CarFilmStoreMapper;
 import com.yeem.car_film_saas.service.ICarFilmStoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
@@ -85,25 +86,35 @@ public class CarFilmStoreServiceImpl extends ServiceImpl<CarFilmStoreMapper, Car
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmStore carFilmStore) {
         carFilmStore.setDeleteFlag(true);
         carFilmStoreMapper.updateById(carFilmStore);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmStore carFilmStore) {
         return SqlHelper.retBool(carFilmStoreMapper.insert(carFilmStore));
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmStore carFilmStore) {
         carFilmStoreMapper.updateById(carFilmStore);
     }
 
-    public List<CarFilmStore> selectAddress(String latitude,String longitude){
-        Map<String ,Object> map=new HashMap<String,Object>();
-        map.put("latitude",latitude);
-        map.put("longitude",longitude);
+    /**
+     * 输入经纬度查询距离门店
+     * @param latitude
+     * @param longitude
+     * @return
+     */
+    @Transactional(rollbackFor = {Exception.class})
+    public List<CarFilmStore> selectAddress(String latitude, String longitude) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("latitude", latitude);
+        map.put("longitude", longitude);
         return carFilmStoreMapper.selectAddress(map);
     }
 

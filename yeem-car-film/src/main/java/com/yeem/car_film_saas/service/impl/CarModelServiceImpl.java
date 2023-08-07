@@ -14,6 +14,7 @@ import com.yeem.car_film_saas.mapper.CarModelMapper;
 import com.yeem.car_film_saas.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
@@ -119,6 +120,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @param id
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void removeByBrandId(Long id) {
         UpdateWrapper<CarModel> wrapper = new UpdateWrapper<>();
         wrapper.eq("brand_id", id).set("delete_flag", true);
@@ -126,6 +128,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void remove(Long id) {
         UpdateWrapper<CarModel> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", id).set("delete_flag", true);
@@ -138,17 +141,19 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @param carModelList
      */
     @Override
-    public boolean save(List<CarModel> carModelList,Long brandId) {
-        boolean flag=false;
+    @Transactional(rollbackFor = {Exception.class})
+    public boolean save(List<CarModel> carModelList, Long brandId) {
+        boolean flag = false;
         for (CarModel carModel : carModelList) {
             carModel.setBrandId(brandId);
             carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
-          flag=  SqlHelper.retBool(carModelMapper.insert(carModel));
+            flag = SqlHelper.retBool(carModelMapper.insert(carModel));
         }
         return flag;
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void insert(CarModel carModel) {
         carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
         carModelMapper.insert(carModel);
@@ -160,6 +165,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @param carModelList
      */
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public void update(List<CarModel> carModelList) {
         for (CarModel carModel : carModelList) {
             carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
@@ -168,21 +174,16 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarModel carModel) {
         carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
         return super.save(carModel);
     }
 
     @Override
+    @Transactional(rollbackFor = {Exception.class})
     public boolean updateById(CarModel carModel) {
         carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
         return super.updateById(carModel);
     }
-
-    @Override
-    @DS("car-film-saas")
-    public boolean updateBatchById(Collection<CarModel> entityList) {
-        return super.updateBatchById(entityList);
-    }
-
 }
