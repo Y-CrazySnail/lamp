@@ -82,7 +82,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
         List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
         if (!zeroOrderList.isEmpty()) {
-            zeroOrderList.forEach(e -> {
+            zeroOrderList.forEach(zeroOrder -> {
+                List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(zeroOrder.getId());
+                zeroOrder.setOrderItemList(zeroOrderItemList);
             });
         }
         return zeroOrderList;

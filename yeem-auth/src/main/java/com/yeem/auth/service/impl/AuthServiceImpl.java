@@ -64,15 +64,15 @@ public class AuthServiceImpl implements IAuthService {
         if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(sessionKey)) {
             throw new RuntimeException("get openId and sessionKey error");
         }
-        try {
-            PhoneNumberDTO phoneNumberDTO = WechatUtils.decryptPhoneNumber(sessionKey, wechatMiniProgramDTO.getEncryptedData(), wechatMiniProgramDTO.getIv());
-            phoneNumber = phoneNumberDTO.getPhoneNumber();
-        } catch (Exception e) {
-            log.error("decryption phone number error:", e);
-        }
-        if (StringUtils.isEmpty(phoneNumber)) {
-            throw new RuntimeException("decryption phone number error");
-        }
+//        try {
+//            PhoneNumberDTO phoneNumberDTO = WechatUtils.decryptPhoneNumber(sessionKey, wechatMiniProgramDTO.getEncryptedData(), wechatMiniProgramDTO.getIv());
+//            phoneNumber = phoneNumberDTO.getPhoneNumber();
+//        } catch (Exception e) {
+//            log.error("decryption phone number error:", e);
+//        }
+//        if (StringUtils.isEmpty(phoneNumber)) {
+//            throw new RuntimeException("decryption phone number error");
+//        }
         ThirdPartyLogin thirdPartyLoginWechatMiniProgram = thirdPartyLoginService.getByWechatMiniProgram(wechatMiniProgramDTO.getApplication(), openId);
         if (StringUtils.isEmpty(thirdPartyLoginWechatMiniProgram)) {
             String usernameTemp = UUID.fastUUID().toString();
@@ -96,7 +96,7 @@ public class AuthServiceImpl implements IAuthService {
         HttpResponse httpResponse = HttpRequest.post(authUrl).header("Authorization", auth).execute();
         wechatMiniProgramDTO.setUserId(user.getId());
         wechatMiniProgramDTO.setUsername(user.getUsername());
-        wechatMiniProgramDTO.setPhoneNumber(phoneNumber);
+//        wechatMiniProgramDTO.setPhoneNumber(phoneNumber);
         wechatMiniProgramDTO.setResponse(httpResponse.body());
         wechatMiniProgramDTO.setWechatOpenId(openId);
         return wechatMiniProgramDTO;
