@@ -4,7 +4,7 @@ import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarBrand;
 import com.yeem.car_film_saas.entity.CarModel;
 import com.yeem.car_film_saas.service.ICarModelService;
-import com.yeem.car_film_saas.utils.OperLog;
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class CarModelController extends BaseController<CarBrand> {
      *
      * @return
      */
-    @OperLog(operModul = "model模块", operType = "list查询", operDesc = "描述:查询model全部信息")
+    @OperateLog(operateModule = "model模块", operateType = "list查询", operateDesc = "描述:查询model全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
@@ -43,7 +43,7 @@ public class CarModelController extends BaseController<CarBrand> {
      * @param size
      * @return
      */
-    @OperLog(operModul = "model模块", operType = "pages查询", operDesc = "描述:分页查询model全部信息")
+    @OperateLog(operateModule = "model模块", operateType = "pages查询", operateDesc = "描述:分页查询model全部信息")
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "name", required = false) String name) {
         try {
@@ -60,7 +60,7 @@ public class CarModelController extends BaseController<CarBrand> {
      * @param id
      * @return
      */
-    @OperLog(operModul = "model模块", operType = "getById查询", operDesc = "描述:ID查询model全部信息")
+    @OperateLog(operateModule = "model模块", operateType = "getById查询", operateDesc = "描述:ID查询model全部信息")
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
@@ -81,7 +81,7 @@ public class CarModelController extends BaseController<CarBrand> {
      * @param carModel
      * @return
      */
-    @OperLog(operModul = "model模块", operType = "delete", operDesc = "描述:软删除model全部信息")
+    @OperateLog(operateModule = "model模块", operateType = "delete", operateDesc = "描述:软删除model全部信息")
     @DeleteMapping("/delete")
     public ResponseEntity<Object> removeByBrandId(@RequestBody CarModel carModel) {
         try {
@@ -99,7 +99,7 @@ public class CarModelController extends BaseController<CarBrand> {
      * @param carModelList
      * @return
      */
-    @OperLog(operModul = "model模块", operType = "update", operDesc = "描述:修改model全部信息")
+    @OperateLog(operateModule = "model模块", operateType = "update", operateDesc = "描述:修改model全部信息")
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody List<CarModel> carModelList) {
         try {
@@ -117,7 +117,7 @@ public class CarModelController extends BaseController<CarBrand> {
      * @param carModel
      * @return
      */
-    @OperLog(operModul = "model模块", operType = "save", operDesc = "描述:保存model全部信息")
+    @OperateLog(operateModule = "model模块", operateType = "save", operateDesc = "描述:保存model全部信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarModel carModel) {
         try {

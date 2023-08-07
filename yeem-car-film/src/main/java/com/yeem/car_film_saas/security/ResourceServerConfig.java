@@ -1,4 +1,4 @@
-package com.yeem.security;
+package com.yeem.car_film_saas.security;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean;

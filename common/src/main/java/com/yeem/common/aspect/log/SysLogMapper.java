@@ -1,4 +1,4 @@
-package com.yeem.car_film_saas.utils;
+package com.yeem.common.aspect.log;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;

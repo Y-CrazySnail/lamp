@@ -18,11 +18,6 @@
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-generator</artifactId>
-            <version>3.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
             <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
             <version>3.6.1</version>
         </dependency>
@@ -74,11 +69,6 @@
             <groupId>org.bouncycastle</groupId>
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.46</version>
-        </dependency>
-        <dependency>
-            <groupId>cn.hangsman.operationlog</groupId>
-            <artifactId>operation-log-spring-boot-starter</artifactId>
-            <version>1.0.1</version>
         </dependency>
     </dependencies>
 

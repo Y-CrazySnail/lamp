@@ -3,7 +3,7 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmTechnician;
 import com.yeem.car_film_saas.service.ICarFilmTechnicianService;
-import com.yeem.car_film_saas.utils.OperLog;
+import com.yeem.common.aspect.log.OperateLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class CarFilmTechnicianController {
     @Autowired
     private ICarFilmTechnicianService carFilmTechnicianService;
 
-    @OperLog(operModul = "technician模块", operType = "list查询", operDesc = "描述:查询technician全部信息")
+    @OperateLog(operateModule = "technician模块", operateType = "list查询", operateDesc = "描述:查询technician全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "name", required = false) String name, @RequestParam(value = "province", required = false) String province, @RequestParam(value = "city", required = false) String city, @RequestParam(value = "county", required = false) String county, @RequestParam(value = "level", required = false) String level) {
         try {
@@ -28,7 +28,7 @@ public class CarFilmTechnicianController {
         }
     }
 
-    @OperLog(operModul = "technician模块", operType = "pages查询", operDesc = "描述:分页查询technician全部信息")
+    @OperateLog(operateModule = "technician模块", operateType = "pages查询", operateDesc = "描述:分页查询technician全部信息")
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "name", required = false) String name, @RequestParam(value = "province", required = false) String province, @RequestParam(value = "city", required = false) String city, @RequestParam(value = "county", required = false) String county, @RequestParam(value = "level", required = false) String level) {
         try {
@@ -39,7 +39,7 @@ public class CarFilmTechnicianController {
         }
     }
 
-    @OperLog(operModul = "technician模块", operType = "getById查询", operDesc = "描述:ID查询technician全部信息")
+    @OperateLog(operateModule = "technician模块", operateType = "getById查询", operateDesc = "描述:ID查询technician全部信息")
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
@@ -50,7 +50,7 @@ public class CarFilmTechnicianController {
         }
     }
 
-    @OperLog(operModul = "technician模块", operType = "delete", operDesc = "描述:软删除technician全部信息")
+    @OperateLog(operateModule = "technician模块", operateType = "delete", operateDesc = "描述:软删除technician全部信息")
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarFilmTechnician carFilmTechnician) {
         try {
@@ -62,7 +62,7 @@ public class CarFilmTechnicianController {
         }
     }
 
-    @OperLog(operModul = "technician模块", operType = "save", operDesc = "描述:保存technician全部信息")
+    @OperateLog(operateModule = "technician模块", operateType = "save", operateDesc = "描述:保存technician全部信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarFilmTechnician carFilmTechnician) {
         try {
@@ -74,7 +74,7 @@ public class CarFilmTechnicianController {
         }
     }
 
-    @OperLog(operModul = "technician模块", operType = "update", operDesc = "描述:修改qtechnician全部信息")
+    @OperateLog(operateModule = "technician模块", operateType = "update", operateDesc = "描述:修改qtechnician全部信息")
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarFilmTechnician carFilmTechnician) {
         try {

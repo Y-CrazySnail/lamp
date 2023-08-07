@@ -3,15 +3,13 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarBrand;
 import com.yeem.car_film_saas.service.ICarBrandService;
-import com.yeem.car_film_saas.utils.OperLog;
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.transform.Result;
 
 @Slf4j
 @RestController
@@ -25,7 +23,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      *
      * @return
      */
-    @OperLog(operModul = "Brand模块", operType = "list查询", operDesc = "描述:查询Brand全部信息")
+    @OperateLog(operateModule = "Brand模块", operateType = "list查询", operateDesc = "描述:查询Brand全部信息")
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
@@ -44,7 +42,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      * @param brandName
      * @return
      */
-    @OperLog(operModul = "Brand模块", operType = "pages查询", operDesc = "描述:分页查询Brand全部信息")
+    @OperateLog(operateModule = "Brand模块", operateType = "pages查询", operateDesc = "描述:分页查询Brand全部信息")
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "brandName", required = false) String brandName) {
         try {
@@ -61,7 +59,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      * @param id
      * @return
      */
-    @OperLog(operModul = "Brand模块", operType = "getById查询", operDesc = "描述:ID查询Brand全部信息")
+    @OperateLog(operateModule = "Brand模块", operateType = "getById查询", operateDesc = "描述:ID查询Brand全部信息")
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
@@ -81,7 +79,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      * @param carBrand
      * @return
      */
-    @OperLog(operModul = "Brand模块", operType = "delete", operDesc = "描述:软删除Brand全部信息")
+    @OperateLog(operateModule = "Brand模块", operateType = "delete", operateDesc = "描述:软删除Brand全部信息")
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarBrand carBrand) {
         try {
@@ -99,7 +97,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      * @param carBrand
      * @return
      */
-    @OperLog(operModul = "Brand模块", operType = "update", operDesc = "描述:修改Brand全部信息")
+    @OperateLog(operateModule = "Brand模块", operateType = "update", operateDesc = "描述:修改Brand全部信息")
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarBrand carBrand) {
         try {
@@ -123,7 +121,7 @@ public class CarBrandController extends BaseController<CarBrand> {
      * @param carBrand
      * @return
      */
-    @OperLog(operModul = "Brand模块", operType = "save", operDesc = "描述:保存Brand全部信息")
+    @OperateLog(operateModule = "Brand模块", operateType = "save", operateDesc = "描述:保存Brand全部信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarBrand carBrand) {
         try {
