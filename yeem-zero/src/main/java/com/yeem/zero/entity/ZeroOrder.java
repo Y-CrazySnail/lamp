@@ -24,6 +24,10 @@ public class ZeroOrder extends BaseEntity {
      */
     private String orderNo;
     /**
+     * 订单名称
+     */
+    private String orderName;
+    /**
      * 运单号
      */
     private String waybillNo;
@@ -99,6 +103,14 @@ public class ZeroOrder extends BaseEntity {
 
     public void setOrderNo(String orderNo) {
         this.orderNo = orderNo;
+    }
+
+    public String getOrderName() {
+        return orderName;
+    }
+
+    public void setOrderName(String orderName) {
+        this.orderName = orderName;
     }
 
     public String getWaybillNo() {

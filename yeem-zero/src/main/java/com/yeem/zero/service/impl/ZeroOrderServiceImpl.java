@@ -70,7 +70,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
         zeroOrder.getOrderItemList().forEach(zeroOrderItem -> zeroOrderItem.setOrderId(zeroOrder.getId()));
         zeroOrderItemService.saveBatch(zeroOrder.getOrderItemList());
-
+        StringBuilder orderName = new StringBuilder();
+        for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
+            orderName.append(zeroOrderItem.getZeroProduct().getName());
+        }
+        zeroOrder.setOrderName(orderName.toString());
         PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
 
