@@ -78,6 +78,20 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public ZeroOrder prepay(ZeroOrder zeroOrder) {
+        // 获取用户信息
+        String username = OauthUtils.getUsername();
+        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
+        if (StringUtils.isEmpty(zeroUserExtra)) {
+            throw new RuntimeException("user info is null when save cart");
+        }
+        zeroOrder = get(zeroOrder.getId());
+        PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
+        zeroOrder.setPrepayWithRequestPaymentResponse(response);
+        return zeroOrder;
+    }
+
+    @Override
     public ZeroOrder get(Long id) {
         String username = OauthUtils.getUsername();
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
@@ -100,6 +114,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderQueryWrapper.eq("status", status);
         }
         zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroOrderQueryWrapper.orderByDesc(BaseEntity.BaseField.UPDATE_TIME.getName());
         List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
         if (!zeroOrderList.isEmpty()) {
             zeroOrderList.forEach(zeroOrder -> {

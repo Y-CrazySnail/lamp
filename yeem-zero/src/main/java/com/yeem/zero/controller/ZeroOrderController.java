@@ -38,6 +38,23 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
         }
     }
 
+    /**
+     * 支付
+     *
+     * @param zeroOrder 入参对象
+     * @return 下单状态
+     */
+    @PostMapping("prepay")
+    public ResponseEntity<Object> prepay(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            ZeroOrder resZeroOrder = zeroOrderService.prepay(zeroOrder);
+            return ResponseEntity.ok(resZeroOrder);
+        } catch (Exception e) {
+            log.error("prepay error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("prepay error");
+        }
+    }
+
     @GetMapping("list")
     public ResponseEntity<Object> list(@RequestParam("status") String status) {
         try {

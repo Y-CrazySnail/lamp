@@ -10,6 +10,8 @@ import java.util.List;
 public interface IZeroOrderService extends IService<ZeroOrder> {
     ZeroOrder order(ZeroOrder zeroOrder);
 
+    ZeroOrder prepay(ZeroOrder zeroOrder);
+
     ZeroOrder get(Long id);
 
     List<ZeroOrder> list(String status);
