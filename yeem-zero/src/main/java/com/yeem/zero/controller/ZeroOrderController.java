@@ -39,12 +39,33 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
     }
 
     @GetMapping("list")
-    public ResponseEntity<Object> list(@RequestParam String status) {
+    public ResponseEntity<Object> list(@RequestParam("status") String status) {
         try {
             return ResponseEntity.ok(zeroOrderService.list(status));
         } catch (Exception e) {
             log.error("list order error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("list order error");
+        }
+    }
+
+    @GetMapping("get")
+    public ResponseEntity<Object> get(@RequestParam("id") Long id) {
+        try {
+            return ResponseEntity.ok(zeroOrderService.get(id));
+        } catch (Exception e) {
+            log.error("get order error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("get order error");
+        }
+    }
+
+    @DeleteMapping("remove")
+    public ResponseEntity<Object> remove(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.remove(zeroOrder.getId());
+            return ResponseEntity.ok("remove order success");
+        } catch (Exception e) {
+            log.error("remove order error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("remove order error");
         }
     }
 }

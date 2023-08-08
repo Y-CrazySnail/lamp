@@ -2,8 +2,10 @@ package com.yeem.zero.service.impl;
 
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.*;
@@ -39,6 +41,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Autowired
     private IZeroPaymentService zeroPaymentService;
 
+    @Autowired
+    private IZeroAddressService zeroAddressService;
+
     @Override
     public ZeroOrder order(ZeroOrder zeroOrder) {
         // 获取用户信息
@@ -73,6 +78,21 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public ZeroOrder get(Long id) {
+        String username = OauthUtils.getUsername();
+        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
+        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+        zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroOrderQueryWrapper.eq("id", id);
+        ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
+        List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
+        zeroOrder.setOrderItemList(zeroOrderItemList);
+        ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
+        zeroOrder.setAddress(zeroAddress);
+        return zeroOrder;
+    }
+
+    @Override
     public List<ZeroOrder> list(String status) {
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
@@ -85,9 +105,23 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderList.forEach(zeroOrder -> {
                 List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(zeroOrder.getId());
                 zeroOrder.setOrderItemList(zeroOrderItemList);
+                ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
+                zeroOrder.setAddress(zeroAddress);
             });
         }
         return zeroOrderList;
+    }
+
+    @Override
+    public void remove(Long id) {
+        UpdateWrapper<ZeroOrder> zeroOrderUpdateWrapper = new UpdateWrapper<>();
+        zeroOrderUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), 1);
+        zeroOrderUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
+        super.remove(zeroOrderUpdateWrapper);
+        UpdateWrapper<ZeroOrderItem> zeroOrderItemUpdateWrapper = new UpdateWrapper<>();
+        zeroOrderItemUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), 1);
+        zeroOrderItemUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
+        zeroOrderItemService.remove(zeroOrderItemUpdateWrapper);
     }
 
     /**
