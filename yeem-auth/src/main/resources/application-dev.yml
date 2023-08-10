@@ -14,12 +14,12 @@ spring:
       datasource:
         auth:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/auth_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
           username: yeem_dev
           password: yeem_dev
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/proxy_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true
+          url: jdbc:mysql://ec2-43-192-61-121.cn-northwest-1.compute.amazonaws.com.cn:3306/proxy_dev?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
           username: yeem_dev
           password: yeem_dev
       druid:
@@ -40,7 +40,7 @@ spring:
         stat:
           log-slow-sql: true
           merge-sql: true
-          slow-sql-millis: 10000
+          slow-sql-millis: 60000
 mybatis-plus:
   mapper-locations: classpath*:mappers/**/*.xml
   type-aliases-package: com.yeem

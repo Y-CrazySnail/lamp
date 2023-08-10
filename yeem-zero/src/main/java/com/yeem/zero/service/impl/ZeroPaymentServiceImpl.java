@@ -64,6 +64,13 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
                 .apiV3Key(apiV3Key)
                 .build();
         JsapiServiceExtension service = new JsapiServiceExtension.Builder().config(config).build();
+        PrepayRequest request = getPrepayRequest(openId, zeroOrder);
+        PrepayWithRequestPaymentResponse payment = service.prepayWithRequestPayment(request);
+        payment.setSignType("MD5");
+        return payment;
+    }
+
+    private PrepayRequest getPrepayRequest(String openId, ZeroOrder zeroOrder) {
         PrepayRequest request = new PrepayRequest();
         Amount amount = new Amount();
         amount.setTotal(10);
@@ -77,8 +84,6 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         request.setDescription("支付测试");
         request.setNotifyUrl("https://www.chinaybop.com");
         request.setOutTradeNo(zeroOrder.getOrderNo());
-        PrepayWithRequestPaymentResponse payment = service.prepayWithRequestPayment(request);
-        payment.setSignType("MD5");
-        return payment;
+        return request;
     }
 }
