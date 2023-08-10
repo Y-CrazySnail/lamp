@@ -55,6 +55,23 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
         }
     }
 
+    /**
+     * 已支付接口
+     *
+     * @param zeroOrder 订单信息
+     * @return response
+     */
+    @PostMapping("paid")
+    public ResponseEntity<Object> paid(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.paid(zeroOrder);
+            return ResponseEntity.ok("paid success");
+        } catch (Exception e) {
+            log.error("paid error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("paid error");
+        }
+    }
+
     @GetMapping("list")
     public ResponseEntity<Object> list(@RequestParam("status") String status) {
         try {

@@ -12,6 +12,8 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     ZeroOrder prepay(ZeroOrder zeroOrder);
 
+    void paid(ZeroOrder zeroOrder);
+
     ZeroOrder get(Long id);
 
     List<ZeroOrder> list(String status);

@@ -1,5 +1,6 @@
 package com.yeem.common.utils;
 
+import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -12,43 +13,6 @@ import java.util.Map;
 public class FreeMakerUtils {
 
     /**
-     * 获取FreeMaker配置
-     *
-     * @param templatePath 模版路径
-     * @return FreeMaker配置
-     */
-    public static Configuration getConfiguration(String templatePath) {
-        // 创建配置类
-        Configuration configuration = new Configuration(Configuration.getVersion());
-        try {
-            configuration.setDirectoryForTemplateLoading(new File(templatePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // 设置字符集
-        configuration.setDefaultEncoding("utf-8");
-        return configuration;
-    }
-
-    /**
-     * 获取FreeMaker模版
-     *
-     * @param templatePath 模版路径
-     * @param templateName 模版名称
-     * @return FreeMaker模版
-     */
-    public static Template getTemplate(String templatePath, String templateName) {
-        Configuration configuration = getConfiguration(templatePath);
-        Template template = null;
-        try {
-            template = configuration.getTemplate(templateName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return template;
-    }
-
-    /**
      * 获取FreeMaker替换文本
      *
      * @param templatePath 模版路径
@@ -57,13 +21,41 @@ public class FreeMakerUtils {
      * @return FreeMaker替换文本
      */
     public static String getContent(String templatePath, String templateName, Map<String, Object> replaceMap) {
-        Template template = getTemplate(templatePath, templateName);
+        // 创建配置类
+        Configuration configuration = new Configuration(Configuration.getVersion());
+        Template template = null;
         String content = null;
         try {
+            configuration.setDirectoryForTemplateLoading(new File(templatePath));
+            // 设置字符集
+            configuration.setDefaultEncoding("utf-8");
+            template = configuration.getTemplate(templateName);
             content = FreeMarkerTemplateUtils.processTemplateIntoString(template, replaceMap);
         } catch (IOException | TemplateException e) {
             e.printStackTrace();
         }
         return content;
+    }
+
+    /**
+     * 获取FreeMaker替换文本
+     *
+     * @param templateContent 模版内容
+     * @param replaceMap      替换Map
+     * @return FreeMaker替换文本
+     */
+    public static String getContent(String templateContent, Map<String, Object> replaceMap) {
+        Configuration configuration = new Configuration(Configuration.getVersion());
+        configuration.setDefaultEncoding("utf-8");
+        configuration.setCacheStorage(new freemarker.cache.NullCacheStorage());
+        StringTemplateLoader stringTemplateLoader = new StringTemplateLoader();
+        stringTemplateLoader.putTemplate("template", templateContent);
+        configuration.setTemplateLoader(stringTemplateLoader);
+        try {
+            Template template = configuration.getTemplate("template");
+            return FreeMarkerTemplateUtils.processTemplateIntoString(template, replaceMap);
+        } catch (IOException | TemplateException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -96,6 +96,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public void paid(ZeroOrder zeroOrder) {
+        zeroOrder.setStatus(Constant.ORDER_STATUS_PAY);
+        zeroOrder.setPaymentTime(new Date());
+        super.updateById(zeroOrder);
+    }
+
+    @Override
     public ZeroOrder get(Long id) {
         String username = OauthUtils.getUsername();
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
@@ -118,6 +125,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderQueryWrapper.eq("status", status);
         }
         zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
         zeroOrderQueryWrapper.orderByDesc(BaseEntity.BaseField.UPDATE_TIME.getName());
         List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
         if (!zeroOrderList.isEmpty()) {

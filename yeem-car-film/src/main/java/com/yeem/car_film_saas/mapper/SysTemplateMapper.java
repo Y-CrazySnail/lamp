@@ -5,6 +5,6 @@ import com.yeem.car_film_saas.entity.SysTemplate;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-public interface TemplateMapper extends BaseMapper<SysTemplate> {
+public interface SysTemplateMapper extends BaseMapper<SysTemplate> {
 
 }
