@@ -1,10 +1,10 @@
 
-host = smtp.richcloud.biz
+host = smtp.yeah.net
 
 port = 25
 
-from = 老张<service@richcloud.biz>
+from = daimayong@yeah.net
 
-user = service@richcloud.biz
+user = daimayong
 
-pass = 19980720Meng
+pass = APYDOSTDPDUOEEHQ

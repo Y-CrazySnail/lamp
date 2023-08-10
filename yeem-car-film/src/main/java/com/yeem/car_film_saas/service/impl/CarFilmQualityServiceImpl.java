@@ -6,14 +6,20 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.car_film_saas.entity.CarFilmQuality;
+import com.yeem.car_film_saas.entity.SysMail;
+import com.yeem.car_film_saas.entity.SysTemplate;
 import com.yeem.car_film_saas.mapper.CarFilmQualityMapper;
 import com.yeem.car_film_saas.service.ICarFilmQualityService;
+import com.yeem.car_film_saas.service.IMailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper, CarFilmQuality> implements ICarFilmQualityService {
@@ -21,6 +27,8 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Autowired
     private CarFilmQualityMapper carFilmQualityMapper;
 
+    @Autowired
+    private IMailService mailService;
     @Override
     public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
@@ -112,7 +120,23 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmQuality carFilmQuality) {
-        return SqlHelper.retBool(carFilmQualityMapper.insert(carFilmQuality));
+
+        SqlHelper.retBool(carFilmQualityMapper.insert(carFilmQuality));
+        SysMail sysMail=new SysMail();
+        sysMail.setToEmail("1270737197@qq.com");
+        sysMail.setBusinessName("11");
+        sysMail.setBusinessId(1);
+
+
+
+        SysTemplate sysTemplate=new SysTemplate();
+        sysTemplate.setName("aaa");
+        sysTemplate.setType("mail");
+        Map<String, Object> root=new HashMap<>();
+        root.put("name",carFilmQuality.getName());
+        root.put("car",carFilmQuality.getCarModel());
+        mailService.seedEmail(sysMail,sysTemplate,root);
+        return true;
     }
 
     @Override
