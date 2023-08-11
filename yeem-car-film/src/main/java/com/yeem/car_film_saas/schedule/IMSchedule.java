@@ -21,6 +21,7 @@ public class IMSchedule {
     @Scheduled(cron = "0/10 * * * * ?")
     public void schedule() {
         log.info("send mail start:{}", LocalDateTime.now());
-        // todo 定时任务 定时扫描
+
+        //  todo 定时任务 定时扫描
     }
 }
