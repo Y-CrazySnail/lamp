@@ -5,18 +5,19 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.yeem.car_film_saas.dto.SysIMSendDTO;
+import com.yeem.car_film_saas.dto.SysMailSendDTO;
 import com.yeem.car_film_saas.entity.CarFilmQuality;
 import com.yeem.car_film_saas.entity.SysMail;
 import com.yeem.car_film_saas.entity.SysTemplate;
 import com.yeem.car_film_saas.mapper.CarFilmQualityMapper;
 import com.yeem.car_film_saas.service.ICarFilmQualityService;
-import com.yeem.car_film_saas.service.IMailService;
+import com.yeem.car_film_saas.service.ISysIMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,8 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     private CarFilmQualityMapper carFilmQualityMapper;
 
     @Autowired
-    private IMailService mailService;
+    private ISysIMService sysIMService;
+
     @Override
     public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
@@ -129,13 +131,15 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
 
 
 
-        SysTemplate sysTemplate=new SysTemplate();
-        sysTemplate.setName("aaa");
-        sysTemplate.setType("mail");
-        Map<String, Object> root=new HashMap<>();
-        root.put("name",carFilmQuality.getName());
-        root.put("car",carFilmQuality.getCarModel());
-        mailService.seedEmail(sysMail,sysTemplate,root);
+//        SysTemplate sysTemplate=new SysTemplate();
+//        sysTemplate.setName("aaa");
+//        sysTemplate.setType("mail");
+//        Map<String, Object> root=new HashMap<>();
+//        root.put("name",carFilmQuality.getName());
+//        root.put("car",carFilmQuality.getCarModel());
+        // todo 调用发送邮件接口 preSend
+        SysIMSendDTO sysIMSendDTO = new SysMailSendDTO();
+        sysIMService.preSend(sysIMSendDTO);
         return true;
     }
 
