@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yeem.car_film_saas.mapper.SysMailMapper">
+    <select id="getTodoMail" resultType="list">
+        SELECT *FROM saas_car_film_dev.sys_mail WHERE timing_flag=1 and timing_time=now()and (state=0 or state =9)
+    </select>
+</mapper>

@@ -12,4 +12,9 @@ public interface ISysMailService extends IService<SysMail> {
     List<SysMail> getTodoMail();
 
     void save(SysMailSendDTO sysMailSendDTO, SysTemplate sysTemplate);
+
+   void send();
+
+   void send(SysMail sysMail);
+
 }

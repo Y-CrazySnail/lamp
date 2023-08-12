@@ -130,16 +130,19 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysMail.setBusinessId(1);
 
 
-
-//        SysTemplate sysTemplate=new SysTemplate();
-//        sysTemplate.setName("aaa");
-//        sysTemplate.setType("mail");
 //        Map<String, Object> root=new HashMap<>();
 //        root.put("name",carFilmQuality.getName());
 //        root.put("car",carFilmQuality.getCarModel());
         // todo 调用发送邮件接口 preSend
-        SysIMSendDTO sysIMSendDTO = new SysMailSendDTO();
-        sysIMService.preSend(sysIMSendDTO);
+        SysMailSendDTO sysMailSendDTO = new SysMailSendDTO();
+        Map<String, Object> map=new HashMap<>();
+        map.put("name",carFilmQuality.getName());
+        map.put("car",carFilmQuality.getCarModel());
+        sysMailSendDTO.setReplaceMap(map);
+        sysMailSendDTO.setTemplateName("aaa");
+        sysMailSendDTO.setTemplateType("mail");
+        sysMailSendDTO.setToEmail(carFilmQuality.getQualityCardNo());
+        sysIMService.preSend(sysMailSendDTO);
         return true;
     }
 
