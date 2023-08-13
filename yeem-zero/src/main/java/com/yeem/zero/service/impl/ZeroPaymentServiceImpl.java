@@ -82,7 +82,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         payer.setOpenid(openId);
         request.setPayer(payer);
         request.setDescription("支付测试");
-        request.setNotifyUrl("https://www.chinaybop.com");
+        request.setNotifyUrl("https://edreamroom.com/zero-api/zero-payment/callback");
         request.setOutTradeNo(zeroOrder.getOrderNo());
         return request;
     }

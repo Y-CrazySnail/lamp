@@ -103,3 +103,4 @@ permit-url:
   - /role/getPermissionIdList
   - /zero-auth/login
   - /zero-address/test
+  - /zero-payment/callback
