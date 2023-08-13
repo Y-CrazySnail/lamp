@@ -82,3 +82,10 @@ tencent:
     secret-key: 00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA
     # 地区
     region: ap-shanghai
+
+mail:
+  host: smtp.yeah.net
+  port: 25
+  from: daimayong@yeah.net
+  user: daimayong
+  pass: APYDOSTDPDUOEEHQ

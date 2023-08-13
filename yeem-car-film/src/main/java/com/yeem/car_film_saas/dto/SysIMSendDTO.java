@@ -6,7 +6,7 @@ import java.util.Map;
 public class SysIMSendDTO {
     private String templateName;
     private String templateType;
-    private String businessId;
+    private Integer businessId;
     private Date timingTime;
     private Map<String, Object> replaceMap;
 
@@ -26,11 +26,11 @@ public class SysIMSendDTO {
         this.templateType = templateType;
     }
 
-    public String getBusinessId() {
+    public Integer getBusinessId() {
         return businessId;
     }
 
-    public void setBusinessId(String businessId) {
+    public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
     }
 

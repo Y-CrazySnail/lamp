@@ -1,8 +1,9 @@
 package com.yeem.car_film_saas.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.car_film_saas.dto.SysMailSendDTO;
 import com.yeem.car_film_saas.entity.SysMail;
@@ -12,17 +13,20 @@ import com.yeem.car_film_saas.service.ISysMailService;
 import com.yeem.common.utils.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.xml.ws.Action;
+import java.io.File;
+import java.lang.reflect.Array;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
-import static com.alibaba.druid.sql.visitor.SQLEvalVisitorUtils.eq;
 
 @Slf4j
 @Service
@@ -30,6 +34,9 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
 
     @Autowired
     private SysMailMapper sysMailMapper;
+
+    @Autowired
+    private Environment environment;
 
     /**
      * 获取待发送邮件列表
@@ -41,6 +48,10 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         return sysMailMapper.getTodoMail();
     }
 
+    /**
+     * 定时发送
+     */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void send() {
         List<SysMail> todoMail = this.getTodoMail();
@@ -49,12 +60,37 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         }
     }
 
+    /**
+     * 立刻发送
+     *
+     * @param sysMail
+     */
+    @Transactional(rollbackFor = {Exception.class})
     @Override
     public void send(SysMail sysMail) {
-        if (StringUtils.isEmpty(sysMail.getAttachment())) {
-            MailUtil.send(sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false);
-        } else {
-            MailUtil.send(sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), true, FileUtil.file("d:/aaa.xml"));
+        MailAccount account = new MailAccount();
+        account.setHost(environment.getProperty("mail.host"));
+        account.setPort(Integer.valueOf(Objects.requireNonNull(environment.getProperty("mail.port"))));
+        account.setAuth(true);
+        account.setFrom(environment.getProperty("mail.from"));
+        account.setUser(environment.getProperty("mail.user"));
+        account.setPass(environment.getProperty("mail.pass"));
+        try {
+            if (StringUtils.isEmpty(sysMail.getAttachment())) {
+                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false);
+            } else {
+//                C:\\Users\\QiMou\\Desktop\\1.jpg
+                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false,FileUtil.file(sysMail.getAttachment()));
+            }
+            sysMail.setState(1);
+            sysMail.setSendTime(new Date());
+        } catch (Exception e) {
+            sysMail.setState(9);
+            sysMail.setTryTime(sysMail.getTryTime() + 1);
+            sysMail.setException(e.toString());
+            log.error("send mail error", e);
+        } finally {
+            sysMailMapper.updateById(sysMail);
         }
     }
 
@@ -65,22 +101,21 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         SysMail sysMail = new SysMail();
         sysMail.setContent(FreeMakerUtils.getContent(sysTemplate.getContent(), sysMailSendDTO.getReplaceMap()));
         sysMail.setSubject(FreeMakerUtils.getContent(sysTemplate.getSubject(), sysMailSendDTO.getReplaceMap()));
+        sysMail.setFromEmail(environment.getProperty("mail.from"));
         sysMail.setToEmail(sysMailSendDTO.getToEmail());
         sysMail.setAttachment(sysMailSendDTO.getAttachment());
+        sysMail.setBusinessId(sysMailSendDTO.getBusinessId());
+        sysMail.setBusinessName(sysTemplate.getName());
         if (!StringUtils.isEmpty(sysMailSendDTO.getTimingTime())) {
             sysMail.setTimingTime(sysMailSendDTO.getTimingTime());
             sysMail.setTimingFlag(1);
+            sysMailMapper.insert(sysMail);
         } else {
             sysMail.setTimingFlag(0);
-            try {
-                this.send(sysMail);
-                sysMail.setState(1);
-            } catch (Exception e) {
-                sysMail.setException("异常为" + e);
-            }
+            sysMailMapper.insert(sysMail);
+            this.send(sysMail);
         }
         // 调用邮件service保存
-        sysMailMapper.insert(sysMail);
         log.info("发送邮件");
     }
 }
