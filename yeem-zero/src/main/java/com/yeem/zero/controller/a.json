@@ -1,0 +1,14 @@
+{
+  "id": "bb94c60e-1622-5491-9792-5d0f4616da76",
+  "create_time": "2023-08-14T22:03:17+08:00",
+  "resource_type": "encrypt-resource",
+  "event_type": "TRANSACTION.SUCCESS",
+  "summary": "支付成功",
+  "resource": {
+    "original_type": "transaction",
+    "algorithm": "AEAD_AES_256_GCM",
+    "ciphertext": "dcnZB95Suc6blcuQTfjvjc9u2K8LHXELMfedmgj1ayQoyV40CJiX1SLYvQlxj1TtoWRmsS4l54ukeSozy5um/zSumNfY/dqboKEO+uAyklYpUIVEdUvC8dGZrHoTrYmtZtsb9NVwFYTzVNjRMYFfmx4QBJsdAq8dsMANi6QfV3J6AL8DZy1lvyjhz+wP2FHAvkE/vyN0JFrQ2ddXIRMgQV3qIo3dYLcmIDMDwyooiBeABRZ65gsc6SDUyAnapGBMNNVnHeJGI/+veyyLrSqLx109VKwmpmR0sxOJRInA8Sptuf9UoyYEKyPll8ORnF6ob9DLbNunPg/rsLYfJhAVaaqPTnjV2mn/a4YHL1rj3TPf+xZkf+R0zdvOhZn9m6x6nEX+K/YTGnzR7ixBg212EolUQdgugqigablyHR6KMIr5LDtusqAtCiLhY+g7HvpuMt0qaSqojsRYeazjZ6OIzFvywgpOrenvZ2qTKa4QnQN2J1V5d2Fb1cukMwCcSmqyGoPiggaCb7FRkCNNuCyhNRZDhZbLe3UrWsrpj21VsHBQquau5QWDvA2D2kqZz2034z9Ux8O2QzFWixHoc9WhhLQ=",
+    "associated_data": "transaction",
+    "nonce": "rxEwDVp7Qulo"
+  }
+}Ï
