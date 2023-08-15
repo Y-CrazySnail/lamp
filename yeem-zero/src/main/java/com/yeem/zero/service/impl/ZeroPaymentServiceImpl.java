@@ -1,12 +1,18 @@
 package com.yeem.zero.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
+import com.wechat.pay.java.core.exception.ValidationException;
+import com.wechat.pay.java.core.notification.NotificationConfig;
+import com.wechat.pay.java.core.notification.NotificationParser;
+import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
 import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.yeem.common.utils.AESUtils;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.entity.ZeroPayment;
@@ -68,6 +74,35 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         PrepayWithRequestPaymentResponse payment = service.prepayWithRequestPayment(request);
         payment.setSignType("MD5");
         return payment;
+    }
+
+    @Override
+    public void callback(ObjectNode objectNode) {
+        com.wechat.pay.java.core.notification.RequestParam requestParam =
+                new com.wechat.pay.java.core.notification.RequestParam.Builder()
+                        .serialNumber(merchantSerialNumber)
+                        .nonce(String.valueOf(objectNode.get("resource").get("nonce")))
+//                        .signature(wechatSignature)
+//                        .body(requestBody)
+                        .build();
+        // 如果已经初始化了 RSAAutoCertificateConfig，可直接使用
+        // 没有的话，则构造一个
+        NotificationConfig config = new RSAAutoCertificateConfig.Builder()
+                .merchantId(merchantId)
+                .privateKeyFromPath(privateKeyPath)
+                .merchantSerialNumber(merchantSerialNumber)
+                .apiV3Key(apiV3Key)
+                .build();
+        // 初始化 NotificationParser
+        NotificationParser parser = new NotificationParser(config);
+        try {
+            // 以支付通知回调为例，验签、解密并转换成 Transaction
+            Transaction transaction = parser.parse(requestParam, Transaction.class);
+            log.info("{}", transaction);
+        } catch (ValidationException e) {
+            // 签名验证失败，返回 401 UNAUTHORIZED 状态码
+            log.error("sign verification failed", e);
+        }
     }
 
     private PrepayRequest getPrepayRequest(String openId, ZeroOrder zeroOrder) {
