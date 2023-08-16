@@ -1,11 +1,8 @@
 package com.yeem.zero.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.wechat.pay.java.core.RSAAutoCertificateConfig;
-import com.wechat.pay.java.core.exception.ValidationException;
-import com.wechat.pay.java.core.notification.NotificationConfig;
-import com.wechat.pay.java.core.notification.NotificationParser;
-import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroOrder;
@@ -16,13 +13,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.PrivateKey;
-import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 @Slf4j
 @RestController
 @RequestMapping("/zero-payment")
 public class ZeroPaymentController extends BaseController<ZeroOrder> {
+
+    private final static String HEADER_NAME_TIMESTAMP = "Wechatpay-Timestamp";
+    private final static String HEADER_NAME_NONCE = "Wechatpay-Nonce";
+    private final static String HEADER_NAME_SERIAL = "Wechatpay-Serial";
+    private final static String HEADER_NAME_SIGNATURE = "Wechatpay-Signature";
 
     @Autowired
     private IZeroPaymentService zeroPaymentService;
@@ -39,14 +42,46 @@ public class ZeroPaymentController extends BaseController<ZeroOrder> {
     }
 
     @PostMapping("callback")
-    public ResponseEntity<Object> callback(@RequestBody ObjectNode objectNode) {
+    public ResponseEntity<Object> callback(@RequestBody ObjectNode objectNode, HttpServletRequest request) {
         try {
-            zeroPaymentService.callback(objectNode);
-            log.info("支付回调：{}", objectNode);
+            String timestamp = request.getHeader(HEADER_NAME_TIMESTAMP);
+            String nonce = request.getHeader(HEADER_NAME_NONCE);
+            String serialNo = request.getHeader(HEADER_NAME_SERIAL);
+            String signature = request.getHeader(HEADER_NAME_SIGNATURE);
+            zeroPaymentService.callback(timestamp, nonce, serialNo, signature, objectNode);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("notify error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("notify error");
+        }
+    }
+
+    public static String readData(HttpServletRequest request) {
+        BufferedReader br = null;
+
+        try {
+            StringBuilder result = new StringBuilder();
+
+            String line;
+            for (br = request.getReader(); (line = br.readLine()) != null; result.append(line)) {
+                if (result.length() > 0) {
+                    result.append("\n");
+                }
+            }
+
+            line = result.toString();
+            return line;
+        } catch (IOException var12) {
+            throw new RuntimeException(var12);
+        } finally {
+            if (br != null) {
+                try {
+                    br.close();
+                } catch (IOException var11) {
+                    var11.printStackTrace();
+                }
+            }
+
         }
     }
 }

@@ -1,6 +1,9 @@
 package com.yeem.zero.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wechat.pay.java.core.RSAAutoCertificateConfig;
 import com.wechat.pay.java.core.exception.ValidationException;
@@ -24,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 @Slf4j
 @Service
@@ -54,6 +58,8 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
 
     @Autowired
     private IZeroUserExtraService zeroUserExtraService;
+    @Autowired
+    private ZeroPaymentMapper zeroPaymentMapper;
 
     @Override
     public PrepayWithRequestPaymentResponse wechatPrepay(ZeroOrder zeroOrder) {
@@ -73,34 +79,43 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         PrepayRequest request = getPrepayRequest(openId, zeroOrder);
         PrepayWithRequestPaymentResponse payment = service.prepayWithRequestPayment(request);
         payment.setSignType("MD5");
+        ZeroPayment zeroPayment = new ZeroPayment();
+        zeroPayment.setOrderId(zeroOrder.getId());
+        zeroPayment.setOrderNo(zeroOrder.getOrderNo());
+        this.save(zeroPayment);
         return payment;
     }
 
     @Override
-    public void callback(ObjectNode objectNode) {
-        com.wechat.pay.java.core.notification.RequestParam requestParam =
-                new com.wechat.pay.java.core.notification.RequestParam.Builder()
-                        .serialNumber(merchantSerialNumber)
-                        .nonce(String.valueOf(objectNode.get("resource").get("nonce")))
-//                        .signature(wechatSignature)
-//                        .body(requestBody)
-                        .build();
-        // 如果已经初始化了 RSAAutoCertificateConfig，可直接使用
-        // 没有的话，则构造一个
-        NotificationConfig config = new RSAAutoCertificateConfig.Builder()
-                .merchantId(merchantId)
-                .privateKeyFromPath(privateKeyPath)
-                .merchantSerialNumber(merchantSerialNumber)
-                .apiV3Key(apiV3Key)
-                .build();
-        // 初始化 NotificationParser
-        NotificationParser parser = new NotificationParser(config);
+    public void callback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode) {
+        String body = null;
         try {
-            // 以支付通知回调为例，验签、解密并转换成 Transaction
+            body = new ObjectMapper().writeValueAsString(objectNode);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            com.wechat.pay.java.core.notification.RequestParam requestParam =
+                    new com.wechat.pay.java.core.notification.RequestParam.Builder()
+                            .serialNumber(serialNo)
+                            .nonce(nonce)
+                            .timestamp(timestamp)
+                            .signature(signature)
+                            .body(body)
+                            .build();
+            NotificationConfig config = new RSAAutoCertificateConfig.Builder()
+                    .merchantId(merchantId)
+                    .privateKeyFromPath(privateKeyPath)
+                    .merchantSerialNumber(merchantSerialNumber)
+                    .apiV3Key(apiV3Key)
+                    .build();
+            NotificationParser parser = new NotificationParser(config);
             Transaction transaction = parser.parse(requestParam, Transaction.class);
-            log.info("{}", transaction);
+            log.info("wechat transaction info：{}", transaction);
+            ZeroPayment zeroPayment = this.getByOrderNo(transaction.getOutTradeNo());
+            zeroPayment.assign(transaction);
+            super.updateById(zeroPayment);
         } catch (ValidationException e) {
-            // 签名验证失败，返回 401 UNAUTHORIZED 状态码
             log.error("sign verification failed", e);
         }
     }
@@ -120,5 +135,21 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         request.setNotifyUrl("https://edreamroom.com/zero-api/zero-payment/callback");
         request.setOutTradeNo(zeroOrder.getOrderNo());
         return request;
+    }
+
+    @Override
+    public ZeroPayment getByOrderNo(String orderNo) {
+        QueryWrapper<ZeroPayment> zeroPaymentQueryWrapper = new QueryWrapper<>();
+        zeroPaymentQueryWrapper.eq("order_no", orderNo);
+        return super.getOne(zeroPaymentQueryWrapper);
+    }
+
+    @Override
+    public boolean save(ZeroPayment entity) {
+        ZeroPayment zeroPayment = this.getByOrderNo(entity.getOrderNo());
+        if (StringUtils.isEmpty(zeroPayment)) {
+            zeroPaymentMapper.insert(entity);
+        }
+        return true;
     }
 }

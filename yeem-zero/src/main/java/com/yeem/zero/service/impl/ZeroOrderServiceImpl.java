@@ -77,7 +77,6 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setOrderName(orderName.toString());
         PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
-
         return zeroOrder;
     }
 
