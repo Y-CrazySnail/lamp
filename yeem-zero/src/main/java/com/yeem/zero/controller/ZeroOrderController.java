@@ -72,6 +72,24 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
         }
     }
 
+    /**
+     * 确认收货
+     *
+     * @param zeroOrder 确认收货
+     * @return response
+     */
+    @PostMapping("confirm")
+    public ResponseEntity<Object> confirm(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.confirm(zeroOrder);
+            return ResponseEntity.ok("confirm success");
+        } catch (Exception e) {
+            log.error("confirm error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("confirm error");
+        }
+    }
+
+
     @GetMapping("list")
     public ResponseEntity<Object> list(@RequestParam("status") String status) {
         try {

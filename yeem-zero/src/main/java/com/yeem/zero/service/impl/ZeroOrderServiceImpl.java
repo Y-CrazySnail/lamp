@@ -102,6 +102,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public void confirm(ZeroOrder zeroOrder) {
+        zeroOrder.setStatus(Constant.ORDER_STATUS_RECEIVE);
+        zeroOrder.setCompleteTime(new Date());
+        super.updateById(zeroOrder);
+    }
+
+    @Override
     public ZeroOrder get(Long id) {
         String username = OauthUtils.getUsername();
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
