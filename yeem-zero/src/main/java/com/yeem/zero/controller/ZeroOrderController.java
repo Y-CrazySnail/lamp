@@ -1,5 +1,6 @@
 package com.yeem.zero.controller;
 
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroOrderService;
@@ -89,7 +90,7 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
         }
     }
 
-
+    @OperateLog(operateModule = "订单模块", operateType = "查询订单列表", operateDesc = "描述:查询订单列表")
     @GetMapping("list")
     public ResponseEntity<Object> list(@RequestParam("status") String status) {
         try {
