@@ -1,12 +1,11 @@
-package com.yeem.car_film_saas.service.impl;
+package com.yeem.common.im.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import com.yeem.car_film_saas.mapper.SysTemplateMapper;
-import com.yeem.car_film_saas.entity.SysTemplate;
-import com.yeem.car_film_saas.service.ISysTemplateService;
 import com.yeem.common.entity.BaseEntity;
+import com.yeem.common.im.entity.SysTemplate;
+import com.yeem.common.im.mapper.SysTemplateMapper;
+import com.yeem.common.im.service.ISysTemplateService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 

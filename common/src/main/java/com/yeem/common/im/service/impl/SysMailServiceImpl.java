@@ -1,15 +1,13 @@
-package com.yeem.car_film_saas.service.impl;
+package com.yeem.common.im.service.impl;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.extra.mail.MailAccount;
 import cn.hutool.extra.mail.MailUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yeem.car_film_saas.dto.SysMailSendDTO;
-import com.yeem.car_film_saas.entity.SysMail;
-import com.yeem.car_film_saas.entity.SysTemplate;
-import com.yeem.car_film_saas.mapper.SysMailMapper;
-import com.yeem.car_film_saas.service.ISysMailService;
+import com.yeem.common.im.dto.SysMailSendDTO;
+import com.yeem.common.im.entity.SysMail;
+import com.yeem.common.im.entity.SysTemplate;
+import com.yeem.common.im.mapper.SysMailMapper;
+import com.yeem.common.im.service.ISysMailService;
 import com.yeem.common.utils.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.lang.reflect.Array;
-import java.net.URL;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

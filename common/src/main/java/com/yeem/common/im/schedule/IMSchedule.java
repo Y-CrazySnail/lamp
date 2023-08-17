@@ -1,13 +1,12 @@
-package com.yeem.car_film_saas.schedule;
+package com.yeem.common.im.schedule;
 
-import com.yeem.car_film_saas.service.ISysMailService;
+import com.yeem.common.im.service.ISysMailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Slf4j
 @Component

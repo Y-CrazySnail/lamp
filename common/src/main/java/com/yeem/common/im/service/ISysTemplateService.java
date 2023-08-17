@@ -1,7 +1,7 @@
-package com.yeem.car_film_saas.service;
+package com.yeem.common.im.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yeem.car_film_saas.entity.SysTemplate;
+import com.yeem.common.im.entity.SysTemplate;
 
 public interface ISysTemplateService extends IService<SysTemplate> {
     SysTemplate get(String type, String name);

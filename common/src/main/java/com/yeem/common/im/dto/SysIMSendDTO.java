@@ -1,4 +1,4 @@
-package com.yeem.car_film_saas.dto;
+package com.yeem.common.im.dto;
 
 import java.util.Date;
 import java.util.Map;

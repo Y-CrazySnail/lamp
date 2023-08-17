@@ -1,12 +1,12 @@
-package com.yeem.car_film_saas.service.impl;
+package com.yeem.common.im.service.impl;
 
-import com.yeem.car_film_saas.dto.SysIMSendDTO;
-import com.yeem.car_film_saas.dto.SysMailSendDTO;
-import com.yeem.car_film_saas.dto.SysSMSSendDTO;
-import com.yeem.car_film_saas.entity.SysTemplate;
-import com.yeem.car_film_saas.service.ISysIMService;
-import com.yeem.car_film_saas.service.ISysMailService;
-import com.yeem.car_film_saas.service.ISysTemplateService;
+import com.yeem.common.im.dto.SysIMSendDTO;
+import com.yeem.common.im.dto.SysMailSendDTO;
+import com.yeem.common.im.dto.SysSMSSendDTO;
+import com.yeem.common.im.entity.SysTemplate;
+import com.yeem.common.im.service.ISysIMService;
+import com.yeem.common.im.service.ISysMailService;
+import com.yeem.common.im.service.ISysTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

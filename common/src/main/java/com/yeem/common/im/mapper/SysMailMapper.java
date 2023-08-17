@@ -1,7 +1,7 @@
-package com.yeem.car_film_saas.mapper;
+package com.yeem.common.im.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yeem.car_film_saas.entity.SysMail;
+import com.yeem.common.im.entity.SysMail;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;

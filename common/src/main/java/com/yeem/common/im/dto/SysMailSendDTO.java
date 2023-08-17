@@ -1,9 +1,8 @@
-package com.yeem.car_film_saas.dto;
+package com.yeem.common.im.dto;
 
 public class SysMailSendDTO extends SysIMSendDTO {
     private String toEmail;
     private String attachment;
-
     private boolean htmlFlag;
 
     public boolean getHtmlFlag() {

@@ -1,10 +1,10 @@
-package com.yeem.car_film_saas.service;
+package com.yeem.common.im.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yeem.car_film_saas.dto.SysMailSendDTO;
-import com.yeem.car_film_saas.entity.SysMail;
-import com.yeem.car_film_saas.entity.SysTemplate;
+import com.yeem.common.im.dto.SysMailSendDTO;
+import com.yeem.common.im.entity.SysMail;
+import com.yeem.common.im.entity.SysTemplate;
 
 import java.util.List;
 
