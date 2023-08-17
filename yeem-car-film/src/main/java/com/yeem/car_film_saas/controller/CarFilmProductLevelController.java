@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/car-file-product-level")
+@RequestMapping("/car-film-product-level")
 public class CarFilmProductLevelController {
     @Autowired
     private ICarFilmProductLevelService carFilmProductLevelService;

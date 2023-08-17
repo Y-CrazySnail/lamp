@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/car-file-quality")
+@RequestMapping("/car-film-quality")
 public class CarFilmQualityController {
 
     @Autowired

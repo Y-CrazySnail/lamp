@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/car-file-store")
+@RequestMapping("/car-film-store")
 public class CarFilmStoreController {
     @Autowired
     private ICarFilmStoreService carFilmStoreService;

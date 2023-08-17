@@ -35,7 +35,7 @@ fi
 
 echo -e "Starting the Server ...\c"
 nohup java $JAVA_OPTS $JAVA_MEM_OPTS $JAVA_DEBUG_OPTS $JAVA_JMX_OPTS -classpath $CONF_DIR:$CLASSES_DIR:$LIB_DIR $MAIN_CLASS --mpw.key=$MPW_KEY  > /dev/null 2>&1 &
-echo "java $JAVA_OPTS $JAVA_MEM_OPTS $JAVA_DEBUG_OPTS $JAVA_JMX_OPTS -classpath $CONF_DIR:$CLASSES_DIR:$LIB_DIR $MAIN_CLASS --mpw.key=$MPW_KEY  > /dev/null 2>&1 &"
+
 COUNT=0
 while [ $COUNT -lt 1 ]; do
     echo -e ".\c"

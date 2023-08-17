@@ -9,8 +9,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(exclude={DataSourceAutoConfiguration.class})
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 @EnableScheduling
-public class Client {
+public class ClientApplication {
     public static void main(String[] args) {
-        new SpringApplicationBuilder(Client.class).run(args);
+        new SpringApplicationBuilder(ClientApplication.class).run(args);
     }
 }

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/car-file-technician")
+@RequestMapping("/car-film-technician")
 public class CarFilmTechnicianController {
 
     @Autowired

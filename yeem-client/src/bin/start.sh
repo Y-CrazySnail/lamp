@@ -6,7 +6,7 @@ DEPLOY_DIR=`pwd`
 CONF_DIR=$DEPLOY_DIR/conf
 CLASSES_DIR=$DEPLOY_DIR/classes
 LIB_DIR=$DEPLOY_DIR/lib/*
-MAIN_CLASS=com.yeem.YeemCarFilmApplication
+MAIN_CLASS=com.yeem.ClientApplication
 
 PIDS=`ps -ef | grep java | grep "$CONF_DIR" |grep -v grep |awk '{print $2}'`
 
@@ -28,9 +28,9 @@ fi
 JAVA_MEM_OPTS=""
 BITS=`java -version 2>&1 | grep -i 64-bit`
 if [ -n "$BITS" ]; then
-    JAVA_MEM_OPTS=" -server -Xms2048m -Xmx2048m -XX:+HeapDumpOnOutOfMemoryError "
+    JAVA_MEM_OPTS=" -server -Xms512m -Xmx512m -XX:+HeapDumpOnOutOfMemoryError "
 else
-    JAVA_MEM_OPTS=" -server -Xms2048m -Xmx2048m -XX:PermSize=64m -XX:SurvivorRatio=2 -XX:+UseParallelGC "
+    JAVA_MEM_OPTS=" -server -Xms512m -Xmx512m -XX:PermSize=64m -XX:SurvivorRatio=2 -XX:+UseParallelGC "
 fi
 
 echo -e "Starting the Server ...\c"
