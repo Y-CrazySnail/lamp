@@ -15,5 +15,6 @@ public class SysTemplate extends BaseEntity {
     private String type;
     private String subject;
     private String content;
+    private boolean htmlFlag;
 }
 

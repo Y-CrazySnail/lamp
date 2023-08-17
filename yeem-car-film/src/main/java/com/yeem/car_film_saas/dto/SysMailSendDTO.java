@@ -4,6 +4,16 @@ public class SysMailSendDTO extends SysIMSendDTO {
     private String toEmail;
     private String attachment;
 
+    private boolean htmlFlag;
+
+    public boolean getHtmlFlag() {
+        return htmlFlag;
+    }
+
+    public void setHtmlFlag(boolean htmlFlag) {
+        this.htmlFlag = htmlFlag;
+    }
+
     public String getToEmail() {
         return toEmail;
     }

@@ -27,4 +27,5 @@ public class SysMail extends BaseEntity {
     private Date sendTime; // 发送时间
     private int tryTime; // 尝试次数
     private String exception; // 异常信息
+    private boolean htmlFlag;//是不是html
 }

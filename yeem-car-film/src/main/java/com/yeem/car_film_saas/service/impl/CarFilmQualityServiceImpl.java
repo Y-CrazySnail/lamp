@@ -136,6 +136,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysMailSendDTO.setReplaceMap(map);
         sysMailSendDTO.setTemplateName("aaa");
         sysMailSendDTO.setTemplateType("mail");
+        sysMailSendDTO.setBusinessId(1);
         sysMailSendDTO.setToEmail(carFilmQuality.getQualityCardNo());
         sysIMService.preSend(sysMailSendDTO);
         return true;

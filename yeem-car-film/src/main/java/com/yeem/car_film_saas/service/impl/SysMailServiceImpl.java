@@ -77,7 +77,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         account.setPass(environment.getProperty("mail.pass"));
         try {
             if (StringUtils.isEmpty(sysMail.getAttachment())) {
-                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false);
+                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), sysMail.isHtmlFlag());
             } else {
                 List<File> attachmentFileList = new ArrayList<>();
                 for (String attachment : sysMail.getAttachment().split(",")) {
@@ -86,7 +86,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
                         attachmentFileList.add(new File(attachment));
                     }
                 }
-                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), true, attachmentFileList.toArray(new File[0]));
+                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), sysMail.isHtmlFlag(), attachmentFileList.toArray(new File[0]));
             }
             sysMail.setState(1);
             sysMail.setSendTime(new Date());
@@ -97,6 +97,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
             log.error("send mail error", e);
         } finally {
             sysMailMapper.updateById(sysMail);
+            log.info("发送邮件");
         }
     }
 
@@ -112,6 +113,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         sysMail.setAttachment(sysMailSendDTO.getAttachment());
         sysMail.setBusinessId(sysMailSendDTO.getBusinessId());
         sysMail.setBusinessName(sysTemplate.getName());
+        sysMail.setHtmlFlag(sysTemplate.isHtmlFlag());
         if (!StringUtils.isEmpty(sysMailSendDTO.getTimingTime())) {
             sysMail.setTimingTime(sysMailSendDTO.getTimingTime());
             sysMail.setTimingFlag(1);
@@ -121,7 +123,6 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
             sysMailMapper.insert(sysMail);
             this.send(sysMail);
         }
-        // 调用邮件service保存
         log.info("发送邮件");
     }
 }
