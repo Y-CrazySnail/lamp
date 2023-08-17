@@ -79,16 +79,14 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
             if (StringUtils.isEmpty(sysMail.getAttachment())) {
                 MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false);
             } else {
-//                C:\\Users\\QiMou\\Desktop\\1.jpg
-                String[] split = sysMail.getAttachment().split(",");
-                System.out.println(split[0]);
-                System.out.println(split[1]);
-                List<File> fileList = new ArrayList<>();
-                for (String str : split) {
-                 fileList.add(new File(str));
+                List<File> attachmentFileList = new ArrayList<>();
+                for (String attachment : sysMail.getAttachment().split(",")) {
+                    File file = new File(attachment);
+                    if (file.exists() && file.isFile()) {
+                        attachmentFileList.add(new File(attachment));
+                    }
                 }
-
-                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), true, FileUtil.file(fileList.toString()));
+                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), true, attachmentFileList.toArray(new File[0]));
             }
             sysMail.setState(1);
             sysMail.setSendTime(new Date());
