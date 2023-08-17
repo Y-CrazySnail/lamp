@@ -80,7 +80,15 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
                 MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false);
             } else {
 //                C:\\Users\\QiMou\\Desktop\\1.jpg
-                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), false,FileUtil.file(sysMail.getAttachment()));
+                String[] split = sysMail.getAttachment().split(",");
+                System.out.println(split[0]);
+                System.out.println(split[1]);
+                List<File> fileList = new ArrayList<>();
+                for (String str : split) {
+                 fileList.add(new File(str));
+                }
+
+                MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), true, FileUtil.file(fileList.toString()));
             }
             sysMail.setState(1);
             sysMail.setSendTime(new Date());

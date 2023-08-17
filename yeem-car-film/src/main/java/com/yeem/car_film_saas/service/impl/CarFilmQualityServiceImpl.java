@@ -128,11 +128,6 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysMail.setToEmail("1270737197@qq.com");
         sysMail.setBusinessName("11");
         sysMail.setBusinessId(1);
-
-
-//        Map<String, Object> root=new HashMap<>();
-//        root.put("name",carFilmQuality.getName());
-//        root.put("car",carFilmQuality.getCarModel());
         // todo 调用发送邮件接口 preSend
         SysMailSendDTO sysMailSendDTO = new SysMailSendDTO();
         Map<String, Object> map=new HashMap<>();
