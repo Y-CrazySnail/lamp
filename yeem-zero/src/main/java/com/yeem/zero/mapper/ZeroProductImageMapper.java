@@ -10,5 +10,5 @@ import java.util.List;
 @Mapper
 @DS("zero")
 public interface ZeroProductImageMapper extends BaseMapper<ZeroProductImage> {
-    List<ZeroProductImage> selectByProductIdAndType(Long productId, Integer type);
+    List<ZeroProductImage> selectByProductId(Long productId);
 }

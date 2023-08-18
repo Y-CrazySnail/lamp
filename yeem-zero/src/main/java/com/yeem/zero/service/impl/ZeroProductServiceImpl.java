@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -29,14 +30,18 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         List<ZeroProduct> zeroProductList = zeroProductMapper.selectByCategoryId(categoryId);
         if (null != zeroProductList && !zeroProductList.isEmpty()) {
             zeroProductList.forEach(zeroProduct -> {
-                List<ZeroProductImage> zeroProductImageShowList = zeroProductImageService
-                        .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_SHOW.getType());
+                List<ZeroProductImage> zeroProductImageList = zeroProductImageService.listByProductId(zeroProduct.getId());
+                List<ZeroProductImage> zeroProductImageShowList = zeroProductImageList.stream()
+                        .filter(image -> ZeroProductImage.Type.TYPE_SHOW.getType().equals(image.getType()))
+                        .collect(Collectors.toList());
                 zeroProduct.setZeroProductImageShowList(zeroProductImageShowList);
-                List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageService
-                        .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_SWIPER.getType());
+                List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageList.stream()
+                        .filter(image -> ZeroProductImage.Type.TYPE_SWIPER.getType().equals(image.getType()))
+                        .collect(Collectors.toList());
                 zeroProduct.setZeroProductImageSwiperList(zeroProductImageSwiperList);
-                List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageService
-                        .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_DETAIL.getType());
+                List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageList.stream()
+                        .filter(image -> ZeroProductImage.Type.TYPE_DETAIL.getType().equals(image.getType()))
+                        .collect(Collectors.toList());
                 zeroProduct.setZeroProductImageDetailList(zeroProductImageDetailList);
             });
         }
@@ -46,14 +51,18 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     @Override
     public ZeroProduct getById(Long id) {
         ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
-        List<ZeroProductImage> zeroProductImageShowList = zeroProductImageService
-                .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_SHOW.getType());
+        List<ZeroProductImage> zeroProductImageList = zeroProductImageService.listByProductId(zeroProduct.getId());
+        List<ZeroProductImage> zeroProductImageShowList = zeroProductImageList.stream()
+                .filter(image -> ZeroProductImage.Type.TYPE_SHOW.getType().equals(image.getType()))
+                .collect(Collectors.toList());
         zeroProduct.setZeroProductImageShowList(zeroProductImageShowList);
-        List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageService
-                .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_SWIPER.getType());
+        List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageList.stream()
+                .filter(image -> ZeroProductImage.Type.TYPE_SWIPER.getType().equals(image.getType()))
+                .collect(Collectors.toList());
         zeroProduct.setZeroProductImageSwiperList(zeroProductImageSwiperList);
-        List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageService
-                .listByProductIdAndType(zeroProduct.getId(), ZeroProductImage.Type.TYPE_DETAIL.getType());
+        List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageList.stream()
+                .filter(image -> ZeroProductImage.Type.TYPE_DETAIL.getType().equals(image.getType()))
+                .collect(Collectors.toList());
         zeroProduct.setZeroProductImageDetailList(zeroProductImageDetailList);
         return zeroProduct;
     }
@@ -76,16 +85,17 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
 
     /**
      * 软删除
+     *
      * @param zeroProduct 产品信息
      */
 
     @Override
     public void removeProduct(ZeroProduct zeroProduct) {
         UpdateWrapper<ZeroProduct> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("id",zeroProduct.getId()).set("delete_flag", true);
+        updateWrapper.eq("id", zeroProduct.getId()).set("delete_flag", true);
         zeroProductMapper.update(null, updateWrapper);
         UpdateWrapper<ZeroProductImage> updateWrapperImg = new UpdateWrapper<>();
-        updateWrapperImg.eq("product_id",zeroProduct.getId()).set("delete_flag", true);
-        zeroProductImageService.update(null,updateWrapperImg);
+        updateWrapperImg.eq("product_id", zeroProduct.getId()).set("delete_flag", true);
+        zeroProductImageService.update(null, updateWrapperImg);
     }
 }

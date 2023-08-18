@@ -75,6 +75,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             orderName.append(zeroOrderItem.getZeroProduct().getName());
         }
         zeroOrder.setOrderName(orderName.toString());
+        super.updateById(zeroOrder);
         PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
         return zeroOrder;
@@ -124,11 +125,14 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
-    public List<ZeroOrder> list(String status) {
+    public List<ZeroOrder> list(String status, String name) {
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(status)) {
             zeroOrderQueryWrapper.eq("status", status);
+        }
+        if (!StringUtils.isEmpty(name)) {
+            zeroOrderQueryWrapper.like("order_name", name);
         }
         zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
         zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
@@ -138,8 +142,6 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderList.forEach(zeroOrder -> {
                 List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(zeroOrder.getId());
                 zeroOrder.setOrderItemList(zeroOrderItemList);
-                ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
-                zeroOrder.setAddress(zeroAddress);
             });
         }
         return zeroOrderList;

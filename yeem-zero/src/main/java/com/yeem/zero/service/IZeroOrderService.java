@@ -18,7 +18,7 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     ZeroOrder get(Long id);
 
-    List<ZeroOrder> list(String status);
+    List<ZeroOrder> list(String status, String name);
 
     void remove(Long id);
 }

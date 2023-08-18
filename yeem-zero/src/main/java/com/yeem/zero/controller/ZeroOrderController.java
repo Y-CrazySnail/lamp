@@ -92,9 +92,10 @@ public class ZeroOrderController extends BaseController<ZeroOrder> {
 
     @OperateLog(operateModule = "订单模块", operateType = "查询订单列表", operateDesc = "描述:查询订单列表")
     @GetMapping("list")
-    public ResponseEntity<Object> list(@RequestParam("status") String status) {
+    public ResponseEntity<Object> list(@RequestParam("status") String status,
+                                       @RequestParam("name") String name) {
         try {
-            return ResponseEntity.ok(zeroOrderService.list(status));
+            return ResponseEntity.ok(zeroOrderService.list(status, name));
         } catch (Exception e) {
             log.error("list order error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("list order error");

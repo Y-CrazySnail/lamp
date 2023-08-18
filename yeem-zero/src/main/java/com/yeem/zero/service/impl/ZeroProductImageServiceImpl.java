@@ -23,12 +23,11 @@ public class ZeroProductImageServiceImpl extends ServiceImpl<ZeroProductImageMap
      * 查询产品图片列表 根据产品ID和类型
      *
      * @param productId 产品ID
-     * @param type      类型 0展示图 1轮播图 2详情图
      * @return 产品图片列表
      */
     @Override
-    public List<ZeroProductImage> listByProductIdAndType(Long productId, Integer type) {
-        return zeroProductImageMapper.selectByProductIdAndType(productId, type);
+    public List<ZeroProductImage> listByProductId(Long productId) {
+        return zeroProductImageMapper.selectByProductId(productId);
     }
 
     @Override
