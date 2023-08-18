@@ -6,10 +6,13 @@ import com.yeem.common.im.dto.SysSMSSendDTO;
 import com.yeem.common.im.entity.SysTemplate;
 import com.yeem.common.im.service.ISysIMService;
 import com.yeem.common.im.service.ISysMailService;
+import com.yeem.common.im.service.ISysSmsService;
 import com.yeem.common.im.service.ISysTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
 
 @Slf4j
 @Service
@@ -21,6 +24,8 @@ public class SysIMServiceImpl implements ISysIMService {
     @Autowired
     private ISysMailService sysMailService;
 
+    @Autowired
+    private ISysSmsService sysSmsService;
     @Override
     public void preSend(SysIMSendDTO sysIMSendDTO) {
         SysTemplate sysTemplate = sysTemplateService.get(sysIMSendDTO.getTemplateType(), sysIMSendDTO.getTemplateName());
@@ -28,6 +33,7 @@ public class SysIMServiceImpl implements ISysIMService {
             sysMailService.save((SysMailSendDTO) sysIMSendDTO, sysTemplate);
         }
         if (SysSMSSendDTO.class.equals(sysIMSendDTO.getClass())) {
+            sysSmsService.save((SysSMSSendDTO) sysIMSendDTO ,sysTemplate);
             // 调用保存短信接口
         }
     }

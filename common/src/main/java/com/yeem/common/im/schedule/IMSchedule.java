@@ -1,6 +1,7 @@
 package com.yeem.common.im.schedule;
 
 import com.yeem.common.im.service.ISysMailService;
+import com.yeem.common.im.service.ISysSmsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,6 +16,8 @@ public class IMSchedule {
     @Autowired
     ISysMailService sysMailService;
 
+    @Autowired
+    ISysSmsService sysSmsService;
     /**
      * 发送邮件定时任务 每10秒执行一次
      */
@@ -22,5 +25,6 @@ public class IMSchedule {
     public void schedule() {
         log.info("send mail start:{}", LocalDateTime.now());
         sysMailService.send();
+        sysSmsService.send();
     }
 }

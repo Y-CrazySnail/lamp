@@ -9,6 +9,7 @@ import com.yeem.common.im.dto.SysMailSendDTO;
 import com.yeem.car_film_saas.entity.CarFilmQuality;
 import com.yeem.car_film_saas.mapper.CarFilmQualityMapper;
 import com.yeem.car_film_saas.service.ICarFilmQualityService;
+import com.yeem.common.im.dto.SysSMSSendDTO;
 import com.yeem.common.im.entity.SysMail;
 import com.yeem.common.im.service.ISysIMService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +125,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     public boolean save(CarFilmQuality carFilmQuality) {
 
         SqlHelper.retBool(carFilmQualityMapper.insert(carFilmQuality));
-        SysMail sysMail=new SysMail();
+   /*     SysMail sysMail=new SysMail();
         sysMail.setToEmail("1270737197@qq.com");
         sysMail.setBusinessName("11");
         sysMail.setBusinessId(1);
@@ -136,7 +139,27 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysMailSendDTO.setTemplateType("mail");
         sysMailSendDTO.setBusinessId(1);
         sysMailSendDTO.setToEmail(carFilmQuality.getQualityCardNo());
-        sysIMService.preSend(sysMailSendDTO);
+        sysIMService.preSend(sysMailSendDTO);*/
+
+        SysSMSSendDTO sysSMSSendDT=new SysSMSSendDTO();
+
+        sysSMSSendDT.setPhone(carFilmQuality.getPhone());
+        sysSMSSendDT.setBusinessId(1);
+        Map<String,Object> map=new HashMap<>();
+        map.put("1","0000");
+        map.put("2","1000");
+        sysSMSSendDT.setReplaceMap(map);
+        sysSMSSendDT.setTemplateType("sms");
+        sysSMSSendDT.setTemplateName("1901593");
+        sysSMSSendDT.setSignName("以梦网络");
+        sysSMSSendDT.setExtendCode("");
+        sysSMSSendDT.setSessionContext("");
+        sysSMSSendDT.setSenderId("");
+
+        long futureTimeInMillis = System.currentTimeMillis() + 20000; // 3600000毫秒 = 1小时
+        Date futureDate = new Date(futureTimeInMillis);
+        sysSMSSendDT.setTimingTime(futureDate);
+        sysIMService.preSend(sysSMSSendDT);
         return true;
     }
 

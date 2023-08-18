@@ -89,3 +89,15 @@ mail:
   from: daimayong@yeah.net
   user: daimayong
   pass: APYDOSTDPDUOEEHQ
+
+SMS:
+  TENCENTCLOUD_SECRET_ID: AKIDLdlYDj5FE0axX4Ytyt18HMK7h5MTNf0J
+  TENCENTCLOUD_SECRET_KEY: FPPFtNfw8SabP1QdhZfYMzSzNakr3GWd
+  # 指定接入地域域名，默认就近地域接入域名为 sms.tencentcloudapi.com ，
+  # 也支持指定地域域名访问，例如广州地域的域名为 sms.ap-guangzhou.tencentcloudapi.com
+  Endpoint: sms.tencentcloudapi.com
+  region: ap-beijing
+  sdkAppId: 1400848355
+  templateId: 1901593
+  signName: 以梦网络
+
