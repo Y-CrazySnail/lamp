@@ -2,6 +2,7 @@ package com.yeem.zero.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.entity.ZeroProductImage;
 import com.yeem.zero.mapper.ZeroProductImageMapper;
 import com.yeem.zero.service.IZeroProductImageService;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -28,6 +30,23 @@ public class ZeroProductImageServiceImpl extends ServiceImpl<ZeroProductImageMap
     @Override
     public List<ZeroProductImage> listByProductId(Long productId) {
         return zeroProductImageMapper.selectByProductId(productId);
+    }
+
+    @Override
+    public void setProductImage(ZeroProduct zeroProduct) {
+        List<ZeroProductImage> zeroProductImageList = zeroProductImageMapper.selectByProductId(zeroProduct.getId());
+        List<ZeroProductImage> zeroProductImageShowList = zeroProductImageList.stream()
+                .filter(image -> ZeroProductImage.Type.TYPE_SHOW.getType().equals(image.getType()))
+                .collect(Collectors.toList());
+        zeroProduct.setZeroProductImageShowList(zeroProductImageShowList);
+        List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageList.stream()
+                .filter(image -> ZeroProductImage.Type.TYPE_SWIPER.getType().equals(image.getType()))
+                .collect(Collectors.toList());
+        zeroProduct.setZeroProductImageSwiperList(zeroProductImageSwiperList);
+        List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageList.stream()
+                .filter(image -> ZeroProductImage.Type.TYPE_DETAIL.getType().equals(image.getType()))
+                .collect(Collectors.toList());
+        zeroProduct.setZeroProductImageDetailList(zeroProductImageDetailList);
     }
 
     @Override

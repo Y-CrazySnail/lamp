@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/zero-product")
@@ -17,6 +19,21 @@ public class ZeroProductController extends BaseController<ZeroProduct> {
 
     @Autowired
     private IZeroProductService zeroProductService;
+
+    @GetMapping("/list-by-name")
+    public ResponseEntity<Object> listByName(@RequestParam("name") String name) {
+        try {
+            List<ZeroProduct> zeroProductList = zeroProductService.list();
+        } catch (Exception e) {
+
+        }
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/recommend")
+    public ResponseEntity<Object> recommend() {
+        return ResponseEntity.ok(null);
+    }
 
     /**
      * 实现id查询方法
@@ -31,6 +48,7 @@ public class ZeroProductController extends BaseController<ZeroProduct> {
             zeroProduct = zeroProductService.getById(id);
             return ResponseEntity.ok(zeroProduct);
         } catch (Exception e) {
+            log.error("get product error:", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
         }
     }

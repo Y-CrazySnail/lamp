@@ -1,7 +1,9 @@
 package com.yeem.zero.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.entity.ZeroProductImage;
 import com.yeem.zero.mapper.ZeroProductMapper;
@@ -12,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,25 +25,45 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     @Autowired
     private IZeroProductImageService zeroProductImageService;
 
+    @Override
+    public List<ZeroProduct> listByName(String name) {
+        QueryWrapper<ZeroProduct> zeroProductQueryWrapper = new QueryWrapper<>();
+        zeroProductQueryWrapper.like("name", name);
+        zeroProductQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
+        List<ZeroProduct> zeroProductList = zeroProductMapper.selectList(zeroProductQueryWrapper);
+        if (null != zeroProductList && !zeroProductList.isEmpty()) {
+            zeroProductList.forEach(zeroProduct -> {
+                zeroProductImageService.setProductImage(zeroProduct);
+            });
+        }
+        return zeroProductList;
+    }
 
     @Override
     public List<ZeroProduct> listByCategoryId(Long categoryId) {
         List<ZeroProduct> zeroProductList = zeroProductMapper.selectByCategoryId(categoryId);
         if (null != zeroProductList && !zeroProductList.isEmpty()) {
             zeroProductList.forEach(zeroProduct -> {
-                List<ZeroProductImage> zeroProductImageList = zeroProductImageService.listByProductId(zeroProduct.getId());
-                List<ZeroProductImage> zeroProductImageShowList = zeroProductImageList.stream()
-                        .filter(image -> ZeroProductImage.Type.TYPE_SHOW.getType().equals(image.getType()))
-                        .collect(Collectors.toList());
-                zeroProduct.setZeroProductImageShowList(zeroProductImageShowList);
-                List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageList.stream()
-                        .filter(image -> ZeroProductImage.Type.TYPE_SWIPER.getType().equals(image.getType()))
-                        .collect(Collectors.toList());
-                zeroProduct.setZeroProductImageSwiperList(zeroProductImageSwiperList);
-                List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageList.stream()
-                        .filter(image -> ZeroProductImage.Type.TYPE_DETAIL.getType().equals(image.getType()))
-                        .collect(Collectors.toList());
-                zeroProduct.setZeroProductImageDetailList(zeroProductImageDetailList);
+                zeroProductImageService.setProductImage(zeroProduct);
+            });
+        }
+        return zeroProductList;
+    }
+
+    /**
+     * 获取推荐商品列表
+     *
+     * @return 推荐商品列表
+     */
+    @Override
+    public List<ZeroProduct> recommend() {
+        QueryWrapper<ZeroProduct> zeroProductQueryWrapper = new QueryWrapper<>();
+        zeroProductQueryWrapper.like("recommend_flag", 1);
+        zeroProductQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
+        List<ZeroProduct> zeroProductList = zeroProductMapper.selectList(zeroProductQueryWrapper);
+        if (null != zeroProductList && !zeroProductList.isEmpty()) {
+            zeroProductList.forEach(zeroProduct -> {
+                zeroProductImageService.setProductImage(zeroProduct);
             });
         }
         return zeroProductList;
@@ -51,19 +72,7 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     @Override
     public ZeroProduct getById(Long id) {
         ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
-        List<ZeroProductImage> zeroProductImageList = zeroProductImageService.listByProductId(zeroProduct.getId());
-        List<ZeroProductImage> zeroProductImageShowList = zeroProductImageList.stream()
-                .filter(image -> ZeroProductImage.Type.TYPE_SHOW.getType().equals(image.getType()))
-                .collect(Collectors.toList());
-        zeroProduct.setZeroProductImageShowList(zeroProductImageShowList);
-        List<ZeroProductImage> zeroProductImageSwiperList = zeroProductImageList.stream()
-                .filter(image -> ZeroProductImage.Type.TYPE_SWIPER.getType().equals(image.getType()))
-                .collect(Collectors.toList());
-        zeroProduct.setZeroProductImageSwiperList(zeroProductImageSwiperList);
-        List<ZeroProductImage> zeroProductImageDetailList = zeroProductImageList.stream()
-                .filter(image -> ZeroProductImage.Type.TYPE_DETAIL.getType().equals(image.getType()))
-                .collect(Collectors.toList());
-        zeroProduct.setZeroProductImageDetailList(zeroProductImageDetailList);
+        zeroProductImageService.setProductImage(zeroProduct);
         return zeroProduct;
     }
 
