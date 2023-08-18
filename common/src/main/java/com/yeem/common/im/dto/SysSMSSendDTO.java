@@ -1,16 +1,15 @@
 package com.yeem.common.im.dto;
 
+import java.util.List;
+
 public class SysSMSSendDTO extends SysIMSendDTO {
     private String phone;
-    private String templateId;
     private String signName;
     private String sessionContext;
-
     /**
      * 短信码号扩展(可忽略)
      */
     private String extendCode;
-
     /**
      * 国内短信无需填写
      */
@@ -46,14 +45,6 @@ public class SysSMSSendDTO extends SysIMSendDTO {
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getTemplateId() {
-        return templateId;
-    }
-
-    public void setTemplateId(String templateId) {
-        this.templateId = templateId;
     }
 
     public String getSignName() {

@@ -1,6 +1,8 @@
 package com.yeem.common.im.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 
@@ -16,10 +18,10 @@ import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
 
 import com.yeem.common.im.dto.SysSMSSendDTO;
-import com.yeem.common.im.entity.SysSms;
+import com.yeem.common.im.entity.SysSMS;
 import com.yeem.common.im.entity.SysTemplate;
 import com.yeem.common.im.mapper.SysSmsMapper;
-import com.yeem.common.im.service.ISysSmsService;
+import com.yeem.common.im.service.ISysSMSService;
 import com.yeem.common.utils.FreeMakerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -30,7 +32,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class SysSmsServiceImpl  extends ServiceImpl<SysSmsMapper, SysSms> implements ISysSmsService {
+public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> implements ISysSMSService {
     @Autowired
     private Environment environment;
 
@@ -38,41 +40,50 @@ public class SysSmsServiceImpl  extends ServiceImpl<SysSmsMapper, SysSms> implem
     private SysSmsMapper sysSmsMapper;
 
     @Override
-    public List<SysSms> getTodo(){
+    public List<SysSMS> getTodo() {
         return sysSmsMapper.getTodo();
     }
+
     @Override
-    public void save(SysSMSSendDTO sysSMSSendDTO, SysTemplate sysTemplate){
-        SysSms sms=new SysSms();
-        sms.setToPhone(sysSMSSendDTO.getPhone());
-        sms.setTimingTime(sysSMSSendDTO.getTimingTime());
-        sms.setContent(FreeMakerUtils.getContent(sysTemplate.getContent(), sysSMSSendDTO.getReplaceMap()));
-        sms.setTemplateId(sysSMSSendDTO.getTemplateId());
-        sms.setTemplateId(sysSMSSendDTO.getSignName());
-        sms.setException(sysSMSSendDTO.getExtendCode());
-        sms.setSenderId(sysSMSSendDTO.getSenderId());
-        sms.setSessionContext(sysSMSSendDTO.getSessionContext());
-        if (!StringUtils.isEmpty(sms.getTimingTime())){
-         // 不立即发短信
-         sms.setTimingFlag(1);
-         // 把时间设置进去
-         sms.setTimingTime(sysSMSSendDTO.getTimingTime());
-         sysSmsMapper.insert(sms);
-        }else {
-            sms.setTimingFlag(0);
-            sysSmsMapper.insert(sms);
+    public void save(SysSMSSendDTO sysSMSSendDTO, SysTemplate sysTemplate) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SysSMS sysSMS = new SysSMS();
+        sysSMS.setToPhone(sysSMSSendDTO.getPhone());
+        sysSMS.setTimingTime(sysSMSSendDTO.getTimingTime());
+        try {
+            sysSMS.setParam(objectMapper.writeValueAsString(sysSMSSendDTO.getReplaceMap()));
+        } catch (JsonProcessingException e) {
+            log.error("error");
+        }
+        sysSMS.setContent(FreeMakerUtils.getContent(sysTemplate.getContent(), sysSMSSendDTO.getReplaceMap()));
+        sysSMS.setTemplateId(sysSMSSendDTO.getTemplateName());
+        sysSMS.setSignName(sysSMSSendDTO.getSignName());
+        sysSMS.setExtendCode(sysSMSSendDTO.getExtendCode());
+        sysSMS.setSenderId(sysSMSSendDTO.getSenderId());
+        sysSMS.setSessionContext(sysSMSSendDTO.getSessionContext());
+        sysSMS.setBusinessId(sysSMSSendDTO.getBusinessId());
+        sysSMS.setBusinessName(sysSMSSendDTO.getTemplateName());
+        if (!StringUtils.isEmpty(sysSMS.getTimingTime())) {
+            sysSMS.setTimingFlag(1);
+            sysSMS.setTimingTime(sysSMSSendDTO.getTimingTime());
+            sysSmsMapper.insert(sysSMS);
+        } else {
+            sysSMS.setTimingFlag(0);
+            sysSmsMapper.insert(sysSMS);
             this.send();
         }
     }
+
     @Override
-    public void send(){
-        List<SysSms> todo = this.getTodo();
-        for (SysSms sms : todo) {
-           sendSms(sms);
+    public void send() {
+        List<SysSMS> todoSMS = this.getTodo();
+        for (SysSMS sysSMS : todoSMS) {
+            send(sysSMS);
         }
     }
+
     @Override
-    public void sendSms(SysSms sms) {
+    public void send(SysSMS sysSMS) {
         try {
             /* 必要步骤：
              * 实例化一个认证对象，入参需要传入腾讯云账户密钥对secretId，secretKey。
@@ -135,25 +146,25 @@ public class SysSmsServiceImpl  extends ServiceImpl<SysSmsMapper, SysSms> implem
             req.setTemplateId(templateId);
 
             /* 模板参数: 模板参数的个数需要与 TemplateId 对应模板的变量个数保持一致，若无模板参数，则设置为空 */
-            // todo 隔离起来
+            // todo 隔离起来 读取param字符串，再反序列化成对象
             String[] templateParamSet = {"1234", "99"};
             req.setTemplateParamSet(templateParamSet);
 
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]
              * 示例如：+8613711112222， 其中前面有一个+号 ，86为国家码，13711112222为手机号，最多不要超过200个手机号 */
-            String[] phoneNumberSet = {sms.getToPhone()};
+            String[] phoneNumberSet = {sysSMS.getToPhone()};
             req.setPhoneNumberSet(phoneNumberSet);
 
             /* 用户的 session 内容（无需要可忽略）: 可以携带用户侧 ID 等上下文信息，server 会原样返回 */
-            String sessionContext = sms.getSessionContext();
+            String sessionContext = sysSMS.getSessionContext();
             req.setSessionContext(sessionContext);
 
             /* 短信码号扩展号（无需要可忽略）: 默认未开通，如需开通请联系 [腾讯云短信小助手] */
-            String extendCode = sms.getExtendCode();
+            String extendCode = sysSMS.getExtendCode();
             req.setExtendCode(extendCode);
 
             /* 国内短信无需填写该项；国际/港澳台短信已申请独立 SenderId 需要填写该字段，默认使用公共 SenderId，无需填写该字段。注：月度使用量达到指定量级可申请独立 SenderId 使用，详情请联系 [腾讯云短信小助手](https://cloud.tencent.com/document/product/382/3773#.E6.8A.80.E6.9C.AF.E4.BA.A4.E6.B5.81)。*/
-            String senderid = sms.getSenderId();
+            String senderid = sysSMS.getSenderId();
             req.setSenderId(senderid);
 
             /* 通过 client 对象调用 SendSms 方法发起请求。注意请求方法名与请求对象是对应的
@@ -174,18 +185,18 @@ public class SysSmsServiceImpl  extends ServiceImpl<SysSmsMapper, SysSms> implem
              * 更多错误，可咨询[腾讯云助手](https://tccc.qcloud.com/web/im/index.html#/chat?webAppId=8fa15978f85cb41f7e2ea36920cb3ae1&title=Sms)
              */
 
-            sms.setState(1);
-            sms.setSendTime(new Date());
-            sms.setSessionContext(sessionContext);
-            sms.setExtendCode(extendCode);
-            sms.setSenderId(senderid);
+            sysSMS.setState(1);
+            sysSMS.setSendTime(new Date());
+            sysSMS.setSessionContext(sessionContext);
+            sysSMS.setExtendCode(extendCode);
+            sysSMS.setSenderId(senderid);
             // todo 不知道怎么获得模板替换后的正文
         } catch (TencentCloudSDKException e) {
-            sms.setState(9);
-            sms.setException(e.toString());
+            sysSMS.setState(9);
+            sysSMS.setException(e.toString());
             e.printStackTrace();
-        }finally {
-            sysSmsMapper.updateById(sms);
+        } finally {
+            sysSmsMapper.updateById(sysSMS);
         }
     }
 }

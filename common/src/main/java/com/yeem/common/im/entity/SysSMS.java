@@ -1,7 +1,6 @@
 package com.yeem.common.im.entity;
 
 
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
@@ -12,7 +11,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("sys_sms")
-public class SysSms extends BaseEntity {
+public class SysSMS extends BaseEntity {
     /**
      * 收信息人电话
      */
@@ -81,4 +80,5 @@ public class SysSms extends BaseEntity {
      * 模板id
      */
     private String templateId;
+    private String param;
 }
