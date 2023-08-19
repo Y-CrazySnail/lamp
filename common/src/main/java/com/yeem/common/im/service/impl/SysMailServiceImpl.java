@@ -92,7 +92,6 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
             log.error("send mail error", e);
         } finally {
             sysMailMapper.updateById(sysMail);
-            log.info("发送邮件");
         }
     }
 

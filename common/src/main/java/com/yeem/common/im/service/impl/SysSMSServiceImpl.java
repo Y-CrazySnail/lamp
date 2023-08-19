@@ -1,7 +1,10 @@
 package com.yeem.common.im.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
@@ -28,8 +31,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> implements ISysSMSService {
@@ -70,7 +75,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
         } else {
             sysSMS.setTimingFlag(0);
             sysSmsMapper.insert(sysSMS);
-            this.send();
+            this.send(sysSMS);
         }
     }
 
@@ -137,17 +142,25 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
 
             /* 短信签名内容: 使用 UTF-8 编码，必须填写已审核通过的签名 */
             // 签名信息可前往 [国内短信](https://console.cloud.tencent.com/smsv2/csms-sign) 或 [国际/港澳台短信](https://console.cloud.tencent.com/smsv2/isms-sign) 的签名管理查看
+            // todo 签名不能写死，是DTO传入的
             String signName = environment.getProperty("SMS.signName");
             req.setSignName(signName);
 
             /* 模板 ID: 必须填写已审核通过的模板 ID */
             // 模板 ID 可前往 [国内短信](https://console.cloud.tencent.com/smsv2/csms-template) 或 [国际/港澳台短信](https://console.cloud.tencent.com/smsv2/isms-template) 的正文模板管理查看
+            // todo 模板ID也不是写死的，是从SysSMS里读出来的
             String templateId = environment.getProperty("SMS.templateId");
             req.setTemplateId(templateId);
 
             /* 模板参数: 模板参数的个数需要与 TemplateId 对应模板的变量个数保持一致，若无模板参数，则设置为空 */
             // todo 隔离起来 读取param字符串，再反序列化成对象
-            String[] templateParamSet = {"1234", "99"};
+            Map<String, String> replaceMap = new ObjectMapper().readValue(sysSMS.getParam(),
+                    new TypeReference<Map<String, String>>() {
+                    });
+            String[] templateParamSet = new String[replaceMap.size()];
+            for (int i = 1; i <= replaceMap.size(); i++) {
+                templateParamSet[i - 1] = replaceMap.get("param" + i);
+            }
             req.setTemplateParamSet(templateParamSet);
 
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]
@@ -187,13 +200,21 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
 
             sysSMS.setState(1);
             sysSMS.setSendTime(new Date());
+            // todo 这啥用没有 --开始
             sysSMS.setSessionContext(sessionContext);
             sysSMS.setExtendCode(extendCode);
             sysSMS.setSenderId(senderid);
+            // todo 这啥用没有 --结束
             // todo 不知道怎么获得模板替换后的正文
         } catch (TencentCloudSDKException e) {
             sysSMS.setState(9);
             sysSMS.setException(e.toString());
+            log.error("send sms error", e);
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (JsonParseException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         } finally {
             sysSmsMapper.updateById(sysSMS);

@@ -146,15 +146,12 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysSMSSendDT.setPhone(carFilmQuality.getPhone());
         sysSMSSendDT.setBusinessId(1);
         Map<String,Object> map=new HashMap<>();
-        map.put("1","0000");
-        map.put("2","1000");
+        map.put("param1","0000");
+        map.put("param2","1000");
         sysSMSSendDT.setReplaceMap(map);
         sysSMSSendDT.setTemplateType("sms");
         sysSMSSendDT.setTemplateName("1901593");
         sysSMSSendDT.setSignName("以梦网络");
-        sysSMSSendDT.setExtendCode("");
-        sysSMSSendDT.setSessionContext("");
-        sysSMSSendDT.setSenderId("");
 
         long futureTimeInMillis = System.currentTimeMillis() + 20000; // 3600000毫秒 = 1小时
         Date futureDate = new Date(futureTimeInMillis);
