@@ -125,21 +125,21 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     public boolean save(CarFilmQuality carFilmQuality) {
 
         SqlHelper.retBool(carFilmQualityMapper.insert(carFilmQuality));
-   /*     SysMail sysMail=new SysMail();
+        SysMail sysMail=new SysMail();
         sysMail.setToEmail("1270737197@qq.com");
         sysMail.setBusinessName("11");
         sysMail.setBusinessId(1);
         // todo 调用发送邮件接口 preSend
         SysMailSendDTO sysMailSendDTO = new SysMailSendDTO();
-        Map<String, Object> map=new HashMap<>();
-        map.put("name",carFilmQuality.getName());
-        map.put("car",carFilmQuality.getCarModel());
-        sysMailSendDTO.setReplaceMap(map);
+        Map<String, Object> map1=new HashMap<>();
+        map1.put("name",carFilmQuality.getName());
+        map1.put("car",carFilmQuality.getCarModel());
+        sysMailSendDTO.setReplaceMap(map1);
         sysMailSendDTO.setTemplateName("aaa");
         sysMailSendDTO.setTemplateType("mail");
         sysMailSendDTO.setBusinessId(1);
         sysMailSendDTO.setToEmail(carFilmQuality.getQualityCardNo());
-        sysIMService.preSend(sysMailSendDTO);*/
+//        sysIMService.preSend(sysMailSendDTO);
 
         SysSMSSendDTO sysSMSSendDT=new SysSMSSendDTO();
 
@@ -151,8 +151,6 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysSMSSendDT.setReplaceMap(map);
         sysSMSSendDT.setTemplateType("sms");
         sysSMSSendDT.setTemplateName("1901593");
-        sysSMSSendDT.setSignName("以梦网络");
-
         long futureTimeInMillis = System.currentTimeMillis() + 20000; // 3600000毫秒 = 1小时
         Date futureDate = new Date(futureTimeInMillis);
         sysSMSSendDT.setTimingTime(futureDate);

@@ -81,4 +81,5 @@ public class SysSMS extends BaseEntity {
      */
     private String templateId;
     private String param;
+    private Integer sendFlag;
 }

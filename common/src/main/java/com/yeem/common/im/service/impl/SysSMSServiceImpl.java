@@ -20,6 +20,7 @@ import com.tencentcloudapi.sms.v20210111.SmsClient;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsRequest;
 import com.tencentcloudapi.sms.v20210111.models.SendSmsResponse;
 
+import com.tencentcloudapi.sms.v20210111.models.SendStatus;
 import com.yeem.common.im.dto.SysSMSSendDTO;
 import com.yeem.common.im.entity.SysSMS;
 import com.yeem.common.im.entity.SysTemplate;
@@ -62,7 +63,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
         }
         sysSMS.setContent(FreeMakerUtils.getContent(sysTemplate.getContent(), sysSMSSendDTO.getReplaceMap()));
         sysSMS.setTemplateId(sysSMSSendDTO.getTemplateName());
-        sysSMS.setSignName(sysSMSSendDTO.getSignName());
+        sysSMS.setSignName(sysTemplate.getSignName());
         sysSMS.setExtendCode(sysSMSSendDTO.getExtendCode());
         sysSMS.setSenderId(sysSMSSendDTO.getSenderId());
         sysSMS.setSessionContext(sysSMSSendDTO.getSessionContext());
@@ -142,18 +143,16 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
 
             /* 短信签名内容: 使用 UTF-8 编码，必须填写已审核通过的签名 */
             // 签名信息可前往 [国内短信](https://console.cloud.tencent.com/smsv2/csms-sign) 或 [国际/港澳台短信](https://console.cloud.tencent.com/smsv2/isms-sign) 的签名管理查看
-            // todo 签名不能写死，是DTO传入的
-            String signName = environment.getProperty("SMS.signName");
+            String signName = sysSMS.getSignName();
             req.setSignName(signName);
 
             /* 模板 ID: 必须填写已审核通过的模板 ID */
             // 模板 ID 可前往 [国内短信](https://console.cloud.tencent.com/smsv2/csms-template) 或 [国际/港澳台短信](https://console.cloud.tencent.com/smsv2/isms-template) 的正文模板管理查看
-            // todo 模板ID也不是写死的，是从SysSMS里读出来的
-            String templateId = environment.getProperty("SMS.templateId");
+            String templateId = sysSMS.getTemplateId();
             req.setTemplateId(templateId);
 
             /* 模板参数: 模板参数的个数需要与 TemplateId 对应模板的变量个数保持一致，若无模板参数，则设置为空 */
-            // todo 隔离起来 读取param字符串，再反序列化成对象
+            // todo 隔离起来 读取param字符串，再反序列化成对象  这是啥没见过 现在的水平看不太懂 我在复习一下集合
             Map<String, String> replaceMap = new ObjectMapper().readValue(sysSMS.getParam(),
                     new TypeReference<Map<String, String>>() {
                     });
@@ -198,23 +197,39 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
              * 更多错误，可咨询[腾讯云助手](https://tccc.qcloud.com/web/im/index.html#/chat?webAppId=8fa15978f85cb41f7e2ea36920cb3ae1&title=Sms)
              */
 
-            sysSMS.setState(1);
-            sysSMS.setSendTime(new Date());
-            // todo 这啥用没有 --开始
-            sysSMS.setSessionContext(sessionContext);
-            sysSMS.setExtendCode(extendCode);
-            sysSMS.setSenderId(senderid);
-            // todo 这啥用没有 --结束
-            // todo 不知道怎么获得模板替换后的正文
+            for (SendStatus sendStatus : res.getSendStatusSet()) {
+               if ("Ok".equals(sendStatus.getCode())){
+                   sysSMS.setState(1);
+                   sysSMS.setSendTime(new Date());
+               }else {
+                   sysSMS.setState(9);
+                   sysSMS.setException(sendStatus.getMessage());
+                   sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
+                   log.error("send sms error sendStatus->NoOK ");
+               }
+            }
         } catch (TencentCloudSDKException e) {
             sysSMS.setState(9);
             sysSMS.setException(e.toString());
+            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
             log.error("send sms error", e);
         } catch (JsonMappingException e) {
             e.printStackTrace();
+            sysSMS.setState(9);
+            sysSMS.setException(e.toString());
+            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
+            log.error("send sms error", e);
         } catch (JsonParseException e) {
+            sysSMS.setState(9);
+            sysSMS.setException(e.toString());
+            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
+            log.error("send sms error", e);
             e.printStackTrace();
         } catch (IOException e) {
+            sysSMS.setState(9);
+            sysSMS.setException(e.toString());
+            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
+            log.error("send sms error", e);
             e.printStackTrace();
         } finally {
             sysSmsMapper.updateById(sysSMS);
