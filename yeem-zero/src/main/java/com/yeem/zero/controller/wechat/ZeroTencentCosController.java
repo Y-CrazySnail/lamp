@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.UUID;
@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-tencent-cos")
+@RequestMapping("/wechat-zero-tencent-cos")
 public class ZeroTencentCosController extends BaseController<ZeroTencentCos> {
 
     @Autowired

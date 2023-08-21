@@ -32,9 +32,7 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         zeroProductQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
         List<ZeroProduct> zeroProductList = zeroProductMapper.selectList(zeroProductQueryWrapper);
         if (null != zeroProductList && !zeroProductList.isEmpty()) {
-            zeroProductList.forEach(zeroProduct -> {
-                zeroProductImageService.setProductImage(zeroProduct);
-            });
+            zeroProductList.forEach(zeroProduct -> zeroProductImageService.setProductImage(zeroProduct));
         }
         return zeroProductList;
     }
@@ -43,9 +41,7 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     public List<ZeroProduct> listByCategoryId(Long categoryId) {
         List<ZeroProduct> zeroProductList = zeroProductMapper.selectByCategoryId(categoryId);
         if (null != zeroProductList && !zeroProductList.isEmpty()) {
-            zeroProductList.forEach(zeroProduct -> {
-                zeroProductImageService.setProductImage(zeroProduct);
-            });
+            zeroProductList.forEach(zeroProduct -> zeroProductImageService.setProductImage(zeroProduct));
         }
         return zeroProductList;
     }
@@ -62,9 +58,7 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         zeroProductQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
         List<ZeroProduct> zeroProductList = zeroProductMapper.selectList(zeroProductQueryWrapper);
         if (null != zeroProductList && !zeroProductList.isEmpty()) {
-            zeroProductList.forEach(zeroProduct -> {
-                zeroProductImageService.setProductImage(zeroProduct);
-            });
+            zeroProductList.forEach(zeroProduct -> zeroProductImageService.setProductImage(zeroProduct));
         }
         return zeroProductList;
     }

@@ -1,7 +1,5 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.conreoller.BaseController;
@@ -19,7 +17,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-payment")
+@RequestMapping("/wechat-zero-payment")
 public class ZeroPaymentController extends BaseController<ZeroOrder> {
 
     private final static String HEADER_NAME_TIMESTAMP = "Wechatpay-Timestamp";

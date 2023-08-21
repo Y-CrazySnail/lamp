@@ -1,5 +1,7 @@
 permit-url:
-  - /zero-auth/login
-  - /zero-category/list
-  - /zero-address/test
-  - /zero-payment/callback
+  - /wechat-zero-auth/login
+  - /wechat-zero-category/list
+  - /wechat-zero-address/test
+  - /wechat-zero-payment/callback
+  - /wechat-zero-product/recommend
+  - /wechat-zero-product/list-by-name

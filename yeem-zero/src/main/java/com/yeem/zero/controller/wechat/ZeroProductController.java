@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import cn.hutool.http.HttpStatus;
 import com.yeem.common.conreoller.BaseController;
@@ -14,7 +14,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-product")
+@RequestMapping("/wechat-zero-product")
 public class ZeroProductController extends BaseController<ZeroProduct> {
 
     @Autowired
@@ -23,16 +23,21 @@ public class ZeroProductController extends BaseController<ZeroProduct> {
     @GetMapping("/list-by-name")
     public ResponseEntity<Object> listByName(@RequestParam("name") String name) {
         try {
-            List<ZeroProduct> zeroProductList = zeroProductService.list();
+            List<ZeroProduct> zeroProductList = zeroProductService.listByName(name);
+            return ResponseEntity.ok(zeroProductList);
         } catch (Exception e) {
-
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("");
         }
-        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/recommend")
     public ResponseEntity<Object> recommend() {
-        return ResponseEntity.ok(null);
+        try {
+            List<ZeroProduct> zeroProductList = zeroProductService.recommend();
+            return ResponseEntity.ok(zeroProductList);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("");
+        }
     }
 
     /**
@@ -86,12 +91,12 @@ public class ZeroProductController extends BaseController<ZeroProduct> {
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> remove(@RequestBody ZeroProduct zeroProduct){
+    public ResponseEntity<Object> remove(@RequestBody ZeroProduct zeroProduct) {
         try {
             zeroProductService.removeProduct(zeroProduct);
             return ResponseEntity.ok(" ");
-        }catch (Exception e){
-         return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
 }

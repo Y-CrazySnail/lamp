@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.common.utils.OauthUtils;
@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-address")
+@RequestMapping("/wechat-zero-address")
 public class ZeroAddressController extends BaseController<ZeroAddress> {
 
     @Autowired

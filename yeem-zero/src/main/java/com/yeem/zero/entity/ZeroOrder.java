@@ -68,16 +68,48 @@ public class ZeroOrder extends BaseEntity {
      */
     private String remark;
     /**
+     * 分销订单标识 0否 1是
+     */
+    private String distributionFlag;
+    /**
+     * 直接推荐人-用户名
+     */
+    private String directReferrerUsername;
+    /**
+     * 间接推荐人-用户名
+     */
+    private String indirectReferrerUsername;
+    /**
+     * 直接推荐人-奖金
+     */
+    private BigDecimal directBonus;
+    /**
+     * 间接推荐人-奖金
+     */
+    private BigDecimal indirectBonus;
+    /**
      * 直接下单direct 购物车下单indirect
      */
     @TableField(exist = false)
     private String type;
+    /**
+     * 订单项列表
+     */
     @TableField(exist = false)
     private List<ZeroOrderItem> orderItemList;
+    /**
+     * 订单地址信息
+     */
     @TableField(exist = false)
     private ZeroAddress address;
+    /**
+     * 购物车列表
+     */
     @TableField(exist = false)
     private List<ZeroCart> cartList;
+    /**
+     * 预支付信息
+     */
     @TableField(exist = false)
     private PrepayWithRequestPaymentResponse prepayWithRequestPaymentResponse;
 
@@ -191,6 +223,46 @@ public class ZeroOrder extends BaseEntity {
 
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+
+    public String getDistributionFlag() {
+        return distributionFlag;
+    }
+
+    public void setDistributionFlag(String distributionFlag) {
+        this.distributionFlag = distributionFlag;
+    }
+
+    public String getDirectReferrerUsername() {
+        return directReferrerUsername;
+    }
+
+    public void setDirectReferrerUsername(String directReferrerUsername) {
+        this.directReferrerUsername = directReferrerUsername;
+    }
+
+    public String getIndirectReferrerUsername() {
+        return indirectReferrerUsername;
+    }
+
+    public void setIndirectReferrerUsername(String indirectReferrerUsername) {
+        this.indirectReferrerUsername = indirectReferrerUsername;
+    }
+
+    public BigDecimal getDirectBonus() {
+        return directBonus;
+    }
+
+    public void setDirectBonus(BigDecimal directBonus) {
+        this.directBonus = directBonus;
+    }
+
+    public BigDecimal getIndirectBonus() {
+        return indirectBonus;
+    }
+
+    public void setIndirectBonus(BigDecimal indirectBonus) {
+        this.indirectBonus = indirectBonus;
     }
 
     public List<ZeroOrderItem> getOrderItemList() {

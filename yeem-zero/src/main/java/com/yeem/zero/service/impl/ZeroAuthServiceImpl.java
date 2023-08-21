@@ -3,7 +3,6 @@ package com.yeem.zero.service.impl;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.common.dto.WechatMiniProgramDTO;
 import com.yeem.zero.entity.ZeroUserExtra;
@@ -13,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -61,6 +58,7 @@ public class ZeroAuthServiceImpl implements IZeroAuthService {
             zeroUserExtra = new ZeroUserExtra();
             zeroUserExtra.setUserId(wechatMiniProgramDTO.getUserId());
             zeroUserExtra.setUsername(wechatMiniProgramDTO.getUsername());
+//            zeroUserExtra.setReferrerUsername(wechatMiniProgramDTO.getReferrerUsername());
             zeroUserExtra.setNickName(wechatMiniProgramDTO.getNickName());
             zeroUserExtra.setAvatarUrl(wechatMiniProgramDTO.getAvatarUrl());
             zeroUserExtra.setGender(wechatMiniProgramDTO.getGender());

@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroCategory;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-category")
+@RequestMapping("/wechat-zero-category")
 public class ZeroCategoryController extends BaseController<ZeroCategory> {
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-order")
+@RequestMapping("/wechat-zero-order")
 public class ZeroOrderController extends BaseController<ZeroOrder> {
 
     @Autowired

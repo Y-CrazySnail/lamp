@@ -14,9 +14,17 @@ public class ZeroUserExtra extends BaseEntity {
      */
     private String username;
     /**
-     * 推荐人-用户名
+     * 直接推荐人-用户名
      */
-    private String referrerUsername;
+    private String directReferrerUsername;
+    /**
+     * 间接推荐人-用户名
+     */
+    private String indirectReferrerUsername;
+    /**
+     * 分销标识 0否 1是
+     */
+    private Integer distributionFlag;
     /**
      * 昵称
      */
@@ -54,12 +62,28 @@ public class ZeroUserExtra extends BaseEntity {
         this.username = username;
     }
 
-    public String getReferrerUsername() {
-        return referrerUsername;
+    public String getIndirectReferrerUsername() {
+        return indirectReferrerUsername;
     }
 
-    public void setReferrerUsername(String referrerUsername) {
-        this.referrerUsername = referrerUsername;
+    public void setIndirectReferrerUsername(String indirectReferrerUsername) {
+        this.indirectReferrerUsername = indirectReferrerUsername;
+    }
+
+    public String getDirectReferrerUsername() {
+        return directReferrerUsername;
+    }
+
+    public void setDirectReferrerUsername(String directReferrerUsername) {
+        this.directReferrerUsername = directReferrerUsername;
+    }
+
+    public Integer getDistributionFlag() {
+        return distributionFlag;
+    }
+
+    public void setDistributionFlag(Integer distributionFlag) {
+        this.distributionFlag = distributionFlag;
     }
 
     public String getNickName() {

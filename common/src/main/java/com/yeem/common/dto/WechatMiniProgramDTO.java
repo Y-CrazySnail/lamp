@@ -3,6 +3,7 @@ package com.yeem.common.dto;
 public class WechatMiniProgramDTO {
     private Long userId;
     private String username;
+    private String referrerUsername;
     /**
      * 应用
      */
@@ -49,6 +50,14 @@ public class WechatMiniProgramDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getReferrerUsername() {
+        return referrerUsername;
+    }
+
+    public void setReferrerUsername(String referrerUsername) {
+        this.referrerUsername = referrerUsername;
     }
 
     public String getApplication() {

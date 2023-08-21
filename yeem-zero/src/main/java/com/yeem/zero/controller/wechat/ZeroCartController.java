@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroCart;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-cart")
+@RequestMapping("/wechat-zero-cart")
 public class ZeroCartController extends BaseController<ZeroCart> {
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.yeem.zero.controller;
+package com.yeem.zero.controller.wechat;
 
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.common.utils.OauthUtils;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/zero-user")
+@RequestMapping("/wechat-zero-user")
 public class ZeroUserController extends BaseController<ZeroUserExtra> {
 
     @Autowired
