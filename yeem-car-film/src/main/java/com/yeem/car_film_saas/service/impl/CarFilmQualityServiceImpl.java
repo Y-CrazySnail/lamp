@@ -129,7 +129,6 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysMail.setToEmail("1270737197@qq.com");
         sysMail.setBusinessName("11");
         sysMail.setBusinessId(1);
-        // todo 调用发送邮件接口 preSend
         SysMailSendDTO sysMailSendDTO = new SysMailSendDTO();
         Map<String, Object> map1=new HashMap<>();
         map1.put("name",carFilmQuality.getName());
@@ -140,9 +139,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         sysMailSendDTO.setBusinessId(1);
         sysMailSendDTO.setToEmail(carFilmQuality.getQualityCardNo());
 //        sysIMService.preSend(sysMailSendDTO);
-
         SysSMSSendDTO sysSMSSendDT=new SysSMSSendDTO();
-
         sysSMSSendDT.setPhone(carFilmQuality.getPhone());
         sysSMSSendDT.setBusinessId(1);
         Map<String,Object> map=new HashMap<>();
