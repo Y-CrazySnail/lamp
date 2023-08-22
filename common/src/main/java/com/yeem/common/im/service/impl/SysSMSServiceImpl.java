@@ -1,13 +1,11 @@
 package com.yeem.common.im.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.common.Credential;
-import com.tencentcloudapi.common.exception.TencentCloudSDKException;
+
 
 //导入可选配置类
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -32,7 +30,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +66,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
         sysSMS.setSessionContext(sysSMSSendDTO.getSessionContext());
         sysSMS.setBusinessId(sysSMSSendDTO.getBusinessId());
         sysSMS.setBusinessName(sysSMSSendDTO.getTemplateName());
+        sysSMS.setTemplateId(sysTemplate.getTemplateId());
         if (!StringUtils.isEmpty(sysSMS.getTimingTime())) {
             sysSMS.setTimingFlag(1);
             sysSMS.setTimingTime(sysSMSSendDTO.getTimingTime());
@@ -97,7 +95,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
              * 你也可以直接在代码中写死密钥对，但是小心不要将代码复制、上传或者分享给他人，
              * 以免泄露密钥对危及你的财产安全。
              * SecretId、SecretKey 查询: https://console.cloud.tencent.com/cam/capi */
-            Credential cred = new Credential(environment.getProperty("SMS.TENCENTCLOUD_SECRET_ID"), environment.getProperty("SMS.TENCENTCLOUD_SECRET_KEY"));
+            Credential cred = new Credential(environment.getProperty("sms.tencentcloud-secret-id"), environment.getProperty("sms.tencentcloud-secret-key"));
 
             // 实例化一个http选项，可选，没有特殊需求可以跳过
             HttpProfile httpProfile = new HttpProfile();
@@ -111,7 +109,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
              * 如有需要请在代码中查阅以获取最新的默认值 */
             httpProfile.setConnTimeout(60);
             /* 指定接入地域域名，默认就近地域接入域名为 sms.tencentcloudapi.com ，也支持指定地域域名访问，例如广州地域的域名为 sms.ap-guangzhou.tencentcloudapi.com */
-            httpProfile.setEndpoint(environment.getProperty("SMS.Endpoint"));
+            httpProfile.setEndpoint(environment.getProperty("sms.endpoint"));
 
             /* 非必要步骤:
              * 实例化一个客户端配置对象，可以指定超时时间等配置 */
@@ -122,7 +120,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
             clientProfile.setHttpProfile(httpProfile);
             /* 实例化要请求产品(以sms为例)的client对象
              * 第二个参数是地域信息，可以直接填写字符串ap-guangzhou，支持的地域列表参考 https://cloud.tencent.com/document/api/382/52071#.E5.9C.B0.E5.9F.9F.E5.88.97.E8.A1.A8 */
-            SmsClient client = new SmsClient(cred, environment.getProperty("SMS.region"), clientProfile);
+            SmsClient client = new SmsClient(cred, environment.getProperty("sms.region"), clientProfile);
             /* 实例化一个请求对象，根据调用的接口和实际情况，可以进一步设置请求参数
              * 你可以直接查询SDK源码确定接口有哪些属性可以设置
              * 属性可能是基本类型，也可能引用了另一个数据结构
@@ -138,7 +136,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
 
             /* 短信应用ID: 短信SdkAppId在 [短信控制台] 添加应用后生成的实际SdkAppId，示例如1400006666 */
             // 应用 ID 可前往 [短信控制台](https://console.cloud.tencent.com/smsv2/app-manage) 查看
-            String sdkAppId = environment.getProperty("SMS.sdkAppId");
+            String sdkAppId = environment.getProperty("sms.sdk-app-id");
             req.setSmsSdkAppId(sdkAppId);
 
             /* 短信签名内容: 使用 UTF-8 编码，必须填写已审核通过的签名 */
@@ -152,7 +150,6 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
             req.setTemplateId(templateId);
 
             /* 模板参数: 模板参数的个数需要与 TemplateId 对应模板的变量个数保持一致，若无模板参数，则设置为空 */
-            // todo 隔离起来 读取param字符串，再反序列化成对象  这是啥没见过 现在的水平看不太懂 我在复习一下集合
             Map<String, String> replaceMap = new ObjectMapper().readValue(sysSMS.getParam(),
                     new TypeReference<Map<String, String>>() {
                     });
@@ -164,8 +161,8 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
 
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]
              * 示例如：+8613711112222， 其中前面有一个+号 ，86为国家码，13711112222为手机号，最多不要超过200个手机号 */
-            String[] phoneNumberSet = {sysSMS.getToPhone()};
-            req.setPhoneNumberSet(phoneNumberSet);
+            String[] splitPhone = sysSMS.getToPhone().split(",");
+            req.setPhoneNumberSet(splitPhone);
 
             /* 用户的 session 内容（无需要可忽略）: 可以携带用户侧 ID 等上下文信息，server 会原样返回 */
             String sessionContext = sysSMS.getSessionContext();
@@ -198,39 +195,19 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
              */
 
             for (SendStatus sendStatus : res.getSendStatusSet()) {
-               if ("Ok".equals(sendStatus.getCode())){
-                   sysSMS.setState(1);
-                   sysSMS.setSendTime(new Date());
-               }else {
-                   sysSMS.setState(9);
-                   sysSMS.setException(sendStatus.getMessage());
-                   sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
-                   log.error("send sms error sendStatus->NoOK ");
-               }
+                if ("Ok".equals(sendStatus.getCode())) {
+                    sysSMS.setState(1);
+                    sysSMS.setSendTime(new Date());
+                } else {
+                    sysSMS.setState(9);
+                    sysSMS.setException(sendStatus.getMessage());
+                    log.error("send sms error sendStatus->NoOK ");
+                }
             }
-        } catch (TencentCloudSDKException e) {
+        } catch (Exception e) {
             sysSMS.setState(9);
             sysSMS.setException(e.toString());
-            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
             log.error("send sms error", e);
-        } catch (JsonMappingException e) {
-            e.printStackTrace();
-            sysSMS.setState(9);
-            sysSMS.setException(e.toString());
-            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
-            log.error("send sms error", e);
-        } catch (JsonParseException e) {
-            sysSMS.setState(9);
-            sysSMS.setException(e.toString());
-            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
-            log.error("send sms error", e);
-            e.printStackTrace();
-        } catch (IOException e) {
-            sysSMS.setState(9);
-            sysSMS.setException(e.toString());
-            sysSMS.setSendFlag(sysSMS.getSendFlag()+1);
-            log.error("send sms error", e);
-            e.printStackTrace();
         } finally {
             sysSmsMapper.updateById(sysSMS);
         }
