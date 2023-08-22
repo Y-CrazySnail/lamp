@@ -133,6 +133,11 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
 
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]最多不要超过200个手机号 */
             String[] splitPhone = sysSMS.getToPhone().split(",");
+            for (String phone : splitPhone) {
+                if (!phone.startsWith("+86")){
+                    phone="+86"+phone;
+                }
+            }
             req.setPhoneNumberSet(splitPhone);
 
             /* 用户的 session 内容（无需要可忽略）: 可以携带用户侧 ID 等上下文信息，server 会原样返回 */
