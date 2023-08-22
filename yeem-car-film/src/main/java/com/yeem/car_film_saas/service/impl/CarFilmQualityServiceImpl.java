@@ -150,7 +150,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         map.put("param2","1000");
         sysSMSSendDT.setReplaceMap(map);
         sysSMSSendDT.setTemplateType("sms");
-        sysSMSSendDT.setTemplateName("1901593");
+        sysSMSSendDT.setTemplateName("bbb");
         long futureTimeInMillis = System.currentTimeMillis() + 20000; // 3600000毫秒 = 1小时
         Date futureDate = new Date(futureTimeInMillis);
         sysSMSSendDT.setTimingTime(futureDate);
