@@ -1,7 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
 import com.yeem.common.aspect.log.OperateLog;
-import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroOrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,6 +10,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
+/**
+ * 订单信息
+ */
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-order")
@@ -22,37 +26,38 @@ public class ZeroOrderController {
     /**
      * 下单
      *
-     * @param zeroOrder 入参对象
+     * @param zeroOrder 订单信息
      * @return 下单状态
      */
     @PostMapping("order")
-    public ResponseEntity<Object> order(@RequestBody ZeroOrder zeroOrder) {
+    public ResponseEntity<ZeroOrder> order(@RequestBody ZeroOrder zeroOrder) {
         if (StringUtils.isEmpty(zeroOrder.getCartList()) || zeroOrder.getCartList().isEmpty()) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("cart list is empty");
+            log.error("cart list is empty");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         try {
             ZeroOrder resZeroOrder = zeroOrderService.order(zeroOrder);
             return ResponseEntity.ok(resZeroOrder);
         } catch (Exception e) {
             log.error("order error", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("order error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * 支付
      *
-     * @param zeroOrder 入参对象
+     * @param zeroOrder 订单信息
      * @return 下单状态
      */
     @PostMapping("prepay")
-    public ResponseEntity<Object> prepay(@RequestBody ZeroOrder zeroOrder) {
+    public ResponseEntity<ZeroOrder> prepay(@RequestBody ZeroOrder zeroOrder) {
         try {
             ZeroOrder resZeroOrder = zeroOrderService.prepay(zeroOrder);
             return ResponseEntity.ok(resZeroOrder);
         } catch (Exception e) {
             log.error("prepay error", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("prepay error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
@@ -69,14 +74,14 @@ public class ZeroOrderController {
             return ResponseEntity.ok("paid success");
         } catch (Exception e) {
             log.error("paid error", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("paid error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * 确认收货
      *
-     * @param zeroOrder 确认收货
+     * @param zeroOrder 订单信息
      * @return response
      */
     @PostMapping("confirm")
@@ -90,28 +95,49 @@ public class ZeroOrderController {
         }
     }
 
+    /**
+     * 查询订单列表
+     *
+     * @param status 订单状态
+     * @param name   订单名称
+     * @return 订单列表
+     * @apiNote 查询订单列表
+     */
     @OperateLog(operateModule = "订单模块", operateType = "查询订单列表", operateDesc = "描述:查询订单列表")
     @GetMapping("list")
-    public ResponseEntity<Object> list(@RequestParam("status") String status,
-                                       @RequestParam("name") String name) {
+    public ResponseEntity<List<ZeroOrder>> list(@RequestParam("status") String status, @RequestParam("name") String name) {
         try {
             return ResponseEntity.ok(zeroOrderService.list(status, name));
         } catch (Exception e) {
             log.error("list order error:", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("list order error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * 查询订单信息
+     *
+     * @param id 订单ID
+     * @return 订单信息
+     * @apiNote 查询订单信息
+     */
     @GetMapping("get")
-    public ResponseEntity<Object> get(@RequestParam("id") Long id) {
+    public ResponseEntity<ZeroOrder> get(@RequestParam("id") Long id) {
         try {
             return ResponseEntity.ok(zeroOrderService.get(id));
         } catch (Exception e) {
             log.error("get order error:", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("get order error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
+    /**
+     * 删除订单信息
+     *
+     * @param zeroOrder 订单信息
+     * @return 删除结果
+     * @apiNote 删除订单信息
+     */
     @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody ZeroOrder zeroOrder) {
         try {

@@ -2,7 +2,6 @@ package com.yeem.zero.controller.wechat;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
-import com.yeem.common.conreoller.BaseController;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroPaymentService;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
 
+/**
+ * 支付功能
+ */
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-payment")
@@ -28,14 +30,21 @@ public class ZeroPaymentController {
     @Autowired
     private IZeroPaymentService zeroPaymentService;
 
+    /**
+     * 预支付
+     *
+     * @param zeroOrder 订单信息
+     * @return 预支付信息
+     * @apiNote 预支付
+     */
     @PostMapping("wechat-prepay")
-    public ResponseEntity<Object> wechatPrepay(@RequestBody ZeroOrder zeroOrder) {
+    public ResponseEntity<PrepayWithRequestPaymentResponse> wechatPrepay(@RequestBody ZeroOrder zeroOrder) {
         try {
             PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroOrder);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("wechat prepay error:", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("wechat prepay error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 

@@ -22,7 +22,9 @@ public class ZeroCart extends BaseEntity {
      * 选中标识 0未选中 1选中
      */
     private Boolean checkFlag;
-
+    /**
+     * 产品信息
+     */
     @TableField(exist = false)
     private ZeroProduct zeroProduct;
 

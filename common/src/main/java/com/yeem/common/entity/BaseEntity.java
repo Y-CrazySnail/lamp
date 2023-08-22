@@ -10,21 +10,44 @@ import java.time.LocalDateTime;
 
 public class BaseEntity implements Serializable {
 
+    /**
+     * 主键ID
+     */
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
+    /**
+     * 创建人
+     * @ignore
+     */
     @TableField(fill = FieldFill.INSERT)
     private String createUser;
 
+    /**
+     * 创建时间
+     * @ignore
+     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
+    /**
+     * 更新人
+     * @ignore
+     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateUser;
 
+    /**
+     * 更新时间
+     * @ignore
+     */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
+    /**
+     * 删除标识
+     * @ignore
+     */
     private Boolean deleteFlag;
 
     public Long getId() {

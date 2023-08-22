@@ -5,6 +5,9 @@ import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "zero_address", autoResultMap = true)
 public class ZeroAddress extends BaseEntity {
+    /**
+     * 用户ID
+     */
     private Long userId;
     /**
      * 收货人

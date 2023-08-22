@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 微信小程序认证授权
+ */
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-auth")
@@ -19,6 +22,13 @@ public class ZeroAuthController {
     @Autowired
     private IZeroAuthService zeroAuthService;
 
+    /**
+     * 微信小程序登录
+     *
+     * @param wechatMiniProgramDTO 微信小程序DTO
+     * @return 登录响应信息
+     * @apiNote 微信小程序登录
+     */
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody WechatMiniProgramDTO wechatMiniProgramDTO) {
         try {
