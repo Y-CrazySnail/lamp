@@ -18,7 +18,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-payment")
-public class ZeroPaymentController extends BaseController<ZeroOrder> {
+public class ZeroPaymentController {
 
     private final static String HEADER_NAME_TIMESTAMP = "Wechatpay-Timestamp";
     private final static String HEADER_NAME_NONCE = "Wechatpay-Nonce";

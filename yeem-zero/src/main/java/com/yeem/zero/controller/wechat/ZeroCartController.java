@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-cart")
-public class ZeroCartController extends BaseController<ZeroCart> {
+public class ZeroCartController {
 
     @Autowired
     private IZeroCartService zeroCartService;

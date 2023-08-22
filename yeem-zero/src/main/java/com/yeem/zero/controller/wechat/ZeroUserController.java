@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-user")
-public class ZeroUserController extends BaseController<ZeroUserExtra> {
+public class ZeroUserController {
 
     @Autowired
     private IZeroUserExtraService zeroUserExtraService;

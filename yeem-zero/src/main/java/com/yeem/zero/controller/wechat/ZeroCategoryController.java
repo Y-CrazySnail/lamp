@@ -14,7 +14,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-category")
-public class ZeroCategoryController extends BaseController<ZeroCategory> {
+public class ZeroCategoryController {
 
     @Autowired
     private IZeroCategoryService zeroCategoryService;

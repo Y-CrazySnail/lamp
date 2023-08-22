@@ -22,7 +22,7 @@ import java.io.IOException;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-tencent-cos")
-public class ZeroTencentCosController extends BaseController<ZeroTencentCos> {
+public class ZeroTencentCosController {
 
     @Autowired
     private Environment environment;

@@ -1,3 +1,12 @@
 {
-  "outPath": "D://md2"
+  "outPath": "target/doc",
+  "serverUrl": "http://42.192.164.50",
+  "isStrict": false,
+  "packageFilters": "",
+  "projectName": "商城项目",
+  "appToken": "b414086531524fb0bc14f757346fec92",
+  "openUrl": "http://42.192.164.50:7700/api",
+  "debugEnvName":"本地环境",
+  "replace": true,
+  "debugEnvUrl":"http://42.192.164.50"
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-order")
-public class ZeroOrderController extends BaseController<ZeroOrder> {
+public class ZeroOrderController {
 
     @Autowired
     private IZeroOrderService zeroOrderService;

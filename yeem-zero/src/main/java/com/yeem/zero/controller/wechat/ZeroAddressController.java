@@ -1,6 +1,5 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.common.conreoller.BaseController;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.common.utils.TencentFileUtils;
 import com.yeem.zero.entity.ZeroAddress;
@@ -18,10 +17,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+/**
+ * 地址信息
+ */
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-address")
-public class ZeroAddressController extends BaseController<ZeroAddress> {
+public class ZeroAddressController {
 
     @Autowired
     private IZeroAddressService zeroAddressService;
@@ -29,6 +31,12 @@ public class ZeroAddressController extends BaseController<ZeroAddress> {
     @Autowired
     private Environment environment;
 
+    /**
+     * 根据用户名查询地址列表
+     *
+     * @apiNote 详细介绍
+     * @return 地址信息列表
+     */
     @GetMapping("listByUsername")
     public ResponseEntity<Object> listByUsername() {
         try {

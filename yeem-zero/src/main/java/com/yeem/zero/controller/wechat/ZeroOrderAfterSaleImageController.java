@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/wechat-zero-order-after-sale-image")
-public class ZeroOrderAfterSaleImageController extends BaseController<ZeroOrderAfterSaleImage> {
+public class ZeroOrderAfterSaleImageController {
 
 }

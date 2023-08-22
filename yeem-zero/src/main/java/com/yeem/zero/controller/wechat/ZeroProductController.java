@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/wechat-zero-product")
-public class ZeroProductController extends BaseController<ZeroProduct> {
+public class ZeroProductController {
 
     @Autowired
     private IZeroProductService zeroProductService;
