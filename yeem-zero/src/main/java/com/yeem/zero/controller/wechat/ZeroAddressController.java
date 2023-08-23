@@ -1,7 +1,7 @@
 package com.yeem.zero.controller.wechat;
 
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
-import com.yeem.common.utils.TencentFileUtils;
 import com.yeem.zero.entity.ZeroAddress;
 import com.yeem.zero.service.IZeroAddressService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,14 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
- * 地址信息
+ * 微信小程序-地址信息
  */
 @Slf4j
 @RestController
@@ -38,6 +34,7 @@ public class ZeroAddressController {
      * @return 地址信息列表
      * @apiNote 根据用户名查询地址列表
      */
+    @OperateLog(operateModule = "地址模块", operateType = "查询列表", operateDesc = "查询地址列表")
     @GetMapping("listByUsername")
     public ResponseEntity<List<ZeroAddress>> listByUsername() {
         try {
@@ -60,6 +57,7 @@ public class ZeroAddressController {
      * @return 保存状态
      * @apiNote 保存地址信息
      */
+    @OperateLog(operateModule = "地址模块", operateType = "保存", operateDesc = "保存地址")
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody ZeroAddress zeroAddress) {
         try {
@@ -78,6 +76,7 @@ public class ZeroAddressController {
      * @return 更新状态
      * @apiNote 更新地址信息
      */
+    @OperateLog(operateModule = "地址模块", operateType = "更新", operateDesc = "更新地址")
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody ZeroAddress zeroAddress) {
         try {
@@ -96,6 +95,7 @@ public class ZeroAddressController {
      * @return 删除状态
      * @apiNote 删除地址信息
      */
+    @OperateLog(operateModule = "地址模块", operateType = "删除", operateDesc = "删除地址")
     @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody ZeroAddress zeroAddress) {
         try {

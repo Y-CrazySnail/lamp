@@ -1,5 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.zero.entity.ZeroCart;
 import com.yeem.zero.service.IZeroCartService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 购物车信息
+ * 微信小程序-购物车信息
  */
 @Slf4j
 @RestController
@@ -27,6 +28,7 @@ public class ZeroCartController {
      * @return 购物车列表信息
      * @apiNote 根据用户名查询购物车列表
      */
+    @OperateLog(operateModule = "购物车模块", operateType = "查询列表", operateDesc = "查询购物车列表")
     @GetMapping("list")
     public ResponseEntity<List<ZeroCart>> list() {
         try {
@@ -44,6 +46,7 @@ public class ZeroCartController {
      * @return 保存状态
      * @apiNote 保存购物车信息
      */
+    @OperateLog(operateModule = "购物车模块", operateType = "保存", operateDesc = "保存购物车")
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody ZeroCart zeroCart) {
         try {
@@ -61,6 +64,7 @@ public class ZeroCartController {
      * @return 更新状态
      * @apiNote 更新购物车信息
      */
+    @OperateLog(operateModule = "购物车模块", operateType = "更新", operateDesc = "更新购物车")
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody ZeroCart zeroCart) {
         try {
@@ -78,6 +82,7 @@ public class ZeroCartController {
      * @return 删除状态
      * @apiNote 删除购物车信息
      */
+    @OperateLog(operateModule = "购物车模块", operateType = "删除", operateDesc = "删除购物车")
     @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody ZeroCart zeroCart) {
         try {

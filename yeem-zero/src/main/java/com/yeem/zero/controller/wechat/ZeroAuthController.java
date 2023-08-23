@@ -1,5 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.dto.WechatMiniProgramDTO;
 import com.yeem.zero.service.IZeroAuthService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 微信小程序认证授权
+ * 微信小程序-认证授权
  */
 @Slf4j
 @RestController
@@ -29,9 +30,11 @@ public class ZeroAuthController {
      * @return 登录响应信息
      * @apiNote 微信小程序登录
      */
+    @OperateLog(operateModule = "认证授权模块", operateType = "认证授权", operateDesc = "认证授权")
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody WechatMiniProgramDTO wechatMiniProgramDTO) {
         try {
+            log.info("login param: {}", wechatMiniProgramDTO);
             String response = zeroAuthService.wechatMiniProgramLogin(wechatMiniProgramDTO);
             return ResponseEntity.ok(response);
         } catch (Exception e) {

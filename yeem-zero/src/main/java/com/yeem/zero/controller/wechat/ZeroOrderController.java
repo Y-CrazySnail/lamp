@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 订单信息
+ * 微信小程序-订单信息
  */
 @Slf4j
 @RestController
@@ -29,6 +29,7 @@ public class ZeroOrderController {
      * @param zeroOrder 订单信息
      * @return 下单状态
      */
+    @OperateLog(operateModule = "订单模块", operateType = "下单", operateDesc = "下单")
     @PostMapping("order")
     public ResponseEntity<ZeroOrder> order(@RequestBody ZeroOrder zeroOrder) {
         if (StringUtils.isEmpty(zeroOrder.getCartList()) || zeroOrder.getCartList().isEmpty()) {
@@ -50,6 +51,7 @@ public class ZeroOrderController {
      * @param zeroOrder 订单信息
      * @return 下单状态
      */
+    @OperateLog(operateModule = "订单模块", operateType = "预支付", operateDesc = "预支付")
     @PostMapping("prepay")
     public ResponseEntity<ZeroOrder> prepay(@RequestBody ZeroOrder zeroOrder) {
         try {
@@ -67,6 +69,7 @@ public class ZeroOrderController {
      * @param zeroOrder 订单信息
      * @return response
      */
+    @OperateLog(operateModule = "订单模块", operateType = "已支付", operateDesc = "已支付")
     @PostMapping("paid")
     public ResponseEntity<Object> paid(@RequestBody ZeroOrder zeroOrder) {
         try {
@@ -84,6 +87,7 @@ public class ZeroOrderController {
      * @param zeroOrder 订单信息
      * @return response
      */
+    @OperateLog(operateModule = "订单模块", operateType = "确认收货", operateDesc = "确认收货")
     @PostMapping("confirm")
     public ResponseEntity<Object> confirm(@RequestBody ZeroOrder zeroOrder) {
         try {
@@ -103,7 +107,7 @@ public class ZeroOrderController {
      * @return 订单列表
      * @apiNote 查询订单列表
      */
-    @OperateLog(operateModule = "订单模块", operateType = "查询订单列表", operateDesc = "描述:查询订单列表")
+    @OperateLog(operateModule = "订单模块", operateType = "查询列表", operateDesc = "查询订单列表")
     @GetMapping("list")
     public ResponseEntity<List<ZeroOrder>> list(@RequestParam("status") String status, @RequestParam("name") String name) {
         try {
@@ -121,6 +125,7 @@ public class ZeroOrderController {
      * @return 订单信息
      * @apiNote 查询订单信息
      */
+    @OperateLog(operateModule = "订单模块", operateType = "查询", operateDesc = "查询订单信息")
     @GetMapping("get")
     public ResponseEntity<ZeroOrder> get(@RequestParam("id") Long id) {
         try {
@@ -138,6 +143,7 @@ public class ZeroOrderController {
      * @return 删除结果
      * @apiNote 删除订单信息
      */
+    @OperateLog(operateModule = "订单模块", operateType = "删除", operateDesc = "删除查询订单")
     @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody ZeroOrder zeroOrder) {
         try {

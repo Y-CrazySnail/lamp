@@ -2,6 +2,7 @@ package com.yeem.zero.controller.wechat;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroPaymentService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,11 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
 
 /**
- * 支付功能
+ * 微信小程序-支付功能
  */
 @Slf4j
 @RestController
@@ -48,6 +47,14 @@ public class ZeroPaymentController {
         }
     }
 
+    /**
+     * 支付回调
+     *
+     * @param objectNode 支付回调参数
+     * @param request    request
+     * @return 回调状态
+     */
+    @OperateLog(operateModule = "支付模块", operateType = "支付回调", operateDesc = "支付回调")
     @PostMapping("callback")
     public ResponseEntity<Object> callback(@RequestBody ObjectNode objectNode, HttpServletRequest request) {
         try {
@@ -60,35 +67,6 @@ public class ZeroPaymentController {
         } catch (Exception e) {
             log.error("notify error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("notify error");
-        }
-    }
-
-    public static String readData(HttpServletRequest request) {
-        BufferedReader br = null;
-
-        try {
-            StringBuilder result = new StringBuilder();
-
-            String line;
-            for (br = request.getReader(); (line = br.readLine()) != null; result.append(line)) {
-                if (result.length() > 0) {
-                    result.append("\n");
-                }
-            }
-
-            line = result.toString();
-            return line;
-        } catch (IOException var12) {
-            throw new RuntimeException(var12);
-        } finally {
-            if (br != null) {
-                try {
-                    br.close();
-                } catch (IOException var11) {
-                    var11.printStackTrace();
-                }
-            }
-
         }
     }
 }

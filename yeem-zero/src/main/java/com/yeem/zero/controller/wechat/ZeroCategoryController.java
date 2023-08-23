@@ -1,5 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
+import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.zero.entity.ZeroCategory;
 import com.yeem.zero.service.IZeroCategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 商品类别信息
+ * 微信小程序-商品类别信息
  */
 @Slf4j
 @RestController
@@ -27,6 +28,7 @@ public class ZeroCategoryController {
      * @return 商品类别信息列表
      * @apiNote 查询商品类别信息列表
      */
+    @OperateLog(operateModule = "商品类别模块", operateType = "查询列表", operateDesc = "查询商品类别")
     @GetMapping("list")
     public ResponseEntity<List<ZeroCategory>> list() {
         List<ZeroCategory> zeroCategoryList;
