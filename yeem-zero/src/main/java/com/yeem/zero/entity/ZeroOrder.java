@@ -2,6 +2,7 @@ package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.entity.BaseEntity;
 
@@ -87,6 +88,11 @@ public class ZeroOrder extends BaseEntity {
      * 间接推荐人-奖金
      */
     private BigDecimal indirectBonus;
+    /**
+     * 物流信息
+     */
+    @TableField(exist = false)
+    private JsonNode logistics;
     /**
      * 直接下单direct 购物车下单indirect
      */
@@ -303,5 +309,13 @@ public class ZeroOrder extends BaseEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public JsonNode getLogistics() {
+        return logistics;
+    }
+
+    public void setLogistics(JsonNode logistics) {
+        this.logistics = logistics;
     }
 }

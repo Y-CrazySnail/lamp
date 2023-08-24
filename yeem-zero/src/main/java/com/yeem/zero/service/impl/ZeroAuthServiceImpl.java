@@ -58,7 +58,16 @@ public class ZeroAuthServiceImpl implements IZeroAuthService {
             zeroUserExtra = new ZeroUserExtra();
             zeroUserExtra.setUserId(wechatMiniProgramDTO.getUserId());
             zeroUserExtra.setUsername(wechatMiniProgramDTO.getUsername());
-//            zeroUserExtra.setReferrerUsername(wechatMiniProgramDTO.getReferrerUsername());
+            if (!StringUtils.isEmpty(wechatMiniProgramDTO.getReferrerUsername())) {
+                zeroUserExtra.setDirectReferrerUsername(wechatMiniProgramDTO.getReferrerUsername());
+                log.info("direct referrer username:{}", wechatMiniProgramDTO.getUsername());
+                ZeroUserExtra directReferrerUserExtra = zeroUserExtraService.get(wechatMiniProgramDTO.getReferrerUsername());
+                if (!StringUtils.isEmpty(directReferrerUserExtra)
+                        && !StringUtils.isEmpty(directReferrerUserExtra.getDirectReferrerUsername())) {
+                    log.info("indirect referrer username:{}", wechatMiniProgramDTO.getUsername());
+                    zeroUserExtra.setIndirectReferrerUsername(directReferrerUserExtra.getDirectReferrerUsername());
+                }
+            }
             zeroUserExtra.setNickName(wechatMiniProgramDTO.getNickName());
             zeroUserExtra.setAvatarUrl(wechatMiniProgramDTO.getAvatarUrl());
             zeroUserExtra.setGender(wechatMiniProgramDTO.getGender());

@@ -4,8 +4,10 @@ import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.entity.BaseEntity;
+import com.yeem.common.utils.LogisticsUtils;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.*;
@@ -121,6 +123,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setOrderItemList(zeroOrderItemList);
         ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
         zeroOrder.setAddress(zeroAddress);
+        JsonNode logistics = LogisticsUtils.query("AKIDiiVwawwc78cmr7h4esd2f3hkopr1mIz3Er4k",
+                "8j09FNAymtEo85w1x8Mybeha5eHpeF3Tm8ix9itu", "", "78714106471365");
+        zeroOrder.setLogistics(logistics);
         return zeroOrder;
     }
 
