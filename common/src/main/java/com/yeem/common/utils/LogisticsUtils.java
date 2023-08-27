@@ -1,12 +1,6 @@
 package com.yeem.common.utils;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -40,20 +34,6 @@ public class LogisticsUtils {
         return "hmac id=\"" + secretId + "\", algorithm=\"hmac-sha1\", headers=\"x-date x-source\", signature=\"" + sig + "\"";
     }
 
-    public static String urlencode(Map<?, ?> map) throws UnsupportedEncodingException {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<?, ?> entry : map.entrySet()) {
-            if (sb.length() > 0) {
-                sb.append("&");
-            }
-            sb.append(String.format("%s=%s",
-                    URLEncoder.encode(entry.getKey().toString(), "UTF-8"),
-                    URLEncoder.encode(entry.getValue().toString(), "UTF-8")
-            ));
-        }
-        return sb.toString();
-    }
-
     public static JsonNode query(String secretId, String secretKey,
                                  String mobile, String number) {
         BufferedReader in = null;
@@ -68,12 +48,12 @@ public class LogisticsUtils {
             // 请求方法
             String method = "POST";
             // 请求头
-            Map<String, String> headers = new HashMap<String, String>();
+            Map<String, String> headers = new HashMap<>();
             headers.put("X-Source", source);
             headers.put("X-Date", datetime);
             headers.put("Authorization", auth);
             // body参数
-            Map<String, String> bodyParams = new HashMap<String, String>();
+            Map<String, String> bodyParams = new HashMap<>();
             bodyParams.put("expressCode", "auto");
             bodyParams.put("mobile", mobile);
             bodyParams.put("number", number);

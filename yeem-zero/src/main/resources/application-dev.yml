@@ -92,3 +92,10 @@ tencent:
 
 auth:
   wechat-mini-program: http://127.0.0.1:8080/server/auth/wechat-mini-program
+
+# 物流
+logistics:
+  # 密钥ID
+  secret-id: AKIDiiVwawwc78cmr7h4esd2f3hkopr1mIz3Er4k
+  # 密钥Key
+  secret-key: 8j09FNAymtEo85w1x8Mybeha5eHpeF3Tm8ix9itu

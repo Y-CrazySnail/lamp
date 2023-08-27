@@ -15,6 +15,7 @@ import com.yeem.zero.mapper.ZeroOrderMapper;
 import com.yeem.zero.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -46,6 +47,12 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Autowired
     private IZeroAddressService zeroAddressService;
 
+    @Value("${logistics.signing-id}")
+    private String logisticsSecretId;
+
+    @Value("${logistics.signing-key}")
+    private String logisticsSecretKey;
+
     @Override
     public ZeroOrder order(ZeroOrder zeroOrder) {
         // 获取用户信息
@@ -60,6 +67,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setOrderNo(orderNo);
         // 运费
         zeroOrder.setDeliveryCharge(BigDecimal.valueOf(0));
+        // 订单项组装
         if (Constant.ORDER_TYPE_DIRECT.equals(zeroOrder.getType())) {
             orderWithDirect(zeroOrder);
         }
@@ -69,17 +77,21 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setStatus(Constant.ORDER_STATUS_ORDER);
         zeroOrder.setOrderTime(new Date());
         super.save(zeroOrder);
-
+        // 订单项处理
         zeroOrder.getOrderItemList().forEach(zeroOrderItem -> zeroOrderItem.setOrderId(zeroOrder.getId()));
         zeroOrderItemService.saveBatch(zeroOrder.getOrderItemList());
+        // 订单名称
         StringBuilder orderName = new StringBuilder();
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
             orderName.append(zeroOrderItem.getZeroProduct().getName());
         }
         zeroOrder.setOrderName(orderName.toString());
         super.updateById(zeroOrder);
+        // 预支付信息
         PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
+        // 分销逻辑处理
+
         return zeroOrder;
     }
 
@@ -123,9 +135,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setOrderItemList(zeroOrderItemList);
         ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
         zeroOrder.setAddress(zeroAddress);
-        JsonNode logistics = LogisticsUtils.query("AKIDiiVwawwc78cmr7h4esd2f3hkopr1mIz3Er4k",
-                "8j09FNAymtEo85w1x8Mybeha5eHpeF3Tm8ix9itu", "", "78714106471365");
-        zeroOrder.setLogistics(logistics);
+        // 物流信息查询
+        if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
+            JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", "78714106471365");
+            zeroOrder.setLogistics(logistics);
+        }
         return zeroOrder;
     }
 
@@ -140,7 +154,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderQueryWrapper.like("order_name", name);
         }
         zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
-        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
+        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(),  Constant.BOOLEAN_FALSE);
         zeroOrderQueryWrapper.orderByDesc(BaseEntity.BaseField.UPDATE_TIME.getName());
         List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
         if (!zeroOrderList.isEmpty()) {
@@ -155,11 +169,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Override
     public void remove(Long id) {
         UpdateWrapper<ZeroOrder> zeroOrderUpdateWrapper = new UpdateWrapper<>();
-        zeroOrderUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), 1);
+        zeroOrderUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_TRUE);
         zeroOrderUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
         super.remove(zeroOrderUpdateWrapper);
         UpdateWrapper<ZeroOrderItem> zeroOrderItemUpdateWrapper = new UpdateWrapper<>();
-        zeroOrderItemUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), 1);
+        zeroOrderItemUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(),  Constant.BOOLEAN_TRUE);
         zeroOrderItemUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
         zeroOrderItemService.remove(zeroOrderItemUpdateWrapper);
     }

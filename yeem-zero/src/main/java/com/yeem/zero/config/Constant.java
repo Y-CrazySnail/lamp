@@ -2,6 +2,12 @@ package com.yeem.zero.config;
 
 public class Constant {
     /**
+     * 布尔标识 0否 1是
+     */
+    public static final String BOOLEAN_TRUE = "1";
+    public static final String BOOLEAN_FALSE = "0";
+
+    /**
      * direct 直接下单
      * indirect (间接下单) 购物车下单
      */
