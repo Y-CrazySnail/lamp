@@ -99,3 +99,18 @@ logistics:
   secret-id: AKIDiiVwawwc78cmr7h4esd2f3hkopr1mIz3Er4k
   # 密钥Key
   secret-key: 8j09FNAymtEo85w1x8Mybeha5eHpeF3Tm8ix9itu
+
+# 分销
+distribution:
+  # 直接
+  direct:
+    # 开关 0关1开
+    switch: 1
+    # 全局佣金 %
+    global-rate: 10
+  # 间接
+  indirect:
+    # 开关 0关1开
+    switch: 0
+    # 全局佣金 %
+    global-rate: 0

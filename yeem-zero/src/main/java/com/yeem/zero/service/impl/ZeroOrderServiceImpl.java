@@ -20,10 +20,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.math.BigDecimal.ROUND_HALF_UP;
 
 @Slf4j
 @Service
@@ -47,11 +50,23 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Autowired
     private IZeroAddressService zeroAddressService;
 
-    @Value("${logistics.signing-id}")
+    @Value("${logistics.secret-id}")
     private String logisticsSecretId;
 
-    @Value("${logistics.signing-key}")
+    @Value("${logistics.secret-key}")
     private String logisticsSecretKey;
+
+    @Value("${distribution.direct.switch}")
+    private String distributionDirectSwitch;
+
+    @Value("${distribution.indirect.switch}")
+    private String distributionIndirectSwitch;
+
+    @Value("${distribution.direct.global-rate}")
+    private Integer distributionDirectGlobalRate;
+
+    @Value("${distribution.indirect.global-rate}")
+    private Integer distributionIndirectGlobalRate;
 
     @Override
     public ZeroOrder order(ZeroOrder zeroOrder) {
@@ -86,11 +101,17 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             orderName.append(zeroOrderItem.getZeroProduct().getName());
         }
         zeroOrder.setOrderName(orderName.toString());
+        // 分销相关
+        BigDecimal directBound = calculateDirectBonus(zeroOrder, zeroUserExtra);
+        zeroOrder.setDirectReferrerUsername(zeroUserExtra.getDirectReferrerUsername());
+        zeroOrder.setDirectBonus(directBound);
+        BigDecimal indirectBound = calculateIndirectBonus(zeroOrder, zeroUserExtra);
+        zeroOrder.setIndirectReferrerUsername(zeroUserExtra.getIndirectReferrerUsername());
+        zeroOrder.setIndirectBonus(indirectBound);
         super.updateById(zeroOrder);
         // 预支付信息
         PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
-        // 分销逻辑处理
 
         return zeroOrder;
     }
@@ -154,7 +175,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderQueryWrapper.like("order_name", name);
         }
         zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
-        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(),  Constant.BOOLEAN_FALSE);
+        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         zeroOrderQueryWrapper.orderByDesc(BaseEntity.BaseField.UPDATE_TIME.getName());
         List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
         if (!zeroOrderList.isEmpty()) {
@@ -173,7 +194,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrderUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
         super.remove(zeroOrderUpdateWrapper);
         UpdateWrapper<ZeroOrderItem> zeroOrderItemUpdateWrapper = new UpdateWrapper<>();
-        zeroOrderItemUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(),  Constant.BOOLEAN_TRUE);
+        zeroOrderItemUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_TRUE);
         zeroOrderItemUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
         zeroOrderItemService.remove(zeroOrderItemUpdateWrapper);
     }
@@ -222,5 +243,70 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setAmount(amount);
         zeroOrder.setOrderItemList(zeroOrderItemList);
         zeroCartService.removeByIds(cartIdList);
+    }
+
+
+    private BigDecimal calculateDirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
+        String directReferrerUsername = zeroUserExtra.getDirectReferrerUsername();
+        ZeroUserExtra directZeroUserExtra = zeroUserExtraService.get(directReferrerUsername);
+        // 判断直接分销开关
+        if (Constant.BOOLEAN_FALSE.equals(distributionDirectSwitch)) {
+            return null;
+        }
+        if (!directZeroUserExtra.getDistributionFlag()) {
+            return null;
+        }
+        BigDecimal bound = new BigDecimal(0);
+        for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
+            if (zeroOrderItem.getZeroProduct().getDirectReferrerRate() > 0) {
+                // 根据商品佣金比例
+                bound = bound.add(zeroOrderItem.getAmount()
+                        .multiply(BigDecimal.valueOf(zeroOrderItem.getZeroProduct().getDirectReferrerRate()))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            } else if (directZeroUserExtra.getDirectReferrerRate() > 0) {
+                // 根据分销商佣金比例
+                bound = bound.add(zeroOrderItem.getAmount()
+                        .multiply(BigDecimal.valueOf(directZeroUserExtra.getDirectReferrerRate()))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            } else {
+                // 根据全局
+                bound = bound.add(zeroOrderItem.getAmount()
+                        .multiply(BigDecimal.valueOf(distributionDirectGlobalRate))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            }
+        }
+        return bound;
+    }
+
+    private BigDecimal calculateIndirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
+        String indirectReferrerUsername = zeroUserExtra.getIndirectReferrerUsername();
+        ZeroUserExtra indirectZeroUserExtra = zeroUserExtraService.get(indirectReferrerUsername);
+        // 判断直接分销开关
+        if (Constant.BOOLEAN_FALSE.equals(distributionIndirectSwitch)) {
+            return null;
+        }
+        if (!indirectZeroUserExtra.getDistributionFlag()) {
+            return null;
+        }
+        BigDecimal bound = new BigDecimal(0);
+        for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
+            if (zeroOrderItem.getZeroProduct().getIndirectReferrerRate() > 0) {
+                // 根据商品佣金比例
+                bound = bound.add(zeroOrderItem.getAmount()
+                        .multiply(BigDecimal.valueOf(zeroOrderItem.getZeroProduct().getIndirectReferrerRate()))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            } else if (indirectZeroUserExtra.getIndirectReferrerRate() > 0) {
+                // 根据分销商佣金比例
+                bound = bound.add(zeroOrderItem.getAmount()
+                        .multiply(BigDecimal.valueOf(indirectZeroUserExtra.getDirectReferrerRate()))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            } else {
+                // 根据全局
+                bound = bound.add(zeroOrderItem.getAmount()
+                        .multiply(BigDecimal.valueOf(distributionIndirectGlobalRate))
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
+            }
+        }
+        return bound;
     }
 }

@@ -35,6 +35,14 @@ public class ZeroProduct extends BaseEntity {
      */
     private Integer sort;
     /**
+     * 商品直接推荐费率 0未设置
+     */
+    private Integer directReferrerRate;
+    /**
+     * 商品间接推荐费率 0未设置
+     */
+    private Integer indirectReferrerRate;
+    /**
      * 展示图列表 type=0
      */
     @TableField(exist = false)
@@ -96,6 +104,22 @@ public class ZeroProduct extends BaseEntity {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Integer getDirectReferrerRate() {
+        return directReferrerRate;
+    }
+
+    public void setDirectReferrerRate(Integer directReferrerRate) {
+        this.directReferrerRate = directReferrerRate;
+    }
+
+    public Integer getIndirectReferrerRate() {
+        return indirectReferrerRate;
+    }
+
+    public void setIndirectReferrerRate(Integer indirectReferrerRate) {
+        this.indirectReferrerRate = indirectReferrerRate;
     }
 
     public List<ZeroProductImage> getZeroProductImageShowList() {
