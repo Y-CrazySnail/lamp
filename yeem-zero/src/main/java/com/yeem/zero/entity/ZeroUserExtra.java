@@ -3,6 +3,8 @@ package com.yeem.zero.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
+import java.math.BigDecimal;
+
 @TableName(value = "zero_user_extra", autoResultMap = true)
 public class ZeroUserExtra extends BaseEntity {
     /**
@@ -33,6 +35,10 @@ public class ZeroUserExtra extends BaseEntity {
      * 间接分销佣金比例
      */
     private Integer indirectReferrerRate;
+    /**
+     * 余额
+     */
+    private BigDecimal balance;
     /**
      * 昵称
      */
@@ -148,5 +154,13 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setWechatOpenId(String wechatOpenId) {
         this.wechatOpenId = wechatOpenId;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public void setBalance(BigDecimal balance) {
+        this.balance = balance;
     }
 }
