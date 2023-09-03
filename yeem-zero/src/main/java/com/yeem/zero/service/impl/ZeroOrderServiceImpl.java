@@ -26,8 +26,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
-
 @Slf4j
 @Service
 public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder> implements IZeroOrderService {
@@ -188,6 +186,17 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public List<ZeroOrder> distribution(String nickName) {
+        String username = OauthUtils.getUsername();
+        List<ZeroOrder> zeroOrderList = baseMapper.distribution(username);
+        zeroOrderList.forEach(zeroOrder -> {
+            ZeroUserExtra zeroUserExtra = zeroUserExtraService.getByUserId(zeroOrder.getUserId());
+            zeroOrder.setUserExtra(zeroUserExtra);
+        });
+        return zeroOrderList;
+    }
+
+    @Override
     public void remove(Long id) {
         UpdateWrapper<ZeroOrder> zeroOrderUpdateWrapper = new UpdateWrapper<>();
         zeroOrderUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_TRUE);
@@ -197,6 +206,22 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrderItemUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_TRUE);
         zeroOrderItemUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
         zeroOrderItemService.remove(zeroOrderItemUpdateWrapper);
+    }
+
+    @Override
+    public Integer getDirectReferrerOrderCount(String username) {
+        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+        zeroOrderQueryWrapper.eq("direct_referrer_username", username);
+        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
+        return baseMapper.selectCount(zeroOrderQueryWrapper);
+    }
+
+    @Override
+    public Integer getIndirectReferrerOrderCount(String username) {
+        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+        zeroOrderQueryWrapper.eq("indirect_referrer_username", username);
+        zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
+        return baseMapper.selectCount(zeroOrderQueryWrapper);
     }
 
     /**

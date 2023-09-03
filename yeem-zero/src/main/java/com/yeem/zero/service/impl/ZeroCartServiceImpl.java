@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.OauthUtils;
+import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.ZeroCart;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.entity.ZeroUserExtra;
@@ -66,7 +67,7 @@ public class ZeroCartServiceImpl extends ServiceImpl<ZeroCartMapper, ZeroCart> i
             throw new RuntimeException("user info is null when save cart");
         }
         QueryWrapper<ZeroCart> zeroCartQueryWrapper = new QueryWrapper<>();
-        zeroCartQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), "0");
+        zeroCartQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         zeroCartQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
         List<ZeroCart> zeroCartList = zeroCartMapper.selectList(zeroCartQueryWrapper);
         zeroCartList.forEach(zeroCart -> {

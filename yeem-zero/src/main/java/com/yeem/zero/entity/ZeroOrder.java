@@ -118,6 +118,11 @@ public class ZeroOrder extends BaseEntity {
      */
     @TableField(exist = false)
     private PrepayWithRequestPaymentResponse prepayWithRequestPaymentResponse;
+    /**
+     * 用户信息
+     */
+    @TableField(exist = false)
+    private ZeroUserExtra userExtra;
 
     public Long getUserId() {
         return userId;
@@ -317,5 +322,13 @@ public class ZeroOrder extends BaseEntity {
 
     public void setLogistics(JsonNode logistics) {
         this.logistics = logistics;
+    }
+
+    public ZeroUserExtra getUserExtra() {
+        return userExtra;
+    }
+
+    public void setUserExtra(ZeroUserExtra userExtra) {
+        this.userExtra = userExtra;
     }
 }

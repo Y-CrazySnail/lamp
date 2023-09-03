@@ -1,5 +1,6 @@
 package com.yeem.zero.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
@@ -40,6 +41,10 @@ public class ZeroUserExtra extends BaseEntity {
      */
     private BigDecimal balance;
     /**
+     * 待结算金额
+     */
+    private BigDecimal todoBalance;
+    /**
      * 昵称
      */
     private String nickName;
@@ -59,6 +64,16 @@ public class ZeroUserExtra extends BaseEntity {
      * 微信OpenId
      */
     private String wechatOpenId;
+    /**
+     * 推荐用户数量
+     */
+    @TableField(exist = false)
+    private Integer referrerUserCount;
+    /**
+     * 推荐订单数量
+     */
+    @TableField(exist = false)
+    private Integer referrerOrderCount;
 
     public Long getUserId() {
         return userId;
@@ -162,5 +177,29 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    public BigDecimal getTodoBalance() {
+        return todoBalance;
+    }
+
+    public void setTodoBalance(BigDecimal todoBalance) {
+        this.todoBalance = todoBalance;
+    }
+
+    public Integer getReferrerUserCount() {
+        return referrerUserCount;
+    }
+
+    public void setReferrerUserCount(Integer referrerUserCount) {
+        this.referrerUserCount = referrerUserCount;
+    }
+
+    public Integer getReferrerOrderCount() {
+        return referrerOrderCount;
+    }
+
+    public void setReferrerOrderCount(Integer referrerOrderCount) {
+        this.referrerOrderCount = referrerOrderCount;
     }
 }

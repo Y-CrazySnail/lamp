@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yeem.zero.mapper.ZeroUserExtraMapper">
-
+    <select id="distribution" resultType="com.yeem.zero.entity.ZeroUserExtra">
+        select
+            zue.*,
+            (
+                select count(1) from zero_order
+                where distribution_flag = 1
+                and status = 5
+                and (direct_referrer_username = #{username} and indirect_referrer_username = #{username})
+            ) as referrer_order_count
+        from zero_user_extra zue
+        where zue.delete_flag != 1
+        and (zue.direct_referrer_username = #{username} or zue.indirect_referrer_username = #{username})
+        <if test="nickName != null and nickName != ''.toString()">
+            and zue.nick_name like #{nickName}
+        </if>
+    </select>
 </mapper>

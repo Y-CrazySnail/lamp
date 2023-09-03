@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * 微信小程序-用户信息
  */
@@ -30,18 +32,18 @@ public class ZeroUserController {
      */
     @OperateLog(operateModule = "用户模块", operateType = "查询用户信息", operateDesc = "查询用户信息")
     @GetMapping("get")
-    public ResponseEntity<Object> get() {
+    public ResponseEntity<ZeroUserExtra> get() {
         String username = OauthUtils.getUsername();
         if (StringUtils.isEmpty(username)) {
             log.error("get username error");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("get username error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         ZeroUserExtra userExtra;
         try {
             userExtra = zeroUserExtraService.get(username);
         } catch (Exception e) {
             log.error("get user extra info error:", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(userExtra);
     }
@@ -63,5 +65,30 @@ public class ZeroUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(zeroUserExtra);
+    }
+
+    /**
+     * 分销团队查询
+     *
+     * @param nickName 昵称（模糊查询）
+     * @return 分销团队用户信息
+     * @apiNote 分销团队查询
+     */
+    @OperateLog(operateModule = "用户模块", operateType = "分销团队查询", operateDesc = "分销团队查询")
+    @GetMapping("distribution")
+    public ResponseEntity<List<ZeroUserExtra>> distribution(@RequestParam("nickName") String nickName) {
+        String username = OauthUtils.getUsername();
+        if (StringUtils.isEmpty(username)) {
+            log.error("get username error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        List<ZeroUserExtra> zeroUserExtraList;
+        try {
+            zeroUserExtraList = zeroUserExtraService.distribution(username, nickName);
+        } catch (Exception e) {
+            log.error("update user extra info error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return ResponseEntity.ok(zeroUserExtraList);
     }
 }

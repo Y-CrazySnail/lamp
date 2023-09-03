@@ -20,5 +20,11 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     List<ZeroOrder> list(String status, String name);
 
+    List<ZeroOrder> distribution(String nickName);
+
     void remove(Long id);
+
+    Integer getDirectReferrerOrderCount(String username);
+
+    Integer getIndirectReferrerOrderCount(String username);
 }

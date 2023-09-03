@@ -102,7 +102,7 @@ public class ZeroOrderController {
     /**
      * 查询订单列表
      *
-     * @param status 订单状态
+     * @param status 订单状态 1：已下单|待付款 2：已付款|待发货 3：已发货|待收货 4：已收货|待评价 5：已完成 0：交易关闭 -1：退款中
      * @param name   订单名称
      * @return 订单列表
      * @apiNote 查询订单列表
@@ -112,6 +112,24 @@ public class ZeroOrderController {
     public ResponseEntity<List<ZeroOrder>> list(@RequestParam("status") String status, @RequestParam("name") String name) {
         try {
             return ResponseEntity.ok(zeroOrderService.list(status, name));
+        } catch (Exception e) {
+            log.error("list order error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 查询分销订单列表
+     *
+     * @param nickname 昵称
+     * @return 订单列表
+     * @apiNote 查询分销订单列表
+     */
+    @OperateLog(operateModule = "订单模块", operateType = "查询分销订单列表", operateDesc = "查询分销订单列表")
+    @GetMapping("distribution")
+    public ResponseEntity<List<ZeroOrder>> distribution(@RequestParam("nickName") String nickname) {
+        try {
+            return ResponseEntity.ok(zeroOrderService.distribution(nickname));
         } catch (Exception e) {
             log.error("list order error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
