@@ -17,6 +17,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -53,7 +54,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
         userExtraQueryWrapper.eq("username", username);
         ZeroUserExtra userExtra = zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
-        if (userExtra.getDistributionFlag()) {
+        if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag()) {
             Integer referrerUserCount = 0;
             Integer referrerOrderCount = 0;
             // 直接推荐

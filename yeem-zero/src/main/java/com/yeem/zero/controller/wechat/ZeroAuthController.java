@@ -34,7 +34,7 @@ public class ZeroAuthController {
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody WechatMiniProgramDTO wechatMiniProgramDTO) {
         try {
-            log.info("login param: {}", wechatMiniProgramDTO);
+            log.info("login param: {}", wechatMiniProgramDTO.toString());
             String response = zeroAuthService.wechatMiniProgramLogin(wechatMiniProgramDTO);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
