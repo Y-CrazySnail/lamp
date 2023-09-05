@@ -278,6 +278,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         if (Constant.BOOLEAN_FALSE.equals(distributionDirectSwitch)) {
             return null;
         }
+        // 无直接推荐人
+        if (StringUtils.isEmpty(directZeroUserExtra)) {
+            return null;
+        }
+        // 直接推荐人不是分销商
         if (!directZeroUserExtra.getDistributionFlag()) {
             return null;
         }
@@ -310,6 +315,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         if (Constant.BOOLEAN_FALSE.equals(distributionIndirectSwitch)) {
             return null;
         }
+        // 无间接推荐人
+        if (StringUtils.isEmpty(indirectZeroUserExtra)) {
+            return null;
+        }
+        // 间接推荐人不是分销商
         if (!indirectZeroUserExtra.getDistributionFlag()) {
             return null;
         }
