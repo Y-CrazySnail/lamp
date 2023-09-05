@@ -288,12 +288,14 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         }
         BigDecimal bound = new BigDecimal(0);
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
-            if (zeroOrderItem.getZeroProduct().getDirectReferrerRate() > 0) {
+            if (!StringUtils.isEmpty(zeroOrderItem.getZeroProduct().getDirectReferrerRate())
+                    && zeroOrderItem.getZeroProduct().getDirectReferrerRate() > 0) {
                 // 根据商品佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
                         .multiply(BigDecimal.valueOf(zeroOrderItem.getZeroProduct().getDirectReferrerRate()))
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-            } else if (directZeroUserExtra.getDirectReferrerRate() > 0) {
+            } else if (!StringUtils.isEmpty(directZeroUserExtra.getDirectReferrerRate())
+                    && directZeroUserExtra.getDirectReferrerRate() > 0) {
                 // 根据分销商佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
                         .multiply(BigDecimal.valueOf(directZeroUserExtra.getDirectReferrerRate()))
@@ -325,12 +327,14 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         }
         BigDecimal bound = new BigDecimal(0);
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
-            if (zeroOrderItem.getZeroProduct().getIndirectReferrerRate() > 0) {
+            if (!StringUtils.isEmpty(zeroOrderItem.getZeroProduct().getIndirectReferrerRate())
+                    && zeroOrderItem.getZeroProduct().getIndirectReferrerRate() > 0) {
                 // 根据商品佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
                         .multiply(BigDecimal.valueOf(zeroOrderItem.getZeroProduct().getIndirectReferrerRate()))
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-            } else if (indirectZeroUserExtra.getIndirectReferrerRate() > 0) {
+            } else if (!StringUtils.isEmpty(indirectZeroUserExtra.getIndirectReferrerRate())
+                    && indirectZeroUserExtra.getIndirectReferrerRate() > 0) {
                 // 根据分销商佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
                         .multiply(BigDecimal.valueOf(indirectZeroUserExtra.getDirectReferrerRate()))
