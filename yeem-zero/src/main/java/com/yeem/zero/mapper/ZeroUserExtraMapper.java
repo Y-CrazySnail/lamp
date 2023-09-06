@@ -6,6 +6,7 @@ import com.yeem.zero.entity.ZeroUserExtra;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Mapper
@@ -13,4 +14,16 @@ import java.util.List;
 public interface ZeroUserExtraMapper extends BaseMapper<ZeroUserExtra> {
     List<ZeroUserExtra> distribution(@Param("username") String username,
                                      @Param("nickName") String nickName);
+
+    void addBalance(@Param("username") String username,
+                    @Param("amount") BigDecimal amount);
+
+    void subtractBalance(@Param("username") String username,
+                         @Param("amount") BigDecimal amount);
+
+    void addTodoBalance(@Param("username") String username,
+                        @Param("amount") BigDecimal amount);
+
+    void subtractTodoBalance(@Param("username") String username,
+                             @Param("amount") BigDecimal amount);
 }

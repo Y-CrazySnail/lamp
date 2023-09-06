@@ -71,7 +71,7 @@ public class ZeroOrder extends BaseEntity {
     /**
      * 分销订单标识 0否 1是
      */
-    private String distributionFlag;
+    private Boolean distributionFlag;
     /**
      * 直接推荐人-用户名
      */
@@ -236,11 +236,11 @@ public class ZeroOrder extends BaseEntity {
         this.remark = remark;
     }
 
-    public String getDistributionFlag() {
+    public Boolean getDistributionFlag() {
         return distributionFlag;
     }
 
-    public void setDistributionFlag(String distributionFlag) {
+    public void setDistributionFlag(Boolean distributionFlag) {
         this.distributionFlag = distributionFlag;
     }
 

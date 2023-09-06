@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 
@@ -113,5 +114,25 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         zeroUserExtraQueryWrapper.eq("indirect_referrer_username", username);
         zeroUserExtraQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         return zeroUserExtraMapper.selectCount(zeroUserExtraQueryWrapper);
+    }
+
+    @Override
+    public void addBalance(String username, BigDecimal amount) {
+        zeroUserExtraMapper.addBalance(username, amount);
+    }
+
+    @Override
+    public void subtractBalance(String username, BigDecimal amount) {
+        zeroUserExtraMapper.subtractBalance(username, amount);
+    }
+
+    @Override
+    public void addTodoBalance(String username, BigDecimal amount) {
+        zeroUserExtraMapper.addTodoBalance(username, amount);
+    }
+
+    @Override
+    public void subtractTodoBalance(String username, BigDecimal amount) {
+        zeroUserExtraMapper.subtractTodoBalance(username, amount);
     }
 }

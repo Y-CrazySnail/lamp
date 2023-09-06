@@ -28,7 +28,7 @@ public class ZeroBalanceRecord extends BaseEntity {
     /**
      * 交易时间
      */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dealTime;
 
     public Long getUserId() {
@@ -69,5 +69,25 @@ public class ZeroBalanceRecord extends BaseEntity {
 
     public void setDealTime(Date dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public enum Type {
+        WITHDRAW("充值", 0),
+        TOP_UP("提现", 1);
+        private final String name;
+        private final Integer value;
+
+        Type(String name, Integer value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Integer getValue() {
+            return value;
+        }
     }
 }

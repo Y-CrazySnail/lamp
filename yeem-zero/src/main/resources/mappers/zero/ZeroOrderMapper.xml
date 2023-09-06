@@ -11,7 +11,11 @@
             zo.direct_bonus,
             zo.indirect_bonus
         from zero_order zo
-        where distribution_flag = 1 and delete_flag != 1 and status = '5'
+        left join zero_user_extra zue on zo.user_id = zue.user_id
+        where distribution_flag = 1 and delete_flag != 1
         and (direct_referrer_username = #{username} or indirect_referrer_username = #{username})
+        <if test="nickName != '' and nickName != null">
+            and zue.nick_name = #{nickName}
+        </if>
     </select>
 </mapper>

@@ -17,4 +17,28 @@
             and zue.nick_name like #{nickName}
         </if>
     </select>
+
+    <update id="addBalance">
+        update zero_user_extra
+        set balance = balance + #{amount}
+        where username = #{username}
+    </update>
+
+    <update id="subtractBalance">
+        update zero_user_extra
+        set balance = balance - #{amount}
+        where username = #{username}
+    </update>
+
+    <update id="addTodoBalance">
+        update zero_user_extra
+        set todo_balance = todo_balance + #{amount}
+        where username = #{username}
+    </update>
+
+    <update id="subtractTodoBalance">
+        update zero_user_extra
+        set todo_balance = todo_balance - #{amount}
+        where username = #{username}
+    </update>
 </mapper>

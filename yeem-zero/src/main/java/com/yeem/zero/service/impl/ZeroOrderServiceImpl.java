@@ -48,6 +48,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Autowired
     private IZeroAddressService zeroAddressService;
 
+    @Autowired
+    private IZeroBalanceRecordService zeroBalanceRecordService;
+
     @Value("${logistics.secret-id}")
     private String logisticsSecretId;
 
@@ -99,13 +102,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             orderName.append(zeroOrderItem.getZeroProduct().getName());
         }
         zeroOrder.setOrderName(orderName.toString());
-        // 分销相关
-        BigDecimal directBound = calculateDirectBonus(zeroOrder, zeroUserExtra);
-        zeroOrder.setDirectReferrerUsername(zeroUserExtra.getDirectReferrerUsername());
-        zeroOrder.setDirectBonus(directBound);
-        BigDecimal indirectBound = calculateIndirectBonus(zeroOrder, zeroUserExtra);
-        zeroOrder.setIndirectReferrerUsername(zeroUserExtra.getIndirectReferrerUsername());
-        zeroOrder.setIndirectBonus(indirectBound);
+        // 直接分销相关
+        calculateDirectBonus(zeroOrder, zeroUserExtra);
+        // 间接分销相关
+        calculateIndirectBonus(zeroOrder, zeroUserExtra);
+
         super.updateById(zeroOrder);
         // 预支付信息
         PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
@@ -137,9 +138,50 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public void confirm(ZeroOrder zeroOrder) {
+        zeroOrder = get(zeroOrder.getId());
         zeroOrder.setStatus(Constant.ORDER_STATUS_RECEIVE);
         zeroOrder.setCompleteTime(new Date());
         super.updateById(zeroOrder);
+        // 直接分销处理
+        if (!StringUtils.isEmpty(zeroOrder.getDistributionFlag())
+                && zeroOrder.getDistributionFlag()) {
+            if (!StringUtils.isEmpty(zeroOrder.getDirectReferrerUsername())
+                    && !StringUtils.isEmpty(zeroOrder.getDirectBonus())) {
+                zeroUserExtraService.subtractTodoBalance(zeroOrder.getDirectReferrerUsername(), zeroOrder.getDirectBonus());
+                zeroUserExtraService.addBalance(zeroOrder.getDirectReferrerUsername(), zeroOrder.getDirectBonus());
+                ZeroBalanceRecord zeroBalanceRecord = new ZeroBalanceRecord();
+                zeroBalanceRecord.setType(ZeroBalanceRecord.Type.WITHDRAW.getValue());
+                zeroBalanceRecord.setDealTime(new Date());
+                ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getDirectReferrerUsername());
+                if (!StringUtils.isEmpty(zeroUserExtra)) {
+                    zeroBalanceRecord.setAmount(zeroOrder.getDirectBonus());
+                    zeroBalanceRecord.setUserId(zeroUserExtra.getUserId());
+                    zeroBalanceRecord.setBalance(zeroUserExtra.getBalance().add(zeroOrder.getDirectBonus()));
+                    zeroBalanceRecordService.save(zeroBalanceRecord);
+                }
+            }
+        }
+        // 间接分销处理
+        if (!StringUtils.isEmpty(zeroOrder.getDistributionFlag())
+                && zeroOrder.getDistributionFlag()) {
+            if (!StringUtils.isEmpty(zeroOrder.getIndirectReferrerUsername())
+                    && !StringUtils.isEmpty(zeroOrder.getIndirectBonus())) {
+                zeroUserExtraService.subtractTodoBalance(zeroOrder.getIndirectReferrerUsername(),
+                        zeroOrder.getIndirectBonus());
+                zeroUserExtraService.addBalance(zeroOrder.getIndirectReferrerUsername(),
+                        zeroOrder.getIndirectBonus());
+                ZeroBalanceRecord zeroBalanceRecord = new ZeroBalanceRecord();
+                zeroBalanceRecord.setType(ZeroBalanceRecord.Type.WITHDRAW.getValue());
+                zeroBalanceRecord.setDealTime(new Date());
+                ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getIndirectReferrerUsername());
+                if (!StringUtils.isEmpty(zeroUserExtra)) {
+                    zeroBalanceRecord.setAmount(zeroOrder.getIndirectBonus());
+                    zeroBalanceRecord.setUserId(zeroUserExtra.getUserId());
+                    zeroBalanceRecord.setBalance(zeroUserExtra.getBalance().add(zeroOrder.getIndirectBonus()));
+                    zeroBalanceRecordService.save(zeroBalanceRecord);
+                }
+            }
+        }
     }
 
     @Override
@@ -188,7 +230,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Override
     public List<ZeroOrder> distribution(String nickName) {
         String username = OauthUtils.getUsername();
-        List<ZeroOrder> zeroOrderList = baseMapper.distribution(username);
+        List<ZeroOrder> zeroOrderList = baseMapper.distribution(username, nickName);
         zeroOrderList.forEach(zeroOrder -> {
             ZeroUserExtra zeroUserExtra = zeroUserExtraService.getByUserId(zeroOrder.getUserId());
             zeroOrder.setUserExtra(zeroUserExtra);
@@ -271,20 +313,20 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
 
-    private BigDecimal calculateDirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
+    private void calculateDirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
         String directReferrerUsername = zeroUserExtra.getDirectReferrerUsername();
         ZeroUserExtra directZeroUserExtra = zeroUserExtraService.get(directReferrerUsername);
         // 判断直接分销开关
         if (Constant.BOOLEAN_FALSE.equals(distributionDirectSwitch)) {
-            return null;
+            return;
         }
         // 无直接推荐人
         if (StringUtils.isEmpty(directZeroUserExtra)) {
-            return null;
+            return;
         }
         // 直接推荐人不是分销商
         if (!directZeroUserExtra.getDistributionFlag()) {
-            return null;
+            return;
         }
         BigDecimal bound = new BigDecimal(0);
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
@@ -307,23 +349,26 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
             }
         }
-        return bound;
+        zeroOrder.setDirectReferrerUsername(directReferrerUsername);
+        zeroOrder.setDirectBonus(bound);
+        zeroOrder.setDistributionFlag(Boolean.TRUE);
+        zeroUserExtraService.addTodoBalance(directReferrerUsername, bound);
     }
 
-    private BigDecimal calculateIndirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
+    private void calculateIndirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
         String indirectReferrerUsername = zeroUserExtra.getIndirectReferrerUsername();
         ZeroUserExtra indirectZeroUserExtra = zeroUserExtraService.get(indirectReferrerUsername);
         // 判断直接分销开关
         if (Constant.BOOLEAN_FALSE.equals(distributionIndirectSwitch)) {
-            return null;
+            return;
         }
         // 无间接推荐人
         if (StringUtils.isEmpty(indirectZeroUserExtra)) {
-            return null;
+            return;
         }
         // 间接推荐人不是分销商
         if (!indirectZeroUserExtra.getDistributionFlag()) {
-            return null;
+            return;
         }
         BigDecimal bound = new BigDecimal(0);
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
@@ -346,6 +391,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
             }
         }
-        return bound;
+        zeroOrder.setIndirectReferrerUsername(indirectReferrerUsername);
+        zeroOrder.setIndirectBonus(bound);
+        zeroOrder.setDistributionFlag(Boolean.TRUE);
+        zeroUserExtraService.addTodoBalance(indirectReferrerUsername, bound);
     }
 }
