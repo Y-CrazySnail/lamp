@@ -93,4 +93,22 @@ public class ZeroCartController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("remove cart error");
         }
     }
+
+    /**
+     * 批量删除购物车信息
+     *
+     * @return 批量删除状态
+     * @apiNote 批量删除购物车信息
+     */
+    @OperateLog(operateModule = "购物车模块", operateType = "批量删除", operateDesc = "批量删除购物车")
+    @DeleteMapping("batchRemove")
+    public ResponseEntity<Object> batchRemove(@RequestBody ZeroCart zeroCart) {
+        try {
+            zeroCartService.removeByIds(zeroCart.getIdList());
+            return ResponseEntity.ok("batch remove cart success");
+        } catch (Exception e) {
+            log.error("batch remove cart error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("batch remove cart error");
+        }
+    }
 }

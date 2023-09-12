@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class BaseEntity implements Serializable {
 
@@ -52,6 +53,12 @@ public class BaseEntity implements Serializable {
      * @ignore
      */
     private Boolean deleteFlag;
+
+    /**
+     * 批量操作ID
+     */
+    @TableField(exist = false)
+    private List<Long> idList;
 
     public Long getId() {
         return id;
@@ -99,6 +106,14 @@ public class BaseEntity implements Serializable {
 
     public void setDeleteFlag(Boolean deleteFlag) {
         this.deleteFlag = deleteFlag;
+    }
+
+    public List<Long> getIdList() {
+        return idList;
+    }
+
+    public void setIdList(List<Long> idList) {
+        this.idList = idList;
     }
 
     public enum BaseField {

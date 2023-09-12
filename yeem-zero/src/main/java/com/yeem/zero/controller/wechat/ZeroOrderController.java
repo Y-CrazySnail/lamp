@@ -128,6 +128,7 @@ public class ZeroOrderController {
     @OperateLog(operateModule = "订单模块", operateType = "查询分销订单列表", operateDesc = "查询分销订单列表")
     @GetMapping("distribution")
     public ResponseEntity<List<ZeroOrder>> distribution(@RequestParam("nickName") String nickname) {
+        log.info("distribution order param:{}", nickname);
         try {
             return ResponseEntity.ok(zeroOrderService.distribution(nickname));
         } catch (Exception e) {

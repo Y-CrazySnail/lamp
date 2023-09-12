@@ -3,6 +3,7 @@ package com.yeem.zero.controller.wechat;
 import com.yeem.common.aspect.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroFavorite;
+import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.service.IZeroFavoriteService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +56,8 @@ public class ZeroFavoriteController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody ZeroFavorite zeroFavorite) {
         try {
+            ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
+            zeroFavorite.setUserId(zeroUserExtra.getUserId());
             zeroFavoriteService.save(zeroFavorite);
             return ResponseEntity.ok("save product to favorite success");
         } catch (Exception e) {
@@ -78,6 +81,24 @@ public class ZeroFavoriteController {
         } catch (Exception e) {
             log.error("remove favorite error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("remove favorite error");
+        }
+    }
+
+    /**
+     * 批量删除收藏信息
+     *
+     * @return 批量删除状态
+     * @apiNote 批量删除收藏信息
+     */
+    @OperateLog(operateModule = "收藏模块", operateType = "批量删除", operateDesc = "批量删除收藏")
+    @DeleteMapping("batchRemove")
+    public ResponseEntity<Object> batchRemove(@RequestBody ZeroFavorite zeroFavorite) {
+        try {
+            zeroFavoriteService.removeByIds(zeroFavorite.getIdList());
+            return ResponseEntity.ok("batch remove favorite success");
+        } catch (Exception e) {
+            log.error("batch remove favorite error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("batch remove favorite error");
         }
     }
 }
