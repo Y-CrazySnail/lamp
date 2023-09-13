@@ -2,6 +2,7 @@ package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.entity.BaseEntity;
@@ -47,23 +48,32 @@ public class ZeroOrder extends BaseEntity {
     /**
      * 下单时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date orderTime;
     /**
      * 付款时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date paymentTime;
     /**
      * 发货时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date shipmentTime;
+    /**
+     * 预计发货时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    private Date estimatedShipmentTime;
     /**
      * 成交时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date completeTime;
     /**
      * 0未退款 1已退款
      */
-    private Date refundFlag;
+    private Integer refundFlag;
     /**
      * 订单备注
      */
@@ -220,11 +230,11 @@ public class ZeroOrder extends BaseEntity {
         this.completeTime = completeTime;
     }
 
-    public Date getRefundFlag() {
+    public Integer getRefundFlag() {
         return refundFlag;
     }
 
-    public void setRefundFlag(Date refundFlag) {
+    public void setRefundFlag(Integer refundFlag) {
         this.refundFlag = refundFlag;
     }
 
@@ -330,5 +340,13 @@ public class ZeroOrder extends BaseEntity {
 
     public void setUserExtra(ZeroUserExtra userExtra) {
         this.userExtra = userExtra;
+    }
+
+    public Date getEstimatedShipmentTime() {
+        return estimatedShipmentTime;
+    }
+
+    public void setEstimatedShipmentTime(Date estimatedShipmentTime) {
+        this.estimatedShipmentTime = estimatedShipmentTime;
     }
 }

@@ -1,5 +1,6 @@
 package com.yeem.zero.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -133,6 +134,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     public void paid(ZeroOrder zeroOrder) {
         zeroOrder.setStatus(Constant.ORDER_STATUS_PAY);
         zeroOrder.setPaymentTime(new Date());
+        zeroOrder.setEstimatedShipmentTime(DateUtil.offsetDay(zeroOrder.getPaymentTime(), 3));
         super.updateById(zeroOrder);
     }
 

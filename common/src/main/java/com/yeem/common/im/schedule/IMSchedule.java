@@ -23,7 +23,6 @@ public class IMSchedule {
      */
     @Scheduled(cron = "0/10 * * * * ?")
     public void schedule() {
-        log.info("send mail start:{}", LocalDateTime.now());
         sysMailService.send();
         sysSmsService.send();
     }

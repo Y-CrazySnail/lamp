@@ -1,6 +1,7 @@
 package com.yeem.zero.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
 
 import java.math.BigDecimal;
@@ -27,6 +28,7 @@ public class ZeroUserBalanceRecord extends BaseEntity {
     /**
      * 交易时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date dealTime;
 
     public Long getUserId() {
