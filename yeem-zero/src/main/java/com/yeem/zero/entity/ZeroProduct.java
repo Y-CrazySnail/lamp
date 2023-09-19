@@ -35,6 +35,10 @@ public class ZeroProduct extends BaseEntity {
      */
     private Integer sort;
     /**
+     * 推荐标识
+     */
+    private Boolean recommendFlag;
+    /**
      * 商品直接推荐费率 0未设置
      */
     private Integer directReferrerRate;
@@ -104,6 +108,14 @@ public class ZeroProduct extends BaseEntity {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public Boolean getRecommendFlag() {
+        return recommendFlag;
+    }
+
+    public void setRecommendFlag(Boolean recommendFlag) {
+        this.recommendFlag = recommendFlag;
     }
 
     public Integer getDirectReferrerRate() {
