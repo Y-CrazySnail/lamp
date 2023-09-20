@@ -8,6 +8,7 @@ import com.yeem.zero.entity.ZeroOrder;
 import java.util.List;
 
 public interface IZeroOrderService extends IService<ZeroOrder> {
+
     ZeroOrder order(ZeroOrder zeroOrder);
 
     ZeroOrder prepay(ZeroOrder zeroOrder);

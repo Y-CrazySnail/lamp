@@ -398,4 +398,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setDistributionFlag(Boolean.TRUE);
         zeroUserExtraService.addTodoBalance(indirectReferrerUsername, bound);
     }
+
+    @Override
+    public boolean updateById(ZeroOrder entity) {
+        return super.updateById(entity);
+    }
 }
