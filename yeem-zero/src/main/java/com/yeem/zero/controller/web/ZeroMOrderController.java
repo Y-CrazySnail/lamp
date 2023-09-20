@@ -32,9 +32,9 @@ public class ZeroMOrderController {
      */
     @GetMapping("page")
     public ResponseEntity<IPage<ZeroOrder>> getPage(@RequestParam("current") Integer current,
-                                                    @RequestParam("current") Integer size,
-                                                    @RequestParam("userId") Long userId,
-                                                    @RequestParam("status") String status) {
+                                                    @RequestParam("size") Integer size,
+                                                    @RequestParam(value = "userId", required = false) Long userId,
+                                                    @RequestParam(value = "status", required = false) String status) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -59,6 +59,7 @@ public class ZeroMOrderController {
 
     /**
      * 更新订单信息
+     *
      * @param zeroOrder 订单信息
      * @return 修改状态
      */
