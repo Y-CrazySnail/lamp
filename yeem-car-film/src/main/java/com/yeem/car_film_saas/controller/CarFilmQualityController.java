@@ -3,7 +3,7 @@ package com.yeem.car_film_saas.controller;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarFilmQuality;
 import com.yeem.car_film_saas.service.ICarFilmQualityService;
-import com.yeem.common.aspect.log.OperateLog;
+import com.yeem.log.OperateLog;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

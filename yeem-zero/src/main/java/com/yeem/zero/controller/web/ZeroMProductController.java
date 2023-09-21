@@ -4,7 +4,7 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yeem.common.aspect.log.OperateLog;
+import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +27,19 @@ public class ZeroMProductController {
     /**
      * 分页查询商品
      *
+     * @param current    页码
+     * @param size       页容量
+     * @param name       商品名称
+     * @param categoryId 类别ID
      * @return 商品信息列表
      * @apiNote 分页查询商品
      */
     @OperateLog(operateModule = "商品模块", operateType = "模糊查询商品列表", operateDesc = "根据名称模糊查询商品列表")
     @GetMapping("/page")
-    public ResponseEntity<IPage<ZeroProduct>> page(Integer current, Integer size) {
+    public ResponseEntity<IPage<ZeroProduct>> page(@RequestParam(value = "current") Integer current,
+                                                   @RequestParam(value = "size") Integer size,
+                                                   @RequestParam(value = "name") String name,
+                                                   @RequestParam(value = "categoryId") Long categoryId) {
         try {
             QueryWrapper<ZeroProduct> zeroProductQueryWrapper = new QueryWrapper<>();
             if (StringUtils.isEmpty(current)) {

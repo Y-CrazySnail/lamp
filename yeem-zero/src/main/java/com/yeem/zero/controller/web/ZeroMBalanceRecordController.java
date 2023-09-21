@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.web;
 
-import com.yeem.common.aspect.log.OperateLog;
+import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroBalanceRecord;
 import com.yeem.zero.service.IZeroBalanceRecordService;
 import lombok.extern.slf4j.Slf4j;

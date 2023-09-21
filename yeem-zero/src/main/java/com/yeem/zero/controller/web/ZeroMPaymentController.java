@@ -2,7 +2,7 @@ package com.yeem.zero.controller.web;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
-import com.yeem.common.aspect.log.OperateLog;
+import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroPaymentService;
 import lombok.extern.slf4j.Slf4j;

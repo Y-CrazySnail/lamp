@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.common.aspect.log.OperateLog;
+import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroOrderService;
 import lombok.extern.slf4j.Slf4j;
