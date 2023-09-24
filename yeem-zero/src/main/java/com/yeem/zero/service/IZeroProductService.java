@@ -21,12 +21,7 @@ public interface IZeroProductService extends IService<ZeroProduct> {
      */
     ZeroProduct getById(Long id);
 
-    /**
-     * 增加一个酒类
-     *
-     * @param zeroProduct 产品信息
-     */
-    void addProduct(ZeroProduct zeroProduct);
+    boolean save(ZeroProduct zeroProduct);
 
     /**
      * 更新商品

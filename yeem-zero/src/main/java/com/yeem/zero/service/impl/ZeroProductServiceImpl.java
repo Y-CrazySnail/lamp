@@ -71,11 +71,12 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     }
 
     @Override
-    public void addProduct(ZeroProduct zeroProduct) {
+    public boolean save(ZeroProduct zeroProduct) {
         zeroProductMapper.insert(zeroProduct);
         zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageShowList());
         zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageSwiperList());
         zeroProductImageService.saveBatch(zeroProduct.getZeroProductImageDetailList());
+        return true;
     }
 
     @Override

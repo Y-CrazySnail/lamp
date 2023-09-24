@@ -1,7 +1,9 @@
 package com.yeem.common.utils;
 
+import cn.hutool.core.date.DateUtil;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
+import com.qcloud.cos.auth.AnonymousCOSCredentials;
 import com.qcloud.cos.auth.BasicSessionCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.http.HttpProtocol;
@@ -27,6 +29,31 @@ import java.util.concurrent.Executors;
 public class TencentFileUtils {
 
     /**
+     * 获取无签名路径
+     *
+     * @param bucketName 桶名称
+     * @param key        文件key
+     * @return URL
+     */
+    public static URL getUrl(String bucketName, String region, String key) {
+        COSCredentials cred = new AnonymousCOSCredentials();
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.setRegion(new Region(region));
+        clientConfig.setHttpProtocol(HttpProtocol.https);
+        COSClient cosClient = new COSClient(cred, clientConfig);
+        try {
+            URL url = cosClient.getObjectUrl(bucketName, key);
+            log.info("{}", url);
+            return url;
+        } catch (Exception e) {
+            log.error("get object url error:", e);
+            throw new RuntimeException("get object url error");
+        } finally {
+            cosClient.shutdown();
+        }
+    }
+
+    /**
      * 获取签名路径
      *
      * @param bucketName 桶名称
@@ -39,8 +66,8 @@ public class TencentFileUtils {
     public static URL generatePreSignedUrl(String bucketName, String secretId, String secretKey, String region, String key) {
         COSClient cosClient = createCOSClient(bucketName, secretId, secretKey, region);
         try {
-            // 168 hour = 7 day
-            Date expirationDate = new Date(System.currentTimeMillis() + 60 * 60 * 1000 * 168);
+            // 30天
+            Date expirationDate = DateUtil.offsetDay(new Date(), 30);
             URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate);
             log.info("{}", url);
             return url;
@@ -51,7 +78,6 @@ public class TencentFileUtils {
             cosClient.shutdown();
         }
     }
-
 
     /**
      * 腾讯云COS 上传文件

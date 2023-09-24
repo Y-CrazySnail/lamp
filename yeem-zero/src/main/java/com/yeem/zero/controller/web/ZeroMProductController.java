@@ -38,8 +38,8 @@ public class ZeroMProductController {
     @GetMapping("/page")
     public ResponseEntity<IPage<ZeroProduct>> page(@RequestParam(value = "current") Integer current,
                                                    @RequestParam(value = "size") Integer size,
-                                                   @RequestParam(value = "name") String name,
-                                                   @RequestParam(value = "categoryId") Long categoryId) {
+                                                   @RequestParam(value = "name", required = false) String name,
+                                                   @RequestParam(value = "categoryId", required = false) Long categoryId) {
         try {
             QueryWrapper<ZeroProduct> zeroProductQueryWrapper = new QueryWrapper<>();
             if (StringUtils.isEmpty(current)) {
@@ -55,4 +55,44 @@ public class ZeroMProductController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).build();
         }
     }
+
+    /**
+     * 根据商品ID查询
+     *
+     * @param id 商品ID
+     * @return 商品信息
+     * @apiNote 根据商品ID查询
+     */
+    @OperateLog(operateModule = "商品模块", operateType = "查询商品信息", operateDesc = "根据ID查询商品信息")
+    @GetMapping("/get")
+    public ResponseEntity<Object> get(@RequestParam("id") Long id) {
+        ZeroProduct zeroProduct;
+        try {
+            zeroProduct = zeroProductService.getById(id);
+            return ResponseEntity.ok(zeroProduct);
+        } catch (Exception e) {
+            log.error("get product error:", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
+        }
+    }
+
+
+    /**
+     * 保存商品信息
+     *
+     * @param zeroProduct 商品信息
+     * @return 保存状态
+     * @apiNote 保存商品信息
+     */
+    @OperateLog(operateModule = "商品模块", operateType = "保存商品信息", operateDesc = "保存商品信息")
+    @PostMapping("/save")
+    public ResponseEntity<Object> add(@RequestBody ZeroProduct zeroProduct) {
+        try {
+            zeroProductService.save(zeroProduct);
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
+        }
+    }
+
 }

@@ -30,7 +30,7 @@ public class OperateLogAspect {
     private static ThreadLocal<Long> startTime = new ThreadLocal<>();
 
     // 设置操作日志切入点 记录操作日志 在注解的位置切入代码
-    @Pointcut("@annotation(com.yeem.log.aspect.log.OperateLog)")
+    @Pointcut("@annotation(com.yeem.log.OperateLog)")
     public void operatePointCut() {
     }
 
