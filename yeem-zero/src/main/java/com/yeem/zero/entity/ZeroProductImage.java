@@ -1,10 +1,14 @@
 package com.yeem.zero.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
-@TableName(value = "zero_product_image", autoResultMap = true)
 public class ZeroProductImage extends BaseEntity {
+
+    public ZeroProductImage(Integer type, String path) {
+        this.type = type;
+        this.path = path;
+    }
+
     /**
      * 商品ID
      */
