@@ -1,9 +1,7 @@
 package com.yeem.zero.controller.web;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpStatus;
-import com.qcloud.cos.model.UploadResult;
 import com.yeem.common.utils.TencentFileUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ public class ZeroMTencentCosController {
 
     @PostMapping("upload")
     public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
-        String key = UUID.fastUUID() + "." + FileUtil.getSuffix(file.getOriginalFilename());
+        String key = UUID.fastUUID() + "/" + file.getOriginalFilename();
         try {
             TencentFileUtils.upload(
                     environment.getProperty("tencent.cos.bucket-name"),
@@ -39,9 +37,9 @@ public class ZeroMTencentCosController {
             );
             log.info("upload file to tencent cos, key:{}", key);
             String url = TencentFileUtils.getUrl(
-                    environment.getProperty("tencent.cos.bucket-name"),
-                    environment.getProperty("tencent.cos.region"),
-                    key)
+                            environment.getProperty("tencent.cos.bucket-name"),
+                            environment.getProperty("tencent.cos.region"),
+                            key)
                     .toString();
             return ResponseEntity.ok(url);
         } catch (IOException e) {
