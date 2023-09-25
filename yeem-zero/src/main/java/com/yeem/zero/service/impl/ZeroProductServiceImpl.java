@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.zero.entity.ZeroProduct;
-import com.yeem.zero.entity.ZeroProductImage;
 import com.yeem.zero.mapper.ZeroProductMapper;
 import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;

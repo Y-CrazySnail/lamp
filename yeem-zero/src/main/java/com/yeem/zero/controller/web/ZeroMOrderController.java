@@ -68,4 +68,18 @@ public class ZeroMOrderController {
         zeroOrderService.updateById(zeroOrder);
         return ResponseEntity.ok("更新成功");
     }
+
+    /**
+     * 发货
+     *
+     * @param zeroOrder 订单信息
+     * @return 修改状态
+     */
+    @PutMapping("update")
+    public ResponseEntity<Object> shipment(@RequestBody ZeroOrder zeroOrder) {
+        zeroOrderService.updateById(zeroOrder);
+        return ResponseEntity.ok("更新成功");
+    }
+
+
 }
