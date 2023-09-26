@@ -15,6 +15,8 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     void paid(ZeroOrder zeroOrder);
 
+    void shipment(ZeroOrder zeroOrder);
+
     void confirm(ZeroOrder zeroOrder);
 
     ZeroOrder get(Long id);

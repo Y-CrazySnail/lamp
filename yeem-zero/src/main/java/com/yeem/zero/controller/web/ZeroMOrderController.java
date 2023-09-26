@@ -75,11 +75,15 @@ public class ZeroMOrderController {
      * @param zeroOrder 订单信息
      * @return 修改状态
      */
-    @PutMapping("update")
+    @PutMapping("shipment")
     public ResponseEntity<Object> shipment(@RequestBody ZeroOrder zeroOrder) {
-        zeroOrderService.updateById(zeroOrder);
-        return ResponseEntity.ok("更新成功");
+        log.info("order id:{}, shipment", zeroOrder.getId());
+        try {
+            zeroOrderService.shipment(zeroOrder);
+            return ResponseEntity.ok("发货成功");
+        } catch (Exception e) {
+            log.error("order id:{} shitment error", zeroOrder.getId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
-
-
 }

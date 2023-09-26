@@ -139,6 +139,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public void shipment(ZeroOrder zeroOrder) {
+        zeroOrder.setStatus(Constant.ORDER_STATUS_DELIVERY);
+        zeroOrder.setShipmentTime(new Date());
+        baseMapper.updateById(zeroOrder);
+    }
+
+    @Override
     public void confirm(ZeroOrder zeroOrder) {
         zeroOrder = get(zeroOrder.getId());
         zeroOrder.setStatus(Constant.ORDER_STATUS_RECEIVE);
