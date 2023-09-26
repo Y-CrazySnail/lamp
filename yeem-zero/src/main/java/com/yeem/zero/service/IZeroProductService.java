@@ -28,7 +28,7 @@ public interface IZeroProductService extends IService<ZeroProduct> {
      *
      * @param zeroProduct 产品信息
      */
-    void updateProduct(ZeroProduct zeroProduct);
+    boolean update(ZeroProduct zeroProduct);
 
     /**
      * 软删除商品

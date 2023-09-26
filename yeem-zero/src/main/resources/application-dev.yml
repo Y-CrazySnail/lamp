@@ -4,6 +4,9 @@ server:
     context-path: /server
   address: 0.0.0.0
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
   autoconfigure:
     #自动化配置 例外处理
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure

@@ -101,7 +101,7 @@ public class ZeroProductController {
                 log.error("商品ID:{}, [商品销量]为空", zeroProduct.getId());
                 throw new RuntimeException();
             }
-            zeroProductService.updateProduct(zeroProduct);
+            zeroProductService.update(zeroProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不能更新");

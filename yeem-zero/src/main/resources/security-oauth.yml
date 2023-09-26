@@ -5,3 +5,4 @@ permit-url:
   - /wechat-zero-payment/callback
   - /wechat-zero-product/recommend
   - /wechat-zero-product/list-by-name
+  - /manager-zero-tencent-cos/upload

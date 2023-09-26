@@ -86,12 +86,30 @@ public class ZeroMProductController {
      */
     @OperateLog(operateModule = "商品模块", operateType = "保存商品信息", operateDesc = "保存商品信息")
     @PostMapping("/save")
-    public ResponseEntity<Object> add(@RequestBody ZeroProduct zeroProduct) {
+    public ResponseEntity<Object> save(@RequestBody ZeroProduct zeroProduct) {
         try {
             zeroProductService.save(zeroProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
+        }
+    }
+
+    /**
+     * 更新商品信息
+     *
+     * @param zeroProduct 商品信息
+     * @return 更新状态
+     * @apiNote 更新商品信息
+     */
+    @OperateLog(operateModule = "商品模块", operateType = "更新商品信息", operateDesc = "更新商品信息")
+    @PutMapping("/update")
+    public ResponseEntity<Object> update(@RequestBody ZeroProduct zeroProduct) {
+        try {
+            zeroProductService.update(zeroProduct);
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
         }
     }
 

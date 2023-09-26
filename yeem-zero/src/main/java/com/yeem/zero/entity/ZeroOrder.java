@@ -75,6 +75,10 @@ public class ZeroOrder extends BaseEntity {
      */
     private Integer refundFlag;
     /**
+     * 退款原因
+     */
+    private String refundReason;
+    /**
      * 订单备注
      */
     private String remark;
@@ -236,6 +240,14 @@ public class ZeroOrder extends BaseEntity {
 
     public void setRefundFlag(Integer refundFlag) {
         this.refundFlag = refundFlag;
+    }
+
+    public String getRefundReason() {
+        return refundReason;
+    }
+
+    public void setRefundReason(String refundReason) {
+        this.refundReason = refundReason;
     }
 
     public String getRemark() {

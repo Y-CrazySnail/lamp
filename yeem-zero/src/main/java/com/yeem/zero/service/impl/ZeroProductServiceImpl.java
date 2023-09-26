@@ -66,8 +66,9 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     }
 
     @Override
-    public void updateProduct(ZeroProduct zeroProduct) {
+    public boolean update(ZeroProduct zeroProduct) {
         zeroProductMapper.updateById(zeroProduct);
+        return true;
     }
 
     /**

@@ -82,6 +82,24 @@ public class ZeroOrderController {
     }
 
     /**
+     * 退款接口
+     *
+     * @param zeroOrder 订单信息
+     * @return response
+     */
+    @OperateLog(operateModule = "订单模块", operateType = "已支付", operateDesc = "已支付")
+    @PostMapping("refund")
+    public ResponseEntity<Object> refund(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.refund(zeroOrder);
+            return ResponseEntity.ok("refund success");
+        } catch (Exception e) {
+            log.error("refund error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 确认收货
      *
      * @param zeroOrder 订单信息
