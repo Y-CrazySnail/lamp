@@ -71,6 +71,11 @@ public class ZeroOrder extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date completeTime;
     /**
+     * 关闭时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    private Date closeTime;
+    /**
      * 0未退款 1已退款
      */
     private Integer refundFlag;
@@ -232,6 +237,14 @@ public class ZeroOrder extends BaseEntity {
 
     public void setCompleteTime(Date completeTime) {
         this.completeTime = completeTime;
+    }
+
+    public Date getCloseTime() {
+        return closeTime;
+    }
+
+    public void setCloseTime(Date closeTime) {
+        this.closeTime = closeTime;
     }
 
     public Integer getRefundFlag() {

@@ -87,7 +87,7 @@ public class ZeroOrderController {
      * @param zeroOrder 订单信息
      * @return response
      */
-    @OperateLog(operateModule = "订单模块", operateType = "已支付", operateDesc = "已支付")
+    @OperateLog(operateModule = "订单模块", operateType = "退款", operateDesc = "退款")
     @PostMapping("refund")
     public ResponseEntity<Object> refund(@RequestBody ZeroOrder zeroOrder) {
         try {
@@ -100,7 +100,25 @@ public class ZeroOrderController {
     }
 
     /**
-     * 确认收货
+     * 关闭订单接口
+     *
+     * @param zeroOrder 订单信息
+     * @return response
+     */
+    @OperateLog(operateModule = "订单模块", operateType = "关闭订单", operateDesc = "关闭订单")
+    @PostMapping("close")
+    public ResponseEntity<Object> close(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.close(zeroOrder);
+            return ResponseEntity.ok("close order success");
+        } catch (Exception e) {
+            log.error("close order error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 确认收货接口
      *
      * @param zeroOrder 订单信息
      * @return response

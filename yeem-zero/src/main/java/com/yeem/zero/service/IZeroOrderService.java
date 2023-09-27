@@ -17,6 +17,8 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     void refund(ZeroOrder zeroOrder);
 
+    void close(ZeroOrder zeroOrder);
+
     void shipment(ZeroOrder zeroOrder);
 
     void confirm(ZeroOrder zeroOrder);
