@@ -4,7 +4,9 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.log.OperateLog;
+import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +44,7 @@ public class ZeroMProductController {
                                                    @RequestParam(value = "categoryId", required = false) Long categoryId) {
         try {
             QueryWrapper<ZeroProduct> zeroProductQueryWrapper = new QueryWrapper<>();
+            zeroProductQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
             if (StringUtils.isEmpty(current)) {
                 current = 1;
             }
@@ -113,4 +116,21 @@ public class ZeroMProductController {
         }
     }
 
+    /**
+     * 删除商品信息
+     *
+     * @param zeroProduct 商品信息
+     * @return 删除状态
+     * @apiNote 删除商品信息
+     */
+    @OperateLog(operateModule = "商品模块", operateType = "删除商品信息", operateDesc = "删除商品信息")
+    @DeleteMapping("/remove")
+    public ResponseEntity<Object> delete(@RequestBody ZeroProduct zeroProduct) {
+        try {
+            zeroProductService.removeById(zeroProduct.getId());
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+        }
+    }
 }
