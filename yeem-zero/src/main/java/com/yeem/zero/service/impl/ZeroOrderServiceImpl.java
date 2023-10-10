@@ -348,7 +348,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             return;
         }
         // 直接推荐人不是分销商
-        if (!directZeroUserExtra.getDistributionFlag()) {
+        if (directZeroUserExtra.getDistributionFlag() != 1) {
             return;
         }
         BigDecimal bound = new BigDecimal(0);
@@ -390,7 +390,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             return;
         }
         // 间接推荐人不是分销商
-        if (!indirectZeroUserExtra.getDistributionFlag()) {
+        if (indirectZeroUserExtra.getDistributionFlag() != 1) {
             return;
         }
         BigDecimal bound = new BigDecimal(0);

@@ -27,7 +27,7 @@ public class ZeroUserExtra extends BaseEntity {
     /**
      * 分销标识 0否 1是
      */
-    private Boolean distributionFlag;
+    private Integer distributionFlag;
     /**
      * 直接分销佣金比例
      */
@@ -107,11 +107,11 @@ public class ZeroUserExtra extends BaseEntity {
         this.directReferrerUsername = directReferrerUsername;
     }
 
-    public Boolean getDistributionFlag() {
+    public Integer getDistributionFlag() {
         return distributionFlag;
     }
 
-    public void setDistributionFlag(Boolean distributionFlag) {
+    public void setDistributionFlag(Integer distributionFlag) {
         this.distributionFlag = distributionFlag;
     }
 
