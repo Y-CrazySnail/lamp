@@ -106,7 +106,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
                 .apiV3Key(apiV3Key)
                 .build();
         RefundService refundService = new RefundService.Builder().config(config).build();
-        CreateRequest createRequest = getCreateRequest();
+//        CreateRequest createRequest = getCreateRequest();
     }
 
     @Override
@@ -146,7 +146,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
     private PrepayRequest getPrepayRequest(String openId, ZeroOrder zeroOrder) {
         PrepayRequest request = new PrepayRequest();
         Amount amount = new Amount();
-        amount.setTotal(10);
+        amount.setTotal(zeroOrder.getAmount().intValue() * 100);
         amount.setCurrency("CNY");
         request.setAmount(amount);
         request.setAppid(appId);
@@ -168,7 +168,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         amountReq.setCurrency("CNY");
         amountReq.setRefund(10L);
         FundsFromItem fundsFromItem = new FundsFromItem();
-        fundsFromItem.setAmount(10L);
+        fundsFromItem.setAmount(zeroOrder.getAmount().longValue() * 100);
         fundsFromItem.setAccount(Account.AVAILABLE);
         amountReq.setFrom((Collections.singletonList(fundsFromItem)));
         createRequest.setAmount(amountReq);

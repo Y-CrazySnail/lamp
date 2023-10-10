@@ -76,7 +76,7 @@ public class ZeroOrder extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date closeTime;
     /**
-     * 0未退款 1已退款
+     * -1退款中 0未发生退款 1已退款
      */
     private Integer refundFlag;
     /**
