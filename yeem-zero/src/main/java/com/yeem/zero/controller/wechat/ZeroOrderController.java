@@ -100,6 +100,24 @@ public class ZeroOrderController {
     }
 
     /**
+     * 取消退款接口
+     *
+     * @param zeroOrder 订单信息
+     * @return response
+     */
+    @OperateLog(operateModule = "订单模块", operateType = "取消退款", operateDesc = "取消退款")
+    @PostMapping("cancel-refund")
+    public ResponseEntity<Object> cancelRefund(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.cancelRefund(zeroOrder);
+            return ResponseEntity.ok("cancel refund success");
+        } catch (Exception e) {
+            log.error("cancel refund error", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 关闭订单接口
      *
      * @param zeroOrder 订单信息

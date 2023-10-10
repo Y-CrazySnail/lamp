@@ -1,5 +1,6 @@
 package com.yeem.zero.service.impl;
 
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -15,6 +16,11 @@ import com.wechat.pay.java.service.payments.jsapi.model.Amount;
 import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.wechat.pay.java.service.refund.RefundService;
+import com.wechat.pay.java.service.refund.model.Account;
+import com.wechat.pay.java.service.refund.model.AmountReq;
+import com.wechat.pay.java.service.refund.model.CreateRequest;
+import com.wechat.pay.java.service.refund.model.FundsFromItem;
 import com.yeem.common.utils.AESUtils;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroOrder;
@@ -28,6 +34,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Service
@@ -86,6 +98,17 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         return payment;
     }
 
+    public void wechatRefund() {
+        RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
+                .merchantId(merchantId)
+                .privateKeyFromPath(privateKeyPath)
+                .merchantSerialNumber(merchantSerialNumber)
+                .apiV3Key(apiV3Key)
+                .build();
+        RefundService refundService = new RefundService.Builder().config(config).build();
+//        CreateRequest createRequest = getCreateRequest();
+    }
+
     @Override
     public void callback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode) {
         String body = null;
@@ -123,7 +146,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
     private PrepayRequest getPrepayRequest(String openId, ZeroOrder zeroOrder) {
         PrepayRequest request = new PrepayRequest();
         Amount amount = new Amount();
-        amount.setTotal(10);
+        amount.setTotal(zeroOrder.getAmount().intValue() * 100);
         amount.setCurrency("CNY");
         request.setAmount(amount);
         request.setAppid(appId);
@@ -135,6 +158,24 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         request.setNotifyUrl("https://edreamroom.com/zero-api/wechat-zero-payment/callback");
         request.setOutTradeNo(zeroOrder.getOrderNo());
         return request;
+    }
+
+    private CreateRequest getCreateRequest(ZeroOrder zeroOrder) {
+        CreateRequest createRequest = new CreateRequest();
+
+        AmountReq amountReq = new AmountReq();
+        amountReq.setTotal(zeroOrder.getAmount().multiply(new BigDecimal(10)).longValue());
+        amountReq.setCurrency("CNY");
+        amountReq.setRefund(10L);
+        FundsFromItem fundsFromItem = new FundsFromItem();
+        fundsFromItem.setAmount(zeroOrder.getAmount().longValue() * 100);
+        fundsFromItem.setAccount(Account.AVAILABLE);
+        amountReq.setFrom((Collections.singletonList(fundsFromItem)));
+        createRequest.setAmount(amountReq);
+        createRequest.setOutTradeNo(zeroOrder.getOrderNo());
+        String outRefundNo = UUID.fastUUID().toString().replace("-", "");
+        createRequest.setOutRefundNo(outRefundNo);
+        return createRequest;
     }
 
     @Override
