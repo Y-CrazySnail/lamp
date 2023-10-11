@@ -61,23 +61,15 @@ security:
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
 
-# Oauth2客户端信息
-oauth-client-details:
-  zero:
-    # 客户端ID
-    client-id: zero_dev
-    # 客户端密码
-    client-secret: 123456
-
 # 微信小程序
 wechat:
-  zero:
-    # appId
+  active: zero-dev
+  login-url: http://127.0.0.1:8080/server/auth/wechat-mini-program
+  zero-dev:
     app-id: wx9cb140f2eacb6870
-    # appSecret
     app-secret: b873d35be8357186fc8f90c48edb24a9
     merchant-id: 1647282072
-    private-key-path: /Users/snail/Desktop/1647282072_20230803_cert/apiclient_key.pem
+    private-key-path: /data/yeem/config/zero_merchant_cert/apiclient_key.pem
     merchant-serial-number: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
     api-v3-key: d67i4K3rgJNGIs8YU2x1R783joOhlVDq
 
@@ -92,10 +84,6 @@ tencent:
     secret-key: 00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA
     # 地区
     region: ap-shanghai
-
-auth:
-  wechat-mini-program: http://127.0.0.1:8080/server/auth/wechat-mini-program
-
 # 物流
 logistics:
   # 密钥ID

@@ -29,13 +29,13 @@ public class ZeroAuthServiceImpl implements IZeroAuthService {
     @Override
     public String wechatMiniProgramLogin(WechatMiniProgramDTO wechatMiniProgramDTO) {
         ObjectMapper objectMapper = new ObjectMapper();
-        String loginUrl = environment.getProperty("auth.wechat-mini-program");
+        String loginUrl = environment.getProperty("wechat.login-url");
         if (StringUtils.isEmpty(loginUrl)) {
             throw new RuntimeException("login url is null");
         }
         HttpResponse httpResponse = null;
         try {
-            wechatMiniProgramDTO.setApplication("zero");
+            wechatMiniProgramDTO.setApplication(environment.getProperty("wechat.active"));
             httpResponse = HttpRequest.post(loginUrl).body(objectMapper.writeValueAsString(wechatMiniProgramDTO)).execute();
         } catch (JsonProcessingException e) {
             e.printStackTrace();

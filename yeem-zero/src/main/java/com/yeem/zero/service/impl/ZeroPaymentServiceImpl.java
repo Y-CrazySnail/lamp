@@ -21,6 +21,7 @@ import com.wechat.pay.java.service.refund.model.Account;
 import com.wechat.pay.java.service.refund.model.AmountReq;
 import com.wechat.pay.java.service.refund.model.CreateRequest;
 import com.wechat.pay.java.service.refund.model.FundsFromItem;
+import com.yeem.common.dto.WechatMiniProgramDTO;
 import com.yeem.common.utils.AESUtils;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroOrder;
@@ -32,6 +33,7 @@ import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -44,30 +46,8 @@ import java.util.List;
 @Slf4j
 @Service
 public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroPayment> implements IZeroPaymentService {
-
-    @Value("${wechat.zero.app-id}")
-    private String appId;
-    /**
-     * 商户号
-     */
-    @Value("${wechat.zero.merchant-id}")
-    private String merchantId;
-    /**
-     * 商户API私钥路径
-     */
-    @Value("${wechat.zero.private-key-path}")
-    private String privateKeyPath;
-    /**
-     * 商户证书序列号
-     */
-    @Value("${wechat.zero.merchant-serial-number}")
-    private String merchantSerialNumber;
-    /**
-     * 商户APIV3密钥
-     */
-    @Value("${wechat.zero.api-v3-key}")
-    private String apiV3Key;
-
+    @Autowired
+    private Environment environment;
     @Autowired
     private IZeroUserExtraService zeroUserExtraService;
     @Autowired
@@ -81,6 +61,13 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
 
     @Override
     public PrepayWithRequestPaymentResponse wechatPrepay(String openId, ZeroOrder zeroOrder) {
+        String active = environment.getProperty("wechat.active");
+        String appId = environment.getProperty("wechat." + active + ".app-id");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+
         RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
                 .merchantId(merchantId)
                 .privateKeyFromPath(privateKeyPath)
@@ -99,6 +86,13 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
     }
 
     public void wechatRefund() {
+        String active = environment.getProperty("wechat.active");
+        String appId = environment.getProperty("wechat." + active + ".app-id");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+
         RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
                 .merchantId(merchantId)
                 .privateKeyFromPath(privateKeyPath)
@@ -111,6 +105,13 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
 
     @Override
     public void callback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode) {
+        String active = environment.getProperty("wechat.active");
+        String appId = environment.getProperty("wechat." + active + ".app-id");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+
         String body = null;
         try {
             body = new ObjectMapper().writeValueAsString(objectNode);
@@ -144,9 +145,16 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
     }
 
     private PrepayRequest getPrepayRequest(String openId, ZeroOrder zeroOrder) {
+        String active = environment.getProperty("wechat.active");
+        String appId = environment.getProperty("wechat." + active + ".app-id");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+
         PrepayRequest request = new PrepayRequest();
         Amount amount = new Amount();
-        amount.setTotal(zeroOrder.getAmount().intValue() * 100);
+        amount.setTotal(zeroOrder.getAmount().multiply(BigDecimal.valueOf(100)).intValue());
         amount.setCurrency("CNY");
         request.setAmount(amount);
         request.setAppid(appId);

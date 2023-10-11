@@ -60,20 +60,20 @@ security:
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
 
-# Oauth2客户端信息
 oauth-client-details:
   zero:
-    # 客户端ID
     client-id: zero_dev
-    # 客户端密码
+    client-secret: 123456
+  zero-dev:
+    client-id: zero
     client-secret: 123456
 
-# 微信小程序
 wechat:
   zero:
-    # appId
+    app-id: wx5aa8e4152814a522
+    app-secret: 5d063969876462e847993dfd750bc58e
+  zero-dev:
     app-id: wx9cb140f2eacb6870
-    # appSecret
     app-secret: b873d35be8357186fc8f90c48edb24a9
 
 # 腾讯云COS存储

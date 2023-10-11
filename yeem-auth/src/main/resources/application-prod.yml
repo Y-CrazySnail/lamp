@@ -65,8 +65,14 @@ oauth-client-details:
   zero:
     client-id: zero_dev
     client-secret: 123456
+  zero-dev:
+    client-id: zero
+    client-secret: 123456
 
 wechat:
   zero:
+    app-id: wx5aa8e4152814a522
+    app-secret: 5d063969876462e847993dfd750bc58e
+  zero-dev:
     app-id: wx9cb140f2eacb6870
     app-secret: b873d35be8357186fc8f90c48edb24a9
