@@ -21,7 +21,6 @@ public class Constant {
      * 4已收货|待评价
      * 5已完成
      * 0交易关闭
-     * -1退款中
      */
     public static final String ORDER_STATUS_ORDER = "1";
     public static final String ORDER_STATUS_PAY = "2";
@@ -29,5 +28,13 @@ public class Constant {
     public static final String ORDER_STATUS_RECEIVE = "4";
     public static final String ORDER_STATUS_FINISH = "5";
     public static final String ORDER_STATUS_CLOSE = "0";
-    public static final String ORDER_STATUS_REFUND = "-1";
+
+    /**
+     * 1 已退款
+     * 0 未退款
+     * -1 退款中
+     */
+    public static final String REFUND_ED = "1";
+    public static final String REFUND_TODO = "0";
+    public static final String REFUND_ING = "-1";
 }

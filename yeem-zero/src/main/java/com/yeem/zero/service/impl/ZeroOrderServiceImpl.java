@@ -140,15 +140,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public void refund(ZeroOrder zeroOrder) {
-        zeroOrder.setStatus(Constant.ORDER_STATUS_REFUND);
-        zeroOrder.setRefundFlag(Integer.valueOf(Constant.BOOLEAN_TRUE));
+        zeroOrder.setRefundFlag(Integer.valueOf(Constant.REFUND_ING));
         super.updateById(zeroOrder);
     }
 
     @Override
     public void cancelRefund(ZeroOrder zeroOrder) {
-        zeroOrder.setStatus(Constant.ORDER_STATUS_REFUND);
-        zeroOrder.setRefundFlag(Integer.valueOf(Constant.BOOLEAN_FALSE));
+        zeroOrder.setRefundFlag(Integer.valueOf(Constant.REFUND_TODO));
         super.updateById(zeroOrder);
     }
 
