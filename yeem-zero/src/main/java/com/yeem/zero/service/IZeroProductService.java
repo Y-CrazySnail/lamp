@@ -3,6 +3,7 @@ package com.yeem.zero.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.yeem.zero.entity.ZeroProduct;
 
+import java.io.Serializable;
 import java.util.List;
 
 public interface IZeroProductService extends IService<ZeroProduct> {

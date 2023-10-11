@@ -38,4 +38,12 @@ public class ZeroCategoryServiceImpl extends ServiceImpl<ZeroCategoryMapper, Zer
         }
         return zeroCategoryList;
     }
+
+    @Override
+    public List<ZeroCategory> dict() {
+        QueryWrapper<ZeroCategory> zeroCategoryQueryWrapper = new QueryWrapper<>();
+        zeroCategoryQueryWrapper.orderByAsc("sort");
+        zeroCategoryQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), 0);
+        return zeroCategoryMapper.selectList(zeroCategoryQueryWrapper);
+    }
 }

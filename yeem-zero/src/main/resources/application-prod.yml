@@ -63,12 +63,18 @@ oauth-client-details:
 
 wechat:
   zero:
-    app-id: wx9cb140f2eacb6870
-    app-secret: b873d35be8357186fc8f90c48edb24a9
-    merchant-id: 1647282072
+#    app-id: wx9cb140f2eacb6870
+#    app-secret: b873d35be8357186fc8f90c48edb24a9
+#    merchant-id: 1647282072
+#    privateKeyPath: /usr/snail/config/1647282072_20230803_cert/apiclient_key.pem
+#    merchantSerialNumber: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
+#    apiV3Key: d67i4K3rgJNGIs8YU2x1R783joOhlVDq
+    app-id: wx5aa8e4152814a522
+    app-secret: 5d063969876462e847993dfd750bc58e
+    merchant-id: 1653776084
     privateKeyPath: /usr/snail/config/1647282072_20230803_cert/apiclient_key.pem
     merchantSerialNumber: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
-    apiV3Key: d67i4K3rgJNGIs8YU2x1R783joOhlVDq
+    apiV3Key: 4jKnIFqIJrhvvAj0vndX5CfmaQT6hPeH
 
 auth:
   wechat-mini-program: http://127.0.0.1:8080/server/auth/wechat-mini-program

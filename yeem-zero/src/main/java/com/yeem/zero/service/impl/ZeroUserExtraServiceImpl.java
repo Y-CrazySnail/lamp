@@ -55,7 +55,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
         userExtraQueryWrapper.eq("username", username);
         ZeroUserExtra userExtra = zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
-        if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag()) {
+        if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag() == 1) {
             Integer referrerUserCount = 0;
             Integer referrerOrderCount = 0;
             // 直接推荐

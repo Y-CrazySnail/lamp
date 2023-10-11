@@ -3,6 +3,7 @@ package com.yeem.zero.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.mapper.ZeroProductMapper;
@@ -11,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Slf4j
@@ -82,5 +84,14 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         UpdateWrapper<ZeroProduct> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("id", zeroProduct.getId()).set("delete_flag", true);
         zeroProductMapper.update(null, updateWrapper);
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        UpdateWrapper<ZeroProduct> updateWrapper = new UpdateWrapper<>();
+        updateWrapper
+                .eq("id", id)
+                .set("delete_flag", true);
+        return SqlHelper.retBool(zeroProductMapper.update(null, updateWrapper));
     }
 }

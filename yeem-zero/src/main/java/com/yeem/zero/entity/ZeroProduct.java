@@ -112,7 +112,6 @@ public class ZeroProduct extends BaseEntity {
      * 详情图10
      */
     private String imageDetailPath10;
-
     /**
      * 展示图列表 type=0
      */
@@ -128,6 +127,10 @@ public class ZeroProduct extends BaseEntity {
      */
     @TableField(exist = false)
     private List<ZeroProductImage> zeroProductImageDetailList;
+    /**
+     * 分类ID
+     */
+    private Integer categoryId;
 
     public String getName() {
         return name;
@@ -351,6 +354,14 @@ public class ZeroProduct extends BaseEntity {
 
     public void setZeroProductImageDetailList(List<ZeroProductImage> zeroProductImageDetailList) {
         this.zeroProductImageDetailList = zeroProductImageDetailList;
+    }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void dealProductImage(ZeroProduct zeroProduct) {

@@ -25,19 +25,19 @@ public class ZeroMCategoryController {
     private IZeroCategoryService zeroCategoryService;
 
     /**
-     * 查询商品类别信息列表
+     * 查询商品类别信息字典
      *
-     * @return 商品类别信息列表
-     * @apiNote 查询商品类别信息列表
+     * @return 商品类别信息字典
+     * @apiNote 查询商品类别信息字典
      */
-    @OperateLog(operateModule = "商品类别模块", operateType = "查询列表", operateDesc = "查询商品类别")
-    @GetMapping("list")
-    public ResponseEntity<List<ZeroCategory>> list() {
+    @OperateLog(operateModule = "商品类别模块", operateType = "查询字典", operateDesc = "查询商品类别字典")
+    @GetMapping("dict")
+    public ResponseEntity<List<ZeroCategory>> dict() {
         List<ZeroCategory> zeroCategoryList;
         try {
-            zeroCategoryList = zeroCategoryService.list();
+            zeroCategoryList = zeroCategoryService.dict();
         } catch (Exception e) {
-            log.error("list category error:", e);
+            log.error("list category dict error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         return ResponseEntity.ok(zeroCategoryList);
