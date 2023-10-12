@@ -66,7 +66,7 @@ wechat:
     privateKeyPath: /data/yeem/config/zero_merchant_cert/apiclient_key.pem
     merchantSerialNumber: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
     apiV3Key: 4jKnIFqIJrhvvAj0vndX5CfmaQT6hPeH
-
+    notify-url: https://edreamroom.com/zero-api/wechat-zero-payment/callback
 # 腾讯云COS存储
 tencent:
   cos:

@@ -147,7 +147,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
         String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
         String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
-
+        String notifyUrl = environment.getProperty("wechat." + active + "notify-url");
         PrepayRequest request = new PrepayRequest();
         Amount amount = new Amount();
         amount.setTotal(zeroOrder.getAmount().multiply(BigDecimal.valueOf(100)).intValue());
@@ -159,7 +159,7 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         payer.setOpenid(openId);
         request.setPayer(payer);
         request.setDescription("支付测试");
-        request.setNotifyUrl("https://edreamroom.com/zero-api/wechat-zero-payment/callback");
+        request.setNotifyUrl(notifyUrl);
         request.setOutTradeNo(zeroOrder.getOrderNo());
         return request;
     }
