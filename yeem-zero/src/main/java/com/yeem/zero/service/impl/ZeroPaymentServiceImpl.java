@@ -17,12 +17,7 @@ import com.wechat.pay.java.service.payments.jsapi.model.Payer;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.wechat.pay.java.service.refund.RefundService;
-import com.wechat.pay.java.service.refund.model.Account;
-import com.wechat.pay.java.service.refund.model.AmountReq;
-import com.wechat.pay.java.service.refund.model.CreateRequest;
-import com.wechat.pay.java.service.refund.model.FundsFromItem;
-import com.yeem.common.dto.WechatMiniProgramDTO;
-import com.yeem.common.utils.AESUtils;
+import com.wechat.pay.java.service.refund.model.*;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.entity.ZeroPayment;
@@ -85,14 +80,13 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         return payment;
     }
 
-    public void wechatRefund() {
+    public void wechatRefund(ZeroOrder zeroOrder, Long refundAmount) {
         String active = environment.getProperty("wechat.active");
         String appId = environment.getProperty("wechat." + active + ".app-id");
         String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
         String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
         String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
         String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
-
         RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
                 .merchantId(merchantId)
                 .privateKeyFromPath(privateKeyPath)
@@ -100,7 +94,9 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
                 .apiV3Key(apiV3Key)
                 .build();
         RefundService refundService = new RefundService.Builder().config(config).build();
-//        CreateRequest createRequest = getCreateRequest();
+        CreateRequest createRequest = getCreateRequest(zeroOrder, refundAmount);
+        Refund refund = refundService.create(createRequest);
+        log.info("refund:{}", refund);
     }
 
     @Override
@@ -168,13 +164,12 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         return request;
     }
 
-    private CreateRequest getCreateRequest(ZeroOrder zeroOrder) {
+    private CreateRequest getCreateRequest(ZeroOrder zeroOrder, Long refundAmount) {
         CreateRequest createRequest = new CreateRequest();
-
         AmountReq amountReq = new AmountReq();
-        amountReq.setTotal(zeroOrder.getAmount().multiply(new BigDecimal(10)).longValue());
+        amountReq.setTotal(zeroOrder.getAmount().multiply(new BigDecimal(100)).longValue());
         amountReq.setCurrency("CNY");
-        amountReq.setRefund(10L);
+        amountReq.setRefund(refundAmount);
         FundsFromItem fundsFromItem = new FundsFromItem();
         fundsFromItem.setAmount(zeroOrder.getAmount().longValue() * 100);
         fundsFromItem.setAccount(Account.AVAILABLE);
