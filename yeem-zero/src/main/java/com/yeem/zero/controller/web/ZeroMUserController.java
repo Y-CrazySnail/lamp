@@ -1,5 +1,8 @@
 package com.yeem.zero.controller.web;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroUserExtra;
@@ -23,6 +26,40 @@ public class ZeroMUserController {
 
     @Autowired
     private IZeroUserExtraService zeroUserExtraService;
+
+    /**
+     * 订单分页查询
+     *
+     * @param current 当前页
+     * @param size    页码
+     * @return 订单分页
+     */
+    @GetMapping("page")
+    public ResponseEntity<IPage<ZeroUserExtra>> getPage(@RequestParam("current") Integer current,
+                                                    @RequestParam("size") Integer size,
+                                                    @RequestParam(value = "username", required = false) String username,
+                                                    @RequestParam(value = "nickName", required = false) String nickName) {
+        if (StringUtils.isEmpty(current)) {
+            current = 1;
+        }
+        if (StringUtils.isEmpty(size)) {
+            size = 10;
+        }
+        IPage<ZeroUserExtra> page = new Page<>(current, size);
+        QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(username)) {
+            zeroUserExtraQueryWrapper.eq("username", username);
+        }
+        if (!StringUtils.isEmpty(nickName)) {
+            zeroUserExtraQueryWrapper.eq("nick_name", nickName);
+        }
+        try {
+            return ResponseEntity.ok(zeroUserExtraService.page(page, zeroUserExtraQueryWrapper));
+        } catch (Exception e) {
+            log.error("get user page error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     /**
      * 查询用户信息

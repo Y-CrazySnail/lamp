@@ -36,6 +36,7 @@ public class BaseController<T extends BaseEntity> {
         if (StringUtils.isEmpty(size)) {
             size = 10;
         }
+        queryWrapper.orderByDesc(BaseEntity.BaseField.CREATE_TIME.getName());
         IPage<T> page = new Page<>(current, size);
         return ResponseEntity.ok(service.page(page, queryWrapper));
     }
