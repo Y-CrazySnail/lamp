@@ -113,7 +113,7 @@ public class SubscribeController {
             replaceMap.put("xray_ws_path", server.getXrayWsPath());
             replaceMap.put("region", server.getRegion());
             replaceMap.put("traffic", BigDecimal.valueOf((float) member.getTrafficSurplusMonth() / 1024 / 1024 / 1024).setScale(2, RoundingMode.HALF_UP).doubleValue());
-            subscribe.append(FreeMakerUtils.getContent("/usr/snail/config/template/", "xray_subscribe.ftl", replaceMap));
+            subscribe.append(FreeMakerUtils.getContent("/data/yeem/config/template/", "xray_subscribe.ftl", replaceMap));
             subscribe.append("\n");
         });
         String end = DateUtil.format(member.getEnd(), DatePattern.PURE_DATE_PATTERN);
