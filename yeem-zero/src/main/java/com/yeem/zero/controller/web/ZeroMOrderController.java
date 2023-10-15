@@ -58,6 +58,21 @@ public class ZeroMOrderController {
     }
 
     /**
+     * 根据ID查询查询
+     *
+     * @return 订单详细信息
+     */
+    @GetMapping("getById")
+    public ResponseEntity<ZeroOrder> getById(@RequestParam(value = "id") Long id) {
+        try {
+            return ResponseEntity.ok(zeroOrderService.getById(id));
+        } catch (Exception e) {
+            log.error("get order by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 更新订单信息
      *
      * @param zeroOrder 订单信息

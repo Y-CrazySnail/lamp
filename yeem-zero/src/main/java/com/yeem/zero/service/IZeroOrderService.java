@@ -27,6 +27,13 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     ZeroOrder get(Long id);
 
+    /**
+     * 根据ID查询
+     * @param id ID
+     * @return 订单信息
+     */
+    ZeroOrder getById(Long id);
+
     List<ZeroOrder> list(String status, String name);
 
     List<ZeroOrder> distribution(String nickName);

@@ -233,6 +233,25 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
+    public ZeroOrder getById(Long id) {
+        String username = OauthUtils.getUsername();
+        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
+        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+        zeroOrderQueryWrapper.eq("id", id);
+        ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
+        List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
+        zeroOrder.setOrderItemList(zeroOrderItemList);
+        ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
+        zeroOrder.setAddress(zeroAddress);
+        // 物流信息查询
+        if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
+            JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", zeroOrder.getWaybillNo());
+            zeroOrder.setLogistics(logistics);
+        }
+        return zeroOrder;
+    }
+
+    @Override
     public List<ZeroOrder> list(String status, String name) {
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
