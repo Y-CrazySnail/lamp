@@ -141,10 +141,10 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
                 map.put("xray_ws_path", server.getXrayWsPath());
                 map.put("xray_certificate_file", server.getXrayCertificateFile());
                 map.put("xray_key_file", server.getXrayKeyFile());
-                String content = FreeMakerUtils.getContent("/usr/snail/config/template/", "xray_config.ftl", map);
+                String content = FreeMakerUtils.getContent("/data/yeem/config/template/", "xray_config.ftl", map);
                 String uuid = UUID.fastUUID().toString();
                 String basePath = "/usr/snail/webapps/file/config/";
-                String baseUrl = "https://edreamroom.com/file/config/";
+                String baseUrl = "https://yeemcloud.com/file/config/";
                 String relativePath = uuid + "/config.json";
                 FileWriter fileWriter = new FileWriter(basePath + relativePath);
                 fileWriter.write(content);
