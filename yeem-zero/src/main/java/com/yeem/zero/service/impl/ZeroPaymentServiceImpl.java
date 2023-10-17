@@ -55,6 +55,11 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
     }
 
     @Override
+    public void wechatRefund(ZeroOrder zeroOrder) {
+        wechatRefund(zeroOrder, 10L);
+    }
+
+    @Override
     public PrepayWithRequestPaymentResponse wechatPrepay(String openId, ZeroOrder zeroOrder) {
         String active = environment.getProperty("wechat.active");
         String appId = environment.getProperty("wechat." + active + ".app-id");

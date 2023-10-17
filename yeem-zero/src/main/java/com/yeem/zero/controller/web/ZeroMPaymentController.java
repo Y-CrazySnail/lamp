@@ -51,6 +51,23 @@ public class ZeroMPaymentController {
     }
 
     /**
+     * 退款
+     *
+     * @param zeroOrder 订单信息
+     * @apiNote 退款
+     */
+    @PostMapping("wechat-refund")
+    public ResponseEntity<Object> wechatRefund(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroPaymentService.wechatRefund(zeroOrder);
+            return ResponseEntity.ok(null);
+        } catch (Exception e) {
+            log.error("wechat refund error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 支付回调
      *
      * @param objectNode 支付回调参数

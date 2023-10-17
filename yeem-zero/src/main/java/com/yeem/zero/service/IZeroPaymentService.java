@@ -9,6 +9,7 @@ import com.yeem.zero.entity.ZeroPayment;
 public interface IZeroPaymentService extends IService<ZeroPayment> {
     ZeroPayment getByOrderNo(String orderNo);
     PrepayWithRequestPaymentResponse wechatPrepay(ZeroOrder zeroOrder);
+    void wechatRefund(ZeroOrder zeroOrder);
     PrepayWithRequestPaymentResponse wechatPrepay(String openId, ZeroOrder zeroOrder);
     void callback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode);
 }
