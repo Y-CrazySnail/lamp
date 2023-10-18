@@ -175,10 +175,10 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         amountReq.setTotal(zeroOrder.getAmount().multiply(new BigDecimal(100)).longValue());
         amountReq.setCurrency("CNY");
         amountReq.setRefund(refundAmount);
-        FundsFromItem fundsFromItem = new FundsFromItem();
-        fundsFromItem.setAmount(zeroOrder.getAmount().longValue() * 100);
-        fundsFromItem.setAccount(Account.AVAILABLE);
-        amountReq.setFrom((Collections.singletonList(fundsFromItem)));
+//        FundsFromItem fundsFromItem = new FundsFromItem();
+//        fundsFromItem.setAmount(zeroOrder.getAmount().multiply(BigDecimal.valueOf(100)).longValue());
+//        fundsFromItem.setAccount(Account.AVAILABLE);
+//        amountReq.setFrom((Collections.singletonList(fundsFromItem)));
         createRequest.setAmount(amountReq);
         createRequest.setOutTradeNo(zeroOrder.getOrderNo());
         String outRefundNo = UUID.fastUUID().toString().replace("-", "");
