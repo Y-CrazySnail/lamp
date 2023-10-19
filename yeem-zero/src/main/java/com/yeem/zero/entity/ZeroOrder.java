@@ -80,6 +80,10 @@ public class ZeroOrder extends BaseEntity {
      */
     private Integer refundFlag;
     /**
+     * 退款金额
+     */
+    private BigDecimal refundAmount;
+    /**
      * 退款原因
      */
     private String refundReason;
@@ -253,6 +257,14 @@ public class ZeroOrder extends BaseEntity {
 
     public void setRefundFlag(Integer refundFlag) {
         this.refundFlag = refundFlag;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
     }
 
     public String getRefundReason() {
