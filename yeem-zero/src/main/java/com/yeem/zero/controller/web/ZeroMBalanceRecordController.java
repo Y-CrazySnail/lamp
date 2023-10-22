@@ -24,21 +24,4 @@ public class ZeroMBalanceRecordController {
     @Autowired
     private IZeroBalanceRecordService zeroBalanceRecordService;
 
-    /**
-     * 查询用户余额变动明细列表
-     *
-     * @return 余额变动明细列表
-     * @apiNote 根据用户名查询用户余额变动明细列表
-     */
-    @OperateLog(operateModule = "余额明细模块", operateType = "查询用户余额变动明细列表", operateDesc = "查询用户余额变动明细列表")
-    @GetMapping("list")
-    public ResponseEntity<List<ZeroBalanceRecord>> list() {
-        try {
-            List<ZeroBalanceRecord> zeroBalanceRecordList = zeroBalanceRecordService.listByUsername();
-            return ResponseEntity.ok(zeroBalanceRecordList);
-        } catch (Exception e) {
-            log.error("list balance record error:", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 }

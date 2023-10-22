@@ -50,4 +50,18 @@ public class WechatUtils {
         String resultString = AESUtils.decrypt(encryptedData, sessionKey, iv);
         return objectMapper.readValue(resultString, PhoneNumberDTO.class);
     }
+
+    /**
+     * 获取手机号
+     * @param sessionKey sessionKey
+     * @param encryptedData encryptedData
+     * @param iv iv
+     * @return phone number
+     * @throws Exception e
+     */
+    public static String decryptPhone(String sessionKey, String encryptedData, String iv) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String resultString = AESUtils.decrypt(encryptedData, sessionKey, iv);
+        return objectMapper.readValue(resultString, PhoneNumberDTO.class).getPhoneNumber();
+    }
 }

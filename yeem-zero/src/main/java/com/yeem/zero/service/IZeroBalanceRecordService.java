@@ -6,5 +6,5 @@ import com.yeem.zero.entity.ZeroBalanceRecord;
 import java.util.List;
 
 public interface IZeroBalanceRecordService extends IService<ZeroBalanceRecord> {
-    List<ZeroBalanceRecord> listByUsername();
+    List<ZeroBalanceRecord> listByUserId(Long userId);
 }

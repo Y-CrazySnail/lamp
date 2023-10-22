@@ -11,5 +11,5 @@ import java.util.List;
 @Mapper
 @DS("zero")
 public interface ZeroOrderMapper extends BaseMapper<ZeroOrder> {
-    List<ZeroOrder> distribution(@Param("username") String username, @Param("nickName") String nickName);
+    List<ZeroOrder> distribution(@Param("userId") Long userId, @Param("nickName") String nickName);
 }

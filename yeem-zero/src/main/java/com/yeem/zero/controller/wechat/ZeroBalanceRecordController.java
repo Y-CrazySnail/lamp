@@ -2,6 +2,7 @@ package com.yeem.zero.controller.wechat;
 
 import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroBalanceRecord;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroBalanceRecordService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-balance-record")
+@RequestMapping("/wechat/zero-balance-record")
 public class ZeroBalanceRecordController {
 
     @Autowired
@@ -34,7 +35,8 @@ public class ZeroBalanceRecordController {
     @GetMapping("list")
     public ResponseEntity<List<ZeroBalanceRecord>> list() {
         try {
-            List<ZeroBalanceRecord> zeroBalanceRecordList = zeroBalanceRecordService.listByUsername();
+            Long userId = WechatAuthInterceptor.getUserId();
+            List<ZeroBalanceRecord> zeroBalanceRecordList = zeroBalanceRecordService.listByUserId(userId);
             return ResponseEntity.ok(zeroBalanceRecordList);
         } catch (Exception e) {
             log.error("list balance record error:", e);

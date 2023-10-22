@@ -18,40 +18,32 @@ import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.wechat.pay.java.service.refund.RefundService;
 import com.wechat.pay.java.service.refund.model.*;
-import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.entity.ZeroPayment;
-import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.mapper.ZeroPaymentMapper;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroPaymentService;
-import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 @Slf4j
 @Service
 public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroPayment> implements IZeroPaymentService {
+
     @Autowired
     private Environment environment;
-    @Autowired
-    private IZeroUserExtraService zeroUserExtraService;
     @Autowired
     private ZeroPaymentMapper zeroPaymentMapper;
 
     @Override
     public PrepayWithRequestPaymentResponse wechatPrepay(ZeroOrder zeroOrder) {
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
-        return wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
+        String openId = WechatAuthInterceptor.getOpenId();
+        return wechatPrepay(openId, zeroOrder);
     }
 
     @Override

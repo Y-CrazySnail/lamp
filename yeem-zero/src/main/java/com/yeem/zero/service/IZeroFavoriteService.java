@@ -6,5 +6,5 @@ import com.yeem.zero.entity.ZeroFavorite;
 import java.util.List;
 
 public interface IZeroFavoriteService extends IService<ZeroFavorite> {
-    List<ZeroFavorite> listByUsername(String username);
+    List<ZeroFavorite> listByUserId(Long userId);
 }

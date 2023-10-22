@@ -9,21 +9,13 @@ import java.math.BigDecimal;
 @TableName(value = "zero_user_extra", autoResultMap = true)
 public class ZeroUserExtra extends BaseEntity {
     /**
-     * 用户ID
-     */
-    private Long userId;
-    /**
-     * 用户名
-     */
-    private String username;
-    /**
      * 直接推荐人-用户名
      */
-    private String directReferrerUsername;
+    private Long directReferrerUserId;
     /**
      * 间接推荐人-用户名
      */
-    private String indirectReferrerUsername;
+    private Long indirectReferrerUserId;
     /**
      * 分销标识 0否 1是
      */
@@ -74,37 +66,46 @@ public class ZeroUserExtra extends BaseEntity {
      */
     @TableField(exist = false)
     private Integer referrerOrderCount;
+    /**
+     * 微信登录Code
+     */
+    @TableField(exist = false)
+    private String wechatLoginCode;
+    /**
+     * 微信登录响应session key
+     */
+    @TableField(exist = false)
+    private String sessionKey;
+    /**
+     * 手机号密文
+     */
+    @TableField(exist = false)
+    private String encryptedData;
+    /**
+     * 手机号IV
+     */
+    @TableField(exist = false)
+    private String iv;
+    /**
+     * 授权token
+     */
+    @TableField(exist = false)
+    private String token;
 
-    public Long getUserId() {
-        return userId;
+    public Long getDirectReferrerUserId() {
+        return directReferrerUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setDirectReferrerUserId(Long directReferrerUserId) {
+        this.directReferrerUserId = directReferrerUserId;
     }
 
-    public String getUsername() {
-        return username;
+    public Long getIndirectReferrerUserId() {
+        return indirectReferrerUserId;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getIndirectReferrerUsername() {
-        return indirectReferrerUsername;
-    }
-
-    public void setIndirectReferrerUsername(String indirectReferrerUsername) {
-        this.indirectReferrerUsername = indirectReferrerUsername;
-    }
-
-    public String getDirectReferrerUsername() {
-        return directReferrerUsername;
-    }
-
-    public void setDirectReferrerUsername(String directReferrerUsername) {
-        this.directReferrerUsername = directReferrerUsername;
+    public void setIndirectReferrerUserId(Long indirectReferrerUserId) {
+        this.indirectReferrerUserId = indirectReferrerUserId;
     }
 
     public Integer getDistributionFlag() {
@@ -201,5 +202,45 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setReferrerOrderCount(Integer referrerOrderCount) {
         this.referrerOrderCount = referrerOrderCount;
+    }
+
+    public String getWechatLoginCode() {
+        return wechatLoginCode;
+    }
+
+    public void setWechatLoginCode(String wechatLoginCode) {
+        this.wechatLoginCode = wechatLoginCode;
+    }
+
+    public String getSessionKey() {
+        return sessionKey;
+    }
+
+    public void setSessionKey(String sessionKey) {
+        this.sessionKey = sessionKey;
+    }
+
+    public String getEncryptedData() {
+        return encryptedData;
+    }
+
+    public void setEncryptedData(String encryptedData) {
+        this.encryptedData = encryptedData;
+    }
+
+    public String getIv() {
+        return iv;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

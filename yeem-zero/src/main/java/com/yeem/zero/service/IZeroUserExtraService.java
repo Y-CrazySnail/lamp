@@ -7,14 +7,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface IZeroUserExtraService extends IService<ZeroUserExtra> {
-    ZeroUserExtra get(String username);
+    ZeroUserExtra get(Long userId);
     ZeroUserExtra getByUserId(Long userId);
-    ZeroUserExtra update(ZeroUserExtra zeroUserExtra);
-    List<ZeroUserExtra> distribution(String username, String nickName);
-    Integer getDirectReferrerUserCount(String username);
-    Integer getIndirectReferrerUserCount(String username);
-    void addBalance(String username, BigDecimal amount);
-    void subtractBalance(String username, BigDecimal amount);
-    void addTodoBalance(String username, BigDecimal amount);
-    void subtractTodoBalance(String username, BigDecimal amount);
+    ZeroUserExtra getByWechatOpenId(String openId);
+    List<ZeroUserExtra> distribution(Long userId, String nickName);
+    Integer getDirectReferrerUserCount(Long userId);
+    Integer getIndirectReferrerUserCount(Long userId);
+    void addBalance(Long userId, BigDecimal amount);
+    void subtractBalance(Long userId, BigDecimal amount);
+    void addTodoBalance(Long userId, BigDecimal amount);
+    void subtractTodoBalance(Long userId, BigDecimal amount);
 }

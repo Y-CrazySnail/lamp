@@ -8,11 +8,11 @@
                 select count(1) from zero_order
                 where distribution_flag = 1
                 and status = 5
-                and (direct_referrer_username = #{username} and indirect_referrer_username = #{username})
+                and (direct_referrer_user_id = #{userId} and indirect_referrer_user_id = #{userId})
             ) as referrer_order_count
         from zero_user_extra zue
         where zue.delete_flag != 1
-        and (zue.direct_referrer_username = #{username} or zue.indirect_referrer_username = #{username})
+        and (zue.direct_referrer_user_id = #{userId} or zue.indirect_referrer_user_id = #{userId})
         <if test="nickName != null and nickName != ''.toString()">
             and zue.nick_name like #{nickName}
         </if>
@@ -21,24 +21,24 @@
     <update id="addBalance">
         update zero_user_extra
         set balance = balance + #{amount}
-        where username = #{username}
+        where id = #{userId}
     </update>
 
     <update id="subtractBalance">
         update zero_user_extra
         set balance = balance - #{amount}
-        where username = #{username}
+        where id = #{userId}
     </update>
 
     <update id="addTodoBalance">
         update zero_user_extra
         set todo_balance = todo_balance + #{amount}
-        where username = #{username}
+        where id = #{userId}
     </update>
 
     <update id="subtractTodoBalance">
         update zero_user_extra
         set todo_balance = todo_balance - #{amount}
-        where username = #{username}
+        where id = #{userId}
     </update>
 </mapper>

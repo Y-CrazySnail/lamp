@@ -6,14 +6,14 @@
             zo.order_no,
             zo.user_id,
             zo.status,
-            zo.direct_referrer_username,
-            zo.indirect_referrer_username,
+            zo.direct_referrer_user_id,
+            zo.indirect_referrer_user_id,
             zo.direct_bonus,
             zo.indirect_bonus
         from zero_order zo
         left join zero_user_extra zue on zo.user_id = zue.user_id
         where zo.distribution_flag = 1 and zo.delete_flag != 1
-        and (zo.direct_referrer_username = #{username} or zo.indirect_referrer_username = #{username})
+        and (zo.direct_referrer_user_id = #{userId} or zo.indirect_referrer_user_id = #{userId})
         <if test="nickName != '' and nickName != null">
             and zue.nick_name like concat('%', #{nickName}, '%')
         </if>

@@ -9,10 +9,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.LogisticsUtils;
-import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.*;
 import com.yeem.zero.mapper.ZeroOrderMapper;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,13 +72,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public ZeroOrder order(ZeroOrder zeroOrder) {
-        // 获取用户信息
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
-        if (StringUtils.isEmpty(zeroUserExtra)) {
-            throw new RuntimeException("user info is null when save cart");
-        }
-        zeroOrder.setUserId(zeroUserExtra.getUserId());
+        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getUserId());
         // 订单号
         String orderNo = UUID.fastUUID().toString().replace("-", "");
         zeroOrder.setOrderNo(orderNo);
@@ -119,8 +113,8 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Override
     public ZeroOrder prepay(ZeroOrder zeroOrder) {
         // 获取用户信息
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
+        Long id = WechatAuthInterceptor.getUserId();
+        ZeroUserExtra zeroUserExtra = zeroUserExtraService.getById(id);
         if (StringUtils.isEmpty(zeroUserExtra)) {
             throw new RuntimeException("user info is null when save cart");
         }
@@ -173,17 +167,17 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         // 直接分销处理
         if (!StringUtils.isEmpty(zeroOrder.getDistributionFlag())
                 && zeroOrder.getDistributionFlag()) {
-            if (!StringUtils.isEmpty(zeroOrder.getDirectReferrerUsername())
+            if (!StringUtils.isEmpty(zeroOrder.getDirectReferrerUserId())
                     && !StringUtils.isEmpty(zeroOrder.getDirectBonus())) {
-                zeroUserExtraService.subtractTodoBalance(zeroOrder.getDirectReferrerUsername(), zeroOrder.getDirectBonus());
-                zeroUserExtraService.addBalance(zeroOrder.getDirectReferrerUsername(), zeroOrder.getDirectBonus());
+                zeroUserExtraService.subtractTodoBalance(zeroOrder.getDirectReferrerUserId(), zeroOrder.getDirectBonus());
+                zeroUserExtraService.addBalance(zeroOrder.getDirectReferrerUserId(), zeroOrder.getDirectBonus());
                 ZeroBalanceRecord zeroBalanceRecord = new ZeroBalanceRecord();
                 zeroBalanceRecord.setType(ZeroBalanceRecord.Type.WITHDRAW.getValue());
                 zeroBalanceRecord.setDealTime(new Date());
-                ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getDirectReferrerUsername());
+                ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getDirectReferrerUserId());
                 if (!StringUtils.isEmpty(zeroUserExtra)) {
                     zeroBalanceRecord.setAmount(zeroOrder.getDirectBonus());
-                    zeroBalanceRecord.setUserId(zeroUserExtra.getUserId());
+                    zeroBalanceRecord.setUserId(zeroUserExtra.getId());
                     zeroBalanceRecord.setBalance(zeroUserExtra.getBalance().add(zeroOrder.getDirectBonus()));
                     zeroBalanceRecordService.save(zeroBalanceRecord);
                 }
@@ -192,19 +186,19 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         // 间接分销处理
         if (!StringUtils.isEmpty(zeroOrder.getDistributionFlag())
                 && zeroOrder.getDistributionFlag()) {
-            if (!StringUtils.isEmpty(zeroOrder.getIndirectReferrerUsername())
+            if (!StringUtils.isEmpty(zeroOrder.getIndirectReferrerUserId())
                     && !StringUtils.isEmpty(zeroOrder.getIndirectBonus())) {
-                zeroUserExtraService.subtractTodoBalance(zeroOrder.getIndirectReferrerUsername(),
+                zeroUserExtraService.subtractTodoBalance(zeroOrder.getIndirectReferrerUserId(),
                         zeroOrder.getIndirectBonus());
-                zeroUserExtraService.addBalance(zeroOrder.getIndirectReferrerUsername(),
+                zeroUserExtraService.addBalance(zeroOrder.getIndirectReferrerUserId(),
                         zeroOrder.getIndirectBonus());
                 ZeroBalanceRecord zeroBalanceRecord = new ZeroBalanceRecord();
                 zeroBalanceRecord.setType(ZeroBalanceRecord.Type.WITHDRAW.getValue());
                 zeroBalanceRecord.setDealTime(new Date());
-                ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getIndirectReferrerUsername());
+                ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(zeroOrder.getIndirectReferrerUserId());
                 if (!StringUtils.isEmpty(zeroUserExtra)) {
                     zeroBalanceRecord.setAmount(zeroOrder.getIndirectBonus());
-                    zeroBalanceRecord.setUserId(zeroUserExtra.getUserId());
+                    zeroBalanceRecord.setUserId(zeroUserExtra.getId());
                     zeroBalanceRecord.setBalance(zeroUserExtra.getBalance().add(zeroOrder.getIndirectBonus()));
                     zeroBalanceRecordService.save(zeroBalanceRecord);
                 }
@@ -214,10 +208,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public ZeroOrder get(Long id) {
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
         zeroOrderQueryWrapper.eq("id", id);
         ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
         List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
@@ -234,8 +225,6 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public ZeroOrder getById(Long id) {
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
         zeroOrderQueryWrapper.eq("id", id);
         ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
@@ -252,8 +241,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
-    public List<ZeroOrder> list(String status, String name) {
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
+    public List<ZeroOrder> list(Long userId, String status, String name) {
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(status)) {
             zeroOrderQueryWrapper.eq("status", status);
@@ -261,7 +249,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         if (!StringUtils.isEmpty(name)) {
             zeroOrderQueryWrapper.like("order_name", name);
         }
-        zeroOrderQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroOrderQueryWrapper.eq("user_id", userId);
         zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         zeroOrderQueryWrapper.orderByDesc(BaseEntity.BaseField.UPDATE_TIME.getName());
         List<ZeroOrder> zeroOrderList = super.list(zeroOrderQueryWrapper);
@@ -276,8 +264,8 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public List<ZeroOrder> distribution(String nickName) {
-        String username = OauthUtils.getUsername();
-        List<ZeroOrder> zeroOrderList = baseMapper.distribution(username, nickName);
+        Long userId = WechatAuthInterceptor.getUserId();
+        List<ZeroOrder> zeroOrderList = baseMapper.distribution(userId, nickName);
         zeroOrderList.forEach(zeroOrder -> {
             ZeroUserExtra zeroUserExtra = zeroUserExtraService.getByUserId(zeroOrder.getUserId());
             zeroOrder.setUserExtra(zeroUserExtra);
@@ -298,17 +286,17 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
-    public Integer getDirectReferrerOrderCount(String username) {
+    public Integer getDirectReferrerOrderCount(Long userId) {
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        zeroOrderQueryWrapper.eq("direct_referrer_username", username);
+        zeroOrderQueryWrapper.eq("direct_referrer_user_id", userId);
         zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         return baseMapper.selectCount(zeroOrderQueryWrapper);
     }
 
     @Override
-    public Integer getIndirectReferrerOrderCount(String username) {
+    public Integer getIndirectReferrerOrderCount(Long userId) {
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        zeroOrderQueryWrapper.eq("indirect_referrer_username", username);
+        zeroOrderQueryWrapper.eq("indirect_referrer_user_id", userId);
         zeroOrderQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         return baseMapper.selectCount(zeroOrderQueryWrapper);
     }
@@ -361,8 +349,8 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
 
     private void calculateDirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
-        String directReferrerUsername = zeroUserExtra.getDirectReferrerUsername();
-        ZeroUserExtra directZeroUserExtra = zeroUserExtraService.get(directReferrerUsername);
+        Long directReferrerUserId = zeroUserExtra.getDirectReferrerUserId();
+        ZeroUserExtra directZeroUserExtra = zeroUserExtraService.get(directReferrerUserId);
         // 判断直接分销开关
         if (Constant.BOOLEAN_FALSE.equals(distributionDirectSwitch)) {
             return;
@@ -396,15 +384,15 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
             }
         }
-        zeroOrder.setDirectReferrerUsername(directReferrerUsername);
+        zeroOrder.setDirectReferrerUserId(directReferrerUserId);
         zeroOrder.setDirectBonus(bound);
         zeroOrder.setDistributionFlag(Boolean.TRUE);
-        zeroUserExtraService.addTodoBalance(directReferrerUsername, bound);
+        zeroUserExtraService.addTodoBalance(directReferrerUserId, bound);
     }
 
     private void calculateIndirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
-        String indirectReferrerUsername = zeroUserExtra.getIndirectReferrerUsername();
-        ZeroUserExtra indirectZeroUserExtra = zeroUserExtraService.get(indirectReferrerUsername);
+        Long indirectReferrerUserId = zeroUserExtra.getIndirectReferrerUserId();
+        ZeroUserExtra indirectZeroUserExtra = zeroUserExtraService.get(indirectReferrerUserId);
         // 判断直接分销开关
         if (Constant.BOOLEAN_FALSE.equals(distributionIndirectSwitch)) {
             return;
@@ -438,10 +426,10 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
             }
         }
-        zeroOrder.setIndirectReferrerUsername(indirectReferrerUsername);
+        zeroOrder.setIndirectReferrerUserId(indirectReferrerUserId);
         zeroOrder.setIndirectBonus(bound);
         zeroOrder.setDistributionFlag(Boolean.TRUE);
-        zeroUserExtraService.addTodoBalance(indirectReferrerUsername, bound);
+        zeroUserExtraService.addTodoBalance(indirectReferrerUserId, bound);
     }
 
     @Override

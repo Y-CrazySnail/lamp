@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-payment")
+@RequestMapping("/wechat/zero-payment")
 public class ZeroPaymentController {
 
     private final static String HEADER_NAME_TIMESTAMP = "Wechatpay-Timestamp";

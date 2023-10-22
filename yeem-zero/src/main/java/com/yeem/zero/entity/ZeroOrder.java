@@ -98,11 +98,11 @@ public class ZeroOrder extends BaseEntity {
     /**
      * 直接推荐人-用户名
      */
-    private String directReferrerUsername;
+    private Long directReferrerUserId;
     /**
      * 间接推荐人-用户名
      */
-    private String indirectReferrerUsername;
+    private Long indirectReferrerUserId;
     /**
      * 直接推荐人-奖金
      */
@@ -291,20 +291,20 @@ public class ZeroOrder extends BaseEntity {
         this.distributionFlag = distributionFlag;
     }
 
-    public String getDirectReferrerUsername() {
-        return directReferrerUsername;
+    public Long getDirectReferrerUserId() {
+        return directReferrerUserId;
     }
 
-    public void setDirectReferrerUsername(String directReferrerUsername) {
-        this.directReferrerUsername = directReferrerUsername;
+    public void setDirectReferrerUserId(Long directReferrerUserId) {
+        this.directReferrerUserId = directReferrerUserId;
     }
 
-    public String getIndirectReferrerUsername() {
-        return indirectReferrerUsername;
+    public Long getIndirectReferrerUserId() {
+        return indirectReferrerUserId;
     }
 
-    public void setIndirectReferrerUsername(String indirectReferrerUsername) {
-        this.indirectReferrerUsername = indirectReferrerUsername;
+    public void setIndirectReferrerUserId(Long indirectReferrerUserId) {
+        this.indirectReferrerUserId = indirectReferrerUserId;
     }
 
     public BigDecimal getDirectBonus() {

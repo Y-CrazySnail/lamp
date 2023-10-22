@@ -9,6 +9,7 @@ import com.yeem.zero.entity.ZeroBalanceRecord;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.mapper.ZeroBalanceRecordMapper;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroBalanceRecordService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -24,21 +25,13 @@ import java.util.List;
 public class ZeroBalanceRecordServiceImpl extends ServiceImpl<ZeroBalanceRecordMapper, ZeroBalanceRecord> implements IZeroBalanceRecordService {
 
     @Autowired
-    private IZeroUserExtraService zeroUserExtraService;
-
-    @Autowired
     private ZeroBalanceRecordMapper zeroBalanceRecordMapper;
 
     @Override
-    public List<ZeroBalanceRecord> listByUsername() {
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
-        if (StringUtils.isEmpty(zeroUserExtra)) {
-            throw new RuntimeException("user info is null when save cart");
-        }
+    public List<ZeroBalanceRecord> listByUserId(Long userId) {
         QueryWrapper<ZeroBalanceRecord> zeroBalanceRecordQueryWrapper = new QueryWrapper<>();
         zeroBalanceRecordQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
-        zeroBalanceRecordQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroBalanceRecordQueryWrapper.eq("user_id", userId);
         zeroBalanceRecordQueryWrapper.orderByDesc(BaseEntity.BaseField.CREATE_TIME.getName());
         return zeroBalanceRecordMapper.selectList(zeroBalanceRecordQueryWrapper);
     }

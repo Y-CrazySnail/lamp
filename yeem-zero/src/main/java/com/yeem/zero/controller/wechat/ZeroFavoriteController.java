@@ -4,6 +4,7 @@ import com.yeem.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroFavorite;
 import com.yeem.zero.entity.ZeroUserExtra;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroFavoriteService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-favorite")
+@RequestMapping("/wechat/zero-favorite")
 public class ZeroFavoriteController {
 
     @Autowired
@@ -38,7 +39,8 @@ public class ZeroFavoriteController {
     @GetMapping("list")
     public ResponseEntity<List<ZeroFavorite>> list() {
         try {
-            List<ZeroFavorite> zeroFavoriteList = zeroFavoriteService.listByUsername(OauthUtils.getUsername());
+            Long userId = WechatAuthInterceptor.getUserId();
+            List<ZeroFavorite> zeroFavoriteList = zeroFavoriteService.listByUserId(userId);
             return ResponseEntity.ok(zeroFavoriteList);
         } catch (Exception e) {
             log.error("list favorite error:", e);
@@ -56,8 +58,8 @@ public class ZeroFavoriteController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody ZeroFavorite zeroFavorite) {
         try {
-            ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(OauthUtils.getUsername());
-            zeroFavorite.setUserId(zeroUserExtra.getUserId());
+            Long userId = WechatAuthInterceptor.getUserId();
+            zeroFavorite.setUserId(userId);
             zeroFavoriteService.save(zeroFavorite);
             return ResponseEntity.ok("save product to favorite success");
         } catch (Exception e) {

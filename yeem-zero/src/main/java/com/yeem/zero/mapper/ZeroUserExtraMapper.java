@@ -12,18 +12,18 @@ import java.util.List;
 @Mapper
 @DS("zero")
 public interface ZeroUserExtraMapper extends BaseMapper<ZeroUserExtra> {
-    List<ZeroUserExtra> distribution(@Param("username") String username,
+    List<ZeroUserExtra> distribution(@Param("userId") Long userId,
                                      @Param("nickName") String nickName);
 
-    void addBalance(@Param("username") String username,
+    void addBalance(@Param("userId") Long userId,
                     @Param("amount") BigDecimal amount);
 
-    void subtractBalance(@Param("username") String username,
+    void subtractBalance(@Param("userId") Long userId,
                          @Param("amount") BigDecimal amount);
 
-    void addTodoBalance(@Param("username") String username,
+    void addTodoBalance(@Param("userId") Long userId,
                         @Param("amount") BigDecimal amount);
 
-    void subtractTodoBalance(@Param("username") String username,
+    void subtractTodoBalance(@Param("userId") Long userId,
                              @Param("amount") BigDecimal amount);
 }

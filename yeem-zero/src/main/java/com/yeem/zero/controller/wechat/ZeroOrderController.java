@@ -2,6 +2,7 @@ package com.yeem.zero.controller.wechat;
 
 import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroOrder;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-order")
+@RequestMapping("/wechat/zero-order")
 public class ZeroOrderController {
 
     @Autowired
@@ -37,6 +38,8 @@ public class ZeroOrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
         try {
+            Long userId = WechatAuthInterceptor.getUserId();
+            zeroOrder.setUserId(userId);
             ZeroOrder resZeroOrder = zeroOrderService.order(zeroOrder);
             return ResponseEntity.ok(resZeroOrder);
         } catch (Exception e) {
@@ -165,7 +168,8 @@ public class ZeroOrderController {
     @GetMapping("list")
     public ResponseEntity<List<ZeroOrder>> list(@RequestParam("status") String status, @RequestParam("name") String name) {
         try {
-            return ResponseEntity.ok(zeroOrderService.list(status, name));
+            Long userId = WechatAuthInterceptor.getUserId();
+            return ResponseEntity.ok(zeroOrderService.list(userId, status, name));
         } catch (Exception e) {
             log.error("list order error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

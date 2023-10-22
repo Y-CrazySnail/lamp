@@ -46,27 +46,25 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     /**
      * Get user info
      *
-     * @param username username
+     * @param userId userId
      * @return user info
      */
     @Override
-    public ZeroUserExtra get(String username) {
-        log.info("get user info. username:{}", username);
-        QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
-        userExtraQueryWrapper.eq("username", username);
-        ZeroUserExtra userExtra = zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
+    public ZeroUserExtra get(Long userId) {
+        log.info("get user info. user id:{}", userId);
+        ZeroUserExtra userExtra = zeroUserExtraMapper.selectById(userId);
         if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag() == 1) {
             Integer referrerUserCount = 0;
             Integer referrerOrderCount = 0;
             // 直接推荐
             if (Objects.equals(Constant.BOOLEAN_TRUE, environment.getProperty("distribution.direct.switch"))) {
-                referrerUserCount += getDirectReferrerUserCount(username);
-                referrerOrderCount += zeroOrderService.getDirectReferrerOrderCount(username);
+                referrerUserCount += getDirectReferrerUserCount(userId);
+                referrerOrderCount += zeroOrderService.getDirectReferrerOrderCount(userId);
             }
             // 间接推荐
             if (Objects.equals(Constant.BOOLEAN_TRUE, environment.getProperty("distribution.direct.switch"))) {
-                referrerUserCount += getIndirectReferrerUserCount(username);
-                referrerOrderCount += zeroOrderService.getIndirectReferrerOrderCount(username);
+                referrerUserCount += getIndirectReferrerUserCount(userId);
+                referrerOrderCount += zeroOrderService.getIndirectReferrerOrderCount(userId);
             }
             userExtra.setReferrerUserCount(referrerUserCount);
             userExtra.setReferrerOrderCount(referrerOrderCount);
@@ -81,58 +79,51 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         return zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
     }
 
-    /**
-     * Update user info
-     *
-     * @param zeroUserExtra user info
-     * @return status
-     */
     @Override
-    public ZeroUserExtra update(ZeroUserExtra zeroUserExtra) {
-        UpdateWrapper<ZeroUserExtra> zeroUserExtraUpdateWrapper = new UpdateWrapper<>();
-        zeroUserExtraUpdateWrapper.eq("username", OauthUtils.getUsername());
-        zeroUserExtraMapper.update(zeroUserExtra, zeroUserExtraUpdateWrapper);
-        return zeroUserExtra;
+    public ZeroUserExtra getByWechatOpenId(String openId) {
+        QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
+        userExtraQueryWrapper.eq("wechat_open_id", openId);
+        return zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
     }
 
     @Override
-    public List<ZeroUserExtra> distribution(String username, String nickName) {
-        return baseMapper.distribution(username, nickName);
+    public List<ZeroUserExtra> distribution(Long userId, String nickName) {
+        return baseMapper.distribution(userId, nickName);
     }
 
     @Override
-    public Integer getDirectReferrerUserCount(String username) {
+    public Integer getDirectReferrerUserCount(Long userId) {
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
-        zeroUserExtraQueryWrapper.eq("direct_referrer_username", username);
+        zeroUserExtraQueryWrapper.eq("direct_referrer_user_id", userId);
         zeroUserExtraQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         return zeroUserExtraMapper.selectCount(zeroUserExtraQueryWrapper);
     }
 
     @Override
-    public Integer getIndirectReferrerUserCount(String username) {
+    public Integer getIndirectReferrerUserCount(Long userId) {
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
-        zeroUserExtraQueryWrapper.eq("indirect_referrer_username", username);
+        zeroUserExtraQueryWrapper.eq("indirect_referrer_user_id", userId);
         zeroUserExtraQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
         return zeroUserExtraMapper.selectCount(zeroUserExtraQueryWrapper);
     }
 
     @Override
-    public void addBalance(String username, BigDecimal amount) {
-        zeroUserExtraMapper.addBalance(username, amount);
+    public void addBalance(Long userId, BigDecimal amount) {
+        zeroUserExtraMapper.addBalance(userId, amount);
     }
 
     @Override
-    public void subtractBalance(String username, BigDecimal amount) {
-        zeroUserExtraMapper.subtractBalance(username, amount);
+    public void subtractBalance(Long userId, BigDecimal amount) {
+        zeroUserExtraMapper.subtractBalance(userId, amount);
     }
 
     @Override
-    public void addTodoBalance(String username, BigDecimal amount) {
-        zeroUserExtraMapper.addTodoBalance(username, amount);
+    public void addTodoBalance(Long userId, BigDecimal amount) {
+        zeroUserExtraMapper.addTodoBalance(userId, amount);
     }
 
     @Override
-    public void subtractTodoBalance(String username, BigDecimal amount) {
-        zeroUserExtraMapper.subtractTodoBalance(username, amount);
+    public void subtractTodoBalance(Long userId, BigDecimal amount) {
+        zeroUserExtraMapper.subtractTodoBalance(userId, amount);
     }
 }

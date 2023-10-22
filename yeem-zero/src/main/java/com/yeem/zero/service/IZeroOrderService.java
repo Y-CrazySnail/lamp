@@ -34,13 +34,13 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
      */
     ZeroOrder getById(Long id);
 
-    List<ZeroOrder> list(String status, String name);
+    List<ZeroOrder> list(Long userId, String status, String name);
 
     List<ZeroOrder> distribution(String nickName);
 
     void remove(Long id);
 
-    Integer getDirectReferrerOrderCount(String username);
+    Integer getDirectReferrerOrderCount(Long userId);
 
-    Integer getIndirectReferrerOrderCount(String username);
+    Integer getIndirectReferrerOrderCount(Long userId);
 }

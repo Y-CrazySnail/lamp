@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
 //@TableName(value = "zero_refund", autoResultMap = true)
-public class ZeroRefund  extends BaseEntity {
+public class ZeroRefund extends BaseEntity {
     private Long orderId;
     private String refundId;
     private String outRefundNo;

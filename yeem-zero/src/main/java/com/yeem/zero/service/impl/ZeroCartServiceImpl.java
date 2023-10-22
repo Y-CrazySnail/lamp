@@ -36,15 +36,9 @@ public class ZeroCartServiceImpl extends ServiceImpl<ZeroCartMapper, ZeroCart> i
 
     @Override
     public boolean save(ZeroCart zeroCart) {
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
-        if (StringUtils.isEmpty(zeroUserExtra)) {
-            throw new RuntimeException("user info is null when save cart");
-        }
-        zeroCart.setUserId(zeroUserExtra.getUserId());
         // 判断
         QueryWrapper<ZeroCart> zeroCartQueryWrapper = new QueryWrapper<>();
-        zeroCartQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroCartQueryWrapper.eq("user_id", zeroCart.getUserId());
         zeroCartQueryWrapper.eq("product_id", zeroCart.getProductId());
         zeroCartQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), "0");
         List<ZeroCart> existZeroCartList = zeroCartMapper.selectList(zeroCartQueryWrapper);
@@ -60,15 +54,10 @@ public class ZeroCartServiceImpl extends ServiceImpl<ZeroCartMapper, ZeroCart> i
     }
 
     @Override
-    public List<ZeroCart> listByUsername() {
-        String username = OauthUtils.getUsername();
-        ZeroUserExtra zeroUserExtra = zeroUserExtraService.get(username);
-        if (StringUtils.isEmpty(zeroUserExtra)) {
-            throw new RuntimeException("user info is null when save cart");
-        }
+    public List<ZeroCart> listByUserId(Long userId) {
         QueryWrapper<ZeroCart> zeroCartQueryWrapper = new QueryWrapper<>();
         zeroCartQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
-        zeroCartQueryWrapper.eq("user_id", zeroUserExtra.getUserId());
+        zeroCartQueryWrapper.eq("user_id", userId);
         List<ZeroCart> zeroCartList = zeroCartMapper.selectList(zeroCartQueryWrapper);
         zeroCartList.forEach(zeroCart -> {
             ZeroProduct zeroProduct = zeroProductService.getById(zeroCart.getProductId());

@@ -21,7 +21,7 @@ import java.io.IOException;
 
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-tencent-cos")
+@RequestMapping("/wechat/zero-tencent-cos")
 public class ZeroTencentCosController {
 
     @Autowired

@@ -2,6 +2,7 @@ package com.yeem.zero.controller.wechat;
 
 import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroCart;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroCartService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-cart")
+@RequestMapping("/wechat/zero-cart")
 public class ZeroCartController {
 
     @Autowired
@@ -32,7 +33,8 @@ public class ZeroCartController {
     @GetMapping("list")
     public ResponseEntity<List<ZeroCart>> list() {
         try {
-            List<ZeroCart> zeroCartList = zeroCartService.listByUsername();
+            Long userId = WechatAuthInterceptor.getUserId();
+            List<ZeroCart> zeroCartList = zeroCartService.listByUserId(userId);
             return ResponseEntity.ok(zeroCartList);
         } catch (Exception e) {
             log.error("list cart error:", e);
@@ -50,6 +52,8 @@ public class ZeroCartController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody ZeroCart zeroCart) {
         try {
+            Long userId = WechatAuthInterceptor.getUserId();
+            zeroCart.setUserId(userId);
             zeroCartService.save(zeroCart);
             return ResponseEntity.ok("save product to cart success");
         } catch (Exception e) {

@@ -1,8 +1,3 @@
 permit-url:
-  - /wechat-zero-auth/login
-  - /wechat-zero-category/list
-  - /wechat-zero-address/test
-  - /wechat-zero-payment/callback
-  - /wechat-zero-product/recommend
-  - /wechat-zero-product/list-by-name
   - /manager-zero-tencent-cos/upload
+  - /wechat/**

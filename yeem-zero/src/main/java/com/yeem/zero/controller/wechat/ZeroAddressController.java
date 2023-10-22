@@ -1,8 +1,8 @@
 package com.yeem.zero.controller.wechat;
 
 import com.yeem.log.OperateLog;
-import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroAddress;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroAddressService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/wechat-zero-address")
+@RequestMapping("/wechat/zero-address")
 public class ZeroAddressController {
 
     @Autowired
@@ -35,15 +35,11 @@ public class ZeroAddressController {
      * @apiNote 根据用户名查询地址列表
      */
     @OperateLog(operateModule = "地址模块", operateType = "查询列表", operateDesc = "查询地址列表")
-    @GetMapping("listByUsername")
-    public ResponseEntity<List<ZeroAddress>> listByUsername() {
+    @GetMapping("list")
+    public ResponseEntity<List<ZeroAddress>> list() {
         try {
-            String username = OauthUtils.getUsername();
-            if (StringUtils.isEmpty(username)) {
-                log.error("user has not logged in");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
-            return ResponseEntity.ok(zeroAddressService.listByUsername(username));
+            Long userId = WechatAuthInterceptor.getUserId();
+            return ResponseEntity.ok(zeroAddressService.listByUserId(userId));
         } catch (Exception e) {
             log.error("list address error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -61,6 +57,8 @@ public class ZeroAddressController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody ZeroAddress zeroAddress) {
         try {
+            Long userId = WechatAuthInterceptor.getUserId();
+            zeroAddress.setUserId(userId);
             zeroAddressService.save(zeroAddress);
             return ResponseEntity.ok("save address success");
         } catch (Exception e) {
@@ -109,7 +107,6 @@ public class ZeroAddressController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("remove address error");
         }
     }
-//
 //    @GetMapping("test")
 //    public ResponseEntity<Object> test() {
 //        String localFilePath = "/Users/snail/Desktop/logo.png";
