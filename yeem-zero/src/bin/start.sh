@@ -47,5 +47,6 @@ while [ $COUNT -lt 1 ]; do
 done
 
 echo "OK!"
+echo "tail -f /data/yeem/java/logs/yeem-zero/info.log"
 PIDS=`ps -f | grep java | grep "$DEPLOY_DIR" | awk '{print $2}'`
 echo "PID: $PIDS"

@@ -55,8 +55,8 @@ public class ZeroUserController {
             log.info("sessionKey:{}", sessionKey);
             ZeroUserExtra checkZeroUserExtra = zeroUserExtraService.getByWechatOpenId(openId);
             if (StringUtils.isEmpty(checkZeroUserExtra) || StringUtils.isEmpty(checkZeroUserExtra.getId())) {
-                checkZeroUserExtra.setWechatOpenId(openId);
-                zeroUserExtraService.save(checkZeroUserExtra);
+                zeroUserExtra.setWechatOpenId(openId);
+                zeroUserExtraService.save(zeroUserExtra);
             }
             ZeroUserExtra resZeroUserExtra = zeroUserExtraService.getByWechatOpenId(openId);
             resZeroUserExtra.setSessionKey(sessionKey);
@@ -70,10 +70,10 @@ public class ZeroUserController {
     }
 
     /**
-     * 小程序登录
+     * 小程序手机号解析
      *
-     * @return 登录信息
-     * @apiNote 小程序登录
+     * @return 用户信息
+     * @apiNote 小程序手机号解析
      */
     @PostMapping("phone")
     public ResponseEntity<ZeroUserExtra> phone(@RequestBody ZeroUserExtra zeroUserExtra) {
