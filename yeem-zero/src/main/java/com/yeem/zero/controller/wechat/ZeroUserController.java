@@ -90,10 +90,9 @@ public class ZeroUserController {
             throw new RuntimeException("decryption phone number error");
         }
         Long id = WechatAuthInterceptor.getUserId();
-        UpdateWrapper<ZeroUserExtra> userExtraUpdateWrapper = new UpdateWrapper<>();
-        userExtraUpdateWrapper.set("phone_number", phoneNumber);
-        userExtraUpdateWrapper.eq("id", id);
-        zeroUserExtraService.update(userExtraUpdateWrapper);
+        zeroUserExtra.setId(id);
+        zeroUserExtra.setPhoneNumber(phoneNumber);
+        zeroUserExtraService.updateById(zeroUserExtra);
         ZeroUserExtra zeroUserExtraRes = zeroUserExtraService.getById(id);
         return ResponseEntity.ok(zeroUserExtraRes);
     }

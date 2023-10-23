@@ -45,10 +45,6 @@ public class ZeroUserExtra extends BaseEntity {
      */
     private String avatarUrl;
     /**
-     * 性别 0未知 1男 2女
-     */
-    private Integer gender;
-    /**
      * 手机号
      */
     private String phoneNumber;
@@ -146,14 +142,6 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
     }
 
     public String getPhoneNumber() {

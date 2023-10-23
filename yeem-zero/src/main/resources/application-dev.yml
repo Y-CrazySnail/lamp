@@ -71,7 +71,7 @@ wechat:
     merchant-id: 1647282072
     private-key-path: /data/yeem/config/zero_merchant_cert/apiclient_key.pem
     merchant-serial-number: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
-    api-v3-key: d67i4K3rgJNGIs8YU2x1R783joOhlVDq
+    api-v3-key: B61f71a8be99439ca828542791b80000
     notify-url: https://edreamroom.com/zero-api/wechat-zero-payment/callback
 
 # 腾讯云COS存储

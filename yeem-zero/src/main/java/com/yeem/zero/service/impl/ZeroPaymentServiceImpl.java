@@ -59,7 +59,13 @@ public class ZeroPaymentServiceImpl extends ServiceImpl<ZeroPaymentMapper, ZeroP
         String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
         String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
         String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
-
+        log.info("active:{}", active);
+        log.info("openId:{}", openId);
+        log.info("appId:{}", appId);
+        log.info("merchantId:{}", merchantId);
+        log.info("privateKeyPath:{}", privateKeyPath);
+        log.info("merchantSerialNumber:{}", merchantSerialNumber);
+        log.info("apiV3Key:{}", apiV3Key);
         RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
                 .merchantId(merchantId)
                 .privateKeyFromPath(privateKeyPath)
