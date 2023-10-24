@@ -101,4 +101,21 @@ public class ZeroMOrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 退款
+     *
+     * @param zeroOrder 订单信息
+     * @apiNote 退款
+     */
+    @PostMapping("refund")
+    public ResponseEntity<Object> wechatRefund(@RequestBody ZeroOrder zeroOrder) {
+        try {
+            zeroOrderService.wechatRefund(zeroOrder);
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            log.error("wechat refund error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.yeem.zero.service;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.yeem.zero.entity.ZeroCart;
 import com.yeem.zero.entity.ZeroOrder;
 
@@ -43,4 +44,8 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
     Integer getDirectReferrerOrderCount(Long userId);
 
     Integer getIndirectReferrerOrderCount(Long userId);
+
+    void paymentCallback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode);
+
+    void wechatRefund(ZeroOrder zeroOrder);
 }

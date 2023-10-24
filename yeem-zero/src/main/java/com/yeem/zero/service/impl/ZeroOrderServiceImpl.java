@@ -5,8 +5,24 @@ import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.wechat.pay.java.core.RSAAutoCertificateConfig;
+import com.wechat.pay.java.core.exception.ValidationException;
+import com.wechat.pay.java.core.notification.NotificationConfig;
+import com.wechat.pay.java.core.notification.NotificationParser;
+import com.wechat.pay.java.service.partnerpayments.jsapi.model.Transaction;
+import com.wechat.pay.java.service.payments.jsapi.JsapiServiceExtension;
+import com.wechat.pay.java.service.payments.jsapi.model.Amount;
+import com.wechat.pay.java.service.payments.jsapi.model.Payer;
+import com.wechat.pay.java.service.payments.jsapi.model.PrepayRequest;
 import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
+import com.wechat.pay.java.service.refund.RefundService;
+import com.wechat.pay.java.service.refund.model.AmountReq;
+import com.wechat.pay.java.service.refund.model.CreateRequest;
+import com.wechat.pay.java.service.refund.model.Refund;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.LogisticsUtils;
 import com.yeem.zero.config.Constant;
@@ -17,6 +33,7 @@ import com.yeem.zero.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -32,6 +49,9 @@ import java.util.stream.Collectors;
 public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder> implements IZeroOrderService {
 
     @Autowired
+    private Environment environment;
+
+    @Autowired
     private IZeroUserExtraService zeroUserExtraService;
 
     @Autowired
@@ -42,9 +62,6 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Autowired
     private IZeroProductService zeroProductService;
-
-    @Autowired
-    private IZeroPaymentService zeroPaymentService;
 
     @Autowired
     private IZeroAddressService zeroAddressService;
@@ -101,12 +118,10 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         calculateDirectBonus(zeroOrder, zeroUserExtra);
         // 间接分销相关
         calculateIndirectBonus(zeroOrder, zeroUserExtra);
-
         super.updateById(zeroOrder);
         // 预支付信息
-        PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
+        PrepayWithRequestPaymentResponse response = wechatPrepay(zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
-
         return zeroOrder;
     }
 
@@ -119,7 +134,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             throw new RuntimeException("user info is null when save cart");
         }
         zeroOrder = get(zeroOrder.getId());
-        PrepayWithRequestPaymentResponse response = zeroPaymentService.wechatPrepay(zeroUserExtra.getWechatOpenId(), zeroOrder);
+        PrepayWithRequestPaymentResponse response = wechatPrepay(zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
         return zeroOrder;
     }
@@ -435,5 +450,134 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Override
     public boolean updateById(ZeroOrder entity) {
         return super.updateById(entity);
+    }
+
+    /**
+     * 调起支付
+     *
+     * @param zeroOrder
+     * @return
+     */
+    private PrepayWithRequestPaymentResponse wechatPrepay(ZeroOrder zeroOrder) {
+        String openId = WechatAuthInterceptor.getOpenId();
+        String active = environment.getProperty("wechat.active");
+        String appId = environment.getProperty("wechat." + active + ".app-id");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+        String notifyUrl = environment.getProperty("wechat." + active + ".payment-notify-url");
+        // 组装校验配置信息
+        RSAAutoCertificateConfig rsaAutoCertificateConfig = new RSAAutoCertificateConfig.Builder()
+                .merchantId(merchantId)
+                .privateKeyFromPath(privateKeyPath)
+                .merchantSerialNumber(merchantSerialNumber)
+                .apiV3Key(apiV3Key)
+                .build();
+        JsapiServiceExtension service = new JsapiServiceExtension.Builder().config(rsaAutoCertificateConfig).build();
+        // 组装付款请求体
+        PrepayRequest prepayRequest = new PrepayRequest();
+        Amount amount = new Amount();
+        amount.setTotal(zeroOrder.getAmount().multiply(BigDecimal.valueOf(100)).intValue());
+        amount.setCurrency("CNY");
+        prepayRequest.setAmount(amount);
+        prepayRequest.setAppid(appId);
+        prepayRequest.setMchid(merchantId);
+        Payer payer = new Payer();
+        payer.setOpenid(openId);
+        prepayRequest.setPayer(payer);
+        prepayRequest.setDescription(zeroOrder.getOrderName());
+        prepayRequest.setNotifyUrl(notifyUrl);
+        prepayRequest.setOutTradeNo(zeroOrder.getOrderNo());
+        PrepayWithRequestPaymentResponse payment = service.prepayWithRequestPayment(prepayRequest);
+        payment.setSignType("MD5");
+        return payment;
+    }
+
+    public void paymentCallback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode) {
+        String active = environment.getProperty("wechat.active");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+        String body = null;
+        try {
+            body = new ObjectMapper().writeValueAsString(objectNode);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            com.wechat.pay.java.core.notification.RequestParam requestParam =
+                    new com.wechat.pay.java.core.notification.RequestParam.Builder()
+                            .serialNumber(serialNo)
+                            .nonce(nonce)
+                            .timestamp(timestamp)
+                            .signature(signature)
+                            .body(body)
+                            .build();
+            NotificationConfig config = new RSAAutoCertificateConfig.Builder()
+                    .merchantId(merchantId)
+                    .privateKeyFromPath(privateKeyPath)
+                    .merchantSerialNumber(merchantSerialNumber)
+                    .apiV3Key(apiV3Key)
+                    .build();
+            NotificationParser parser = new NotificationParser(config);
+            Transaction transaction = parser.parse(requestParam, Transaction.class);
+            log.info("wechat transaction info：{}", transaction);
+            QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+            zeroOrderQueryWrapper.eq("order_no", transaction.getOutTradeNo());
+            ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
+            zeroOrder.setStatus(Constant.ORDER_STATUS_PAY);
+            zeroOrder.setPaymentTransactionId(transaction.getTransactionId());
+            zeroOrder.setPaymentTradeType(transaction.getTradeType().name());
+            zeroOrder.setPaymentTradeState(transaction.getTradeState().name());
+            zeroOrder.setPaymentSuccessTime(transaction.getSuccessTime());
+            zeroOrder.setPaymentBankType(transaction.getBankType());
+            zeroOrder.setPaymentCurrency(transaction.getAmount().getCurrency());
+            zeroOrder.setPaymentTotal(Long.valueOf(transaction.getAmount().getTotal()));
+            super.updateById(zeroOrder);
+        } catch (ValidationException e) {
+            log.error("sign verification failed", e);
+        }
+    }
+
+    public void wechatRefund(ZeroOrder zeroOrder) {
+        String active = environment.getProperty("wechat.active");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+        String notifyUrl = environment.getProperty("wechat." + active + ".refund-notify-url");
+        // 组装校验配置信息
+        RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
+                .merchantId(merchantId)
+                .privateKeyFromPath(privateKeyPath)
+                .merchantSerialNumber(merchantSerialNumber)
+                .apiV3Key(apiV3Key)
+                .build();
+        RefundService refundService = new RefundService.Builder().config(config).build();
+        // 组装退款请求体
+        CreateRequest createRequest = new CreateRequest();
+        AmountReq amountReq = new AmountReq();
+        amountReq.setTotal(zeroOrder.getAmount().multiply(new BigDecimal(100)).longValue());
+        amountReq.setCurrency("CNY");
+        amountReq.setRefund(zeroOrder.getRefundAmount().multiply(BigDecimal.valueOf(100)).longValue());
+        createRequest.setAmount(amountReq);
+        createRequest.setOutTradeNo(zeroOrder.getOrderNo());
+        String outRefundNo = UUID.fastUUID().toString().replace("-", "");
+        createRequest.setOutRefundNo(outRefundNo);
+        createRequest.setNotifyUrl(notifyUrl);
+        Refund refund = refundService.create(createRequest);
+        log.info("refund response:{}", refund);
+        zeroOrder.setRefundId(refund.getRefundId());
+        zeroOrder.setRefundNo(refund.getOutRefundNo());
+        zeroOrder.setRefundReceivedAccount(refund.getUserReceivedAccount());
+        zeroOrder.setRefundSuccessTime(refund.getSuccessTime());
+        zeroOrder.setRefundChannel(refund.getChannel().name());
+        zeroOrder.setRefundStatus(refund.getStatus().name());
+        zeroOrder.setRefundFundsAccount(refund.getFundsAccount().name());
+        zeroOrder.setRefundPayerRefund(refund.getAmount().getPayerRefund());
+        zeroOrder.setRefundFee(refund.getAmount().getRefundFee());
+        super.updateById(zeroOrder);
     }
 }

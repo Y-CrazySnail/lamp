@@ -1,5 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.yeem.log.OperateLog;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.security.WechatAuthInterceptor;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -20,6 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/wechat/zero-order")
 public class ZeroOrderController {
+
+    private final static String HEADER_NAME_TIMESTAMP = "Wechatpay-Timestamp";
+    private final static String HEADER_NAME_NONCE = "Wechatpay-Nonce";
+    private final static String HEADER_NAME_SERIAL = "Wechatpay-Serial";
+    private final static String HEADER_NAME_SIGNATURE = "Wechatpay-Signature";
 
     @Autowired
     private IZeroOrderService zeroOrderService;
@@ -229,6 +236,29 @@ public class ZeroOrderController {
         } catch (Exception e) {
             log.error("remove order error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("remove order error");
+        }
+    }
+
+    /**
+     * 支付回调
+     *
+     * @param objectNode 支付回调参数
+     * @param request    request
+     * @return 回调状态
+     */
+    @OperateLog(operateModule = "支付模块", operateType = "支付回调", operateDesc = "支付回调")
+    @PostMapping("paymentCallback")
+    public ResponseEntity<Object> callback(@RequestBody ObjectNode objectNode, HttpServletRequest request) {
+        try {
+            String timestamp = request.getHeader(HEADER_NAME_TIMESTAMP);
+            String nonce = request.getHeader(HEADER_NAME_NONCE);
+            String serialNo = request.getHeader(HEADER_NAME_SERIAL);
+            String signature = request.getHeader(HEADER_NAME_SIGNATURE);
+            zeroOrderService.paymentCallback(timestamp, nonce, serialNo, signature, objectNode);
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            log.error("notify error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("notify error");
         }
     }
 }

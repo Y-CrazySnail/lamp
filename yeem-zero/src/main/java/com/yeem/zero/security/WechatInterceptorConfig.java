@@ -7,11 +7,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Slf4j
 @Configuration
-public class InterceptorConfig implements WebMvcConfigurer {
+public class WechatInterceptorConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new WechatAuthInterceptor())
                 .addPathPatterns("/wechat/**")
-                .excludePathPatterns("/wechat/zero-user/login");
+                .excludePathPatterns("/wechat/zero-user/login")
+                .excludePathPatterns("/wechat/zero-order/paymentCallback");
     }
 }
