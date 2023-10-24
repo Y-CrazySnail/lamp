@@ -69,7 +69,7 @@ wechat:
     app-id: wx9cb140f2eacb6870
     app-secret: b873d35be8357186fc8f90c48edb24a9
     merchant-id: 1647282072
-    private-key-path: /data/yeem/config/zero_merchant_cert/apiclient_key.pem
+    private-key-path: /data/yeem/config/yeem_merchant_cert/apiclient_key.pem
     merchant-serial-number: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
     api-v3-key: B61f71a8be99439ca828542791b80000
     notify-url: https://edreamroom.com/zero-api/wechat-zero-payment/callback
