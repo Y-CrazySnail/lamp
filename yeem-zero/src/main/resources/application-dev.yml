@@ -72,8 +72,8 @@ wechat:
     private-key-path: /data/yeem/config/yeem_merchant_cert/apiclient_key.pem
     merchant-serial-number: 674BEAFC9E28B3AB4D77803D6529F1F9B10E87D5
     api-v3-key: B61f71a8be99439ca828542791b80000
-    payment-notify-url: https://yeemcloud.com/dev-zero-api/wechat/zero-order/paymentCallback
-    refund-notify-url: https://yeemcloud.com/zero-api/wechat-zero-payment/refundCallback
+    payment-notify-url: https://yeemcloud.com/zero-dev-api/wechat/zero-order/paymentCallback
+    refund-notify-url: https://yeemcloud.com/zero-dev-api/wechat/zero-order/refundCallback
 
 # 腾讯云COS存储
 tencent:

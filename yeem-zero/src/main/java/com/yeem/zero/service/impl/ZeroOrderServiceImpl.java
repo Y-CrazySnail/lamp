@@ -580,4 +580,44 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setRefundFee(refund.getAmount().getRefundFee());
         super.updateById(zeroOrder);
     }
+
+    public void refundCallback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode) {
+        String active = environment.getProperty("wechat.active");
+        String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
+        String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
+        String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
+        String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
+        String body = null;
+        try {
+            body = new ObjectMapper().writeValueAsString(objectNode);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            com.wechat.pay.java.core.notification.RequestParam requestParam =
+                    new com.wechat.pay.java.core.notification.RequestParam.Builder()
+                            .serialNumber(serialNo)
+                            .nonce(nonce)
+                            .timestamp(timestamp)
+                            .signature(signature)
+                            .body(body)
+                            .build();
+            NotificationConfig config = new RSAAutoCertificateConfig.Builder()
+                    .merchantId(merchantId)
+                    .privateKeyFromPath(privateKeyPath)
+                    .merchantSerialNumber(merchantSerialNumber)
+                    .apiV3Key(apiV3Key)
+                    .build();
+            NotificationParser parser = new NotificationParser(config);
+            Transaction transaction = parser.parse(requestParam, Transaction.class);
+            log.info("wechat transaction info：{}", transaction);
+            QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
+            zeroOrderQueryWrapper.eq("order_no", transaction.getOutTradeNo());
+            ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
+            zeroOrder.setPaymentSuccessTime(transaction.getSuccessTime());
+            super.updateById(zeroOrder);
+        } catch (ValidationException e) {
+            log.error("sign verification failed", e);
+        }
+    }
 }

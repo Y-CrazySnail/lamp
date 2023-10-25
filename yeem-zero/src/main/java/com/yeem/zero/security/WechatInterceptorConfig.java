@@ -13,6 +13,7 @@ public class WechatInterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new WechatAuthInterceptor())
                 .addPathPatterns("/wechat/**")
                 .excludePathPatterns("/wechat/zero-user/login")
+                .excludePathPatterns("/wechat/zero-order/refundCallback")
                 .excludePathPatterns("/wechat/zero-order/paymentCallback");
     }
 }

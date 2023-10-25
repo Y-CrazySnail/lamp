@@ -48,4 +48,6 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
     void paymentCallback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode);
 
     void wechatRefund(ZeroOrder zeroOrder);
+
+    void refundCallback(String timestamp, String nonce, String serialNo, String signature, ObjectNode objectNode);
 }

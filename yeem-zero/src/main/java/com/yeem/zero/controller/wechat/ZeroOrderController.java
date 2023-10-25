@@ -261,4 +261,27 @@ public class ZeroOrderController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("notify error");
         }
     }
+
+    /**
+     * 退款回调
+     *
+     * @param objectNode 退款回调参数
+     * @param request    request
+     * @return 回调状态
+     */
+    @OperateLog(operateModule = "支付模块", operateType = "退款回调", operateDesc = "退款回调")
+    @PostMapping("refundCallback")
+    public ResponseEntity<Object> refundCallback(@RequestBody ObjectNode objectNode, HttpServletRequest request) {
+        try {
+            String timestamp = request.getHeader(HEADER_NAME_TIMESTAMP);
+            String nonce = request.getHeader(HEADER_NAME_NONCE);
+            String serialNo = request.getHeader(HEADER_NAME_SERIAL);
+            String signature = request.getHeader(HEADER_NAME_SIGNATURE);
+            zeroOrderService.refundCallback(timestamp, nonce, serialNo, signature, objectNode);
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            log.error("notify error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("notify error");
+        }
+    }
 }
