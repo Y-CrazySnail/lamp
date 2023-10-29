@@ -1,6 +1,5 @@
 package com.yeem.zero.controller.wechat;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yeem.common.dto.WxLoginResponse;
 import com.yeem.common.utils.WechatJWTUtils;
 import com.yeem.common.utils.WechatUtils;
@@ -60,8 +59,10 @@ public class ZeroUserController {
             }
             ZeroUserExtra resZeroUserExtra = zeroUserExtraService.getByWechatOpenId(openId);
             resZeroUserExtra.setSessionKey(sessionKey);
-            String token = WechatJWTUtils.generateJWT(active, resZeroUserExtra.getId(), openId);
-            resZeroUserExtra.setToken(token);
+            if (!StringUtils.isEmpty(resZeroUserExtra.getPhoneNumber())) {
+                String token = WechatJWTUtils.generateJWT(active, resZeroUserExtra.getId(), resZeroUserExtra.getWechatOpenId());
+                resZeroUserExtra.setToken(token);
+            }
             return ResponseEntity.ok(resZeroUserExtra);
         } catch (IOException e) {
             log.error("wx login api error：", e);
@@ -77,6 +78,7 @@ public class ZeroUserController {
      */
     @PostMapping("phone")
     public ResponseEntity<ZeroUserExtra> phone(@RequestBody ZeroUserExtra zeroUserExtra) {
+        String active = environment.getProperty("wechat.active");
         String phoneNumber = null;
         try {
             phoneNumber = WechatUtils.decryptPhone(
@@ -89,11 +91,13 @@ public class ZeroUserController {
         if (StringUtils.isEmpty(phoneNumber)) {
             throw new RuntimeException("decryption phone number error");
         }
-        Long id = WechatAuthInterceptor.getUserId();
-        zeroUserExtra.setId(id);
+        ZeroUserExtra zeroUserExtraSet = zeroUserExtraService.getByWechatOpenId(zeroUserExtra.getWechatOpenId());
+        zeroUserExtra.setId(zeroUserExtraSet.getId());
         zeroUserExtra.setPhoneNumber(phoneNumber);
         zeroUserExtraService.updateById(zeroUserExtra);
-        ZeroUserExtra zeroUserExtraRes = zeroUserExtraService.getById(id);
+        ZeroUserExtra zeroUserExtraRes = zeroUserExtraService.getById(zeroUserExtraSet.getId());
+        String token = WechatJWTUtils.generateJWT(active, zeroUserExtraRes.getId(), zeroUserExtraRes.getWechatOpenId());
+        zeroUserExtraRes.setToken(token);
         return ResponseEntity.ok(zeroUserExtraRes);
     }
 

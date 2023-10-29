@@ -615,6 +615,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderQueryWrapper.eq("order_no", transaction.getOutTradeNo());
             ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
             zeroOrder.setRefundSuccessTime(transaction.getSuccessTime());
+            zeroOrder.setRefundFlag(Integer.valueOf(Constant.BOOLEAN_TRUE));
             super.updateById(zeroOrder);
         } catch (ValidationException e) {
             log.error("sign verification failed", e);
