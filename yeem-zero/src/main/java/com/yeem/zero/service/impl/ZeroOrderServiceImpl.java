@@ -44,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.yeem.zero.config.Constant.ORDER_REFUND_TYPE_REFUND;
+
 @Slf4j
 @Service
 public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder> implements IZeroOrderService {
@@ -542,6 +544,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     public void wechatRefund(ZeroOrder zeroOrder) {
+        zeroOrder = get(zeroOrder.getId());
         String active = environment.getProperty("wechat.active");
         String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
         String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
@@ -616,6 +619,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
             zeroOrder.setRefundSuccessTime(transaction.getSuccessTime());
             zeroOrder.setRefundFlag(Integer.valueOf(Constant.BOOLEAN_TRUE));
+            if (ORDER_REFUND_TYPE_REFUND.equals(zeroOrder.getRefundType())) {
+                zeroOrder.setStatus(Constant.ORDER_STATUS_CLOSE);
+            }
             super.updateById(zeroOrder);
         } catch (ValidationException e) {
             log.error("sign verification failed", e);

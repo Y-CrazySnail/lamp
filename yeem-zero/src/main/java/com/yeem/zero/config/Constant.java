@@ -37,4 +37,11 @@ public class Constant {
     public static final String REFUND_ED = "1";
     public static final String REFUND_TODO = "0";
     public static final String REFUND_ING = "-1";
+
+    /**
+     * 1 仅退款
+     * 2 退货退款
+     */
+    public static final String ORDER_REFUND_TYPE_ONLY_REFUND = "1";
+    public static final String ORDER_REFUND_TYPE_REFUND = "2";
 }

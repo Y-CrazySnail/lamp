@@ -49,6 +49,7 @@ public class ZeroMOrderController {
         if (!StringUtils.isEmpty(status)) {
             zeroOrderQueryWrapper.eq("status", status);
         }
+        zeroOrderQueryWrapper.orderByAsc("status");
         try {
             return ResponseEntity.ok(zeroOrderService.page(page, zeroOrderQueryWrapper));
         } catch (Exception e) {

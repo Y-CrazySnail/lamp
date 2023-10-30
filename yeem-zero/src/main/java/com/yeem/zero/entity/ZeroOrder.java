@@ -143,12 +143,14 @@ public class ZeroOrder extends BaseEntity {
      * 微信支付退款号
      */
     private String refundId;
-
     /**
      * 商户订单号，原支付交易对应的商户订单号
      */
     private String refundNo;
-
+    /**
+     * 退款类型 1仅退款 2退货退款
+     */
+    private String refundType;
     /**
      * 退款入账账户，当前退款单的退款入账方，有以下几种情况：
      * 1）退回银行卡：{银行名称}{卡类型}{卡尾号}
@@ -481,6 +483,14 @@ public class ZeroOrder extends BaseEntity {
 
     public String getRefundNo() {
         return refundNo;
+    }
+
+    public String getRefundType() {
+        return refundType;
+    }
+
+    public void setRefundType(String refundType) {
+        this.refundType = refundType;
     }
 
     public void setRefundNo(String refundNo) {
