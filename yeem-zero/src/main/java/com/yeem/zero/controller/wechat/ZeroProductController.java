@@ -1,7 +1,7 @@
 package com.yeem.zero.controller.wechat;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -30,7 +30,6 @@ public class ZeroProductController {
      * @return 商品信息列表
      * @apiNote 根据名称模糊查询商品列表
      */
-    @OperateLog(operateModule = "商品模块", operateType = "模糊查询商品列表", operateDesc = "根据名称模糊查询商品列表")
     @GetMapping("/list-by-name")
     public ResponseEntity<Object> listByName(@RequestParam("name") String name) {
         try {
@@ -47,7 +46,6 @@ public class ZeroProductController {
      * @return 推荐商品列表
      * @apiNote 查询推荐商品列表
      */
-    @OperateLog(operateModule = "商品模块", operateType = "查询推荐商品列表", operateDesc = "查询推荐商品列表")
     @GetMapping("/recommend")
     public ResponseEntity<Object> recommend() {
         try {
@@ -65,7 +63,6 @@ public class ZeroProductController {
      * @return 商品信息
      * @apiNote 根据商品ID查询
      */
-    @OperateLog(operateModule = "商品模块", operateType = "查询商品信息", operateDesc = "根据ID查询商品信息")
     @GetMapping("/get")
     public ResponseEntity<Object> get(@RequestParam("id") Long id) {
         ZeroProduct zeroProduct;

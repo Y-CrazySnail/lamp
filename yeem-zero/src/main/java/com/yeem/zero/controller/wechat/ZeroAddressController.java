@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroAddress;
 import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroAddressService;
@@ -34,7 +34,6 @@ public class ZeroAddressController {
      * @return 地址信息列表
      * @apiNote 根据用户名查询地址列表
      */
-    @OperateLog(operateModule = "地址模块", operateType = "查询列表", operateDesc = "查询地址列表")
     @GetMapping("list")
     public ResponseEntity<List<ZeroAddress>> list() {
         try {

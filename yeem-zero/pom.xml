@@ -23,11 +23,6 @@
             <version>1.0.0</version>
         </dependency>
         <dependency>
-            <groupId>com.yeem</groupId>
-            <artifactId>yeem-log</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>

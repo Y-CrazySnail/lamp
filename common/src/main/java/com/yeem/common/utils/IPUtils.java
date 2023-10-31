@@ -1,9 +1,11 @@
 package com.yeem.common.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Slf4j
 public class IPUtils {
     /**
      * 获取IP
@@ -12,6 +14,7 @@ public class IPUtils {
      * @return IP
      */
     public static String getIpAddress(HttpServletRequest request) {
+        log.info(request.getRemoteHost());
         String xRealIP = request.getHeader("X-Real-IP");
         String xForwardedFor = request.getHeader("X-Forwarded-For");
         // 多次反向代理后会有多个ip值，第一个ip才是真实ip

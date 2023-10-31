@@ -3,7 +3,7 @@ package com.yeem.zero.controller.web;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.service.IZeroUserExtraService;
@@ -36,9 +36,8 @@ public class ZeroMUserController {
      */
     @GetMapping("page")
     public ResponseEntity<IPage<ZeroUserExtra>> getPage(@RequestParam("current") Integer current,
-                                                    @RequestParam("size") Integer size,
-                                                    @RequestParam(value = "userId", required = false) Long userId,
-                                                    @RequestParam(value = "nickName", required = false) String nickName) {
+                                                        @RequestParam("size") Integer size,
+                                                        @RequestParam(value = "nickName", required = false) String nickName) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -47,9 +46,6 @@ public class ZeroMUserController {
         }
         IPage<ZeroUserExtra> page = new Page<>(current, size);
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(userId)) {
-            zeroUserExtraQueryWrapper.eq("id", userId);
-        }
         if (!StringUtils.isEmpty(nickName)) {
             zeroUserExtraQueryWrapper.eq("nick_name", nickName);
         }

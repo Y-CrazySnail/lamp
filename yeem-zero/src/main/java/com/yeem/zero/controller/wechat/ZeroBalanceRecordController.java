@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroBalanceRecord;
 import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroBalanceRecordService;

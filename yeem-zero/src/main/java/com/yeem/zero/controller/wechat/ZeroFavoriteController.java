@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroFavorite;
 import com.yeem.zero.entity.ZeroUserExtra;
@@ -35,7 +35,6 @@ public class ZeroFavoriteController {
      * @return 收藏列表信息
      * @apiNote 根据用户名查询收藏列表
      */
-    @OperateLog(operateModule = "收藏模块", operateType = "查询列表", operateDesc = "查询收藏列表")
     @GetMapping("list")
     public ResponseEntity<List<ZeroFavorite>> list() {
         try {

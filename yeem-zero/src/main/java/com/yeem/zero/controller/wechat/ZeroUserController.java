@@ -3,7 +3,7 @@ package com.yeem.zero.controller.wechat;
 import com.yeem.common.dto.WxLoginResponse;
 import com.yeem.common.utils.WechatJWTUtils;
 import com.yeem.common.utils.WechatUtils;
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroUserExtraService;
@@ -107,7 +107,6 @@ public class ZeroUserController {
      * @return 用户信息
      * @apiNote 查询用户信息
      */
-    @OperateLog(operateModule = "用户模块", operateType = "查询用户信息", operateDesc = "查询用户信息")
     @GetMapping("get")
     public ResponseEntity<ZeroUserExtra> get() {
         Long userId = WechatAuthInterceptor.getUserId();

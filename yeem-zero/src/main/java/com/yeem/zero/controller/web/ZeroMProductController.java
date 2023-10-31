@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.common.entity.BaseEntity;
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.service.IZeroProductService;
@@ -78,7 +78,6 @@ public class ZeroMProductController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
         }
     }
-
 
     /**
      * 保存商品信息

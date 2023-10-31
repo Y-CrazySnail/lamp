@@ -44,7 +44,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.yeem.zero.config.Constant.ORDER_REFUND_TYPE_REFUND;
+import static com.yeem.zero.config.Constant.*;
 
 @Slf4j
 @Service
@@ -151,13 +151,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public void refund(ZeroOrder zeroOrder) {
-        zeroOrder.setRefundFlag(Integer.valueOf(Constant.REFUND_ING));
+        zeroOrder.setRefundFlag(REFUND_ING);
         super.updateById(zeroOrder);
     }
 
     @Override
     public void cancelRefund(ZeroOrder zeroOrder) {
-        zeroOrder.setRefundFlag(Integer.valueOf(Constant.REFUND_TODO));
+        zeroOrder.setRefundFlag(REFUND_TODO);
         super.updateById(zeroOrder);
     }
 
@@ -618,7 +618,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             zeroOrderQueryWrapper.eq("order_no", transaction.getOutTradeNo());
             ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
             zeroOrder.setRefundSuccessTime(transaction.getSuccessTime());
-            zeroOrder.setRefundFlag(Integer.valueOf(Constant.BOOLEAN_TRUE));
+            zeroOrder.setRefundFlag(REFUND_ED);
             if (ORDER_REFUND_TYPE_REFUND.equals(zeroOrder.getRefundType())) {
                 zeroOrder.setStatus(Constant.ORDER_STATUS_CLOSE);
             }

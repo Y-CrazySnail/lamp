@@ -1,7 +1,7 @@
 package com.yeem.zero.controller.wechat;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroOrderService;
@@ -171,7 +171,6 @@ public class ZeroOrderController {
      * @return 订单列表
      * @apiNote 查询订单列表
      */
-    @OperateLog(operateModule = "订单模块", operateType = "查询列表", operateDesc = "查询订单列表")
     @GetMapping("list")
     public ResponseEntity<List<ZeroOrder>> list(@RequestParam("status") String status, @RequestParam("name") String name) {
         try {
@@ -190,7 +189,6 @@ public class ZeroOrderController {
      * @return 订单列表
      * @apiNote 查询分销订单列表
      */
-    @OperateLog(operateModule = "订单模块", operateType = "查询分销订单列表", operateDesc = "查询分销订单列表")
     @GetMapping("distribution")
     public ResponseEntity<List<ZeroOrder>> distribution(@RequestParam("nickName") String nickname) {
         log.info("distribution order param:{}", nickname);
@@ -209,7 +207,6 @@ public class ZeroOrderController {
      * @return 订单信息
      * @apiNote 查询订单信息
      */
-    @OperateLog(operateModule = "订单模块", operateType = "查询", operateDesc = "查询订单信息")
     @GetMapping("get")
     public ResponseEntity<ZeroOrder> get(@RequestParam("id") Long id) {
         try {

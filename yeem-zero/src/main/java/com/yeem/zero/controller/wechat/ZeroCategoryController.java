@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroCategory;
 import com.yeem.zero.service.IZeroCategoryService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,6 @@ public class ZeroCategoryController {
      * @return 商品类别信息列表
      * @apiNote 查询商品类别信息列表
      */
-    @OperateLog(operateModule = "商品类别模块", operateType = "查询列表", operateDesc = "查询商品类别")
     @GetMapping("list")
     public ResponseEntity<List<ZeroCategory>> list() {
         List<ZeroCategory> zeroCategoryList;

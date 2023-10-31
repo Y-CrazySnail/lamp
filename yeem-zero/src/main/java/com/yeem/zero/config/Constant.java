@@ -34,9 +34,9 @@ public class Constant {
      * 0 未退款
      * -1 退款中
      */
-    public static final String REFUND_ED = "1";
-    public static final String REFUND_TODO = "0";
-    public static final String REFUND_ING = "-1";
+    public static final Integer REFUND_ED = 1;
+    public static final Integer REFUND_TODO = 0;
+    public static final Integer REFUND_ING = -1;
 
     /**
      * 1 仅退款

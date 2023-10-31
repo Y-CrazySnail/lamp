@@ -1,6 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
-import com.yeem.log.OperateLog;
+import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroCart;
 import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroCartService;
@@ -29,7 +29,6 @@ public class ZeroCartController {
      * @return 购物车列表信息
      * @apiNote 根据用户名查询购物车列表
      */
-    @OperateLog(operateModule = "购物车模块", operateType = "查询列表", operateDesc = "查询购物车列表")
     @GetMapping("list")
     public ResponseEntity<List<ZeroCart>> list() {
         try {
