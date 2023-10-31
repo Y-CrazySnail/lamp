@@ -1,5 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yeem.zero.log.OperateLog;
 import com.yeem.zero.entity.ZeroCart;
 import com.yeem.zero.security.WechatAuthInterceptor;
@@ -112,6 +113,25 @@ public class ZeroCartController {
         } catch (Exception e) {
             log.error("batch remove cart error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("batch remove cart error");
+        }
+    }
+
+    /**
+     * 购物车全选
+     *
+     * @return 购物车全选状态
+     * @apiNote 购物车全选
+     */
+    @PutMapping("check-all")
+    public ResponseEntity<Object> checkAll() {
+        try {
+            UpdateWrapper<ZeroCart> zeroCartUpdateWrapper = new UpdateWrapper<>();
+            zeroCartUpdateWrapper.set("check_flag", "1");
+            zeroCartService.update(zeroCartUpdateWrapper);
+            return ResponseEntity.ok("check all cart success");
+        } catch (Exception e) {
+            log.error("check all cart error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("check all cart error");
         }
     }
 }
