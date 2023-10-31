@@ -1,12 +1,18 @@
 package com.yeem.common.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 @Slf4j
 public class IPUtils {
+    private static final String UNKNOWN = "unknown";
+    private static final String LOCALHOST_IP = "127.0.0.1";
+    // 客户端与服务器同为一台机器，获取的 ip 有时候是 ipv6 格式
+    private static final String LOCALHOST_IPV6 = "0:0:0:0:0:0:0:1";
+    private static final String SEPARATOR = ",";
     /**
      * 获取IP
      *
@@ -14,37 +20,42 @@ public class IPUtils {
      * @return IP
      */
     public static String getIpAddress(HttpServletRequest request) {
-        log.info(request.getRemoteHost());
-        String xRealIP = request.getHeader("X-Real-IP");
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        // 多次反向代理后会有多个ip值，第一个ip才是真实ip
-        if (!StringUtils.isEmpty(xForwardedFor) && !"unKnown".equalsIgnoreCase(xForwardedFor)) {
-            int index = xForwardedFor.indexOf(",");
-            if (index != -1) {
-                return "0:0:0:0:0:0:0:1".equals(xForwardedFor.substring(0, index)) ? "127.0.0.1" : xForwardedFor.substring(0, index);
-            } else {
-                return "0:0:0:0:0:0:0:1".equals(xForwardedFor) ? "127.0.0.1" : xForwardedFor;
+        if (request == null) {
+            return "unknown";
+        }
+        String ip = request.getHeader("x-forwarded-for");
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Forwarded-For");
+        }
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("WL-Proxy-Client-IP");
+        }
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getHeader("X-Real-IP");
+        }
+        if (ip == null || ip.length() == 0 || UNKNOWN.equalsIgnoreCase(ip)) {
+            ip = request.getRemoteAddr();
+            if (LOCALHOST_IP.equalsIgnoreCase(ip) || LOCALHOST_IPV6.equalsIgnoreCase(ip)) {
+                // 根据网卡取本机配置的 IP
+                InetAddress iNet = null;
+                try {
+                    iNet = InetAddress.getLocalHost();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                if (iNet != null)
+                    ip = iNet.getHostAddress();
             }
         }
-        xForwardedFor = xRealIP;
-        if (!StringUtils.isEmpty(xForwardedFor) && !"unKnown".equalsIgnoreCase(xForwardedFor))
-            return "0:0:0:0:0:0:0:1".equals(xForwardedFor) ? "127.0.0.1" : xForwardedFor;
-
-        if (StringUtils.isEmpty(xForwardedFor) || "unknown".equalsIgnoreCase(xForwardedFor))
-            xForwardedFor = request.getHeader("Proxy-Client-IP");
-
-        if (StringUtils.isEmpty(xForwardedFor) || "unknown".equalsIgnoreCase(xForwardedFor))
-            xForwardedFor = request.getHeader("WL-Proxy-Client-IP");
-
-        if (StringUtils.isEmpty(xForwardedFor) || "unknown".equalsIgnoreCase(xForwardedFor))
-            xForwardedFor = request.getHeader("HTTP_CLIENT_IP");
-
-        if (StringUtils.isEmpty(xForwardedFor) || "unknown".equalsIgnoreCase(xForwardedFor))
-            xForwardedFor = request.getHeader("HTTP_X_FORWARDED_FOR");
-
-        if (StringUtils.isEmpty(xForwardedFor) || "unknown".equalsIgnoreCase(xForwardedFor))
-            xForwardedFor = request.getRemoteAddr();
-
-        return "0:0:0:0:0:0:0:1".equals(xForwardedFor) ? "127.0.0.1" : xForwardedFor;
+        // 对于通过多个代理的情况，分割出第一个 IP
+        if (ip != null && ip.length() > 15) {
+            if (ip.indexOf(SEPARATOR) > 0) {
+                ip = ip.substring(0, ip.indexOf(SEPARATOR));
+            }
+        }
+        return LOCALHOST_IPV6.equals(ip) ? LOCALHOST_IP : ip;
     }
 }
