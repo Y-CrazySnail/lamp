@@ -46,6 +46,22 @@ public class ZeroAddressController {
     }
 
     /**
+     * 根据地址ID查询地址信息
+     *
+     * @return 地址信息
+     * @apiNote 根据地址ID查询地址信息
+     */
+    @GetMapping("get-by-id")
+    public ResponseEntity<ZeroAddress> list(@RequestParam(value = "id") Long id) {
+        try {
+            return ResponseEntity.ok(zeroAddressService.getById(id));
+        } catch (Exception e) {
+            log.error("get address by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 保存地址信息
      *
      * @param zeroAddress 地址信息

@@ -56,4 +56,20 @@ public class ZeroMUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 根据ID获取用户信息
+     *
+     * @param id 用户ID
+     * @return 用户信息
+     */
+    @GetMapping(value = "getById")
+    public ResponseEntity<ZeroUserExtra> getPage(@RequestParam(value = "id", required = false) Long id) {
+        try {
+            return ResponseEntity.ok(zeroUserExtraService.get(id));
+        } catch (Exception e) {
+            log.error("get user by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
