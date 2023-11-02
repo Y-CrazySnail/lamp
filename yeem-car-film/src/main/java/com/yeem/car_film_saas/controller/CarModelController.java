@@ -4,7 +4,7 @@ import cn.hutool.http.HttpStatus;
 import com.yeem.car_film_saas.entity.CarBrand;
 import com.yeem.car_film_saas.entity.CarModel;
 import com.yeem.car_film_saas.service.ICarModelService;
-import com.yeem.log.OperateLog;
+import com.yeem.car_film_saas.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

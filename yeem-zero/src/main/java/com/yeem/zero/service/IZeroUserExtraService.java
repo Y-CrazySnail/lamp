@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface IZeroUserExtraService extends IService<ZeroUserExtra> {
-    ZeroUserExtra get(Long userId);
+    ZeroUserExtra getById(Long userId);
     ZeroUserExtra getByUserId(Long userId);
     ZeroUserExtra getByWechatOpenId(String openId);
     List<ZeroUserExtra> distribution(Long userId, String nickName);

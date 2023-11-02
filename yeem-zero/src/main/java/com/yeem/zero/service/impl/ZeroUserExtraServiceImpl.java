@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.config.Constant;
+import com.yeem.zero.entity.ZeroAddress;
 import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.mapper.ZeroUserExtraMapper;
+import com.yeem.zero.service.IZeroAddressService;
 import com.yeem.zero.service.IZeroOrderService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,8 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
 
     @Autowired
     private IZeroOrderService zeroOrderService;
+    @Autowired
+    private IZeroAddressService zeroAddressService;
 
     @DS("zero")
     @Override
@@ -50,7 +54,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
      * @return user info
      */
     @Override
-    public ZeroUserExtra get(Long userId) {
+    public ZeroUserExtra getById(Long userId) {
         log.info("get user info. user id:{}", userId);
         ZeroUserExtra userExtra = zeroUserExtraMapper.selectById(userId);
         if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag() == 1) {
@@ -69,6 +73,8 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
             userExtra.setReferrerUserCount(referrerUserCount);
             userExtra.setReferrerOrderCount(referrerOrderCount);
         }
+        List<ZeroAddress> zeroAddressList = zeroAddressService.listByUserId(userExtra.getId());
+        userExtra.setZeroAddressList(zeroAddressList);
         return userExtra;
     }
 

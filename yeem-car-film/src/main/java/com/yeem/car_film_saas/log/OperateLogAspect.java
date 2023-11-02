@@ -1,4 +1,4 @@
-package com.yeem.log;
+package com.yeem.car_film_saas.log;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.common.utils.IPUtils;
@@ -30,14 +30,14 @@ public class OperateLogAspect {
     private static ThreadLocal<Long> startTime = new ThreadLocal<>();
 
     // 设置操作日志切入点 记录操作日志 在注解的位置切入代码
-    @Pointcut("@annotation(com.yeem.log.OperateLog)")
+    @Pointcut("@annotation(com.yeem.car_film_saas.log.OperateLog)")
     public void operatePointCut() {
     }
 
     /**
      * 设置操作异常切入点记录异常日志 扫描所有controller包下操作
      */
-    @Pointcut("execution(* com.yeem.*.controller.*.*(..))")
+    @Pointcut("execution(* com.yeem.car_film_saas.*.controller.*.*(..))")
     public void operateExceptionPointCut() {
     }
 

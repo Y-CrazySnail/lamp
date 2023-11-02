@@ -112,7 +112,7 @@ public class ZeroUserController {
         Long userId = WechatAuthInterceptor.getUserId();
         ZeroUserExtra userExtra;
         try {
-            userExtra = zeroUserExtraService.get(userId);
+            userExtra = zeroUserExtraService.getById(userId);
         } catch (Exception e) {
             log.error("get user extra info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

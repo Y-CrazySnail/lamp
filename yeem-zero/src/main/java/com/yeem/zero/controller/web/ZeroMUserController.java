@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.zero.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroUserExtra;
+import com.yeem.zero.service.IZeroAddressService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class ZeroMUserController {
     @GetMapping(value = "getById")
     public ResponseEntity<ZeroUserExtra> getPage(@RequestParam(value = "id", required = false) Long id) {
         try {
-            return ResponseEntity.ok(zeroUserExtraService.get(id));
+            return ResponseEntity.ok(zeroUserExtraService.getById(id));
         } catch (Exception e) {
             log.error("get user by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

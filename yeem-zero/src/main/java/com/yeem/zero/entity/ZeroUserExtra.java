@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @TableName(value = "zero_user_extra", autoResultMap = true)
 public class ZeroUserExtra extends BaseEntity {
@@ -87,6 +88,11 @@ public class ZeroUserExtra extends BaseEntity {
      */
     @TableField(exist = false)
     private String token;
+    /**
+     * 地址列表
+     */
+    @TableField(exist = false)
+    private List<ZeroAddress> zeroAddressList;
 
     public Long getDirectReferrerUserId() {
         return directReferrerUserId;
@@ -230,5 +236,13 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public List<ZeroAddress> getZeroAddressList() {
+        return zeroAddressList;
+    }
+
+    public void setZeroAddressList(List<ZeroAddress> zeroAddressList) {
+        this.zeroAddressList = zeroAddressList;
     }
 }
