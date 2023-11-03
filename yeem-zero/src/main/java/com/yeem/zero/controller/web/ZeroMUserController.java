@@ -38,7 +38,9 @@ public class ZeroMUserController {
     @GetMapping("page")
     public ResponseEntity<IPage<ZeroUserExtra>> getPage(@RequestParam("current") Integer current,
                                                         @RequestParam("size") Integer size,
-                                                        @RequestParam(value = "nickName", required = false) String nickName) {
+                                                        @RequestParam(value = "nickName", required = false) String nickName,
+                                                        @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
+                                                        @RequestParam(value = "distributionFlag", required = false) Integer distributionFlag) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -48,7 +50,13 @@ public class ZeroMUserController {
         IPage<ZeroUserExtra> page = new Page<>(current, size);
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(nickName)) {
-            zeroUserExtraQueryWrapper.eq("nick_name", nickName);
+            zeroUserExtraQueryWrapper.like("nick_name", nickName);
+        }
+        if (!StringUtils.isEmpty(phoneNumber)) {
+            zeroUserExtraQueryWrapper.like("phone_number", phoneNumber);
+        }
+        if (!StringUtils.isEmpty(distributionFlag)) {
+            zeroUserExtraQueryWrapper.eq("distribution_flag", distributionFlag);
         }
         try {
             return ResponseEntity.ok(zeroUserExtraService.page(page, zeroUserExtraQueryWrapper));

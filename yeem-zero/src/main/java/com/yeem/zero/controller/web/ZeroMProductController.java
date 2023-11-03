@@ -51,6 +51,12 @@ public class ZeroMProductController {
             if (StringUtils.isEmpty(size)) {
                 size = 10;
             }
+            if (!StringUtils.isEmpty(name)) {
+                zeroProductQueryWrapper.like("name", name);
+            }
+            if (!StringUtils.isEmpty(categoryId)) {
+                zeroProductQueryWrapper.eq("category_id", categoryId);
+            }
             IPage<ZeroProduct> page = new Page<>(current, size);
             IPage<ZeroProduct> zeroProductIPage = zeroProductService.page(page, zeroProductQueryWrapper);
             return ResponseEntity.ok(zeroProductIPage);
