@@ -130,6 +130,8 @@ public class ZeroUserController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody ZeroUserExtra entity) {
         try {
+            Long userId = WechatAuthInterceptor.getUserId();
+            entity.setId(userId);
             zeroUserExtraService.updateById(entity);
         } catch (Exception e) {
             log.error("update user extra info error:", e);

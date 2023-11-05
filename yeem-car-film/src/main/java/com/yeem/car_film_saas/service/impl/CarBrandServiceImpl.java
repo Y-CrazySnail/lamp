@@ -48,14 +48,14 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
      *
      * @param current
      * @param size
-     * @param brandName
+     * @param name
      * @return
      */
     @Override
-    public IPage<CarBrand> pages(int current, int size, String brandName) {
+    public IPage<CarBrand> pages(int current, int size, String name) {
         QueryWrapper<CarBrand> carBrandQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(brandName)) {
-            carBrandQueryWrapper.like("name", brandName);
+        if (!StringUtils.isEmpty(name)) {
+            carBrandQueryWrapper.like("name", name);
         }
         IPage<CarBrand> page = new Page<>(current, size);
         IPage<CarBrand> pages = carBrandMapper.selectPage(page, carBrandQueryWrapper);

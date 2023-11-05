@@ -367,6 +367,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     private void calculateDirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
         Long directReferrerUserId = zeroUserExtra.getDirectReferrerUserId();
+        if (StringUtils.isEmpty(directReferrerUserId)) {
+            return;
+        }
         ZeroUserExtra directZeroUserExtra = zeroUserExtraService.getById(directReferrerUserId);
         // 判断直接分销开关
         if (Constant.BOOLEAN_FALSE.equals(distributionDirectSwitch)) {
@@ -409,6 +412,9 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     private void calculateIndirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
         Long indirectReferrerUserId = zeroUserExtra.getIndirectReferrerUserId();
+        if (StringUtils.isEmpty(indirectReferrerUserId)) {
+            return;
+        }
         ZeroUserExtra indirectZeroUserExtra = zeroUserExtraService.getById(indirectReferrerUserId);
         // 判断直接分销开关
         if (Constant.BOOLEAN_FALSE.equals(distributionIndirectSwitch)) {

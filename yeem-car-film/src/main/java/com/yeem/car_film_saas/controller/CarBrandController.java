@@ -39,14 +39,16 @@ public class CarBrandController extends BaseController<CarBrand> {
      *
      * @param current
      * @param size
-     * @param brandName
+     * @param name
      * @return
      */
     @OperateLog(operateModule = "Brand模块", operateType = "pages查询", operateDesc = "描述:分页查询Brand全部信息")
     @GetMapping("/pages")
-    public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "brandName", required = false) String brandName) {
+    public ResponseEntity<Object> pages(@RequestParam("current") int current,
+                                        @RequestParam("size") int size,
+                                        @RequestParam(value = "name", required = false) String name) {
         try {
-            return ResponseEntity.ok(carBrandService.pages(current, size, brandName));
+            return ResponseEntity.ok(carBrandService.pages(current, size, name));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页模糊查询失败");

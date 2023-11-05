@@ -14,6 +14,10 @@ public class WechatInterceptorConfig implements WebMvcConfigurer {
                 .addPathPatterns("/wechat/**")
                 .excludePathPatterns("/wechat/zero-user/login")
                 .excludePathPatterns("/wechat/zero-user/phone")
+                .excludePathPatterns("/wechat/zero-product/recommend")
+                .excludePathPatterns("/wechat/zero-product/get")
+                .excludePathPatterns("/wechat/zero-product/list-by-name")
+                .excludePathPatterns("/wechat/zero-category/list")
                 .excludePathPatterns("/wechat/zero-order/refundCallback")
                 .excludePathPatterns("/wechat/zero-order/paymentCallback");
     }
