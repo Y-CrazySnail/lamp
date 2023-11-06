@@ -127,19 +127,6 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, CarBrand> i
                 carModelService.remove(databaseCarModel.getId());
             }
         });
-        // 非 Java8 写法
-        // for (CarModel databaseCarModel : databaseCarModelList) {
-        //     boolean flag = false;
-        //     for (CarModel carModel : carModelList) {
-        //         if (null != carModel.getId() && databaseCarModel.getId().equals(carModel.getId())) {
-        //             flag = true;
-        //             break;
-        //         }
-        //     }
-        //     if (!flag) {
-        //         carModelService.remove(databaseCarModel.getId());
-        //     }
-        // }
     }
 
     /**

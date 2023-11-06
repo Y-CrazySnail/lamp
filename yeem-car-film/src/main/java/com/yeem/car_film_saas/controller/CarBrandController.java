@@ -86,7 +86,7 @@ public class CarBrandController extends BaseController<CarBrand> {
     public ResponseEntity<Object> delete(@RequestBody CarBrand carBrand) {
         try {
             carBrandService.remove(carBrand);
-            return ResponseEntity.ok(" ");
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("软删除失败");
