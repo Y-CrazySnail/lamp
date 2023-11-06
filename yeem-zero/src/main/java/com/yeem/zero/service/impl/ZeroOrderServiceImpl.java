@@ -106,6 +106,8 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         }
         zeroOrder.setStatus(Constant.ORDER_STATUS_ORDER);
         zeroOrder.setOrderTime(new Date());
+        // todo 设置商品快照
+        // todo 设置地址快照
         super.save(zeroOrder);
         // 订单项处理
         zeroOrder.getOrderItemList().forEach(zeroOrderItem -> zeroOrderItem.setOrderId(zeroOrder.getId()));
@@ -231,7 +233,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
         zeroOrder.setOrderItemList(zeroOrderItemList);
         ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
-        zeroOrder.setAddress(zeroAddress);
+        zeroOrder.setZeroAddress(zeroAddress);
         // 物流信息查询
         if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
             JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", "78714106471365");
@@ -248,7 +250,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
         zeroOrder.setOrderItemList(zeroOrderItemList);
         ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
-        zeroOrder.setAddress(zeroAddress);
+        zeroOrder.setZeroAddress(zeroAddress);
         // 物流信息查询
         if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
             JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", zeroOrder.getWaybillNo());

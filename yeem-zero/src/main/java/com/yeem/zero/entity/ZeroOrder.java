@@ -22,6 +22,10 @@ public class ZeroOrder extends BaseEntity {
      */
     private Long addressId;
     /**
+     * 收货人
+     */
+    private String addressName;
+    /**
      * 订单编号
      */
     private String orderNo;
@@ -91,6 +95,26 @@ public class ZeroOrder extends BaseEntity {
      * 订单备注
      */
     private String remark;
+    /**
+     * 手机号
+     */
+    private String phone;
+    /**
+     * 省
+     */
+    private String province;
+    /**
+     * 市
+     */
+    private String city;
+    /**
+     * 区
+     */
+    private String county;
+    /**
+     * 详细地址
+     */
+    private String address;
     /**
      * 分销订单标识 0否 1是
      */
@@ -224,7 +248,7 @@ public class ZeroOrder extends BaseEntity {
      * 订单地址信息
      */
     @TableField(exist = false)
-    private ZeroAddress address;
+    private ZeroAddress zeroAddress;
     /**
      * 购物车列表
      */
@@ -561,14 +585,6 @@ public class ZeroOrder extends BaseEntity {
         this.orderItemList = orderItemList;
     }
 
-    public ZeroAddress getAddress() {
-        return address;
-    }
-
-    public void setAddress(ZeroAddress address) {
-        this.address = address;
-    }
-
     public List<ZeroCart> getCartList() {
         return cartList;
     }
@@ -615,5 +631,61 @@ public class ZeroOrder extends BaseEntity {
 
     public void setEstimatedShipmentTime(Date estimatedShipmentTime) {
         this.estimatedShipmentTime = estimatedShipmentTime;
+    }
+
+    public String getAddressName() {
+        return addressName;
+    }
+
+    public void setAddressName(String addressName) {
+        this.addressName = addressName;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCounty() {
+        return county;
+    }
+
+    public void setCounty(String county) {
+        this.county = county;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public ZeroAddress getZeroAddress() {
+        return zeroAddress;
+    }
+
+    public void setZeroAddress(ZeroAddress zeroAddress) {
+        this.zeroAddress = zeroAddress;
     }
 }
