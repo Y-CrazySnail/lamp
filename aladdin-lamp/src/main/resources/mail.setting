@@ -1,0 +1,10 @@
+
+host = smtp.richcloud.biz
+
+port = 25
+
+from = 老张<service@richcloud.biz>
+
+user = service@richcloud.biz
+
+pass = 19980720Meng

@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>common</module>
+        <module>aladdin-lamp</module>
         <module>yeem-auth</module>
         <module>yeem-car-film</module>
         <module>yeem-car-old</module>

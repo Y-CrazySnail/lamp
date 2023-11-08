@@ -1,0 +1,10 @@
+permit-url:
+  - /command_record/get
+  - /command_record/finish
+  - /subscribe/**
+  - /ssh/**
+  - /traffic/save
+  - /node/getConfiguration
+  - /node/test
+  - /server/refresh
+  - /auth/wechat-mini-program
