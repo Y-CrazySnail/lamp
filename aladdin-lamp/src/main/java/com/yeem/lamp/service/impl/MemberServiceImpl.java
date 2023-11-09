@@ -2,6 +2,7 @@ package com.yeem.lamp.service.impl;
 
 import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+
 import com.yeem.lamp.entity.Member;
 import com.yeem.lamp.mapper.MemberMapper;
 import com.yeem.lamp.service.IMemberService;
@@ -12,18 +13,4 @@ import org.springframework.stereotype.Service;
 @Service
 public class MemberServiceImpl extends ServiceImpl<MemberMapper, Member> implements IMemberService {
 
-    @Autowired
-    private MemberMapper memberMapper;
-
-    @DS("proxy")
-    @Override
-    public void resetMemberData() {
-        memberMapper.resetMemberData();
-    }
-
-    @DS("proxy")
-    @Override
-    public void calculateData() {
-        memberMapper.calculateData();
-    }
 }
