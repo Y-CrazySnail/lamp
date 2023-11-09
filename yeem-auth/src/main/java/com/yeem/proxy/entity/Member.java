@@ -16,6 +16,7 @@ public class Member extends BaseEntity {
     private Long trafficDownMonth;
     private Long trafficUpMonth;
     private Long trafficSurplusMonth;
+    private String nodeId;
 
     public String getWechat() {
         return wechat;
@@ -79,5 +80,13 @@ public class Member extends BaseEntity {
 
     public void setTrafficSurplusMonth(Long trafficSurplusMonth) {
         this.trafficSurplusMonth = trafficSurplusMonth;
+    }
+
+    public String getNodeId() {
+        return nodeId;
+    }
+
+    public void setNodeId(String nodeId) {
+        this.nodeId = nodeId;
     }
 }
