@@ -5,7 +5,7 @@ cd ..
 DEPLOY_DIR=`pwd`
 CONF_DIR=$DEPLOY_DIR/conf
 
-PIDS=`ps -ef | grep java | grep yeem-auth | grep -v grep |awk '{print $2}'`
+PIDS=`ps -ef | grep java | grep aladdin-lamp | grep -v grep |awk '{print $2}'`
 if [ -z "$PIDS" ]; then
     echo "ERROR: The Server does not started!"
     exit 1
