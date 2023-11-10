@@ -1,7 +1,7 @@
 package com.yeem.car_film_saas.controller;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.car_film_saas.entity.CarBrand;
+import com.yeem.car_film_saas.entity.BaseCarBrand;
 import com.yeem.car_film_saas.service.ICarBrandService;
 import com.yeem.car_film_saas.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/car-brand")
-public class CarBrandController extends BaseController<CarBrand> {
+@RequestMapping("/base-car-brand")
+public class BaseCarBrandController extends BaseController<BaseCarBrand> {
     @Autowired
     private ICarBrandService carBrandService;
 
@@ -78,14 +78,14 @@ public class CarBrandController extends BaseController<CarBrand> {
     /**
      * 删除
      *
-     * @param carBrand
+     * @param baseCarBrand
      * @return
      */
     @OperateLog(operateModule = "Brand模块", operateType = "delete", operateDesc = "描述:软删除Brand全部信息")
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody CarBrand carBrand) {
+    public ResponseEntity<Object> delete(@RequestBody BaseCarBrand baseCarBrand) {
         try {
-            carBrandService.remove(carBrand);
+            carBrandService.remove(baseCarBrand);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);
@@ -96,20 +96,20 @@ public class CarBrandController extends BaseController<CarBrand> {
     /**
      * 更改
      *
-     * @param carBrand
+     * @param baseCarBrand
      * @return
      */
     @OperateLog(operateModule = "Brand模块", operateType = "update", operateDesc = "描述:修改Brand全部信息")
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody CarBrand carBrand) {
+    public ResponseEntity<Object> update(@RequestBody BaseCarBrand baseCarBrand) {
         try {
-            if (carBrand.getName().isEmpty()) {
+            if (baseCarBrand.getName().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("品牌名为空");
             }
-            if (carBrand.getLogoPath().isEmpty()) {
+            if (baseCarBrand.getLogoPath().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("log文件路径为空");
             }
-            carBrandService.update(carBrand);
+            carBrandService.update(baseCarBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -120,20 +120,20 @@ public class CarBrandController extends BaseController<CarBrand> {
     /**
      * 新增
      *
-     * @param carBrand
+     * @param baseCarBrand
      * @return
      */
     @OperateLog(operateModule = "Brand模块", operateType = "save", operateDesc = "描述:保存Brand全部信息")
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody CarBrand carBrand) {
+    public ResponseEntity<Object> save(@RequestBody BaseCarBrand baseCarBrand) {
         try {
-            if (carBrand.getName().isEmpty()) {
+            if (baseCarBrand.getName().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("品牌名为空");
             }
-            if (carBrand.getLogoPath().isEmpty()) {
+            if (baseCarBrand.getLogoPath().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("log文件路径为空");
             }
-            carBrandService.save(carBrand);
+            carBrandService.save(baseCarBrand);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);

@@ -1,46 +1,16 @@
 package com.yeem.car_film_saas.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
-
-import java.util.Date;
 
 @TableName(value = "car_film_product")
 public class CarFilmProduct extends BaseEntity {
-    private String productNo;  // 产品代码
-    private String productName;  // 产品名称
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
-    private Date publishDate;  // 产品成立日期
-    private String operationPrice;  // 产品运营维护价格
-    private String companyName;  // 企业名称
-    private String companyNo;  // 企业营业执照-统一社会信用代码
-    private String managerName;  // 管理人姓名
-    private String managerPhone;  // 管理人手机号
-    private String managerEmail;  // 管理人邮箱
-    private String miniProgramFlag;  // 开通小程序 0否1是
-    private String miniProgramName;  // 微信小程序名称
-    private String officialWebsiteFlag;  // 官方网站 0否1是
-    private String officialWebsiteDomain;  // 官方网站域名}
-
-    public CarFilmProduct() {
-    }
-
-    public CarFilmProduct(String productNo, String productName, Date publishDate, String operationPrice, String companyName, String companyNo, String managerName, String managerPhone, String managerEmail, String miniProgramFlag, String miniProgramName, String officialWebsiteFlag, String officialWebsiteDomain) {
-        this.productNo = productNo;
-        this.productName = productName;
-        this.publishDate = publishDate;
-        this.operationPrice = operationPrice;
-        this.companyName = companyName;
-        this.companyNo = companyNo;
-        this.managerName = managerName;
-        this.managerPhone = managerPhone;
-        this.managerEmail = managerEmail;
-        this.miniProgramFlag = miniProgramFlag;
-        this.miniProgramName = miniProgramName;
-        this.officialWebsiteFlag = officialWebsiteFlag;
-        this.officialWebsiteDomain = officialWebsiteDomain;
-    }
+    private String productNo; // 产品代码
+    private String productType; // 产品代码
+    private String productLevelNo; // 产品级别代码
+    private String productLevelName; // 产品级别名称
+    private String channel; // 渠道
+    private String status; // 状态 0下线 1上线
 
     public String getProductNo() {
         return productNo;
@@ -50,99 +20,43 @@ public class CarFilmProduct extends BaseEntity {
         this.productNo = productNo;
     }
 
-    public String getProductName() {
-        return productName;
+    public String getProductType() {
+        return productType;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 
-    public Date getPublishDate() {
-        return publishDate;
+    public String getProductLevelNo() {
+        return productLevelNo;
     }
 
-    public void setPublishDate(Date publishDate) {
-        this.publishDate = publishDate;
+    public void setProductLevelNo(String productLevelNo) {
+        this.productLevelNo = productLevelNo;
     }
 
-    public String getOperationPrice() {
-        return operationPrice;
+    public String getProductLevelName() {
+        return productLevelName;
     }
 
-    public void setOperationPrice(String operationPrice) {
-        this.operationPrice = operationPrice;
+    public void setProductLevelName(String productLevelName) {
+        this.productLevelName = productLevelName;
     }
 
-    public String getCompanyName() {
-        return companyName;
+    public String getChannel() {
+        return channel;
     }
 
-    public void setCompanyName(String companyName) {
-        this.companyName = companyName;
+    public void setChannel(String channel) {
+        this.channel = channel;
     }
 
-    public String getCompanyNo() {
-        return companyNo;
+    public String getStatus() {
+        return status;
     }
 
-    public void setCompanyNo(String companyNo) {
-        this.companyNo = companyNo;
-    }
-
-    public String getManagerName() {
-        return managerName;
-    }
-
-    public void setManagerName(String managerName) {
-        this.managerName = managerName;
-    }
-
-    public String getManagerPhone() {
-        return managerPhone;
-    }
-
-    public void setManagerPhone(String managerPhone) {
-        this.managerPhone = managerPhone;
-    }
-
-    public String getManagerEmail() {
-        return managerEmail;
-    }
-
-    public void setManagerEmail(String managerEmail) {
-        this.managerEmail = managerEmail;
-    }
-
-    public String getMiniProgramFlag() {
-        return miniProgramFlag;
-    }
-
-    public void setMiniProgramFlag(String miniProgramFlag) {
-        this.miniProgramFlag = miniProgramFlag;
-    }
-
-    public String getMiniProgramName() {
-        return miniProgramName;
-    }
-
-    public void setMiniProgramName(String miniProgramName) {
-        this.miniProgramName = miniProgramName;
-    }
-
-    public String getOfficialWebsiteFlag() {
-        return officialWebsiteFlag;
-    }
-
-    public void setOfficialWebsiteFlag(String officialWebsiteFlag) {
-        this.officialWebsiteFlag = officialWebsiteFlag;
-    }
-
-    public String getOfficialWebsiteDomain() {
-        return officialWebsiteDomain;
-    }
-
-    public void setOfficialWebsiteDomain(String officialWebsiteDomain) {
-        this.officialWebsiteDomain = officialWebsiteDomain;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

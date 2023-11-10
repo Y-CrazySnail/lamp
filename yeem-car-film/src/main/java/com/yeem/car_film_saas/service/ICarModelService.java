@@ -2,24 +2,24 @@ package com.yeem.car_film_saas.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yeem.car_film_saas.entity.CarModel;
+import com.yeem.car_film_saas.entity.BaseCarModel;
 
 import java.util.List;
 
-public interface ICarModelService extends IService<CarModel> {
+public interface ICarModelService extends IService<BaseCarModel> {
     /**
      * id查询所有
      *
      * @return
      */
-    List<CarModel> list();
+    List<BaseCarModel> list();
 
     /**
      * Id查询所有不被软删除的数据
      *
      * @return
      */
-    List<CarModel> listByBrandId(Long id);
+    List<BaseCarModel> listByBrandId(Long id);
 
     /**
      * 分页查询
@@ -28,7 +28,7 @@ public interface ICarModelService extends IService<CarModel> {
      * @param size
      * @return
      */
-    IPage<CarModel> pages(int current, int size, String name);
+    IPage<BaseCarModel> pages(int current, int size, String name);
 
 
     /**
@@ -37,7 +37,7 @@ public interface ICarModelService extends IService<CarModel> {
      * @param id
      * @return
      */
-    CarModel getById(Long id);
+    BaseCarModel getById(Long id);
 
     /**
      * 删除
@@ -51,17 +51,17 @@ public interface ICarModelService extends IService<CarModel> {
     /**
      * 增加
      *
-     * @param carModelList
+     * @param baseCarModelList
      */
-    boolean save(List<CarModel> carModelList,Long brandId);
+    boolean save(List<BaseCarModel> baseCarModelList, Long brandId);
 
-    void insert(CarModel carModel);
+    void insert(BaseCarModel baseCarModel);
 
     /**
      * 修改
      *
-     * @param carModelList
+     * @param baseCarModelList
      */
-    void update(List<CarModel> carModelList);
+    void update(List<BaseCarModel> baseCarModelList);
 
 }

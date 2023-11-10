@@ -6,7 +6,7 @@ import com.yeem.common.entity.BaseEntity;
 
 
 @TableName(value = "base_car_model")
-public class CarModel extends BaseEntity {
+public class BaseCarModel extends BaseEntity {
     private String name;
 
     private String nameEn;
@@ -18,10 +18,10 @@ public class CarModel extends BaseEntity {
     @TableField(exist = false)
     private String levelName;
 
-    public CarModel() {
+    public BaseCarModel() {
     }
 
-    public CarModel(String name, String nameEn, Long brandId, String levelNo, String levelName) {
+    public BaseCarModel(String name, String nameEn, Long brandId, String levelNo, String levelName) {
         this.name = name;
         this.nameEn = nameEn;
         this.brandId = brandId;

@@ -2,16 +2,16 @@ package com.yeem.car_film_saas.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yeem.car_film_saas.entity.CarBrand;
+import com.yeem.car_film_saas.entity.BaseCarBrand;
 
 import java.util.List;
 
-public interface ICarBrandService extends IService<CarBrand> {
+public interface ICarBrandService extends IService<BaseCarBrand> {
     /**
      * 查询所有不被软删除的数据
      * @return
      */
-    List<CarBrand> list();
+    List<BaseCarBrand> list();
 
     /**
      * 分页查询
@@ -21,30 +21,30 @@ public interface ICarBrandService extends IService<CarBrand> {
      */
 
 
-   IPage<CarBrand> pages(int current, int size, String name);
+   IPage<BaseCarBrand> pages(int current, int size, String name);
 
     /**
      * id单独查询
      * @param id
      * @return
      */
-    CarBrand getById(Long id);
+    BaseCarBrand getById(Long id);
 
     /**
      * 软删除
-     * @param carBrand
+     * @param baseCarBrand
      */
-    void remove(CarBrand carBrand);
+    void remove(BaseCarBrand baseCarBrand);
 
     /**
      * 更改
-     * @param carBrand
+     * @param baseCarBrand
      */
-    void update(CarBrand carBrand);
+    void update(BaseCarBrand baseCarBrand);
 
     /**
      * 新增
-     * @param carBrand
+     * @param baseCarBrand
      */
-    boolean save(CarBrand carBrand);
+    boolean save(BaseCarBrand baseCarBrand);
 }

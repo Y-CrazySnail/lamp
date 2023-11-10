@@ -6,21 +6,21 @@ import com.yeem.car_film_saas.entity.CarFilmProduct;
 
 import java.util.List;
 
-
 public interface ICarFilmProductService extends IService<CarFilmProduct> {
+
     /**
      * 查询所有不被软删除的数据
      *
      * @return
      */
-    List<CarFilmProduct> list(String productNo, String productName, String companyName, String  companyNo,String  managerName,String  managerPhone , String  miniProgramFlag,String officialWebsiteFlag);
+    List<CarFilmProduct> list(String productNo, String productLevelName, String status);
 
     /**
      * 分页查询
      *
      * @return
      */
-    IPage<CarFilmProduct> pages(int current, int size, String productNo, String productName, String companyName, String  companyNo,String  managerName,String  managerPhone , String  miniProgramFlag,String officialWebsiteFlag);
+    IPage<CarFilmProduct> pages(int current, int size, String productNo, String productLevelName, String status);
 
     /**
      * 按id查询
@@ -35,19 +35,19 @@ public interface ICarFilmProductService extends IService<CarFilmProduct> {
      *
      * @param
      */
-    void remove(CarFilmProduct carFilmProduct);
+    void remove(CarFilmProduct carFilmProductLevel);
 
     /**
      * 新增商品
      *
-     * @param carFilmProduct
+     * @param carFilmProductLevel
      */
-    boolean save(CarFilmProduct carFilmProduct);
+    boolean save(CarFilmProduct carFilmProductLevel);
 
     /**
      * 更改商品
      *
-     * @param carFilmProduct
+     * @param carFilmProductLevel
      */
-    void update(CarFilmProduct carFilmProduct);
+    void update(CarFilmProduct carFilmProductLevel);
 }

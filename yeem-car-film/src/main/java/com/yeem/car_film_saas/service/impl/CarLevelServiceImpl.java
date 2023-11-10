@@ -2,7 +2,7 @@ package com.yeem.car_film_saas.service.impl;
 
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yeem.car_film_saas.entity.CarLevel;
+import com.yeem.car_film_saas.entity.BaseCarLevel;
 
 import com.yeem.car_film_saas.mapper.CarLevelMapper;
 
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-public class CarLevelServiceImpl extends ServiceImpl<CarLevelMapper, CarLevel> implements ICarLevelService {
+public class CarLevelServiceImpl extends ServiceImpl<CarLevelMapper, BaseCarLevel> implements ICarLevelService {
 @Autowired
 private CarLevelMapper carLevelMapper;
 
@@ -27,7 +27,7 @@ private CarLevelMapper carLevelMapper;
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public List<CarLevel> list() {
+    public List<BaseCarLevel> list() {
         return carLevelMapper.selectList(null);
     }
 }

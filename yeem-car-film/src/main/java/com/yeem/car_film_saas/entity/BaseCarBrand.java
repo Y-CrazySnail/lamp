@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @TableName(value = "base_car_brand")
-public class CarBrand extends BaseEntity {
+public class BaseCarBrand extends BaseEntity {
 
     private String name;
 
@@ -18,20 +18,20 @@ public class CarBrand extends BaseEntity {
 
     private  String logoName;
     @TableField(exist = false)
-    private List<CarModel> carModelList;
+    private List<BaseCarModel> baseCarModelList;
 
     @TableField(exist = false)
     private Integer carModelCount;
 
-    public CarBrand() {
+    public BaseCarBrand() {
     }
 
-    public CarBrand(String name, String nameEn, String logoPath, String logoName, List<CarModel> carModelList) {
+    public BaseCarBrand(String name, String nameEn, String logoPath, String logoName, List<BaseCarModel> baseCarModelList) {
         this.name = name;
         this.nameEn = nameEn;
         this.logoPath = logoPath;
         this.logoName = logoName;
-        this.carModelList = carModelList;
+        this.baseCarModelList = baseCarModelList;
     }
 
     public Integer getCarModelCount() {
@@ -74,11 +74,11 @@ public class CarBrand extends BaseEntity {
         this.logoName = logoName;
     }
 
-    public List<CarModel> getCarModelList() {
-        return carModelList;
+    public List<BaseCarModel> getCarModelList() {
+        return baseCarModelList;
     }
 
-    public void setCarModelList(List<CarModel> carModelList) {
-        this.carModelList = carModelList;
+    public void setCarModelList(List<BaseCarModel> baseCarModelList) {
+        this.baseCarModelList = baseCarModelList;
     }
 }

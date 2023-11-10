@@ -1,8 +1,8 @@
 package com.yeem.car_film_saas.controller;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.car_film_saas.entity.CarBrand;
-import com.yeem.car_film_saas.entity.CarModel;
+import com.yeem.car_film_saas.entity.BaseCarBrand;
+import com.yeem.car_film_saas.entity.BaseCarModel;
 import com.yeem.car_film_saas.service.ICarModelService;
 import com.yeem.car_film_saas.log.OperateLog;
 import com.yeem.common.conreoller.BaseController;
@@ -15,8 +15,8 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/car-model")
-public class CarModelController extends BaseController<CarBrand> {
+@RequestMapping("/base-car-model")
+public class BaseCarModelController extends BaseController<BaseCarBrand> {
     @Autowired
     private ICarModelService ICarModelService;
 
@@ -78,14 +78,14 @@ public class CarModelController extends BaseController<CarBrand> {
     /**
      * 根据brand_id删除
      *
-     * @param carModel
+     * @param baseCarModel
      * @return
      */
     @OperateLog(operateModule = "model模块", operateType = "delete", operateDesc = "描述:软删除model全部信息")
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> removeByBrandId(@RequestBody CarModel carModel) {
+    public ResponseEntity<Object> removeByBrandId(@RequestBody BaseCarModel baseCarModel) {
         try {
-            ICarModelService.removeByBrandId(carModel.getId());
+            ICarModelService.removeByBrandId(baseCarModel.getId());
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("delete方法", e);
@@ -96,14 +96,14 @@ public class CarModelController extends BaseController<CarBrand> {
     /**
      * 更改
      *
-     * @param carModelList
+     * @param baseCarModelList
      * @return
      */
     @OperateLog(operateModule = "model模块", operateType = "update", operateDesc = "描述:修改model全部信息")
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody List<CarModel> carModelList) {
+    public ResponseEntity<Object> update(@RequestBody List<BaseCarModel> baseCarModelList) {
         try {
-            ICarModelService.update(carModelList);
+            ICarModelService.update(baseCarModelList);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -114,14 +114,14 @@ public class CarModelController extends BaseController<CarBrand> {
     /**
      * 增加
      *
-     * @param carModel
+     * @param baseCarModel
      * @return
      */
     @OperateLog(operateModule = "model模块", operateType = "save", operateDesc = "描述:保存model全部信息")
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody CarModel carModel) {
+    public ResponseEntity<Object> save(@RequestBody BaseCarModel baseCarModel) {
         try {
-            ICarModelService.save(carModel);
+            ICarModelService.save(baseCarModel);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);

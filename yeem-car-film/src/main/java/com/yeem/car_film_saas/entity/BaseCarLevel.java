@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
 @TableName(value = "base_car_level")
-public class CarLevel extends BaseEntity {
+public class BaseCarLevel extends BaseEntity {
     /**
      * 级别代码
      */
@@ -14,10 +14,10 @@ public class CarLevel extends BaseEntity {
      */
     private String levelName;
 
-    public CarLevel() {
+    public BaseCarLevel() {
     }
 
-    public CarLevel(String levelNo, String levelName) {
+    public BaseCarLevel(String levelNo, String levelName) {
         this.levelNo = levelNo;
         this.levelName = levelName;
     }

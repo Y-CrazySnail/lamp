@@ -1,15 +1,14 @@
 package com.yeem.car_film_saas.service.impl;
 
 import cn.hutool.extra.pinyin.PinyinUtil;
-import com.baomidou.dynamic.datasource.annotation.DS;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.yeem.car_film_saas.entity.CarLevel;
-import com.yeem.car_film_saas.entity.CarModel;
+import com.yeem.car_film_saas.entity.BaseCarModel;
+import com.yeem.car_film_saas.entity.BaseCarLevel;
 import com.yeem.car_film_saas.mapper.CarModelMapper;
 import com.yeem.car_film_saas.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import java.util.Collection;
 import java.util.List;
 
 @Service
-public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> implements ICarModelService {
+public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, BaseCarModel> implements ICarModelService {
     @Autowired
     private CarModelMapper carModelMapper;
     @Autowired
@@ -36,17 +34,17 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public List<CarModel> list() {
-        List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("delete_flag", 0));
-        List<CarLevel> carLevels = carLevelService.list();
-        for (CarModel carModel : carModels) {
-            for (CarLevel carLevel : carLevels) {
-                if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
-                    carModel.setLevelName(carLevel.getLevelName());
+    public List<BaseCarModel> list() {
+        List<BaseCarModel> baseCarModels = carModelMapper.selectList(new QueryWrapper<BaseCarModel>().eq("delete_flag", 0));
+        List<BaseCarLevel> baseCarLevels = carLevelService.list();
+        for (BaseCarModel baseCarModel : baseCarModels) {
+            for (BaseCarLevel baseCarLevel : baseCarLevels) {
+                if (baseCarLevel.getLevelNo().equals(baseCarModel.getLevelNo())) {
+                    baseCarModel.setLevelName(baseCarLevel.getLevelName());
                 }
             }
         }
-        return carModels;
+        return baseCarModels;
     }
 
     /**
@@ -56,17 +54,17 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public List<CarModel> listByBrandId(Long id) {
-        List<CarModel> carModels = carModelMapper.selectList(new QueryWrapper<CarModel>().eq("brand_id", id).eq("delete_flag", 0));
-        List<CarLevel> carLevels = carLevelService.list();
-        for (CarModel carModel : carModels) {
-            for (CarLevel carLevel : carLevels) {
-                if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
-                    carModel.setLevelName(carLevel.getLevelName());
+    public List<BaseCarModel> listByBrandId(Long id) {
+        List<BaseCarModel> baseCarModels = carModelMapper.selectList(new QueryWrapper<BaseCarModel>().eq("brand_id", id).eq("delete_flag", 0));
+        List<BaseCarLevel> baseCarLevels = carLevelService.list();
+        for (BaseCarModel baseCarModel : baseCarModels) {
+            for (BaseCarLevel baseCarLevel : baseCarLevels) {
+                if (baseCarLevel.getLevelNo().equals(baseCarModel.getLevelNo())) {
+                    baseCarModel.setLevelName(baseCarLevel.getLevelName());
                 }
             }
         }
-        return carModels;
+        return baseCarModels;
     }
 
     /**
@@ -77,20 +75,20 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public IPage<CarModel> pages(int current, int size, String name) {
-        QueryWrapper<CarModel> carModelQueryWrapper = new QueryWrapper<>();
+    public IPage<BaseCarModel> pages(int current, int size, String name) {
+        QueryWrapper<BaseCarModel> carModelQueryWrapper = new QueryWrapper<>();
         if (!StringUtils.isEmpty(name)) {
             carModelQueryWrapper.like("name", name);
         }
         carModelQueryWrapper.eq("delete_flag", 0);
-        Page<CarModel> page = new Page<>(current, size);
-        Page<CarModel> carModelPage = carModelMapper.selectPage(page, carModelQueryWrapper);
-        List<CarModel> records = carModelPage.getRecords();
-        List<CarLevel> carLevels = carLevelService.list();
-        for (CarModel carModel : records) {
-            for (CarLevel carLevel : carLevels) {
-                if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
-                    carModel.setLevelName(carLevel.getLevelName());
+        Page<BaseCarModel> page = new Page<>(current, size);
+        Page<BaseCarModel> carModelPage = carModelMapper.selectPage(page, carModelQueryWrapper);
+        List<BaseCarModel> records = carModelPage.getRecords();
+        List<BaseCarLevel> baseCarLevels = carLevelService.list();
+        for (BaseCarModel baseCarModel : records) {
+            for (BaseCarLevel baseCarLevel : baseCarLevels) {
+                if (baseCarLevel.getLevelNo().equals(baseCarModel.getLevelNo())) {
+                    baseCarModel.setLevelName(baseCarLevel.getLevelName());
                 }
             }
         }
@@ -104,14 +102,14 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
      * @return
      */
     @Override
-    public CarModel getById(Long id) {
-        CarModel carModel = carModelMapper.selectById(id);
-        for (CarLevel carLevel : carLevelService.list()) {
-            if (carLevel.getLevelNo().equals(carModel.getLevelNo())) {
-                carModel.setLevelName(carLevel.getLevelName());
+    public BaseCarModel getById(Long id) {
+        BaseCarModel baseCarModel = carModelMapper.selectById(id);
+        for (BaseCarLevel baseCarLevel : carLevelService.list()) {
+            if (baseCarLevel.getLevelNo().equals(baseCarModel.getLevelNo())) {
+                baseCarModel.setLevelName(baseCarLevel.getLevelName());
             }
         }
-        return carModel;
+        return baseCarModel;
     }
 
     /**
@@ -122,7 +120,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void removeByBrandId(Long id) {
-        UpdateWrapper<CarModel> wrapper = new UpdateWrapper<>();
+        UpdateWrapper<BaseCarModel> wrapper = new UpdateWrapper<>();
         wrapper.eq("brand_id", id).set("delete_flag", true);
         carModelMapper.update(null, wrapper);
     }
@@ -130,7 +128,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void remove(Long id) {
-        UpdateWrapper<CarModel> wrapper = new UpdateWrapper<>();
+        UpdateWrapper<BaseCarModel> wrapper = new UpdateWrapper<>();
         wrapper.eq("id", id).set("delete_flag", true);
         carModelMapper.update(null, wrapper);
     }
@@ -138,52 +136,52 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, CarModel> i
     /**
      * 新增
      *
-     * @param carModelList
+     * @param baseCarModelList
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public boolean save(List<CarModel> carModelList, Long brandId) {
+    public boolean save(List<BaseCarModel> baseCarModelList, Long brandId) {
         boolean flag = false;
-        for (CarModel carModel : carModelList) {
-            carModel.setBrandId(brandId);
-            carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
-            flag = SqlHelper.retBool(carModelMapper.insert(carModel));
+        for (BaseCarModel baseCarModel : baseCarModelList) {
+            baseCarModel.setBrandId(brandId);
+            baseCarModel.setNameEn(PinyinUtil.getPinyin(baseCarModel.getName()));
+            flag = SqlHelper.retBool(carModelMapper.insert(baseCarModel));
         }
         return flag;
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public void insert(CarModel carModel) {
-        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
-        carModelMapper.insert(carModel);
+    public void insert(BaseCarModel baseCarModel) {
+        baseCarModel.setNameEn(PinyinUtil.getPinyin(baseCarModel.getName()));
+        carModelMapper.insert(baseCarModel);
     }
 
     /**
      * 更新
      *
-     * @param carModelList
+     * @param baseCarModelList
      */
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public void update(List<CarModel> carModelList) {
-        for (CarModel carModel : carModelList) {
-            carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
-            carModelMapper.updateById(carModel);
+    public void update(List<BaseCarModel> baseCarModelList) {
+        for (BaseCarModel baseCarModel : baseCarModelList) {
+            baseCarModel.setNameEn(PinyinUtil.getPinyin(baseCarModel.getName()));
+            carModelMapper.updateById(baseCarModel);
         }
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public boolean save(CarModel carModel) {
-        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
-        return super.save(carModel);
+    public boolean save(BaseCarModel baseCarModel) {
+        baseCarModel.setNameEn(PinyinUtil.getPinyin(baseCarModel.getName()));
+        return super.save(baseCarModel);
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
-    public boolean updateById(CarModel carModel) {
-        carModel.setNameEn(PinyinUtil.getPinyin(carModel.getName()));
-        return super.updateById(carModel);
+    public boolean updateById(BaseCarModel baseCarModel) {
+        baseCarModel.setNameEn(PinyinUtil.getPinyin(baseCarModel.getName()));
+        return super.updateById(baseCarModel);
     }
 }
