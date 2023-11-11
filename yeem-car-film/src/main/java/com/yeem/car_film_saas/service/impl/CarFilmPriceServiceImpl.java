@@ -40,13 +40,13 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
     @Override
     public IPage<CarFilmPrice> pages(int current, int size, String productNo,String productLevelNo,String carLevelNo) {
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
-        if (StringUtils.isEmpty(productNo)) {
+        if (!StringUtils.isEmpty(productNo)) {
             carFilmPriceQueryWrapper.eq("product_no", productNo);
         }
-        if (StringUtils.isEmpty(productLevelNo)) {
+        if (!StringUtils.isEmpty(productLevelNo)) {
             carFilmPriceQueryWrapper.eq("product_level_no", productLevelNo);
         }
-        if (StringUtils.isEmpty(carLevelNo)) {
+        if (!StringUtils.isEmpty(carLevelNo)) {
             carFilmPriceQueryWrapper.eq("car_level_no", carLevelNo);
         }
         carFilmPriceQueryWrapper.eq("delete_flag", 0);

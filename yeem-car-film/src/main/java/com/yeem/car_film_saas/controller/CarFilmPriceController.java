@@ -29,7 +29,11 @@ public class CarFilmPriceController {
 
     @OperateLog(operateModule = "price模块", operateType = "pages查询", operateDesc = "描述:分页查询price全部信息")
     @GetMapping("/pages")
-    public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam("productNo") String productNo, @RequestParam("productLevelNo") String productLevelNo, @RequestParam("carLevelNo") String carLevelNo) {
+    public ResponseEntity<Object> pages(@RequestParam("current") int current,
+                                        @RequestParam("size") int size,
+                                        @RequestParam(value = "productNo", required = false) String productNo,
+                                        @RequestParam(value = "productLevelNo", required = false) String productLevelNo,
+                                        @RequestParam(value = "carLevelNo", required = false) String carLevelNo) {
         try {
             return ResponseEntity.ok(iCarFilmPriceService.pages(current, size, productNo, productLevelNo, carLevelNo));
         } catch (Exception e) {
