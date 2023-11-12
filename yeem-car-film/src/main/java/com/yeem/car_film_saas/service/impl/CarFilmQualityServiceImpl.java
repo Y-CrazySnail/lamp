@@ -117,7 +117,10 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmQuality carFilmQuality) {
-
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmQuality.getProductNo())) {
+            return false;
+        }
         SqlHelper.retBool(carFilmQualityMapper.insert(carFilmQuality));
         SysMail sysMail = new SysMail();
         sysMail.setToEmail("1270737197@qq.com");
