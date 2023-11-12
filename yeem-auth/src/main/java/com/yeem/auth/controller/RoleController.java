@@ -1,6 +1,7 @@
 package com.yeem.auth.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yeem.auth.service.IRoleService;
 import com.yeem.common.conreoller.BaseController;
 import com.yeem.auth.entity.Role;
 import com.yeem.auth.entity.RolePermission;
@@ -21,9 +22,19 @@ public class RoleController extends BaseController<Role> {
     @Autowired
     private RolePermissionMapper rolePermissionMapper;
 
+    @Autowired
+    private IRoleService roleService;
+
     @GetMapping("getPermissionIdList")
     public ResponseEntity<Object> getPermissionIdList(Long roleId) {
         List<RolePermission> rolePermissionList = rolePermissionMapper.selectList(new QueryWrapper<RolePermission>().eq("role_id", roleId));
         return ResponseEntity.ok(rolePermissionList.stream().map(RolePermission::getPermissionId).collect(Collectors.toList()));
+    }
+
+    @GetMapping("all")
+    public ResponseEntity<List<Role>> all() {
+        QueryWrapper<Role> permissionQueryWrapper = new QueryWrapper<>();
+        permissionQueryWrapper.orderByAsc("name");
+        return ResponseEntity.ok(roleService.list(permissionQueryWrapper));
     }
 }
