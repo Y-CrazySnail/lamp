@@ -76,6 +76,11 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmProduct carFilmProductLevel) {
+        CarFilmProduct getOneCarFilmProduct = carFilmProductMapper.selectOne(new QueryWrapper<CarFilmProduct>().eq("id", carFilmProductLevel.getId()));
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(getOneCarFilmProduct.getProductNo())) {
+            throw new RuntimeException("那里不可以~~~");
+        }
         carFilmProductLevel.setDeleteFlag(true);
         carFilmProductMapper.updateById(carFilmProductLevel);
     }
@@ -83,12 +88,20 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmProduct carFilmProductLevel) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmProductLevel.getProductNo())) {
+            return false;
+        }
         return SqlHelper.retBool(carFilmProductMapper.insert(carFilmProductLevel));
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmProduct carFilmProductLevel) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmProductLevel.getProductNo())) {
+            throw new RuntimeException("那里不可以哦~ :)");
+        }
         carFilmProductMapper.updateById(carFilmProductLevel);
     }
 }

@@ -5,20 +5,27 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.yeem.car_film_saas.entity.CarFilmStore;
 import com.yeem.car_film_saas.entity.CarFilmTechnician;
+import com.yeem.car_film_saas.entity.CarFilmTenant;
 import com.yeem.car_film_saas.mapper.CarFilmTechnicianMapper;
 import com.yeem.car_film_saas.service.ICarFilmTechnicianService;
+import com.yeem.car_film_saas.service.ICarFilmTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CarFilmTechnicianServiceImpl extends ServiceImpl<CarFilmTechnicianMapper, CarFilmTechnician> implements ICarFilmTechnicianService {
     @Autowired
     private CarFilmTechnicianMapper carFilmTechnicianMapper;
+
+    @Autowired
+    private ICarFilmTenantService carFilmTenantService;
 
     @Override
     public List<CarFilmTechnician> list(String productNo, String name, String province, String city, String county, String level) {
@@ -79,6 +86,11 @@ public class CarFilmTechnicianServiceImpl extends ServiceImpl<CarFilmTechnicianM
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmTechnician carFilmTechnician) {
+        CarFilmTechnician getOneCarCarFilmTechnician = carFilmTechnicianMapper.selectOne(new QueryWrapper<CarFilmTechnician>().eq("id", carFilmTechnician.getId()));
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(getOneCarCarFilmTechnician.getProductNo())) {
+            throw new RuntimeException("那里不可以哦~ :)");
+        }
         carFilmTechnician.setDeleteFlag(true);
         carFilmTechnicianMapper.updateById(carFilmTechnician);
     }
@@ -86,12 +98,20 @@ public class CarFilmTechnicianServiceImpl extends ServiceImpl<CarFilmTechnicianM
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmTechnician carFilmTechnician) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmTechnician.getProductNo())) {
+            return false;
+        }
         return SqlHelper.retBool(carFilmTechnicianMapper.insert(carFilmTechnician));
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmTechnician carFilmTechnician) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmTechnician.getProductNo())) {
+            throw new RuntimeException("那里不可以哦~ :)");
+        }
         carFilmTechnicianMapper.updateById(carFilmTechnician);
     }
 }

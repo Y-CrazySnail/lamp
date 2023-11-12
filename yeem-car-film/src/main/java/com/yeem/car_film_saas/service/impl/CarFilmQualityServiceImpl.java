@@ -110,6 +110,11 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmQuality carFilmQuality) {
+        CarFilmQuality getOneCarFilmQuality = carFilmQualityMapper.selectOne(new QueryWrapper<CarFilmQuality>().eq("id", carFilmQuality.getId()));
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(getOneCarFilmQuality.getProductNo())) {
+            throw new RuntimeException("那里不可以哦~ :)");
+        }
         carFilmQuality.setDeleteFlag(true);
         carFilmQualityMapper.updateById(carFilmQuality);
     }
@@ -155,6 +160,10 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmQuality carFilmQuality) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmQuality.getProductNo())) {
+            throw new RuntimeException("那里不可以哦~ :)");
+        }
         carFilmQualityMapper.updateById(carFilmQuality);
     }
 }

@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.car_film_saas.entity.BaseCarModel;
 import com.yeem.car_film_saas.entity.BaseCarLevel;
 import com.yeem.car_film_saas.mapper.CarModelMapper;
+import com.yeem.car_film_saas.service.ICarBrandService;
+import com.yeem.car_film_saas.service.ICarLevelService;
 import com.yeem.car_film_saas.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,11 +24,12 @@ import java.util.List;
 public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, BaseCarModel> implements ICarModelService {
     @Autowired
     private CarModelMapper carModelMapper;
-    @Autowired
-    private CarLevelServiceImpl carLevelService;
 
     @Autowired
-    CarBrandServiceImpl carBrandService;
+    private ICarLevelService carLevelService;
+
+    @Autowired
+    private ICarBrandService carBrandService;
 
     /**
      * 查询全部

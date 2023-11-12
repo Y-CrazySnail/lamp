@@ -27,7 +27,7 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
     private ICarFilmTenantService carFilmTenantService;
 
     @Override
-    public List<CarFilmPrice> list(String productNo,String productLevelNo,String carLevelNo) {
+    public List<CarFilmPrice> list(String productNo, String productLevelNo, String carLevelNo) {
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         carFilmPriceQueryWrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
@@ -45,7 +45,7 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
     }
 
     @Override
-    public IPage<CarFilmPrice> pages(int current, int size, String productNo,String productLevelNo,String carLevelNo) {
+    public IPage<CarFilmPrice> pages(int current, int size, String productNo, String productLevelNo, String carLevelNo) {
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         carFilmPriceQueryWrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
@@ -71,19 +71,33 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmPrice carFilmPrice) {
+        CarFilmPrice getOneCarFilmPrice = carFilmPriceMapper.selectOne(new QueryWrapper<CarFilmPrice>().eq("id", carFilmPrice.getId()));
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(getOneCarFilmPrice.getProductNo())) {
+            throw new RuntimeException("那里不可以哦~ :)");
+        }
         carFilmPrice.setDeleteFlag(true);
         carFilmPriceMapper.updateById(carFilmPrice);
     }
 
+
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmPrice carFilmPrice) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmPrice.getProductNo())) {
+            return false;
+        }
         return SqlHelper.retBool(carFilmPriceMapper.insert(carFilmPrice));
     }
 
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void update(CarFilmPrice carFilmPrice) {
+        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
+        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmPrice.getProductNo())) {
+            throw new RuntimeException("nonono");
+        }
         carFilmPriceMapper.updateById(carFilmPrice);
     }
 }
