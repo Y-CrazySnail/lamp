@@ -162,7 +162,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     public void update(CarFilmQuality carFilmQuality) {
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmQuality.getProductNo())) {
-            throw new RuntimeException("User not authorized: illegal modification");;
+            throw new RuntimeException("User not authorized: illegal modification");
         }
         carFilmQualityMapper.updateById(carFilmQuality);
     }
