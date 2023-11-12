@@ -5,16 +5,22 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.car_film_saas.entity.CarFilmTenant;
 import com.yeem.car_film_saas.mapper.CarFilmTenantMapper;
 import com.yeem.car_film_saas.service.ICarFilmTenantService;
+import com.yeem.common.utils.OauthUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class CarFilmTenantServiceImpl extends ServiceImpl<CarFilmTenantMapper, CarFilmTenant> implements ICarFilmTenantService {
 
@@ -30,6 +36,8 @@ public class CarFilmTenantServiceImpl extends ServiceImpl<CarFilmTenantMapper, C
     @Override
     public List<CarFilmTenant> list(String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone, String miniProgramFlag, String officialWebsiteFlag) {
         QueryWrapper<CarFilmTenant> wrapper = new QueryWrapper<>();
+        List<CarFilmTenant> carFilmTenantList = this.listByAuthorizedUsername();
+        wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
@@ -56,6 +64,16 @@ public class CarFilmTenantServiceImpl extends ServiceImpl<CarFilmTenantMapper, C
         }
         wrapper.eq("delete_flag", 0);
         return carFilmTenantMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<CarFilmTenant> listByAuthorizedUsername() {
+        String username = OauthUtils.getUsername();
+        QueryWrapper<CarFilmTenant> carFilmTenantQueryWrapper = new QueryWrapper<>();
+        carFilmTenantQueryWrapper.like("authorized_username", "|" + username + "|");
+        List<CarFilmTenant> carFilmTenantList = super.list(carFilmTenantQueryWrapper);
+        log.debug("username：{}, carFilmTenantList:{}", username, carFilmTenantList);
+        return carFilmTenantList;
     }
 
     /**

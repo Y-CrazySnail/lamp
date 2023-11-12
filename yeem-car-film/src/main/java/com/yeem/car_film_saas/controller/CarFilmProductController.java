@@ -18,7 +18,9 @@ public class CarFilmProductController {
 
     @OperateLog(operateModule = "product-level模块", operateType = "list查询", operateDesc = "描述:查询product-level全部信息")
     @GetMapping("/list")
-    public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "productLevelName", required = false) String productLevelName, @RequestParam(value = "status", required = false) String status) {
+    public ResponseEntity<Object> list(@RequestParam(value = "productNo", required = false) String productNo,
+                                       @RequestParam(value = "productLevelName", required = false) String productLevelName,
+                                       @RequestParam(value = "status", required = false) String status) {
         try {
             return ResponseEntity.ok(carFilmProductLevelService.list(productNo, productLevelName, status));
         } catch (Exception e) {

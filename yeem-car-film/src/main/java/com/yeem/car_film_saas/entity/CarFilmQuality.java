@@ -14,42 +14,22 @@ public class CarFilmQuality extends BaseEntity {
     private String plateNo; // 车牌号
     private String vin; // 车架号
     private String productNo; // 产品代码
+    private String productName;// 产品名称
     private String productLevelNo; // 产品级别代码
+    private String productLevelName; // 产品级别名称
     private BigDecimal price; // 价格
     private String carModel; // 汽车型号
     private String carColor; // 汽车颜色
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
     private Date workDate; // 施工时间
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
     private Date validityDate; // 质保有效期
     private String workCompany; // 施工单位
     private String workStaff; // 施工技师
     private String workPart; // 施工部位
     private String rollNumber; // 卷心号
     private String boxNumber; // 盒头号
-
-    public CarFilmQuality() {
-    }
-
-    public CarFilmQuality(String name, String phone, String qualityCardNo, String plateNo, String vin, String productNo, String productLevelNo, BigDecimal price, String carModel, String carColor, Date workDate, Date validityDate, String workCompany, String workStaff, String workPart, String rollNumber, String boxNumber) {
-        this.name = name;
-        this.phone = phone;
-        this.qualityCardNo = qualityCardNo;
-        this.plateNo = plateNo;
-        this.vin = vin;
-        this.productNo = productNo;
-        this.productLevelNo = productLevelNo;
-        this.price = price;
-        this.carModel = carModel;
-        this.carColor = carColor;
-        this.workDate = workDate;
-        this.validityDate = validityDate;
-        this.workCompany = workCompany;
-        this.workStaff = workStaff;
-        this.workPart = workPart;
-        this.rollNumber = rollNumber;
-        this.boxNumber = boxNumber;
-    }
+    private String approveFlag; //审核标识
 
     public String getName() {
         return name;
@@ -185,5 +165,29 @@ public class CarFilmQuality extends BaseEntity {
 
     public void setBoxNumber(String boxNumber) {
         this.boxNumber = boxNumber;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductLevelName() {
+        return productLevelName;
+    }
+
+    public void setProductLevelName(String productLevelName) {
+        this.productLevelName = productLevelName;
+    }
+
+    public String getApproveFlag() {
+        return approveFlag;
+    }
+
+    public void setApproveFlag(String approveFlag) {
+        this.approveFlag = approveFlag;
     }
 }

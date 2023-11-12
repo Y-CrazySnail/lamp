@@ -15,6 +15,8 @@ public interface ICarFilmTenantService extends IService<CarFilmTenant> {
      */
     List<CarFilmTenant> list(String productNo, String productName, String companyName, String  companyNo, String  managerName, String  managerPhone , String  miniProgramFlag, String officialWebsiteFlag);
 
+    List<CarFilmTenant> listByAuthorizedUsername();
+
     /**
      * 分页查询
      *

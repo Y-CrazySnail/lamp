@@ -15,6 +15,7 @@ public class CarFilmTenant extends BaseEntity {
     private String operationPrice;  // 产品运营维护价格
     private String companyName;  // 企业名称
     private String companyNo;  // 企业营业执照-统一社会信用代码
+    private String authorizedUsername; // 授权用户名
     private String managerName;  // 管理人姓名
     private String managerPhone;  // 管理人手机号
     private String managerEmail;  // 管理人邮箱
@@ -144,5 +145,13 @@ public class CarFilmTenant extends BaseEntity {
 
     public void setOfficialWebsiteDomain(String officialWebsiteDomain) {
         this.officialWebsiteDomain = officialWebsiteDomain;
+    }
+
+    public String getAuthorizedUsername() {
+        return authorizedUsername;
+    }
+
+    public void setAuthorizedUsername(String authorizedUsername) {
+        this.authorizedUsername = authorizedUsername;
     }
 }

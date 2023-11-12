@@ -26,7 +26,6 @@ private CarLevelMapper carLevelMapper;
      * @return
      */
     @Override
-    @Transactional(rollbackFor = {Exception.class})
     public List<BaseCarLevel> list() {
         return carLevelMapper.selectList(null);
     }

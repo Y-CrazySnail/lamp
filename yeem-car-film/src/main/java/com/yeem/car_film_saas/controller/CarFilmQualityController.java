@@ -30,9 +30,16 @@ public class CarFilmQualityController {
 
     @OperateLog(operateModule = "quality模块", operateType = "pages查询", operateDesc = "描述:分页查询quality全部信息")
     @GetMapping("/pages")
-    public ResponseEntity<Object> pages(@RequestParam("current") int current, @RequestParam("size") int size, @RequestParam(value = "name", required = false) String name, @RequestParam(value = "productNo", required = false) String productNo, @RequestParam(value = "phone", required = false) String phone, @RequestParam(value = "qualityCardNo", required = false) String qualityCardNo, @RequestParam(value = "plateNo", required = false) String plateNo, @RequestParam(value = "vin", required = false) String vin, @RequestParam(value = "likeName", required = false) String likeName, @RequestParam(value = "likePhone", required = false) String likePhone, @RequestParam(value = "likeQualityCardNo", required = false) String likeQualityCardNo, @RequestParam(value = "likePlateNo", required = false) String likePlateNo, @RequestParam(value = "likeVin", required = false) String likeVin) {
+    public ResponseEntity<Object> pages(@RequestParam("current") int current,
+                                        @RequestParam("size") int size,
+                                        @RequestParam(value = "name", required = false) String name,
+                                        @RequestParam(value = "productNo", required = false) String productNo,
+                                        @RequestParam(value = "phone", required = false) String phone,
+                                        @RequestParam(value = "qualityCardNo", required = false) String qualityCardNo,
+                                        @RequestParam(value = "plateNo", required = false) String plateNo,
+                                        @RequestParam(value = "vin", required = false) String vin) {
         try {
-            return ResponseEntity.ok(carFilmQualityService.pages(current, size, name, productNo, phone, qualityCardNo, plateNo, vin, likeName, likePhone, likeQualityCardNo, likePlateNo, likeVin));
+            return ResponseEntity.ok(carFilmQualityService.pages(current, size, name, productNo, phone, qualityCardNo, plateNo, vin));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询所有失败");
