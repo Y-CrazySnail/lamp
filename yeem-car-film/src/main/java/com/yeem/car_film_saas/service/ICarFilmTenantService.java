@@ -37,19 +37,19 @@ public interface ICarFilmTenantService extends IService<CarFilmTenant> {
      *
      * @param
      */
-    void remove(CarFilmTenant carFilmProduct);
+    void remove(CarFilmTenant carFilmTenant);
 
     /**
      * 新增商品
      *
-     * @param carFilmProduct
+     * @param carFilmTenant
      */
-    boolean save(CarFilmTenant carFilmProduct);
+    boolean save(CarFilmTenant carFilmTenant);
 
     /**
      * 更改商品
      *
-     * @param carFilmProduct
+     * @param carFilmTenant
      */
-    void update(CarFilmTenant carFilmProduct);
+    void update(CarFilmTenant carFilmTenant);
 }
