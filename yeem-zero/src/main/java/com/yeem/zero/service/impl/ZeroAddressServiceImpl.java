@@ -30,7 +30,9 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
 
     @Override
     public List<ZeroAddress> listByUserId(Long userId) {
-        return zeroAddressMapper.listByUserId(userId);
+        QueryWrapper<ZeroAddress> zeroAddressQueryWrapper = new QueryWrapper<>();
+        zeroAddressQueryWrapper.eq("user_id", userId);
+        return zeroAddressMapper.selectList(zeroAddressQueryWrapper);
     }
 
     @DS("zero")

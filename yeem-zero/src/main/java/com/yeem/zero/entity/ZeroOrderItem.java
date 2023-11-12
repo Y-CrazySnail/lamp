@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public class ZeroOrderItem extends BaseEntity {
     private Long orderId;
     private Long productId;
-    private Long productName;
+    private String productName;
     private int quantity;
     private BigDecimal price;
     private BigDecimal amount;
@@ -97,11 +97,11 @@ public class ZeroOrderItem extends BaseEntity {
         this.productId = productId;
     }
 
-    public Long getProductName() {
+    public String getProductName() {
         return productName;
     }
 
-    public void setProductName(Long productName) {
+    public void setProductName(String productName) {
         this.productName = productName;
     }
 

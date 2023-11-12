@@ -106,11 +106,22 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         }
         zeroOrder.setStatus(Constant.ORDER_STATUS_ORDER);
         zeroOrder.setOrderTime(new Date());
-        // todo 设置商品快照
-        // todo 设置地址快照
+        // 设置地址快照
+        ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
+        zeroOrder.setAddressName(zeroAddress.getName());
+        zeroOrder.setAddressPhone(zeroAddress.getPhone());
+        zeroOrder.setAddressArea(zeroAddress.getArea());
+        zeroOrder.setAddressDetail(zeroAddress.getDetail());
         super.save(zeroOrder);
         // 订单项处理
-        zeroOrder.getOrderItemList().forEach(zeroOrderItem -> zeroOrderItem.setOrderId(zeroOrder.getId()));
+        zeroOrder.getOrderItemList().forEach(zeroOrderItem -> {
+            zeroOrderItem.setOrderId(zeroOrder.getId());
+            // 设置商品快照
+            ZeroProduct zeroProduct = zeroProductService.getById(zeroOrderItem.getProductId());
+            zeroOrderItem.setProductName(zeroProduct.getName());
+            zeroOrderItem.setPrice(zeroProduct.getPrice());
+            zeroOrderItem.setImageShowPath(zeroProduct.getImageShowPath());
+        });
         zeroOrderItemService.saveBatch(zeroOrder.getOrderItemList());
         // 订单名称
         StringBuilder orderName = new StringBuilder();
@@ -232,7 +243,11 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
         List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
         zeroOrder.setOrderItemList(zeroOrderItemList);
-        ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
+        ZeroAddress zeroAddress = new ZeroAddress();
+        zeroAddress.setName(zeroOrder.getAddressName());
+        zeroAddress.setPhone(zeroOrder.getAddressPhone());
+        zeroAddress.setArea(zeroOrder.getAddressArea());
+        zeroAddress.setDetail(zeroOrder.getAddressDetail());
         zeroOrder.setZeroAddress(zeroAddress);
         // 物流信息查询
         if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {

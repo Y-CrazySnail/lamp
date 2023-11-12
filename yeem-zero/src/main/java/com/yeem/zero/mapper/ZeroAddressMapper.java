@@ -11,5 +11,4 @@ import java.util.List;
 @Mapper
 @DS("zero")
 public interface ZeroAddressMapper extends BaseMapper<ZeroAddress> {
-    List<ZeroAddress> listByUserId(@Param("userId") Long userId);
 }

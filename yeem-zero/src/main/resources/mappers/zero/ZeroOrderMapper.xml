@@ -11,7 +11,7 @@
             zo.direct_bonus,
             zo.indirect_bonus
         from zero_order zo
-        left join zero_user_extra zue on zo.user_id = zue.user_id
+        left join zero_user_extra zue on zo.user_id = zue.id
         where zo.distribution_flag = 1 and zo.delete_flag != 1
         and (zo.direct_referrer_user_id = #{userId} or zo.indirect_referrer_user_id = #{userId})
         <if test="nickName != '' and nickName != null">

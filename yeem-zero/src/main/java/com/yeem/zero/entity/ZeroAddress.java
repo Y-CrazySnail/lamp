@@ -18,25 +18,13 @@ public class ZeroAddress extends BaseEntity {
      */
     private String phone;
     /**
-     * 省
+     * 所在地区
      */
-    private String province;
-    /**
-     * 市
-     */
-    private String city;
-    /**
-     * 区
-     */
-    private String county;
+    private String area;
     /**
      * 详细地址
      */
-    private String address;
-    /**
-     * 地址标签
-     */
-    private String label;
+    private String detail;
     /**
      * 默认标识 0否 1是
      */
@@ -66,44 +54,20 @@ public class ZeroAddress extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getProvince() {
-        return province;
+    public String getArea() {
+        return area;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setArea(String area) {
+        this.area = area;
     }
 
-    public String getCity() {
-        return city;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-
-    public void setCounty(String county) {
-        this.county = county;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
+    public void setDetail(String detail) {
+        this.detail = detail;
     }
 
     public Integer getDefaultFlag() {

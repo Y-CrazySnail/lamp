@@ -20,11 +20,8 @@ public class ZeroOrder extends BaseEntity {
     /**
      * 地址ID
      */
+    @TableField(exist = false)
     private Long addressId;
-    /**
-     * 收货人
-     */
-    private String addressName;
     /**
      * 订单编号
      */
@@ -96,25 +93,21 @@ public class ZeroOrder extends BaseEntity {
      */
     private String remark;
     /**
-     * 手机号
+     * 地址-收货人姓名
      */
-    private String phone;
+    private String addressName;
     /**
-     * 省
+     * 地址-手机号
      */
-    private String province;
+    private String addressPhone;
     /**
-     * 市
+     * 地址-所在地区
      */
-    private String city;
+    private String addressArea;
     /**
-     * 区
+     * 地址-详细地址
      */
-    private String county;
-    /**
-     * 详细地址
-     */
-    private String address;
+    private String addressDetail;
     /**
      * 分销订单标识 0否 1是
      */
@@ -641,44 +634,28 @@ public class ZeroOrder extends BaseEntity {
         this.addressName = addressName;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getAddressPhone() {
+        return addressPhone;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setAddressPhone(String addressPhone) {
+        this.addressPhone = addressPhone;
     }
 
-    public String getProvince() {
-        return province;
+    public String getAddressArea() {
+        return addressArea;
     }
 
-    public void setProvince(String province) {
-        this.province = province;
+    public void setAddressArea(String addressArea) {
+        this.addressArea = addressArea;
     }
 
-    public String getCity() {
-        return city;
+    public String getAddressDetail() {
+        return addressDetail;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getCounty() {
-        return county;
-    }
-
-    public void setCounty(String county) {
-        this.county = county;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddressDetail(String addressDetail) {
+        this.addressDetail = addressDetail;
     }
 
     public ZeroAddress getZeroAddress() {
