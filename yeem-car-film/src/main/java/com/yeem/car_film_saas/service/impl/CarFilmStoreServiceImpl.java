@@ -95,10 +95,10 @@ public class CarFilmStoreServiceImpl extends ServiceImpl<CarFilmStoreMapper, Car
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public void remove(CarFilmStore carFilmStore) {
-        CarFilmStore getOneCarCarFilmStore = carFilmStoreMapper.selectOne(new QueryWrapper<CarFilmStore>().eq("id", carFilmStore.getId()));
+        CarFilmStore getOneCarCarFilmStore = carFilmStoreMapper.selectById(carFilmStore.getId());
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(getOneCarCarFilmStore.getProductNo())) {
-            throw new RuntimeException("那里不可以哦~ :)");
+            throw new RuntimeException("User does not have permission: illegal deletion!");
         }
         carFilmStore.setDeleteFlag(true);
         carFilmStoreMapper.updateById(carFilmStore);
@@ -119,7 +119,7 @@ public class CarFilmStoreServiceImpl extends ServiceImpl<CarFilmStoreMapper, Car
     public void update(CarFilmStore carFilmStore) {
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmStore.getProductNo())) {
-            throw new RuntimeException("那里不可以哦~ :)");
+            throw new RuntimeException("User not authorized: illegal modification");
         }
         carFilmStoreMapper.updateById(carFilmStore);
     }
