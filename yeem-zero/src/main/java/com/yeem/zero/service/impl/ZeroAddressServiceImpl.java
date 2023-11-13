@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.zero.entity.ZeroAddress;
 import com.yeem.zero.mapper.ZeroAddressMapper;
 import com.yeem.zero.service.IZeroAddressService;
@@ -32,6 +33,7 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
     public List<ZeroAddress> listByUserId(Long userId) {
         QueryWrapper<ZeroAddress> zeroAddressQueryWrapper = new QueryWrapper<>();
         zeroAddressQueryWrapper.eq("user_id", userId);
+        zeroAddressQueryWrapper.ne(BaseEntity.BaseField.DELETE_FLAG.getName(), true);
         return zeroAddressMapper.selectList(zeroAddressQueryWrapper);
     }
 
