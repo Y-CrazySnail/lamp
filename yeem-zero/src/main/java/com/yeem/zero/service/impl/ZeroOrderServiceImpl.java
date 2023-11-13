@@ -110,7 +110,10 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
         zeroOrder.setAddressName(zeroAddress.getName());
         zeroOrder.setAddressPhone(zeroAddress.getPhone());
-        zeroOrder.setAddressArea(zeroAddress.getArea());
+        zeroOrder.setAddressProvince(zeroAddress.getProvince());
+        zeroOrder.setAddressCity(zeroAddress.getCity());
+        zeroOrder.setAddressDistrict(zeroAddress.getDistrict());
+        zeroOrder.setAddressStreet(zeroAddress.getStreet());
         zeroOrder.setAddressDetail(zeroAddress.getDetail());
         super.save(zeroOrder);
         // 订单项处理
@@ -246,7 +249,10 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         ZeroAddress zeroAddress = new ZeroAddress();
         zeroAddress.setName(zeroOrder.getAddressName());
         zeroAddress.setPhone(zeroOrder.getAddressPhone());
-        zeroAddress.setArea(zeroOrder.getAddressArea());
+        zeroAddress.setProvince(zeroOrder.getAddressProvince());
+        zeroAddress.setCity(zeroOrder.getAddressCity());
+        zeroAddress.setDistrict(zeroOrder.getAddressDistrict());
+        zeroAddress.setStreet(zeroOrder.getAddressStreet());
         zeroAddress.setDetail(zeroOrder.getAddressDetail());
         zeroOrder.setZeroAddress(zeroAddress);
         // 物流信息查询

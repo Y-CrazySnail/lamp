@@ -18,9 +18,21 @@ public class ZeroAddress extends BaseEntity {
      */
     private String phone;
     /**
-     * 所在地区
+     * 省
      */
-    private String area;
+    private String province;
+    /**
+     * 省
+     */
+    private String city;
+    /**
+     * 省
+     */
+    private String district;
+    /**
+     * 省
+     */
+    private String street;
     /**
      * 详细地址
      */
@@ -54,12 +66,36 @@ public class ZeroAddress extends BaseEntity {
         this.phone = phone;
     }
 
-    public String getArea() {
-        return area;
+    public String getProvince() {
+        return province;
     }
 
-    public void setArea(String area) {
-        this.area = area;
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getStreet() {
+        return street;
+    }
+
+    public void setStreet(String street) {
+        this.street = street;
     }
 
     public String getDetail() {

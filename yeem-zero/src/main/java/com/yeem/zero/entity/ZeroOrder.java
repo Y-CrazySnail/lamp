@@ -101,9 +101,21 @@ public class ZeroOrder extends BaseEntity {
      */
     private String addressPhone;
     /**
-     * 地址-所在地区
+     * 省
      */
-    private String addressArea;
+    private String addressProvince;
+    /**
+     * 市
+     */
+    private String addressCity;
+    /**
+     * 区
+     */
+    private String addressDistrict;
+    /**
+     * 街道
+     */
+    private String addressStreet;
     /**
      * 地址-详细地址
      */
@@ -642,12 +654,36 @@ public class ZeroOrder extends BaseEntity {
         this.addressPhone = addressPhone;
     }
 
-    public String getAddressArea() {
-        return addressArea;
+    public String getAddressProvince() {
+        return addressProvince;
     }
 
-    public void setAddressArea(String addressArea) {
-        this.addressArea = addressArea;
+    public void setAddressProvince(String addressProvince) {
+        this.addressProvince = addressProvince;
+    }
+
+    public String getAddressCity() {
+        return addressCity;
+    }
+
+    public void setAddressCity(String addressCity) {
+        this.addressCity = addressCity;
+    }
+
+    public String getAddressDistrict() {
+        return addressDistrict;
+    }
+
+    public void setAddressDistrict(String addressDistrict) {
+        this.addressDistrict = addressDistrict;
+    }
+
+    public String getAddressStreet() {
+        return addressStreet;
+    }
+
+    public void setAddressStreet(String addressStreet) {
+        this.addressStreet = addressStreet;
     }
 
     public String getAddressDetail() {
