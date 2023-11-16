@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.yeem.car.film.entity.CarFilmPrice;
 import com.yeem.car.film.entity.CarFilmProduct;
 import com.yeem.car.film.mapper.CarFilmProductMapper;
+import com.yeem.car.film.service.ICarFilmPriceService;
 import com.yeem.car.film.service.ICarFilmProductService;
 import com.yeem.car.film.service.ICarFilmTenantService;
 import com.yeem.car.film.entity.CarFilmTenant;
@@ -25,6 +27,8 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
     private CarFilmProductMapper carFilmProductMapper;
     @Autowired
     private ICarFilmTenantService carFilmTenantService;
+    @Autowired
+    private ICarFilmPriceService carFilmPriceService;
 
     @Override
     public List<CarFilmProduct> list(String productNo, String productLevelName, String status) {
@@ -42,6 +46,21 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
         }
         wrapper.eq("delete_flag", 0);
         return carFilmProductMapper.selectList(wrapper);
+    }
+
+    @Override
+    public List<CarFilmProduct> listWithPrice(String productNo) {
+        QueryWrapper<CarFilmProduct> carFilmProductQueryWrapper = new QueryWrapper<>();
+        carFilmProductQueryWrapper.eq("product_no", productNo);
+        List<CarFilmProduct> carFilmProductList = carFilmProductMapper.selectList(carFilmProductQueryWrapper);
+        for (CarFilmProduct carFilmProduct : carFilmProductList) {
+            QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
+            carFilmPriceQueryWrapper.eq("product_level_no", carFilmProduct.getProductLevelNo());
+            carFilmPriceQueryWrapper.eq("product_no", carFilmProduct.getProductNo());
+            List<CarFilmPrice> carFilmPriceList = carFilmPriceService.list(carFilmPriceQueryWrapper);
+            carFilmProduct.setCarFilmPriceList(carFilmPriceList);
+        }
+        return carFilmProductList;
     }
 
     @Override

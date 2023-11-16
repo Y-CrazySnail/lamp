@@ -1,7 +1,10 @@
 package com.yeem.car.film.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
+
+import java.util.List;
 
 @TableName(value = "car_film_product")
 public class CarFilmProduct extends BaseEntity {
@@ -11,6 +14,8 @@ public class CarFilmProduct extends BaseEntity {
     private String productLevelName; // 产品级别名称
     private String channel; // 渠道
     private String status; // 状态 0下线 1上线
+    @TableField(exist = false)
+    private List<CarFilmPrice> carFilmPriceList;
 
     public String getProductNo() {
         return productNo;
@@ -58,5 +63,13 @@ public class CarFilmProduct extends BaseEntity {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public List<CarFilmPrice> getCarFilmPriceList() {
+        return carFilmPriceList;
+    }
+
+    public void setCarFilmPriceList(List<CarFilmPrice> carFilmPriceList) {
+        this.carFilmPriceList = carFilmPriceList;
     }
 }

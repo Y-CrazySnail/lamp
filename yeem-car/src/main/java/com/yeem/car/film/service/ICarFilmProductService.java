@@ -15,6 +15,8 @@ public interface ICarFilmProductService extends IService<CarFilmProduct> {
      */
     List<CarFilmProduct> list(String productNo, String productLevelName, String status);
 
+    List<CarFilmProduct> listWithPrice(String productNo);
+
     /**
      * 分页查询
      *

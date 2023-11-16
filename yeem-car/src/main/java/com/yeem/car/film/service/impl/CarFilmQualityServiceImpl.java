@@ -166,4 +166,9 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         }
         carFilmQualityMapper.updateById(carFilmQuality);
     }
+
+    @Override
+    public List<CarFilmQuality> getQualityInfo(String productNo, String phone) {
+        return null;
+    }
 }
