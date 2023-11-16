@@ -7,7 +7,7 @@
         <module>common</module>
         <module>aladdin-lamp</module>
         <module>yeem-auth</module>
-        <module>yeem-car-film</module>
+        <module>yeem-car</module>
         <module>yeem-car-old</module>
         <module>yeem-zero</module>
         <module>yeem-client</module>
