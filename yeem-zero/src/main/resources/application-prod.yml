@@ -3,8 +3,10 @@ server:
   servlet:
     context-path: /server
   address: 0.0.0.0
-
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
   autoconfigure:
     exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
   datasource:
