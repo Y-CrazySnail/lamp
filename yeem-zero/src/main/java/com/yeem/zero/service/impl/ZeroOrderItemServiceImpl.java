@@ -20,22 +20,10 @@ public class ZeroOrderItemServiceImpl extends ServiceImpl<ZeroOrderItemMapper, Z
     @Autowired
     private ZeroOrderItemMapper zeroOrderItemMapper;
 
-    @Autowired
-    private IZeroProductService zeroProductService;
-
     @Override
     public List<ZeroOrderItem> listById(Long orderId) {
         QueryWrapper<ZeroOrderItem> zeroOrderItemQueryWrapper = new QueryWrapper<>();
         zeroOrderItemQueryWrapper.eq("order_id", orderId);
-        List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemMapper.selectList(zeroOrderItemQueryWrapper);
-        for (ZeroOrderItem zeroOrderItem : zeroOrderItemList) {
-            ZeroProduct zeroProduct = new ZeroProduct();
-            zeroProduct.setId(zeroOrderItem.getProductId());
-            zeroProduct.setName(zeroOrderItem.getProductName());
-            zeroProduct.setImageShowPath(zeroOrderItem.getImageShowPath());
-            zeroProduct.setPrice(zeroOrderItem.getPrice());
-            zeroOrderItem.setZeroProduct(zeroProduct);
-        }
-        return zeroOrderItemList;
+        return zeroOrderItemMapper.selectList(zeroOrderItemQueryWrapper);
     }
 }

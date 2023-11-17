@@ -26,8 +26,6 @@ public interface IZeroOrderService extends IService<ZeroOrder> {
 
     void confirm(ZeroOrder zeroOrder);
 
-    ZeroOrder get(Long id);
-
     /**
      * 根据ID查询
      * @param id ID

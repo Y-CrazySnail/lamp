@@ -151,7 +151,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         if (StringUtils.isEmpty(zeroUserExtra)) {
             throw new RuntimeException("user info is null when save cart");
         }
-        zeroOrder = get(zeroOrder.getId());
+        zeroOrder = getById(zeroOrder.getId());
         PrepayWithRequestPaymentResponse response = wechatPrepay(zeroOrder);
         zeroOrder.setPrepayWithRequestPaymentResponse(response);
         return zeroOrder;
@@ -193,7 +193,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     @Override
     public void confirm(ZeroOrder zeroOrder) {
-        zeroOrder = get(zeroOrder.getId());
+        zeroOrder = getById(zeroOrder.getId());
         zeroOrder.setStatus(Constant.ORDER_STATUS_RECEIVE);
         zeroOrder.setCompleteTime(new Date());
         super.updateById(zeroOrder);
@@ -240,41 +240,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     @Override
-    public ZeroOrder get(Long id) {
-        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        zeroOrderQueryWrapper.eq("id", id);
-        ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
+    public ZeroOrder getById(Long id) {
+        ZeroOrder zeroOrder = super.getById(id);
         List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
         zeroOrder.setOrderItemList(zeroOrderItemList);
-        ZeroAddress zeroAddress = new ZeroAddress();
-        zeroAddress.setName(zeroOrder.getAddressName());
-        zeroAddress.setPhone(zeroOrder.getAddressPhone());
-        zeroAddress.setProvince(zeroOrder.getAddressProvince());
-        zeroAddress.setCity(zeroOrder.getAddressCity());
-        zeroAddress.setDistrict(zeroOrder.getAddressDistrict());
-        zeroAddress.setStreet(zeroOrder.getAddressStreet());
-        zeroAddress.setDetail(zeroOrder.getAddressDetail());
-        zeroOrder.setZeroAddress(zeroAddress);
         // 物流信息查询
         if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
             JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", "78714106471365");
-            zeroOrder.setLogistics(logistics);
-        }
-        return zeroOrder;
-    }
-
-    @Override
-    public ZeroOrder getById(Long id) {
-        QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        zeroOrderQueryWrapper.eq("id", id);
-        ZeroOrder zeroOrder = super.getOne(zeroOrderQueryWrapper);
-        List<ZeroOrderItem> zeroOrderItemList = zeroOrderItemService.listById(id);
-        zeroOrder.setOrderItemList(zeroOrderItemList);
-        ZeroAddress zeroAddress = zeroAddressService.getById(zeroOrder.getAddressId());
-        zeroOrder.setZeroAddress(zeroAddress);
-        // 物流信息查询
-        if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
-            JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", zeroOrder.getWaybillNo());
             zeroOrder.setLogistics(logistics);
         }
         return zeroOrder;
@@ -573,7 +545,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     }
 
     public void wechatRefund(ZeroOrder zeroOrder) {
-        zeroOrder = get(zeroOrder.getId());
+        zeroOrder = getById(zeroOrder.getId());
         String active = environment.getProperty("wechat.active");
         String merchantId = environment.getProperty("wechat." + active + ".merchant-id");
         String privateKeyPath = environment.getProperty("wechat." + active + ".private-key-path");
