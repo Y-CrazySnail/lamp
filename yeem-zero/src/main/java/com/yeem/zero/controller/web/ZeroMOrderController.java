@@ -66,7 +66,7 @@ public class ZeroMOrderController {
     @GetMapping("getById")
     public ResponseEntity<ZeroOrder> getById(@RequestParam(value = "id") Long id) {
         try {
-            return ResponseEntity.ok(zeroOrderService.get(id));
+            return ResponseEntity.ok(zeroOrderService.getById(id));
         } catch (Exception e) {
             log.error("get order by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
