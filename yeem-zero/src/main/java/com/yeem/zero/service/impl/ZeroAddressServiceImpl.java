@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.common.entity.BaseEntity;
+import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.ZeroAddress;
 import com.yeem.zero.mapper.ZeroAddressMapper;
 import com.yeem.zero.service.IZeroAddressService;
@@ -41,12 +42,18 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
     @Override
     @Transactional
     public boolean save(ZeroAddress zeroAddress) {
+        if (zeroAddress.getDefaultFlag() == Integer.parseInt(Constant.BOOLEAN_TRUE)) {
+            UpdateWrapper<ZeroAddress> zeroAddressUpdateWrapper = new UpdateWrapper<>();
+            zeroAddressUpdateWrapper.eq("user_id", zeroAddress.getUserId());
+            zeroAddressUpdateWrapper.set("default_flag", Integer.parseInt(Constant.BOOLEAN_FALSE));
+            zeroAddressMapper.update(null, zeroAddressUpdateWrapper);
+        }
         QueryWrapper<ZeroAddress> zeroAddressQueryWrapper = new QueryWrapper<>();
         zeroAddressQueryWrapper.eq("user_id", zeroAddress.getUserId());
         zeroAddressQueryWrapper.eq("default_flag", 1);
         int count = zeroAddressMapper.selectCount(zeroAddressQueryWrapper);
         if (count == 0) {
-            zeroAddress.setDefaultFlag(1);
+            zeroAddress.setDefaultFlag(Integer.parseInt(Constant.BOOLEAN_TRUE));
         }
         return SqlHelper.retBool(zeroAddressMapper.insert(zeroAddress));
     }
@@ -55,10 +62,9 @@ public class ZeroAddressServiceImpl extends ServiceImpl<ZeroAddressMapper, ZeroA
     @Override
     @Transactional
     public boolean update(ZeroAddress zeroAddress) {
-        if (Objects.equals(zeroAddress.getDefaultFlag(), 1)) {
+        if (Objects.equals(zeroAddress.getDefaultFlag(), Integer.parseInt(Constant.BOOLEAN_TRUE))) {
             UpdateWrapper<ZeroAddress> zeroAddressUpdateWrapper = new UpdateWrapper<>();
             zeroAddressUpdateWrapper.eq("user_id", zeroAddress.getUserId());
-            zeroAddressUpdateWrapper.ne("id", zeroAddress.getId());
             zeroAddressUpdateWrapper.set("default_flag", 0);
             zeroAddressMapper.update(null, zeroAddressUpdateWrapper);
         }
