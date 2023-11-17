@@ -279,7 +279,8 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         Long userId = WechatAuthInterceptor.getUserId();
         List<ZeroOrder> zeroOrderList = baseMapper.distribution(userId, nickName);
         zeroOrderList.forEach(zeroOrder -> {
-            ZeroUserExtra zeroUserExtra = zeroUserExtraService.getByUserId(zeroOrder.getUserId());
+            log.info("distribution order user id:{}", zeroOrder.getUserId());
+            ZeroUserExtra zeroUserExtra = zeroUserExtraService.getById(zeroOrder.getUserId());
             zeroOrder.setUserExtra(zeroUserExtra);
         });
         return zeroOrderList;

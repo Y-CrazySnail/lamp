@@ -73,16 +73,9 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
             userExtra.setReferrerUserCount(referrerUserCount);
             userExtra.setReferrerOrderCount(referrerOrderCount);
         }
-        List<ZeroAddress> zeroAddressList = zeroAddressService.listByUserId(userExtra.getId());
+        List<ZeroAddress> zeroAddressList = zeroAddressService.listByUserId(userId);
         userExtra.setZeroAddressList(zeroAddressList);
         return userExtra;
-    }
-
-    @Override
-    public ZeroUserExtra getByUserId(Long userId) {
-        QueryWrapper<ZeroUserExtra> userExtraQueryWrapper = new QueryWrapper<>();
-        userExtraQueryWrapper.eq("user_id", userId);
-        return zeroUserExtraMapper.selectOne(userExtraQueryWrapper);
     }
 
     @Override

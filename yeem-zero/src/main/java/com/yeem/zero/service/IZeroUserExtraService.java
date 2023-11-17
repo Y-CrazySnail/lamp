@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface IZeroUserExtraService extends IService<ZeroUserExtra> {
     ZeroUserExtra getById(Long userId);
-    ZeroUserExtra getByUserId(Long userId);
     ZeroUserExtra getByWechatOpenId(String openId);
     List<ZeroUserExtra> distribution(Long userId, String nickName);
     Integer getDirectReferrerUserCount(Long userId);

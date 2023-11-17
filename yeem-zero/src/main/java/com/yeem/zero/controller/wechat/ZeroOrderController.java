@@ -210,7 +210,7 @@ public class ZeroOrderController {
     @GetMapping("get")
     public ResponseEntity<ZeroOrder> get(@RequestParam("id") Long id) {
         try {
-            return ResponseEntity.ok(zeroOrderService.get(id));
+            return ResponseEntity.ok(zeroOrderService.getById(id));
         } catch (Exception e) {
             log.error("get order error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
