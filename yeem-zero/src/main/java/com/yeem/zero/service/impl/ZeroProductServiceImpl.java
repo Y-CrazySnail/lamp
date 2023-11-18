@@ -5,12 +5,17 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.common.entity.BaseEntity;
+import com.yeem.zero.config.Constant;
+import com.yeem.zero.entity.ZeroFavorite;
 import com.yeem.zero.entity.ZeroProduct;
 import com.yeem.zero.mapper.ZeroProductMapper;
+import com.yeem.zero.security.WechatAuthInterceptor;
+import com.yeem.zero.service.IZeroFavoriteService;
 import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -21,6 +26,8 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
 
     @Autowired
     private ZeroProductMapper zeroProductMapper;
+    @Autowired
+    private IZeroFavoriteService zeroFavoriteService;
 
     @Override
     public List<ZeroProduct> listByName(String name) {
@@ -57,6 +64,18 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     @Override
     public ZeroProduct getById(Long id) {
         ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
+        // 收藏标识
+        if (!StringUtils.isEmpty(WechatAuthInterceptor.getUserId())) {
+            QueryWrapper<ZeroFavorite> zeroFavoriteQueryWrapper = new QueryWrapper<>();
+            zeroFavoriteQueryWrapper.eq("user_id", WechatAuthInterceptor.getUserId());
+            zeroFavoriteQueryWrapper.eq("product_id", zeroProduct.getId());
+            int favoriteCount = zeroFavoriteService.count(zeroFavoriteQueryWrapper);
+            if (favoriteCount > 0) {
+                zeroProduct.setFavoriteFlag(Constant.BOOLEAN_TRUE);
+            } else {
+                zeroProduct.setFavoriteFlag(Constant.BOOLEAN_FALSE);
+            }
+        }
         zeroProduct.dealProductImage(zeroProduct);
         return zeroProduct;
     }

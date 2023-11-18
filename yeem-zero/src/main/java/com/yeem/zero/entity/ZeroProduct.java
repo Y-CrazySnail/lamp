@@ -113,6 +113,11 @@ public class ZeroProduct extends BaseEntity {
      */
     private String imageDetailPath10;
     /**
+     * 收藏标识 0否 1是
+     */
+    @TableField(exist = false)
+    private String favoriteFlag;
+    /**
      * 展示图列表 type=0
      */
     @TableField(exist = false)
@@ -362,6 +367,14 @@ public class ZeroProduct extends BaseEntity {
 
     public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public String getFavoriteFlag() {
+        return favoriteFlag;
+    }
+
+    public void setFavoriteFlag(String favoriteFlag) {
+        this.favoriteFlag = favoriteFlag;
     }
 
     public void dealProductImage(ZeroProduct zeroProduct) {

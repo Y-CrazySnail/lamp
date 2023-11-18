@@ -29,8 +29,7 @@ public class ZeroTencentCosController {
 
     @PostMapping("upload")
     public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
-        String key = UUID.fastUUID() + "." + FileUtil.getSuffix(file.getOriginalFilename());
-        UploadResult uploadResult;
+        String key = UUID.fastUUID() + "/" + file.getOriginalFilename();
         try {
             TencentFileUtils.upload(
                     environment.getProperty("tencent.cos.bucket-name"),
@@ -41,10 +40,15 @@ public class ZeroTencentCosController {
                     file.getInputStream()
             );
             log.info("upload file to tencent cos, key:{}", key);
+            String url = TencentFileUtils.getUrl(
+                            environment.getProperty("tencent.cos.bucket-name"),
+                            environment.getProperty("tencent.cos.region"),
+                            key)
+                    .toString();
+            return ResponseEntity.ok(url);
         } catch (IOException e) {
             log.error("upload file to tencent cos error:", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("upload file to tencent cos error");
         }
-        return ResponseEntity.ok(key);
     }
 }
