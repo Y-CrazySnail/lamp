@@ -12,10 +12,10 @@ public class WechatInterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new WechatAuthInterceptor())
                 .addPathPatterns("/wechat/**")
+                .excludePathPatterns("/wechat/sys-dictionary/list")
                 .excludePathPatterns("/wechat/zero-user/login")
                 .excludePathPatterns("/wechat/zero-user/phone")
                 .excludePathPatterns("/wechat/zero-product/recommend")
-                .excludePathPatterns("/wechat/zero-product/get")
                 .excludePathPatterns("/wechat/zero-product/list-by-name")
                 .excludePathPatterns("/wechat/zero-category/list")
                 .excludePathPatterns("/wechat/zero-order/refundCallback")

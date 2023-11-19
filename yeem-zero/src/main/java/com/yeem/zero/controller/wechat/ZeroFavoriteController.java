@@ -1,5 +1,6 @@
 package com.yeem.zero.controller.wechat;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yeem.zero.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroFavorite;
@@ -58,6 +59,13 @@ public class ZeroFavoriteController {
     public ResponseEntity<Object> save(@RequestBody ZeroFavorite zeroFavorite) {
         try {
             Long userId = WechatAuthInterceptor.getUserId();
+            QueryWrapper<ZeroFavorite> zeroFavoriteQueryWrapper = new QueryWrapper<>();
+            zeroFavoriteQueryWrapper.eq("user_id", WechatAuthInterceptor.getUserId());
+            zeroFavoriteQueryWrapper.eq("product_id", zeroFavorite.getProductId());
+            int favoriteCount = zeroFavoriteService.count(zeroFavoriteQueryWrapper);
+            if (favoriteCount > 0) {
+                return ResponseEntity.ok("save product to favorite success");
+            }
             zeroFavorite.setUserId(userId);
             zeroFavoriteService.save(zeroFavorite);
             return ResponseEntity.ok("save product to favorite success");

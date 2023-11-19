@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.zero.log.OperateLog;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.entity.ZeroUserExtra;
+import com.yeem.zero.security.WechatAuthInterceptor;
 import com.yeem.zero.service.IZeroAddressService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -58,6 +59,7 @@ public class ZeroMUserController {
         if (!StringUtils.isEmpty(distributionFlag)) {
             zeroUserExtraQueryWrapper.eq("distribution_flag", distributionFlag);
         }
+        zeroUserExtraQueryWrapper.isNotNull("phone_number");
         try {
             return ResponseEntity.ok(zeroUserExtraService.page(page, zeroUserExtraQueryWrapper));
         } catch (Exception e) {
@@ -81,4 +83,23 @@ public class ZeroMUserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 更新用户信息
+     *
+     * @return 用户信息
+     * @apiNote 更新用户信息
+     */
+    @OperateLog(operateModule = "用户模块", operateType = "更新用户信息", operateDesc = "更新用户信息")
+    @PutMapping("update")
+    public ResponseEntity<Object> update(@RequestBody ZeroUserExtra entity) {
+        try {
+            zeroUserExtraService.updateById(entity);
+        } catch (Exception e) {
+            log.error("update user extra info error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+        return ResponseEntity.ok(entity);
+    }
+
 }

@@ -66,10 +66,12 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
         ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
         // 收藏标识
         if (!StringUtils.isEmpty(WechatAuthInterceptor.getUserId())) {
+            log.info("userid:{}", WechatAuthInterceptor.getUserId());
             QueryWrapper<ZeroFavorite> zeroFavoriteQueryWrapper = new QueryWrapper<>();
             zeroFavoriteQueryWrapper.eq("user_id", WechatAuthInterceptor.getUserId());
             zeroFavoriteQueryWrapper.eq("product_id", zeroProduct.getId());
             int favoriteCount = zeroFavoriteService.count(zeroFavoriteQueryWrapper);
+            log.info("favoriteCount:{}", favoriteCount);
             if (favoriteCount > 0) {
                 zeroProduct.setFavoriteFlag(Constant.BOOLEAN_TRUE);
             } else {
