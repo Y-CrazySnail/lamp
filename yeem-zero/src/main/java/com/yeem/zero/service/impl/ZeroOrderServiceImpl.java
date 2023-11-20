@@ -211,7 +211,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
                 if (!StringUtils.isEmpty(zeroUserExtra)) {
                     zeroBalanceRecord.setAmount(zeroOrder.getDirectBonus());
                     zeroBalanceRecord.setUserId(zeroUserExtra.getId());
-                    zeroBalanceRecord.setBalance(zeroUserExtra.getBalance().add(zeroOrder.getDirectBonus()));
+                    zeroBalanceRecord.setBalance(zeroUserExtra.getBalance());
                     zeroBalanceRecordService.save(zeroBalanceRecord);
                 }
             }
