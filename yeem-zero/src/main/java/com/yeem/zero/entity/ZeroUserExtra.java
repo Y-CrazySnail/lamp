@@ -93,6 +93,8 @@ public class ZeroUserExtra extends BaseEntity {
      */
     @TableField(exist = false)
     private List<ZeroAddress> zeroAddressList;
+    @TableField(exist = false)
+    private List<ZeroBalanceRecord> zeroBalanceRecordList;
 
     public Long getDirectReferrerUserId() {
         return directReferrerUserId;
@@ -244,5 +246,13 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setZeroAddressList(List<ZeroAddress> zeroAddressList) {
         this.zeroAddressList = zeroAddressList;
+    }
+
+    public List<ZeroBalanceRecord> getZeroBalanceRecordList() {
+        return zeroBalanceRecordList;
+    }
+
+    public void setZeroBalanceRecordList(List<ZeroBalanceRecord> zeroBalanceRecordList) {
+        this.zeroBalanceRecordList = zeroBalanceRecordList;
     }
 }

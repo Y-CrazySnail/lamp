@@ -3,6 +3,7 @@ package com.yeem.zero.controller.web;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yeem.common.entity.BaseEntity;
 import com.yeem.zero.entity.ZeroOrder;
 import com.yeem.zero.service.IZeroOrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +35,8 @@ public class ZeroMOrderController {
     public ResponseEntity<IPage<ZeroOrder>> getPage(@RequestParam("current") Integer current,
                                                     @RequestParam("size") Integer size,
                                                     @RequestParam(value = "userId", required = false) Long userId,
-                                                    @RequestParam(value = "status", required = false) String status) {
+                                                    @RequestParam(value = "status", required = false) String status,
+                                                    @RequestParam(value = "directReferrerUserId", required = false) Long distributionUserId) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -49,7 +51,14 @@ public class ZeroMOrderController {
         if (!StringUtils.isEmpty(status)) {
             zeroOrderQueryWrapper.eq("status", status);
         }
-        zeroOrderQueryWrapper.orderByAsc("status");
+        if (!StringUtils.isEmpty(distributionUserId)) {
+            zeroOrderQueryWrapper.and(QueryWrapper -> QueryWrapper
+                    .eq("direct_referrer_user_id", distributionUserId)
+                    .or()
+                    .eq("indirect_referrer_user_id", distributionUserId)
+            );
+        }
+        zeroOrderQueryWrapper.orderByAsc("status").orderByDesc(BaseEntity.BaseField.ID.getName());
         try {
             return ResponseEntity.ok(zeroOrderService.page(page, zeroOrderQueryWrapper));
         } catch (Exception e) {

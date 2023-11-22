@@ -8,9 +8,11 @@ import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.OauthUtils;
 import com.yeem.zero.config.Constant;
 import com.yeem.zero.entity.ZeroAddress;
+import com.yeem.zero.entity.ZeroBalanceRecord;
 import com.yeem.zero.entity.ZeroUserExtra;
 import com.yeem.zero.mapper.ZeroUserExtraMapper;
 import com.yeem.zero.service.IZeroAddressService;
+import com.yeem.zero.service.IZeroBalanceRecordService;
 import com.yeem.zero.service.IZeroOrderService;
 import com.yeem.zero.service.IZeroUserExtraService;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +41,8 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     private IZeroOrderService zeroOrderService;
     @Autowired
     private IZeroAddressService zeroAddressService;
+    @Autowired
+    private IZeroBalanceRecordService zeroBalanceRecordService;
 
     @DS("zero")
     @Override
@@ -75,6 +79,35 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         }
         List<ZeroAddress> zeroAddressList = zeroAddressService.listByUserId(userId);
         userExtra.setZeroAddressList(zeroAddressList);
+        return userExtra;
+    }
+
+    @Override
+    public ZeroUserExtra getDetailById(Long userId) {
+        log.info("get user detail info. user id:{}", userId);
+        ZeroUserExtra userExtra = zeroUserExtraMapper.selectById(userId);
+        if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag() == 1) {
+            Integer referrerUserCount = 0;
+            Integer referrerOrderCount = 0;
+            // 直接推荐
+            if (Objects.equals(Constant.BOOLEAN_TRUE, environment.getProperty("distribution.direct.switch"))) {
+                referrerUserCount += getDirectReferrerUserCount(userId);
+                referrerOrderCount += zeroOrderService.getDirectReferrerOrderCount(userId);
+            }
+            // 间接推荐
+            if (Objects.equals(Constant.BOOLEAN_TRUE, environment.getProperty("distribution.direct.switch"))) {
+                referrerUserCount += getIndirectReferrerUserCount(userId);
+                referrerOrderCount += zeroOrderService.getIndirectReferrerOrderCount(userId);
+            }
+            userExtra.setReferrerUserCount(referrerUserCount);
+            userExtra.setReferrerOrderCount(referrerOrderCount);
+        }
+        // 地址处理
+        List<ZeroAddress> zeroAddressList = zeroAddressService.listByUserId(userId);
+        userExtra.setZeroAddressList(zeroAddressList);
+        // 获取零钱明细
+        List<ZeroBalanceRecord> zeroBalanceRecordList = zeroBalanceRecordService.listByUserId(userId);
+        userExtra.setZeroBalanceRecordList(zeroBalanceRecordList);
         return userExtra;
     }
 
@@ -124,5 +157,12 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     @Override
     public void subtractTodoBalance(Long userId, BigDecimal amount) {
         zeroUserExtraMapper.subtractTodoBalance(userId, amount);
+    }
+
+    @Override
+    public List<ZeroUserExtra> distributionUserList() {
+        QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
+        zeroUserExtraQueryWrapper.eq("distribution_flag", Constant.BOOLEAN_TRUE);
+        return zeroUserExtraMapper.selectList(zeroUserExtraQueryWrapper);
     }
 }

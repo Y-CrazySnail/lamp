@@ -77,9 +77,24 @@ public class ZeroMUserController {
     @GetMapping(value = "getById")
     public ResponseEntity<ZeroUserExtra> getPage(@RequestParam(value = "id", required = false) Long id) {
         try {
-            return ResponseEntity.ok(zeroUserExtraService.getById(id));
+            return ResponseEntity.ok(zeroUserExtraService.getDetailById(id));
         } catch (Exception e) {
             log.error("get user by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 获取分销商用户信息列表
+     *
+     * @return 分销商用户信息列表
+     */
+    @GetMapping(value = "distribution-user-list")
+    public ResponseEntity<List<ZeroUserExtra>> distributionUserList() {
+        try {
+            return ResponseEntity.ok(zeroUserExtraService.distributionUserList());
+        } catch (Exception e) {
+            log.error("distribution user list error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -101,5 +116,4 @@ public class ZeroMUserController {
         }
         return ResponseEntity.ok(entity);
     }
-
 }
