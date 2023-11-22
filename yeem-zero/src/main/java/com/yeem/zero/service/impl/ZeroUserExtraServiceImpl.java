@@ -160,9 +160,12 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     }
 
     @Override
-    public List<ZeroUserExtra> distributionUserList() {
+    public List<ZeroUserExtra> distributionUserList(String nickName) {
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
         zeroUserExtraQueryWrapper.eq("distribution_flag", Constant.BOOLEAN_TRUE);
+        if (!StringUtils.isEmpty(nickName)) {
+            zeroUserExtraQueryWrapper.like("nick_name", nickName);
+        }
         return zeroUserExtraMapper.selectList(zeroUserExtraQueryWrapper);
     }
 }

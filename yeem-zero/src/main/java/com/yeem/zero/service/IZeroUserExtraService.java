@@ -17,5 +17,5 @@ public interface IZeroUserExtraService extends IService<ZeroUserExtra> {
     void subtractBalance(Long userId, BigDecimal amount);
     void addTodoBalance(Long userId, BigDecimal amount);
     void subtractTodoBalance(Long userId, BigDecimal amount);
-    List<ZeroUserExtra> distributionUserList();
+    List<ZeroUserExtra> distributionUserList(String nickName);
 }

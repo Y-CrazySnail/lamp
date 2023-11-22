@@ -90,9 +90,9 @@ public class ZeroMUserController {
      * @return 分销商用户信息列表
      */
     @GetMapping(value = "distribution-user-list")
-    public ResponseEntity<List<ZeroUserExtra>> distributionUserList() {
+    public ResponseEntity<List<ZeroUserExtra>> distributionUserList(@RequestParam(value = "nickName", required = false) String nickName) {
         try {
-            return ResponseEntity.ok(zeroUserExtraService.distributionUserList());
+            return ResponseEntity.ok(zeroUserExtraService.distributionUserList(nickName));
         } catch (Exception e) {
             log.error("distribution user list error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
