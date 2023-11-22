@@ -38,7 +38,7 @@ public class SubscribeController {
             return "";
         }
         try {
-            List<String> nodeUrlList = aladdinNodeService.getNodeUrlList(uuid);
+            List<String> nodeUrlList = aladdinNodeService.getNodeUrlList(uuid, member.getLabel());
             String url = String.join("|", nodeUrlList);
             log.info("URL:{}", url);
             String sub = "http://127.0.0.1:25500/sub?target=clash&url=" + URLEncodeUtil.encode(url);
@@ -60,7 +60,7 @@ public class SubscribeController {
             return "已过期";
         }
         try {
-            List<String> nodeUrlList = aladdinNodeService.getNodeUrlList(uuid);
+            List<String> nodeUrlList = aladdinNodeService.getNodeUrlList(uuid, member.getLabel());
             String url = String.join("|", nodeUrlList);
             log.info("URL:{}", url);
             String sub = "http://127.0.0.1:25500/sub?target=v2ray&url=" + URLEncodeUtil.encode(url);

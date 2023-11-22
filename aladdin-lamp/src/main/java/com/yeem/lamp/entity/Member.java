@@ -17,6 +17,16 @@ public class Member extends BaseEntity {
     private Long trafficUpMonth;
     private Long trafficSurplusMonth;
 
+    private String label;
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     public String getWechat() {
         return wechat;
     }

@@ -22,13 +22,21 @@ public class AladdinNodeServiceImpl implements IAladdinNodeService {
     private AladdinNodeVmessMapper aladdinNodeVmessMapper;
 
     @Override
-    public List<String> getNodeUrlList(String uuid) {
+    public List<String> getNodeUrlList(String uuid, String label) {
         List<String> nodeUrlList = new ArrayList<>();
         QueryWrapper<AladdinNodeVmess> privateAladdinNodeVmessQueryWrapper = new QueryWrapper<>();
         privateAladdinNodeVmessQueryWrapper.eq("node_id", uuid);
         List<AladdinNodeVmess> privateAaladdinNodeVmessList = aladdinNodeVmessMapper.selectList(privateAladdinNodeVmessQueryWrapper);
         for (AladdinNodeVmess aladdinNodeVmess : privateAaladdinNodeVmessList) {
             nodeUrlList.add(aladdinNodeVmess.convert());
+        }
+        if (label.contains("whatsapp")) {
+            QueryWrapper<AladdinNodeVmess> whatsappAladdinNodeVmessQueryWrapper = new QueryWrapper<>();
+            whatsappAladdinNodeVmessQueryWrapper.eq("node_type", "whatsapp");
+            List<AladdinNodeVmess> whatsappAaladdinNodeVmessList = aladdinNodeVmessMapper.selectList(whatsappAladdinNodeVmessQueryWrapper);
+            for (AladdinNodeVmess aladdinNodeVmess : whatsappAaladdinNodeVmessList) {
+                nodeUrlList.add(aladdinNodeVmess.convert());
+            }
         }
         QueryWrapper<AladdinNodeVmess> publicAladdinNodeVmessQueryWrapper = new QueryWrapper<>();
         publicAladdinNodeVmessQueryWrapper.eq("node_type", "public");
