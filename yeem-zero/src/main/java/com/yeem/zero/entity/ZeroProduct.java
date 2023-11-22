@@ -21,6 +21,10 @@ public class ZeroProduct extends BaseEntity {
      */
     private String description;
     /**
+     * 标签 json格式
+     */
+    private String label;
+    /**
      * 价格
      */
     private BigDecimal price;
@@ -151,6 +155,14 @@ public class ZeroProduct extends BaseEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public BigDecimal getPrice() {

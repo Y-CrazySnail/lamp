@@ -7,6 +7,7 @@ import com.yeem.lamp.service.IAladdinNodeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,7 @@ public class AladdinNodeServiceImpl implements IAladdinNodeService {
         for (AladdinNodeVmess aladdinNodeVmess : privateAaladdinNodeVmessList) {
             nodeUrlList.add(aladdinNodeVmess.convert());
         }
-        if (label.contains("whatsapp")) {
+        if (!StringUtils.isEmpty(label) && label.contains("whatsapp")) {
             QueryWrapper<AladdinNodeVmess> whatsappAladdinNodeVmessQueryWrapper = new QueryWrapper<>();
             whatsappAladdinNodeVmessQueryWrapper.eq("node_type", "whatsapp");
             List<AladdinNodeVmess> whatsappAaladdinNodeVmessList = aladdinNodeVmessMapper.selectList(whatsappAladdinNodeVmessQueryWrapper);
