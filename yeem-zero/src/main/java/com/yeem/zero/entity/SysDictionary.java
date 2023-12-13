@@ -21,4 +21,8 @@ public class SysDictionary extends BaseEntity {
      * 描述
      */
     private String description;
+    /**
+     * 附加属性
+     */
+    private String additiveAttribute;
 }

@@ -247,7 +247,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setOrderItemList(zeroOrderItemList);
         // 物流信息查询
         if (Constant.ORDER_STATUS_DELIVERY.equals(zeroOrder.getStatus())) {
-            JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", "78714106471365");
+            JsonNode logistics = LogisticsUtils.query(logisticsSecretId, logisticsSecretKey, "", zeroOrder.getWaybillNo());
             zeroOrder.setLogistics(logistics);
         }
         return zeroOrder;
