@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yeem.car.film.mapper.CarFilmStoreMapper">
-    <select id="selectAddress" parameterType="map" resultType="com.yeem.car.film.entity.CarFilmStore">
+<mapper namespace="com.yeem.car.mapper.CarFilmStoreMapper">
+    <select id="selectAddress" parameterType="map" resultType="com.yeem.car.entity.CarFilmStore">
         SELECT *, 6378.138 * 2 * ASIN( SQRT( POW( SIN( (#{latitude} * PI( ) / 180 - latitude * PI( ) / 180 ) / 2 ), 2
         ) + COS( #{latitude} * PI( ) / 180 ) * COS( latitude * PI( ) / 180 ) * POW( SIN( ( #{longitude} * PI( ) /
         180 - longitude * PI( ) / 180 ) / 2 ), 2 ) ) ) AS distance FROM car_film_store ORDER BY distance ASC limit 10
