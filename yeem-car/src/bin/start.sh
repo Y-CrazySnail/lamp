@@ -6,7 +6,7 @@ DEPLOY_DIR=`pwd`
 CONF_DIR=$DEPLOY_DIR/conf
 CLASSES_DIR=$DEPLOY_DIR/classes
 LIB_DIR=$DEPLOY_DIR/lib/*
-MAIN_CLASS=com.yeem.car.film.YeemCarFilmApplication
+MAIN_CLASS=com.yeem.YeemCarApplication
 
 PIDS=`ps -ef | grep java | grep "$CONF_DIR" |grep -v grep |awk '{print $2}'`
 
