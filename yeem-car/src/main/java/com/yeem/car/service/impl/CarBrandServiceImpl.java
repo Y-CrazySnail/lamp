@@ -107,7 +107,6 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
     @Transactional(rollbackFor = {Exception.class})
     public void update(BaseCarBrand baseCarBrand) {
         baseCarBrand.setNameEn(PinyinUtil.getPinyin(baseCarBrand.getName()));
-        baseCarBrand.setLogoName(FileNameUtil.getName(baseCarBrand.getLogoPath()));
         carBrandMapper.updateById(baseCarBrand);
         // 数据库-车型
          List<BaseCarModel> databaseBaseCarModelList = this.getById(baseCarBrand.getId()).getCarModelList();
@@ -139,7 +138,6 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(BaseCarBrand baseCarBrand) {
         baseCarBrand.setNameEn(PinyinUtil.getPinyin(baseCarBrand.getName()));
-        baseCarBrand.setLogoName(FileNameUtil.getName(baseCarBrand.getLogoPath()));
         carBrandMapper.insert(baseCarBrand);
         return carModelService.save(baseCarBrand.getCarModelList(), baseCarBrand.getId());
     }
