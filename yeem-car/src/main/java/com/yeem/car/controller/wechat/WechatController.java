@@ -35,20 +35,16 @@ public class WechatController {
 
     /**
      * 查询小程序基础信息
-     * @param httpServletRequest
      * @param productNo
      * @return
      */
     @GetMapping("/getBaseInfo")
-    public ResponseEntity<Object> getBaseInfo(HttpServletRequest httpServletRequest,
-                                          @RequestParam(value = "productNo", required = false) String productNo) {
+    public ResponseEntity<Object> getBaseInfo(@RequestParam(value = "productNo") String productNo) {
         Map<String, Object> result = new HashMap<>();
         try {
             QueryWrapper<BaseCarBrand> baseCarBrandQueryWrapper = new QueryWrapper<>();
             List<BaseCarBrand> baseCarBrandList = carBrandService.list();
             result.put("brandList", baseCarBrandList);
-            List<BaseCarLevel> baseCarLevelList = carLevelService.list();
-            result.put("levelList", baseCarLevelList);
             List<CarFilmProduct> carFilmProductList = carFilmProductService.listWithPrice(productNo);
             result.put("productList", carFilmProductList);
             return ResponseEntity.ok(result);

@@ -16,7 +16,6 @@ public class BaseCarBrand extends BaseEntity {
 
     private String logoPath;
 
-    private  String logoName;
     @TableField(exist = false)
     private List<BaseCarModel> baseCarModelList;
 
@@ -30,7 +29,6 @@ public class BaseCarBrand extends BaseEntity {
         this.name = name;
         this.nameEn = nameEn;
         this.logoPath = logoPath;
-        this.logoName = logoName;
         this.baseCarModelList = baseCarModelList;
     }
 
@@ -64,14 +62,6 @@ public class BaseCarBrand extends BaseEntity {
 
     public void setLogoPath(String logoPath) {
         this.logoPath = logoPath;
-    }
-
-    public String getLogoName() {
-        return logoName;
-    }
-
-    public void setLogoName(String logoName) {
-        this.logoName = logoName;
     }
 
     public List<BaseCarModel> getCarModelList() {
