@@ -12,6 +12,8 @@ import com.yeem.car.service.ICarFilmQualityService;
 import com.yeem.car.service.ICarLevelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,25 @@ public class WechatController {
     private ICarFilmProductService carFilmProductService;
     @Autowired
     private ICarFilmQualityService carFilmQualityService;
+    @Value("${test.name}")
+    private String test;
+
+
+    /**
+     * 查询小程序基础信息
+     * @return
+     */
+    @GetMapping("/ok")
+    public ResponseEntity<Object> ok() {
+        Map<String, Object> result = new HashMap<>();
+        try {
+            System.out.println(test);
+            return null;
+        } catch (Exception e) {
+            log.error("查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
+        }
+    }
 
     /**
      * 查询小程序基础信息

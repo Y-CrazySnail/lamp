@@ -1,8 +1,4 @@
-server:
-  port: 8888
-  servlet:
-    context-path: /server
-  address: 0.0.0.0
+
 spring:
   autoconfigure:
     #自动化配置 例外处理

@@ -1,2 +1,3 @@
 permit-url:
   - /wechat/getBaseInfo
+  - /wechat/ok
