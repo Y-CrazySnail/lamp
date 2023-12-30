@@ -7,16 +7,4 @@ spring:
   application:
     name: yeem-car
   profiles:
-    active: dev
-  cloud:
-    nacos:
-      config:
-        server-addr: 43.143.181.174:8848
-        group: DEFAULT_GROUP
-        file-extension: yml
-        username: nacos
-        password: yeem_nacos_20240101
-      discovery:
-        server-addr: 43.143.181.174:8848
-        username: nacos
-        password: yeem_nacos_20240101
+    active: prod
