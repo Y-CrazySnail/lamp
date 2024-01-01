@@ -1,0 +1,13 @@
+spring:
+  cloud:
+    nacos:
+      username: yeem_dev
+      password: yeem_dev
+      config:
+        server-addr: 43.143.181.174:8848
+        group: DEFAULT_GROUP
+        namespace: 25e259cd-cb4c-48d4-906d-8f2c34229766
+        file-extension: yml
+      discovery:
+        server-addr: 43.143.181.174:8848
+        namespace: 25e259cd-cb4c-48d4-906d-8f2c34229766
