@@ -12,6 +12,7 @@ public class WechatInterceptorConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new WechatAuthInterceptor())
                 .addPathPatterns("/wechat/**")
-                .excludePathPatterns("/wechat/getBaseInfo");
+                .excludePathPatterns("/wechat/getBaseInfo")
+                .excludePathPatterns("/wechat/getQualityInfo");
     }
 }

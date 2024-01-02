@@ -22,5 +22,5 @@ public interface ICarFilmQualityService extends IService<CarFilmQuality> {
 
     void update(CarFilmQuality carFilmQuality);
 
-    List<CarFilmQuality> getQualityInfo(String productNo, String phone);
+    List<CarFilmQuality> getQualityInfo(String productNo, String queryKey);
 }

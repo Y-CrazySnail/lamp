@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +57,7 @@ public class WechatController {
 
     /**
      * 查询小程序基础信息
+     *
      * @param productNo
      * @return
      */
@@ -77,15 +79,19 @@ public class WechatController {
 
     /**
      * 查询质保信息
-     * @param httpServletRequest
-     * @param productNo
-     * @return
+     *
+     * @param productNo 产品代码
+     * @param queryKey 查询关键字
+     * @return 质保信息列表
      */
     @GetMapping("getQualityInfo")
-    public ResponseEntity<Object> getQualityInfo(HttpServletRequest httpServletRequest,
-                                          @RequestParam(value = "productNo", required = false) String productNo) {
+    public ResponseEntity<Object> getQualityInfo(@RequestParam(value = "productNo") String productNo,
+                                                 @RequestParam(value = "queryKey") String queryKey) {
+        if (StringUtils.isEmpty(queryKey)) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
+        }
         try {
-            List<CarFilmQuality> carFilmQualityList = carFilmQualityService.getQualityInfo(productNo, "");
+            List<CarFilmQuality> carFilmQualityList = carFilmQualityService.getQualityInfo(productNo, queryKey);
             return ResponseEntity.ok(carFilmQualityList);
         } catch (Exception e) {
             log.error("查询失败", e);
