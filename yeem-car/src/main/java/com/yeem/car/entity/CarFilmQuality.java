@@ -18,6 +18,7 @@ public class CarFilmQuality extends BaseEntity {
     private String productLevelNo; // 产品级别代码
     private String productLevelName; // 产品级别名称
     private BigDecimal price; // 价格
+    private String carBrand; // 汽车品牌
     private String carModel; // 汽车型号
     private String carColor; // 汽车颜色
     @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
@@ -93,6 +94,14 @@ public class CarFilmQuality extends BaseEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getCarBrand() {
+        return carBrand;
+    }
+
+    public void setCarBrand(String carBrand) {
+        this.carBrand = carBrand;
     }
 
     public String getCarModel() {

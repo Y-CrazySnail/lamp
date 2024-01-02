@@ -170,7 +170,11 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Override
     public List<CarFilmQuality> getQualityInfo(String productNo, String queryKey) {
         QueryWrapper<CarFilmQuality> carFilmQualityQueryWrapper = new QueryWrapper<>();
-        carFilmQualityQueryWrapper.eq("phone", queryKey).or().eq("vin", queryKey).or().eq("quality_card_no", queryKey);
+        carFilmQualityQueryWrapper.eq("product_no", productNo);
+        carFilmQualityQueryWrapper.eq("approve_flag", "1");
+        carFilmQualityQueryWrapper.and(wrapper ->
+                wrapper.eq("phone", queryKey).or().eq("vin", queryKey).or().eq("quality_card_no", queryKey)
+        );
         return carFilmQualityMapper.selectList(carFilmQualityQueryWrapper);
     }
 }
