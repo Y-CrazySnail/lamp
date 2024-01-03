@@ -7,4 +7,4 @@ spring:
   application:
     name: yeem-car
   profiles:
-    active: prod
+    active: dev

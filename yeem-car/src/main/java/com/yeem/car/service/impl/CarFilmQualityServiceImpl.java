@@ -175,6 +175,8 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         carFilmQualityQueryWrapper.and(wrapper ->
                 wrapper.eq("phone", queryKey).or().eq("vin", queryKey).or().eq("quality_card_no", queryKey)
         );
-        return carFilmQualityMapper.selectList(carFilmQualityQueryWrapper);
+        List<CarFilmQuality> carFilmQualityList = carFilmQualityMapper.selectList(carFilmQualityQueryWrapper);
+        carFilmQualityList.forEach(CarFilmQuality::setState);
+        return carFilmQualityList;
     }
 }

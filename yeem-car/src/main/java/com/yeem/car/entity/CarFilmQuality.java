@@ -1,16 +1,23 @@
 package com.yeem.car.entity;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
+import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+
 @TableName(value = "car_film_quality")
 public class CarFilmQuality extends BaseEntity {
     private String name; // 姓名
     private String phone; // 手机号
     private String qualityCardNo; // 质保卡号
+    /**
+     * 质保状态
+     */
+    private String state;
     private String plateNo; // 车牌号
     private String vin; // 车架号
     private String productNo; // 产品代码
@@ -21,9 +28,9 @@ public class CarFilmQuality extends BaseEntity {
     private String carBrand; // 汽车品牌
     private String carModel; // 汽车型号
     private String carColor; // 汽车颜色
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date workDate; // 施工时间
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date validityDate; // 质保有效期
     private String workCompany; // 施工单位
     private String workStaff; // 施工技师
@@ -54,6 +61,14 @@ public class CarFilmQuality extends BaseEntity {
 
     public void setQualityCardNo(String qualityCardNo) {
         this.qualityCardNo = qualityCardNo;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
     }
 
     public String getPlateNo() {
@@ -198,5 +213,30 @@ public class CarFilmQuality extends BaseEntity {
 
     public void setApproveFlag(String approveFlag) {
         this.approveFlag = approveFlag;
+    }
+
+    public enum State {
+        NORMAL("1"),
+        EXPIRED("0");
+        private final String value;
+
+        State(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public void setState() {
+        if (StringUtils.isEmpty(this.validityDate)) {
+            this.state = State.EXPIRED.value;
+        }
+        if (DateUtil.compare(validityDate, new Date()) > 0) {
+            this.state = State.NORMAL.value;
+        } else {
+            this.state = State.EXPIRED.value;
+        }
     }
 }
