@@ -1,6 +1,7 @@
 package com.yeem.car.entity;
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
@@ -17,6 +18,7 @@ public class CarFilmQuality extends BaseEntity {
     /**
      * 质保状态
      */
+    @TableField(exist = false)
     private String state;
     private String plateNo; // 车牌号
     private String vin; // 车架号
