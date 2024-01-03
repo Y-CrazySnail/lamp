@@ -1,5 +1,6 @@
 package com.yeem.car.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
@@ -13,6 +14,13 @@ public class CarFilmUser extends BaseEntity {
      * OpenID
      */
     private String openId;
+    /**
+     * Code
+     */
+    @TableField(exist = false)
+    private String code;
+    @TableField(exist = false)
+    private String token;
     /**
      * 手机号
      */
@@ -40,6 +48,22 @@ public class CarFilmUser extends BaseEntity {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public String getPhone() {
