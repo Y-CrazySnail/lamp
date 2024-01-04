@@ -31,8 +31,6 @@ public class WechatController {
     private ICarFilmQualityService carFilmQualityService;
     @Autowired
     private ICarFilmUserService carFilmUserService;
-    @Value("${test.name}")
-    private String test;
 
     /**
      * 查询小程序基础信息

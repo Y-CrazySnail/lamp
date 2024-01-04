@@ -14,6 +14,7 @@ import com.yeem.common.utils.WechatJWTUtils;
 import com.yeem.common.utils.WechatUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -30,6 +31,11 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
     private ICarFilmTenantService carFilmTenantService;
     @Autowired
     private CarFilmUserMapper carFilmUserMapper;
+
+    @Value("${wechat.wz0005.app-id}")
+    private String WECHAT_WZ0005_APP_ID;
+    @Value("${wechat.wz0005.app-secret}")
+    private String WECHAT_WZ0005_APP_SECRET;
 
     @Override
     public IPage<CarFilmUser> pages(int current, int size, String productNo, String nickName, String phone) {
@@ -60,8 +66,8 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
 
     @Override
     public CarFilmUser login(CarFilmUser carFilmUser) {
-        String appId = "";
-        String appSecret = "";
+        String appId = calculateAppId(carFilmUser.getProductNo());
+        String appSecret = calculateAppSecret(carFilmUser.getProductNo());
         String openId;
         WxLoginResponse wxLoginResponse = null;
         try {
@@ -82,5 +88,31 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         String token = WechatJWTUtils.generateJWT(carFilmUser.getProductNo(), carFilmUser.getId(), carFilmUser.getOpenId());
         carFilmUser.setToken(token);
         return carFilmUser;
+    }
+
+    /**
+     * 解析当前产品AppId
+     *
+     * @param productNo 产品代码
+     * @return AppId
+     */
+    private String calculateAppId(String productNo) {
+        if ("WZ0005".equals(productNo)) {
+            return WECHAT_WZ0005_APP_ID;
+        }
+        return null;
+    }
+
+    /**
+     * 解析当前产品AppSecret
+     *
+     * @param productNo 产品代码
+     * @return AppSecret
+     */
+    private String calculateAppSecret(String productNo) {
+        if ("WZ0005".equals(productNo)) {
+            return WECHAT_WZ0005_APP_SECRET;
+        }
+        return null;
     }
 }
