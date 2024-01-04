@@ -54,6 +54,22 @@ public class ZeroUserExtra extends BaseEntity {
      */
     private String wechatOpenId;
     /**
+     * 阿里账号
+     */
+    private String alipayAccount;
+    /**
+     * 银行卡账号
+     */
+    private String bankCardAccount;
+    /**
+     * 身份证号
+     */
+    private String idCardNo;
+    /**
+     * 身份证姓名
+     */
+    private String idCardName;
+    /**
      * 推荐用户数量
      */
     @TableField(exist = false)
@@ -166,6 +182,38 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setWechatOpenId(String wechatOpenId) {
         this.wechatOpenId = wechatOpenId;
+    }
+
+    public String getAlipayAccount() {
+        return alipayAccount;
+    }
+
+    public void setAlipayAccount(String alipayAccount) {
+        this.alipayAccount = alipayAccount;
+    }
+
+    public String getBankCardAccount() {
+        return bankCardAccount;
+    }
+
+    public void setBankCardAccount(String bankCardAccount) {
+        this.bankCardAccount = bankCardAccount;
+    }
+
+    public String getIdCardNo() {
+        return idCardNo;
+    }
+
+    public void setIdCardNo(String idCardNo) {
+        this.idCardNo = idCardNo;
+    }
+
+    public String getIdCardName() {
+        return idCardName;
+    }
+
+    public void setIdCardName(String idCardName) {
+        this.idCardName = idCardName;
     }
 
     public BigDecimal getBalance() {
