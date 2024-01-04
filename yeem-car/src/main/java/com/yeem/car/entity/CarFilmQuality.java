@@ -40,6 +40,8 @@ public class CarFilmQuality extends BaseEntity {
     private String rollNumber; // 卷心号
     private String boxNumber; // 盒头号
     private String approveFlag; //审核标识
+    @TableField(exist = false)
+    private String productType;
 
     public String getName() {
         return name;
@@ -215,6 +217,14 @@ public class CarFilmQuality extends BaseEntity {
 
     public void setApproveFlag(String approveFlag) {
         this.approveFlag = approveFlag;
+    }
+
+    public String getProductType() {
+        return productType;
+    }
+
+    public void setProductType(String productType) {
+        this.productType = productType;
     }
 
     public enum State {

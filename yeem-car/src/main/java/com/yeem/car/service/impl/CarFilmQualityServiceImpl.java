@@ -5,9 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
+import com.yeem.car.entity.CarFilmProduct;
 import com.yeem.car.entity.CarFilmQuality;
 import com.yeem.car.entity.CarFilmTenant;
 import com.yeem.car.mapper.CarFilmQualityMapper;
+import com.yeem.car.service.ICarFilmProductService;
 import com.yeem.car.service.ICarFilmTenantService;
 import com.yeem.car.service.ICarFilmQualityService;
 import com.yeem.im.dto.SysMailSendDTO;
@@ -36,6 +38,8 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
 
     @Autowired
     private ICarFilmTenantService carFilmTenantService;
+    @Autowired
+    private ICarFilmProductService carFilmProductService;
 
     @Override
     public List<CarFilmQuality> list(String name, String productNo, String phone, String qualityCardNo, String plateNo, String vin, String likeName, String likePhone, String likeQualityCardNo, String likePlateNo, String likeVin) {
@@ -145,6 +149,12 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         );
         List<CarFilmQuality> carFilmQualityList = carFilmQualityMapper.selectList(carFilmQualityQueryWrapper);
         carFilmQualityList.forEach(CarFilmQuality::setState);
+        carFilmQualityList.forEach(carFilmQuality -> {
+            QueryWrapper<CarFilmProduct> carFilmProductQueryWrapper = new QueryWrapper<>();
+            carFilmProductQueryWrapper.eq("product_level_no", carFilmQuality.getProductLevelNo());
+            CarFilmProduct carFilmProduct = carFilmProductService.getOne(carFilmProductQueryWrapper);
+            carFilmQuality.setProductType(carFilmProduct.getProductType());
+        });
         return carFilmQualityList;
     }
 }
