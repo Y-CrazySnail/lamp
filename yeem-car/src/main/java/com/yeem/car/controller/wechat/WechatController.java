@@ -102,11 +102,27 @@ public class WechatController {
      * @apiNote 小程序登录
      */
     @PostMapping("login")
-    public ResponseEntity<CarFilmUser> login(@RequestBody CarFilmUser carFilmUser) {
+    public ResponseEntity<Object> login(@RequestBody CarFilmUser carFilmUser) {
         try {
             return ResponseEntity.ok(carFilmUserService.login(carFilmUser));
         } catch (Exception e) {
             log.error("wx login api error：", e);
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("updateUserInfo")
+    public ResponseEntity<Object> update(@RequestBody CarFilmUser carFilmUser) {
+        Long userId = WechatAuthInterceptor.getUserId();
+        if (StringUtils.isEmpty(userId)) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        carFilmUser.setId(userId);
+        try {
+            carFilmUserService.updateById(carFilmUser);
+            return ResponseEntity.ok(carFilmUser);
+        } catch (Exception e) {
+            log.error("update user info error：", e);
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
