@@ -2,21 +2,17 @@ package com.yeem.car.controller.wechat;
 
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.yeem.car.config.Constant;
 import com.yeem.car.entity.*;
+import com.yeem.car.security.WechatAuthInterceptor;
 import com.yeem.car.service.*;
-import com.yeem.common.dto.WxLoginResponse;
-import com.yeem.common.utils.WechatJWTUtils;
-import com.yeem.common.utils.WechatUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +75,25 @@ public class WechatController {
         } catch (Exception e) {
             log.error("查询失败", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
+        }
+    }
+
+    @PostMapping("saveQualityInfo")
+    public ResponseEntity<Object> saveQualityInfo(@RequestBody CarFilmQuality carFilmQuality) {
+        Long userId = WechatAuthInterceptor.getUserId();
+        if (StringUtils.isEmpty(userId)) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        CarFilmUser carFilmUser = carFilmUserService.getById(userId);
+        if (!Constant.TRUE_STRING.equals(carFilmUser.getQualityPermission())) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        try {
+            carFilmQualityService.saveQualityInfo(carFilmQuality);
+            return ResponseEntity.ok("录入质保成功");
+        } catch (Exception e) {
+            log.error("input quality info error", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("录入质保失败");
         }
     }
 

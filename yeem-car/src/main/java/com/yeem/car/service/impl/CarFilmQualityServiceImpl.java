@@ -122,39 +122,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
     @Override
     @Transactional(rollbackFor = {Exception.class})
     public boolean save(CarFilmQuality carFilmQuality) {
-        List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
-        if (carFilmTenantList.isEmpty() || !carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()).contains(carFilmQuality.getProductNo())) {
-            return false;
-        }
-        SqlHelper.retBool(carFilmQualityMapper.insert(carFilmQuality));
-        SysMail sysMail = new SysMail();
-        sysMail.setToEmail("1270737197@qq.com");
-        sysMail.setBusinessName("11");
-        sysMail.setBusinessId(1);
-        SysMailSendDTO sysMailSendDTO = new SysMailSendDTO();
-        Map<String, Object> map1 = new HashMap<>();
-        map1.put("name", carFilmQuality.getName());
-        map1.put("car", carFilmQuality.getCarModel());
-        sysMailSendDTO.setReplaceMap(map1);
-        sysMailSendDTO.setTemplateName("aaa");
-        sysMailSendDTO.setTemplateType("mail");
-        sysMailSendDTO.setBusinessId(1);
-        sysMailSendDTO.setToEmail(carFilmQuality.getQualityCardNo());
-//        sysIMService.preSend(sysMailSendDTO);
-        SysSMSSendDTO sysSMSSendDT = new SysSMSSendDTO();
-        sysSMSSendDT.setPhone(carFilmQuality.getPhone());
-        sysSMSSendDT.setBusinessId(1);
-        Map<String, Object> map = new HashMap<>();
-        map.put("param1", "0000");
-        map.put("param2", "1000");
-        sysSMSSendDT.setReplaceMap(map);
-        sysSMSSendDT.setTemplateType("sms");
-        sysSMSSendDT.setTemplateName("bbb");
-        long futureTimeInMillis = System.currentTimeMillis() + 20000; // 3600000毫秒 = 1小时
-        Date futureDate = new Date(futureTimeInMillis);
-        sysSMSSendDT.setTimingTime(futureDate);
-        sysIMService.preSend(sysSMSSendDT);
-        return true;
+        return super.save(carFilmQuality);
     }
 
     @Override

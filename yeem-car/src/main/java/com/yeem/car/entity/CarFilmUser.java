@@ -33,6 +33,10 @@ public class CarFilmUser extends BaseEntity {
      * 头像
      */
     private String avatarUrl;
+    /**
+     * 录入质保权限
+     */
+    private String qualityPermission;
 
     public String getProductNo() {
         return productNo;
@@ -88,5 +92,13 @@ public class CarFilmUser extends BaseEntity {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
+    }
+
+    public String getQualityPermission() {
+        return qualityPermission;
+    }
+
+    public void setQualityPermission(String qualityPermission) {
+        this.qualityPermission = qualityPermission;
     }
 }
