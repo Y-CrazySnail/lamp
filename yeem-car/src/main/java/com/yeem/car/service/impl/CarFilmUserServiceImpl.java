@@ -89,7 +89,10 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
             carFilmUser.setOpenId(openId);
             this.save(carFilmUser);
         }
-        carFilmUser = carFilmUserMapper.selectById(carFilmUser.getId());
+        carFilmUser = this.get(carFilmUser.getProductNo(), openId);
+        if (StringUtils.isEmpty(carFilmUser)) {
+            throw new RuntimeException("小程序认证失败");
+        }
         // 在保 过期数量设置
         if (StringUtils.isEmpty(carFilmUser.getPhone())) {
             carFilmUser.setNormalQualityNumber(0);
