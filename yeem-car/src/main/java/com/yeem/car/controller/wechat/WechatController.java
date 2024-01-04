@@ -36,6 +36,15 @@ public class WechatController {
     @Autowired
     private ICarFilmUserService carFilmUserService;
 
+    @Value("${tencent.cos.bucket-name}")
+    private String TENCENT_COS_BUCKET_NAME;
+    @Value("${tencent.cos.secret-id}")
+    private String TENCENT_COS_SECRET_ID;
+    @Value("${tencent.cos.secret-key}")
+    private String TENCENT_COS_SECRET_KEY;
+    @Value("${tencent.cos.region}")
+    private String TENCENT_COS_REGION;
+
     /**
      * 查询小程序基础信息
      *
@@ -131,28 +140,17 @@ public class WechatController {
         }
     }
 
-//    @PostMapping("upload")
-//    public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
-//        String key = UUID.fastUUID() + "/" + file.getOriginalFilename();
-//        try {
-//            TencentFileUtils.upload(
-//                    environment.getProperty("tencent.cos.bucket-name"),
-//                    environment.getProperty("tencent.cos.secret-id"),
-//                    environment.getProperty("tencent.cos.secret-key"),
-//                    environment.getProperty("tencent.cos.region"),
-//                    key,
-//                    file.getInputStream()
-//            );
-//            log.info("upload file to tencent cos, key:{}", key);
-//            String url = TencentFileUtils.getUrl(
-//                            environment.getProperty("tencent.cos.bucket-name"),
-//                            environment.getProperty("tencent.cos.region"),
-//                            key)
-//                    .toString();
-//            return ResponseEntity.ok(url);
-//        } catch (IOException e) {
-//            log.error("upload file to tencent cos error:", e);
-//            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("upload file to tencent cos error");
-//        }
-//    }
+    @PostMapping("upload")
+    public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
+        String key = UUID.fastUUID() + "/" + file.getOriginalFilename();
+        try {
+            TencentFileUtils.upload(TENCENT_COS_BUCKET_NAME, TENCENT_COS_SECRET_ID, TENCENT_COS_SECRET_KEY, TENCENT_COS_REGION, key, file.getInputStream());
+            log.info("upload file to tencent cos, key:{}", key);
+            String url = TencentFileUtils.getUrl(TENCENT_COS_BUCKET_NAME, TENCENT_COS_REGION, key).toString();
+            return ResponseEntity.ok(url);
+        } catch (IOException e) {
+            log.error("upload file to tencent cos error:", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("upload file to tencent cos error");
+        }
+    }
 }
