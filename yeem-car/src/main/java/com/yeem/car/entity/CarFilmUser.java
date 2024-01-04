@@ -37,6 +37,16 @@ public class CarFilmUser extends BaseEntity {
      * 录入质保权限
      */
     private String qualityPermission;
+    /**
+     * 在保数量
+     */
+    @TableField(exist = false)
+    private Integer normalQualityNumber;
+    /**
+     * 过期数量
+     */
+    @TableField(exist = false)
+    private Integer expiredQualityNumber;
 
     public String getProductNo() {
         return productNo;
@@ -100,5 +110,21 @@ public class CarFilmUser extends BaseEntity {
 
     public void setQualityPermission(String qualityPermission) {
         this.qualityPermission = qualityPermission;
+    }
+
+    public Integer getNormalQualityNumber() {
+        return normalQualityNumber;
+    }
+
+    public void setNormalQualityNumber(Integer normalQualityNumber) {
+        this.normalQualityNumber = normalQualityNumber;
+    }
+
+    public Integer getExpiredQualityNumber() {
+        return expiredQualityNumber;
+    }
+
+    public void setExpiredQualityNumber(Integer expiredQualityNumber) {
+        this.expiredQualityNumber = expiredQualityNumber;
     }
 }

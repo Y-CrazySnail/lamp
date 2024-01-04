@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yeem.car.entity.CarFilmQuality;
 import com.yeem.car.entity.CarFilmTenant;
 import com.yeem.car.entity.CarFilmUser;
 import com.yeem.car.mapper.CarFilmUserMapper;
+import com.yeem.car.service.ICarFilmQualityService;
 import com.yeem.car.service.ICarFilmTenantService;
 import com.yeem.car.service.ICarFilmUserService;
 import com.yeem.common.dto.WxLoginResponse;
@@ -29,6 +31,8 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
 
     @Autowired
     private ICarFilmTenantService carFilmTenantService;
+    @Autowired
+    private ICarFilmQualityService carFilmQualityService;
     @Autowired
     private CarFilmUserMapper carFilmUserMapper;
 
@@ -75,7 +79,7 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (StringUtils.isEmpty(wxLoginResponse)) {
+        if (StringUtils.isEmpty(wxLoginResponse) || StringUtils.isEmpty(wxLoginResponse.getOpenid())) {
             throw new RuntimeException("小程序认证失败");
         }
         openId = wxLoginResponse.getOpenid();
@@ -84,6 +88,24 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         if (StringUtils.isEmpty(checkZeroUserExtra) || StringUtils.isEmpty(checkZeroUserExtra.getId())) {
             carFilmUser.setOpenId(openId);
             this.save(carFilmUser);
+        }
+        carFilmUser = carFilmUserMapper.selectById(carFilmUser.getId());
+        // 在保 过期数量设置
+        if (StringUtils.isEmpty(carFilmUser.getPhone())) {
+            carFilmUser.setNormalQualityNumber(0);
+            carFilmUser.setExpiredQualityNumber(0);
+        } else {
+            carFilmUser.setNormalQualityNumber(0);
+            carFilmUser.setExpiredQualityNumber(0);
+            List<CarFilmQuality> carFilmQualityList = carFilmQualityService.getQualityInfo(carFilmUser.getProductNo(), carFilmUser.getPhone());
+            for (CarFilmQuality carFilmQuality : carFilmQualityList) {
+                carFilmQuality.setState();
+                if (CarFilmQuality.State.NORMAL.getValue().equals(carFilmQuality.getState())) {
+                    carFilmUser.setNormalQualityNumber(carFilmUser.getNormalQualityNumber() + 1);
+                } else {
+                    carFilmUser.setExpiredQualityNumber(carFilmUser.getExpiredQualityNumber() + 1);
+                }
+            }
         }
         String token = WechatJWTUtils.generateJWT(carFilmUser.getProductNo(), carFilmUser.getId(), carFilmUser.getOpenId());
         carFilmUser.setToken(token);
