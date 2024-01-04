@@ -89,7 +89,7 @@ public class WechatController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
         }
         try {
-            carFilmQualityService.saveQualityInfo(carFilmQuality);
+            carFilmQualityService.save(carFilmQuality);
             return ResponseEntity.ok("录入质保成功");
         } catch (Exception e) {
             log.error("input quality info error", e);
