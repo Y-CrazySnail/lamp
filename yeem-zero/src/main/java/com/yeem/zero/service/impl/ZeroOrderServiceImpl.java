@@ -194,8 +194,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Override
     public void confirm(ZeroOrder zeroOrder) {
         zeroOrder = getById(zeroOrder.getId());
-        zeroOrder.setStatus(ORDER_STATUS_FINISH);
-        zeroOrder.setCompleteTime(new Date());
+        zeroOrder.setStatus(ORDER_STATUS_RECEIVE);
         zeroOrder.setCompleteTime(new Date());
         super.updateById(zeroOrder);
         // 直接分销处理

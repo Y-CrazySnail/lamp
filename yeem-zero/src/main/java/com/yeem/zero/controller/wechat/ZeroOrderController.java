@@ -173,6 +173,7 @@ public class ZeroOrderController {
      */
     @GetMapping("list")
     public ResponseEntity<List<ZeroOrder>> list(@RequestParam("status") String status, @RequestParam("name") String name) {
+        log.info("查询订单状态：{}， 关键词：{}", status, name);
         try {
             Long userId = WechatAuthInterceptor.getUserId();
             return ResponseEntity.ok(zeroOrderService.list(userId, status, name));
