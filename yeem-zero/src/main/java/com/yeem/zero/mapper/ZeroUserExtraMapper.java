@@ -26,4 +26,6 @@ public interface ZeroUserExtraMapper extends BaseMapper<ZeroUserExtra> {
 
     void subtractTodoBalance(@Param("userId") Long userId,
                              @Param("amount") BigDecimal amount);
+
+    int distributionUserCountByIdCardNo(@Param("idCardNo") String idCardNo);
 }

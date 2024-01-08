@@ -471,6 +471,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         String merchantSerialNumber = environment.getProperty("wechat." + active + ".merchant-serial-number");
         String apiV3Key = environment.getProperty("wechat." + active + ".api-v3-key");
         String notifyUrl = environment.getProperty("wechat." + active + ".payment-notify-url");
+        log.info("支付回调接口：{}", notifyUrl);
         // 组装校验配置信息
         RSAAutoCertificateConfig rsaAutoCertificateConfig = new RSAAutoCertificateConfig.Builder()
                 .merchantId(merchantId)

@@ -111,6 +111,8 @@ public class ZeroUserExtra extends BaseEntity {
     private List<ZeroAddress> zeroAddressList;
     @TableField(exist = false)
     private List<ZeroBalanceRecord> zeroBalanceRecordList;
+    @TableField(exist = false)
+    private Integer repeatApplyDistributionCount;
 
     public Long getDirectReferrerUserId() {
         return directReferrerUserId;
@@ -302,5 +304,13 @@ public class ZeroUserExtra extends BaseEntity {
 
     public void setZeroBalanceRecordList(List<ZeroBalanceRecord> zeroBalanceRecordList) {
         this.zeroBalanceRecordList = zeroBalanceRecordList;
+    }
+
+    public Integer getRepeatApplyDistributionCount() {
+        return repeatApplyDistributionCount;
+    }
+
+    public void setRepeatApplyDistributionCount(Integer repeatApplyDistributionCount) {
+        this.repeatApplyDistributionCount = repeatApplyDistributionCount;
     }
 }

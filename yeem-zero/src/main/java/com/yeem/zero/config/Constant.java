@@ -44,4 +44,9 @@ public class Constant {
      */
     public static final String ORDER_REFUND_TYPE_ONLY_REFUND = "1";
     public static final String ORDER_REFUND_TYPE_REFUND = "2";
+
+    /**
+     * -1 申请成为分销商
+     */
+    public static final Integer DISTRIBUTION_FLAG_ING = -1;
 }

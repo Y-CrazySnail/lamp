@@ -108,6 +108,11 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
         // 获取零钱明细
         List<ZeroBalanceRecord> zeroBalanceRecordList = zeroBalanceRecordService.listByUserId(userId);
         userExtra.setZeroBalanceRecordList(zeroBalanceRecordList);
+        // 申请成为分销商 判断身份证号数量
+        if (Constant.DISTRIBUTION_FLAG_ING.equals(userExtra.getDistributionFlag())) {
+            int distributionUserCount = zeroUserExtraMapper.distributionUserCountByIdCardNo(userExtra.getIdCardNo());
+            userExtra.setRepeatApplyDistributionCount(distributionUserCount);
+        }
         return userExtra;
     }
 

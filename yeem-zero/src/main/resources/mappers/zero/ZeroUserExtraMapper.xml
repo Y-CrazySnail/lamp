@@ -41,4 +41,10 @@
         set todo_balance = todo_balance - #{amount}
         where id = #{userId}
     </update>
+
+    <select id="distributionUserCountByIdCardNo" resultType="java.lang.Integer">
+        select count(1)
+        from zero_user_extra
+        where id_card_no = #{idCardNo} and distribution_flag = 1
+    </select>
 </mapper>
