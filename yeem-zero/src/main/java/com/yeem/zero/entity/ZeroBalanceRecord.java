@@ -30,6 +30,14 @@ public class ZeroBalanceRecord extends BaseEntity {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date dealTime;
+    /**
+     * 状态 -1申请中 1已完成
+     */
+    private String state;
+    /**
+     * 转账截图URL
+     */
+    private String transferScreenshot;
 
     public Long getUserId() {
         return userId;
@@ -69,6 +77,22 @@ public class ZeroBalanceRecord extends BaseEntity {
 
     public void setDealTime(Date dealTime) {
         this.dealTime = dealTime;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getTransferScreenshot() {
+        return transferScreenshot;
+    }
+
+    public void setTransferScreenshot(String transferScreenshot) {
+        this.transferScreenshot = transferScreenshot;
     }
 
     public enum Type {

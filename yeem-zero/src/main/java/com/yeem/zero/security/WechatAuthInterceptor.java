@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import com.yeem.common.utils.WechatJWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +26,9 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
         if (request.getRequestURI().startsWith("/server/wechat/")) {
             String token = request.getHeader("token");
             if (request.getRequestURI().endsWith("zero-tencent-cos/upload") && "yeem".equals(token)) {
+                return true;
+            }
+            if (request.getMethod().equalsIgnoreCase("GET") && StringUtils.isEmpty(token)) {
                 return true;
             }
             if (!WechatJWTUtils.validate(token)) {
@@ -57,17 +61,20 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
                     DateUtil.format(new Date(), DatePattern.NORM_DATETIME_MS_PATTERN),
                     DateUtil.between(beginTime, endTime, DateUnit.MS),
                     request.getRequestURI(),
-                    APPLICATION.get(),
-                    ID.get(),
-                    OPEN_ID.get(),
+                    StringUtils.isEmpty(APPLICATION.get()) ? "" : APPLICATION.get(),
+                    StringUtils.isEmpty(ID.get()) ? "" : ID.get(),
+                    StringUtils.isEmpty(OPEN_ID.get()) ? "" : OPEN_ID.get(),
                     Runtime.getRuntime().maxMemory() / 1024 / 1024,
                     Runtime.getRuntime().totalMemory() / 1024 / 1024,
                     Runtime.getRuntime().freeMemory() / 1024 / 1024
             );
-            APPLICATION.remove();
-            ID.remove();
-            OPEN_ID.remove();
-            BEGIN_TIME.remove();
+            try {
+                APPLICATION.remove();
+                ID.remove();
+                OPEN_ID.remove();
+                BEGIN_TIME.remove();
+            } catch (Exception ignored) {
+            }
         }
     }
 
