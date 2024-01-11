@@ -102,6 +102,7 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         }
         wrapper.eq("delete_flag", 0);
         wrapper.orderByAsc("approve_flag");
+        wrapper.orderByDesc("id");
         Page<CarFilmQuality> page = new Page<>(current, size);
         return carFilmQualityMapper.selectPage(page, wrapper);
     }
