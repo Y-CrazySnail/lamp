@@ -10,6 +10,12 @@ import org.springframework.util.StringUtils;
  */
 @TableName(value = "aladdin_node_vmess", autoResultMap = true)
 public class AladdinNodeVmess extends BaseEntity {
+    private Long serviceId;
+    private Long serverId;
+    private Integer serviceYear;
+    private Integer serviceMonth;
+    private Long serviceDown;
+    private Long serviceUp;
     private String nodeType;
     private String nodePs;
     private String nodeAdd;
@@ -23,6 +29,54 @@ public class AladdinNodeVmess extends BaseEntity {
     private String path;
     private String tls;
     private String sni;
+
+    public Long getServiceId() {
+        return serviceId;
+    }
+
+    public void setServiceId(Long serviceId) {
+        this.serviceId = serviceId;
+    }
+
+    public Long getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(Long serverId) {
+        this.serverId = serverId;
+    }
+
+    public Integer getServiceYear() {
+        return serviceYear;
+    }
+
+    public void setServiceYear(Integer serviceYear) {
+        this.serviceYear = serviceYear;
+    }
+
+    public Integer getServiceMonth() {
+        return serviceMonth;
+    }
+
+    public void setServiceMonth(Integer serviceMonth) {
+        this.serviceMonth = serviceMonth;
+    }
+
+    public Long getServiceDown() {
+        return serviceDown;
+    }
+
+    public void setServiceDown(Long serviceDown) {
+        this.serviceDown = serviceDown;
+    }
+
+    public Long getServiceUp() {
+        return serviceUp;
+    }
+
+    public void setServiceUp(Long serviceUp) {
+        this.serviceUp = serviceUp;
+    }
 
     public String getNodeType() {
         return nodeType;

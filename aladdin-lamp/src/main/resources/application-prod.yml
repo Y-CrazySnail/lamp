@@ -10,7 +10,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     dynamic:
-      primary: auth
+      primary: proxy
       datasource:
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
