@@ -1,6 +1,7 @@
 package com.yeem.lamp.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
@@ -9,6 +10,7 @@ import com.yeem.lamp.mapper.AladdinServiceMapper;
 import com.yeem.lamp.service.IAladdinServiceService;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -31,5 +33,13 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         queryWrapper.ge("end_date", new Date());
         queryWrapper.eq("member_id", memberId);
         return super.list(queryWrapper);
+    }
+
+    @Override
+    public boolean removeByMemberId(Serializable id) {
+        UpdateWrapper<AladdinService> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
+        updateWrapper.eq("member_id", id);
+        return super.update(updateWrapper);
     }
 }
