@@ -1,4 +1,4 @@
-package com.yeem.lamp;
+package com.yeem;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;

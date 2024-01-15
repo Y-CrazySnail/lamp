@@ -1,6 +1,7 @@
 package com.yeem.lamp.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
 
 import java.math.BigDecimal;
@@ -9,7 +10,9 @@ import java.util.Date;
 @TableName(value = "aladdin_service", autoResultMap = true)
 public class AladdinService extends BaseEntity {
     private Long memberId;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date beginDate;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date endDate;
     private Integer dataTraffic;
     private String period;

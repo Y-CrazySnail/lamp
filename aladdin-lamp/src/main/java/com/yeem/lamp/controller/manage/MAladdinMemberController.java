@@ -18,6 +18,21 @@ public class MAladdinMemberController {
     private IAladdinMemberService aladdinMemberService;
 
     /**
+     * 列表查询
+     *
+     * @return 列表信息
+     */
+    @GetMapping("/list")
+    public ResponseEntity<Object> list() {
+        try {
+            return ResponseEntity.ok(aladdinMemberService.list());
+        } catch (Exception e) {
+            log.error("page方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
+        }
+    }
+
+    /**
      * 分页查询
      *
      * @param current 页码
@@ -59,26 +74,6 @@ public class MAladdinMemberController {
     }
 
     /**
-     * 删除
-     *
-     * @param aladdinMember aladdinMember
-     * @return 删除结果
-     */
-    @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody AladdinMember aladdinMember) {
-        try {
-            if (StringUtils.isEmpty(aladdinMember.getId())) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
-            }
-            aladdinMemberService.removeById(aladdinMember.getId());
-            return ResponseEntity.ok("");
-        } catch (Exception e) {
-            log.error("delete方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
-        }
-    }
-
-    /**
      * 更改
      *
      * @param aladdinMember aladdinMember
@@ -111,4 +106,25 @@ public class MAladdinMemberController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
         }
     }
+
+    /**
+     * 删除
+     *
+     * @param aladdinMember aladdinMember
+     * @return 删除结果
+     */
+    @DeleteMapping("/delete")
+    public ResponseEntity<Object> delete(@RequestBody AladdinMember aladdinMember) {
+        try {
+            if (StringUtils.isEmpty(aladdinMember.getId())) {
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+            }
+            aladdinMemberService.removeById(aladdinMember.getId());
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            log.error("delete方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+        }
+    }
+
 }
