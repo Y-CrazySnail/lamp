@@ -1,7 +1,7 @@
 server:
   port: 8080
   servlet:
-    context-path: /aladdin
+    context-path: /server
   address: 0.0.0.0
 
 spring:
