@@ -19,7 +19,8 @@ public class XUIRequest {
     private ObjectMapper objectMapper = new ObjectMapper();
     private String ip;
     private int port;
-    private String remark;
+    private String nodeRemark;
+    private int nodePort;
     private HttpCookie cookie;
     private XUIInboundData xuiInboundData;
 
@@ -37,8 +38,13 @@ public class XUIRequest {
         return this;
     }
 
-    public XUIRequest remark(String remark) {
-        this.remark = remark;
+    public XUIRequest nodeRemark(String nodeRemark) {
+        this.nodeRemark = nodeRemark;
+        return this;
+    }
+
+    public XUIRequest nodePort(int nodePort) {
+        this.nodePort = nodePort;
         return this;
     }
 
@@ -66,11 +72,11 @@ public class XUIRequest {
             formData.put("up", 0);
             formData.put("down", 0);
             formData.put("total", 0);
-            formData.put("remark", "ALADDIN");
+            formData.put("remark", this.nodeRemark);
             formData.put("enable", true);
             formData.put("expiryTime", 0);
             formData.put("listen", null);
-            formData.put("port", 20000);
+            formData.put("port", this.nodePort);
             formData.put("protocol", "vmess");
             List<String> clientStrList = new ArrayList<>();
             for (XUIVmessClient xuiVmessClient : vmessClientList) {
@@ -159,7 +165,7 @@ public class XUIRequest {
             List<XUIInboundData> xuiInboundDataList = objectMapper.readValue(objStr, new TypeReference<List<XUIInboundData>>() {
             });
             for (XUIInboundData xuiInboundData : xuiInboundDataList) {
-                if (!StringUtils.isEmpty(xuiInboundData) && this.remark.equals(xuiInboundData.getRemark())) {
+                if (!StringUtils.isEmpty(xuiInboundData) && this.nodeRemark.equals(xuiInboundData.getRemark())) {
                     this.xuiInboundData = xuiInboundData;
                     break;
                 }

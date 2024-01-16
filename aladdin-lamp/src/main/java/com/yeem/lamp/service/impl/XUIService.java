@@ -63,11 +63,12 @@ public class XUIService {
                 List<AladdinNodeVmess> nodeVmessList = aladdinNodeVmessService.listByServerId(serverId, year, month);
                 String apiIp = server.getApiIp();
                 int apiPort = server.getApiPort();
-                String apiRemark = server.getApiRemark();
                 String apiUsername = server.getApiUsername();
                 String apiPassword = server.getApiPassword();
                 XUIInboundData xuiInboundData = XUIRequest.request()
-                        .ip(apiIp).port(apiPort).remark(apiRemark).login(apiUsername, apiPassword)
+                        .ip(apiIp).port(apiPort)
+                        .nodeRemark(server.getNodeRemark()).nodePort(server.getNodePort())
+                        .login(apiUsername, apiPassword)
                         .sync(vmessClientList);
                 log.info("入站列表数据：{}", xuiInboundData);
                 for (XUIInboundData.ClientStats clientStat : xuiInboundData.getClientStats()) {
