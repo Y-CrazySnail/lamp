@@ -126,5 +126,4 @@ public class MAladdinMemberController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
-
 }

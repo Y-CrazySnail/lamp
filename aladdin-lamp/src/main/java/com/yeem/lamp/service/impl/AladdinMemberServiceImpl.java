@@ -48,6 +48,7 @@ public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, A
     @Override
     public IPage<AladdinMember> pages(int current, int size, String email, String wechat) {
         QueryWrapper<AladdinMember> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         if (!StringUtils.isEmpty(email)) {
             queryWrapper.like("email", email);
         }

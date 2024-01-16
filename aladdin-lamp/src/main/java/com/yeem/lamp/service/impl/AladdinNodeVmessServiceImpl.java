@@ -83,12 +83,15 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
     }
 
     @Override
-    public boolean updateByServerId(Long serverId, String nodePs) {
+    public boolean updateByServerId(Long serverId, String nodeType, String nodePs) {
         UpdateWrapper<AladdinNodeVmess> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.set("node_ps", nodePs);
+        if (!StringUtils.isEmpty(nodePs)) {
+            updateWrapper.set("node_ps", nodePs);
+        }
+        if (!StringUtils.isEmpty(nodeType)) {
+            updateWrapper.set("node_type", nodeType);
+        }
         updateWrapper.eq("server_id", serverId);
         return super.update(updateWrapper);
     }
-
-
 }

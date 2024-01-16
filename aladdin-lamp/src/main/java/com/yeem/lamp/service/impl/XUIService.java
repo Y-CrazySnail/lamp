@@ -63,10 +63,11 @@ public class XUIService {
                 List<AladdinNodeVmess> nodeVmessList = aladdinNodeVmessService.listByServerId(serverId, year, month);
                 String apiIp = server.getApiIp();
                 int apiPort = server.getApiPort();
+                String apiRemark = server.getApiRemark();
                 String apiUsername = server.getApiUsername();
                 String apiPassword = server.getApiPassword();
                 XUIInboundData xuiInboundData = XUIRequest.request()
-                        .ip(apiIp).port(apiPort).login(apiUsername, apiPassword)
+                        .ip(apiIp).port(apiPort).remark(apiRemark).login(apiUsername, apiPassword)
                         .sync(vmessClientList);
                 log.info("入站列表数据：{}", xuiInboundData);
                 for (XUIInboundData.ClientStats clientStat : xuiInboundData.getClientStats()) {
@@ -119,7 +120,7 @@ public class XUIService {
                     nodeVmess.setNodeType(Constant.NODE_TYPE_EXPIRED);
                     aladdinNodeVmessService.updateById(nodeVmess);
                 }
-                aladdinNodeVmessService.updateByServerId(serverId, server.getSubscribeNamePrefix());
+                aladdinNodeVmessService.updateByServerId(serverId, null, server.getSubscribeNamePrefix());
             }
         } catch (IOException e) {
             e.printStackTrace();

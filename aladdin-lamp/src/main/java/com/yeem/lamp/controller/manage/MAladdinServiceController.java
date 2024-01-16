@@ -19,19 +19,19 @@ public class MAladdinServiceController {
     /**
      * 分页查询
      *
-     * @param current 页码
-     * @param size    页容量
-     * @param email   邮箱
-     * @param wechat  微信
+     * @param current  页码
+     * @param size     页容量
+     * @param memberId 会员ID
+     * @param status   状态 0异常 1正常
      * @return 分页信息
      */
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
                                         @RequestParam("size") int size,
-                                        @RequestParam(value = "email", required = false) String email,
-                                        @RequestParam(value = "wechat", required = false) String wechat) {
+                                        @RequestParam(value = "memberId", required = false) Long memberId,
+                                        @RequestParam(value = "status", required = false) String status) {
         try {
-            return ResponseEntity.ok(aladdinServiceService.pages(current, size));
+            return ResponseEntity.ok(aladdinServiceService.pages(current, size, memberId, status));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -54,26 +54,6 @@ public class MAladdinServiceController {
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
-        }
-    }
-
-    /**
-     * 删除
-     *
-     * @param aladdinService aladdinService
-     * @return 删除结果
-     */
-    @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody AladdinService aladdinService) {
-        try {
-            if (StringUtils.isEmpty(aladdinService.getId())) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
-            }
-            aladdinServiceService.removeById(aladdinService.getId());
-            return ResponseEntity.ok("");
-        } catch (Exception e) {
-            log.error("delete方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
 
@@ -108,6 +88,26 @@ public class MAladdinServiceController {
         } catch (Exception e) {
             log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
+        }
+    }
+
+    /**
+     * 删除
+     *
+     * @param aladdinService aladdinService
+     * @return 删除结果
+     */
+    @DeleteMapping("/delete")
+    public ResponseEntity<Object> delete(@RequestBody AladdinService aladdinService) {
+        try {
+            if (StringUtils.isEmpty(aladdinService.getId())) {
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+            }
+            aladdinServiceService.removeById(aladdinService.getId());
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            log.error("delete方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
         }
     }
 }

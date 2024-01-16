@@ -7,6 +7,7 @@ import com.yeem.common.entity.BaseEntity;
 public class AladdinServer extends BaseEntity {
     private String apiIp;
     private int apiPort;
+    private String apiRemark;
     private String apiUsername;
     private String apiPassword;
     private String subscribeIp;
@@ -28,6 +29,14 @@ public class AladdinServer extends BaseEntity {
 
     public void setApiPort(int apiPort) {
         this.apiPort = apiPort;
+    }
+
+    public String getApiRemark() {
+        return apiRemark;
+    }
+
+    public void setApiRemark(String apiRemark) {
+        this.apiRemark = apiRemark;
     }
 
     public String getApiUsername() {

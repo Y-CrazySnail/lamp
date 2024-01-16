@@ -53,14 +53,19 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     }
 
     @Override
-    public IPage<AladdinService> pages(int current, int size) {
+    public IPage<AladdinService> pages(int current, int size, Long memberId, String status) {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
-//        if (!StringUtils.isEmpty(email)) {
-//            queryWrapper.like("email", email);
-//        }
-//        if (!StringUtils.isEmpty(wechat)) {
-//            queryWrapper.like("wechat", wechat);
-//        }
+        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        if (!StringUtils.isEmpty(memberId)) {
+            queryWrapper.eq("member_id", memberId);
+        }
+        if (!StringUtils.isEmpty(status)) {
+            if (Constant.TRUE_STRING.equals(status)) {
+                queryWrapper.gt("end_date", new Date());
+            } else {
+                queryWrapper.le("end_date", new Date());
+            }
+        }
         IPage<AladdinService> page = new Page<>(current, size);
         return aladdinServiceMapper.selectPage(page, queryWrapper);
     }

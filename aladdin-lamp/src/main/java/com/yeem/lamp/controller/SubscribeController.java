@@ -4,17 +4,14 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinMember;
 import com.yeem.lamp.entity.AladdinNodeVmess;
 import com.yeem.lamp.entity.AladdinService;
-import com.yeem.lamp.entity.Member;
 import com.yeem.lamp.service.*;
 import com.yeem.lamp.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,9 +35,6 @@ public class SubscribeController {
     private IAladdinNodeVmessService aladdinNodeVmessService;
 
     @Autowired
-    private IMemberService memberService;
-
-    @Autowired
     private XUIService xuiService;
 
     @GetMapping("/clash")
@@ -57,6 +51,8 @@ public class SubscribeController {
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
+        aladdinMember.setLastUpdateSubscription(new Date());
+        aladdinMemberService.updateById(aladdinMember);
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
         for (AladdinService aladdinService : aladdinServiceList) {
@@ -101,6 +97,8 @@ public class SubscribeController {
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
+        aladdinMember.setLastUpdateSubscription(new Date());
+        aladdinMemberService.updateById(aladdinMember);
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
         for (AladdinService aladdinService : aladdinServiceList) {

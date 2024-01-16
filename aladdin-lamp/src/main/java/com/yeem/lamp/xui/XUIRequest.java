@@ -19,6 +19,7 @@ public class XUIRequest {
     private ObjectMapper objectMapper = new ObjectMapper();
     private String ip;
     private int port;
+    private String remark;
     private HttpCookie cookie;
     private XUIInboundData xuiInboundData;
 
@@ -33,6 +34,11 @@ public class XUIRequest {
 
     public XUIRequest port(int port) {
         this.port = port;
+        return this;
+    }
+
+    public XUIRequest remark(String remark) {
+        this.remark = remark;
         return this;
     }
 
@@ -153,7 +159,7 @@ public class XUIRequest {
             List<XUIInboundData> xuiInboundDataList = objectMapper.readValue(objStr, new TypeReference<List<XUIInboundData>>() {
             });
             for (XUIInboundData xuiInboundData : xuiInboundDataList) {
-                if (!StringUtils.isEmpty(xuiInboundData) && DEFAULT_REMARK.equals(xuiInboundData.getRemark())) {
+                if (!StringUtils.isEmpty(xuiInboundData) && this.remark.equals(xuiInboundData.getRemark())) {
                     this.xuiInboundData = xuiInboundData;
                     break;
                 }
