@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.yulichang.query.MPJQueryWrapper;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinMember;
@@ -29,8 +31,8 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     public List<AladdinService> list() {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        // 临时只生成15G流量的用户
-        queryWrapper.eq("data_traffic", 15);
+        // 临时只生成15G 50G流量的用户
+        queryWrapper.lt("data_traffic", 100);
         queryWrapper.ge("end_date", new Date());
         return super.list(queryWrapper);
     }
@@ -67,6 +69,6 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
             }
         }
         IPage<AladdinService> page = new Page<>(current, size);
-        return aladdinServiceMapper.selectPage(page, queryWrapper);
+        return aladdinServiceMapper.selectPages(page);
     }
 }

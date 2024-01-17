@@ -1,5 +1,6 @@
 package com.yeem.lamp.controller;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.http.HttpUtil;
@@ -12,6 +13,7 @@ import com.yeem.lamp.service.*;
 import com.yeem.lamp.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,8 +39,8 @@ public class SubscribeController {
     @Autowired
     private XUIService xuiService;
 
-    @GetMapping("/clash")
-    public String test() {
+    @GetMapping("/refresh")
+    public String refresh() {
         xuiService.sync();
         return "ok";
     }
@@ -51,12 +53,15 @@ public class SubscribeController {
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
+        log.info("会员更新clash订阅：微信{}，邮箱：{}", aladdinMember.getWechat(), aladdinMember.getEmail());
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
+        String endDate = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
         for (AladdinService aladdinService : aladdinServiceList) {
-            if (aladdinService.getDataTraffic() == 15) {
+            endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
+            if (aladdinService.getDataTraffic() < 100) {
                 List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
                 Long up = 0L;
                 Long down = 0L;
@@ -83,6 +88,16 @@ public class SubscribeController {
                 }
             }
         }
+        AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();
+        aladdinNodeVmess.setNodePs(endDate + "-到期");
+        aladdinNodeVmess.setNodeAdd("google.com");
+        aladdinNodeVmess.setNodePort("443");
+        aladdinNodeVmess.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmess.setAid("0");
+        aladdinNodeVmess.setNet("tcp");
+        aladdinNodeVmess.setType("none");
+        aladdinNodeVmess.setTls("none");
+        nodeUrlList.add(aladdinNodeVmess.convert());
         String url = String.join("|", nodeUrlList);
         log.info("URL:{}", url);
         String sub = "http://127.0.0.1:25500/sub?target=clash&url=" + URLEncodeUtil.encode(url);
@@ -97,12 +112,15 @@ public class SubscribeController {
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
+        log.info("会员更新shadowrocket订阅：微信{}，邮箱：{}", aladdinMember.getWechat(), aladdinMember.getEmail());
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
+        String endDate = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
         for (AladdinService aladdinService : aladdinServiceList) {
-            if (aladdinService.getDataTraffic() == 15) {
+            endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
+            if (aladdinService.getDataTraffic() < 100) {
                 List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
                 Long up = 0L;
                 Long down = 0L;
@@ -129,6 +147,16 @@ public class SubscribeController {
                 }
             }
         }
+        AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();
+        aladdinNodeVmess.setNodePs(endDate + "-到期");
+        aladdinNodeVmess.setNodeAdd("google.com");
+        aladdinNodeVmess.setNodePort("443");
+        aladdinNodeVmess.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmess.setAid("0");
+        aladdinNodeVmess.setNet("tcp");
+        aladdinNodeVmess.setType("none");
+        aladdinNodeVmess.setTls("none");
+        nodeUrlList.add(aladdinNodeVmess.convert());
         String url = String.join("|", nodeUrlList);
         log.info("URL:{}", url);
         String sub = "http://127.0.0.1:25500/sub?target=v2ray&url=" + URLEncodeUtil.encode(url);

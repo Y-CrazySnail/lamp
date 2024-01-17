@@ -10,7 +10,6 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.net.HttpCookie;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class XUIRequest {
@@ -64,10 +63,10 @@ public class XUIRequest {
         return this;
     }
 
-    public XUIInboundData sync(List<XUIVmessClient> vmessClientList) throws IOException {
+    public XUIInboundData syncNode(List<XUIVmessClient> vmessClientList) throws IOException {
         list();
         if (Objects.isNull(xuiInboundData)) {
-            log.error("当前服务器未创建[备注]为ALADDIN的Vmess入口：{},开始创建--------------->", this.ip);
+            log.info("当前服务器未创建[备注]为ALADDIN的Vmess入口：{},开始创建--------------->", this.ip);
             Map<String, Object> formData = new HashMap<>();
             formData.put("up", 0);
             formData.put("down", 0);
@@ -114,10 +113,10 @@ public class XUIRequest {
                     .execute();
             XUIResponse xuiResponseAdd = objectMapper.readValue(addResponse.body(), XUIResponse.class);
             if (!StringUtils.isEmpty(xuiResponseAdd) && xuiResponseAdd.isSuccess()) {
-                log.error("当前服务器未创建[备注]为ALADDIN的Vmess入口：{},结束创建<---------------", this.ip);
+                log.info("当前服务器未创建[备注]为ALADDIN的Vmess入口：{},结束创建<---------------", this.ip);
                 list();
             } else {
-                log.error("{}", xuiResponseAdd);
+                log.error("当前服务器未创建[备注]为ALADDIN的Vmess入口失败：{}", xuiResponseAdd.getMsg());
             }
         } else {
             Map<String, List<XUIInboundData.Client>> xuiInboundDataListMap = objectMapper.readValue(xuiInboundData.getSettings(), new TypeReference<Map<String, List<XUIInboundData.Client>>>() {
@@ -155,6 +154,11 @@ public class XUIRequest {
         return xuiInboundData;
     }
 
+    /**
+     * 获取节点信息
+     *
+     * @throws IOException
+     */
     private void list() throws IOException {
         HttpResponse response = HttpRequest.post("http://" + this.ip + ":" + this.port + "/xui/inbound/list")
                 .cookie(this.cookie)

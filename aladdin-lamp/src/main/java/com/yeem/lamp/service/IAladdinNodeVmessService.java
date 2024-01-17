@@ -10,5 +10,5 @@ public interface IAladdinNodeVmessService extends IService<AladdinNodeVmess> {
     List<AladdinNodeVmess> listByServerId(Long serverId, int year, int month);
     List<AladdinNodeVmess> listByServiceId(Long serviceId, int year, int month);
     List<AladdinNodeVmess> listByNodeType(String nodeType);
-    boolean updateByServerId(Long serverId, String nodeType, String nodePs);
+    boolean updateByServerId(Long serverId, String nodeType, String nodePs, Integer sort);
 }

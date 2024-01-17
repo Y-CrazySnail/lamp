@@ -45,7 +45,7 @@ public class AladdinServerServiceImpl extends ServiceImpl<AladdinServerMapper, A
 
     @Override
     public boolean removeById(Serializable id) {
-        aladdinNodeVmessService.updateByServerId((Long) id, Constant.NODE_TYPE_EXPIRED, null);
+        aladdinNodeVmessService.updateByServerId((Long) id, Constant.NODE_TYPE_EXPIRED, null, null);
         UpdateWrapper<AladdinServer> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
         updateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
@@ -55,7 +55,7 @@ public class AladdinServerServiceImpl extends ServiceImpl<AladdinServerMapper, A
 
     @Override
     public boolean save(AladdinServer entity) {
-        aladdinNodeVmessService.updateByServerId(entity.getId(), null, entity.getSubscribeNamePrefix());
+        aladdinNodeVmessService.updateByServerId(entity.getId(), null, entity.getSubscribeNamePrefix(), entity.getSort());
         return super.save(entity);
     }
 }

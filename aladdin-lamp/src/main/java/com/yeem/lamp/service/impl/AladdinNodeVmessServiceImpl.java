@@ -71,6 +71,7 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
         queryWrapper.eq("service_year", year);
         queryWrapper.eq("service_month", month);
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        queryWrapper.orderByAsc("sort");
         return aladdinNodeVmessMapper.selectList(queryWrapper);
     }
 
@@ -83,13 +84,16 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
     }
 
     @Override
-    public boolean updateByServerId(Long serverId, String nodeType, String nodePs) {
+    public boolean updateByServerId(Long serverId, String nodeType, String nodePs, Integer sort) {
         UpdateWrapper<AladdinNodeVmess> updateWrapper = new UpdateWrapper<>();
         if (!StringUtils.isEmpty(nodePs)) {
             updateWrapper.set("node_ps", nodePs);
         }
         if (!StringUtils.isEmpty(nodeType)) {
             updateWrapper.set("node_type", nodeType);
+        }
+        if (!StringUtils.isEmpty(sort)) {
+            updateWrapper.set("sort", sort);
         }
         updateWrapper.eq("server_id", serverId);
         return super.update(updateWrapper);

@@ -1,5 +1,6 @@
 package com.yeem.lamp.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
@@ -17,6 +18,9 @@ public class AladdinService extends BaseEntity {
     private Integer dataTraffic;
     private String period;
     private BigDecimal price;
+    private String uuid;
+    @TableField(exist = false)
+    private AladdinMember aladdinMember;
 
     public Long getMemberId() {
         return memberId;
@@ -64,5 +68,21 @@ public class AladdinService extends BaseEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public AladdinMember getAladdinMember() {
+        return aladdinMember;
+    }
+
+    public void setAladdinMember(AladdinMember aladdinMember) {
+        this.aladdinMember = aladdinMember;
     }
 }

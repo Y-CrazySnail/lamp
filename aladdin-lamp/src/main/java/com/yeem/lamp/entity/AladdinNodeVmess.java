@@ -29,6 +29,7 @@ public class AladdinNodeVmess extends BaseEntity {
     private String path;
     private String tls;
     private String sni;
+    private int sort;
 
     public Long getServiceId() {
         return serviceId;
@@ -180,6 +181,14 @@ public class AladdinNodeVmess extends BaseEntity {
 
     public void setSni(String sni) {
         this.sni = sni;
+    }
+
+    public int getSort() {
+        return sort;
+    }
+
+    public void setSort(int sort) {
+        this.sort = sort;
     }
 
     public String convert() {
