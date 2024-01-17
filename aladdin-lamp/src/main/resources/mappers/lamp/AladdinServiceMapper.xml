@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yeem.lamp.mapper.AladdinServiceMapper">
-    <resultMap id="aladdinService" type="com.yeem.lamp.entity.AladdinService">
-        <id property="id" column="id" />
-        <result property="name" column="user_name" />
-        private Long memberId;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
-        private Date beginDate;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
-        private Date endDate;
-        private Integer dataTraffic;
-        private String period;
-        private BigDecimal price;
-        private String uuid;
-        @TableField(exist = false)
-        private AladdinMember aladdinMember;
-        <association property="address" javaType="Address">
-            <id property="id" column="address_id" />
-            <result property="city" column="address_city" />
-            <result property="country" column="address_country" />
-        </association>
-    </resultMap>
-
     <select id="selectPages" resultType="com.yeem.lamp.entity.AladdinService">
         select
             s.*,
-            m.email as aladdinMember.email,
-            m.wechat as aladdinMember.wechat,
+            m.email,
+            m.wechat
         from aladdin_service s
-        left join aladdin_member m on s.member_id = m.id
+        inner join aladdin_member m on s.member_id = m.id
+        <where>
+            s.delete_flag = 0 and m.delete_flag = 0
+            <if test="memberId != null and memberId != ''">
+                and m.member_id = #{memberId}
+            </if>
+            <if test="status == '1'.toString()">
+                and s.end_date <![CDATA[>]]> now()
+            </if>
+            <if test="status == '0'.toString()">
+                and s.end_date <![CDATA[<=]]> now()
+            </if>
+            <if test="wechat != null and wechat != ''">
+                and m.wechat like concat('%', #{wechat}, '%')
+            </if>
+            <if test="email != null and email != ''">
+                and m.email like concat('%', #{email}, '%')
+            </if>
+        </where>
     </select>
 </mapper>

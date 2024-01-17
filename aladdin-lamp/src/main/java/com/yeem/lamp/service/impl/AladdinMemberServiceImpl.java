@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinMember;
-import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.mapper.AladdinMemberMapper;
 import com.yeem.lamp.service.IAladdinMemberService;
 import com.yeem.lamp.service.IAladdinOrderService;
@@ -56,12 +55,7 @@ public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, A
             queryWrapper.like("wechat", wechat);
         }
         IPage<AladdinMember> page = new Page<>(current, size);
-        IPage<AladdinMember> pages = aladdinMemberMapper.selectPage(page, queryWrapper);
-        for (AladdinMember record : pages.getRecords()) {
-            List<AladdinService> serviceList = aladdinServiceService.listByMemberId(record.getId());
-            record.setServiceList(serviceList);
-        }
-        return pages;
+        return aladdinMemberMapper.selectPage(page, queryWrapper);
     }
 
     @Override

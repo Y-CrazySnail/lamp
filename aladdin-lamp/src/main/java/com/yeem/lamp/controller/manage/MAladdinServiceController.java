@@ -29,9 +29,11 @@ public class MAladdinServiceController {
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
                                         @RequestParam("size") int size,
                                         @RequestParam(value = "memberId", required = false) Long memberId,
-                                        @RequestParam(value = "status", required = false) String status) {
+                                        @RequestParam(value = "status", required = false) String status,
+                                        @RequestParam(value = "wechat", required = false) String wechat,
+                                        @RequestParam(value = "email", required = false) String email) {
         try {
-            return ResponseEntity.ok(aladdinServiceService.pages(current, size, memberId, status));
+            return ResponseEntity.ok(aladdinServiceService.pages(current, size, memberId, status, wechat, email));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");

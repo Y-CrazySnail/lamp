@@ -2,7 +2,6 @@ package com.yeem.lamp.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinMember;
 import com.yeem.lamp.entity.AladdinNodeVmess;
@@ -46,7 +45,7 @@ public class XUIService {
                 List<XUIVmessClient> vmessClientList = new ArrayList<>();
                 for (AladdinService aladdinService : aladdinServiceList) {
                     AladdinMember aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
-                    XUIVmessClient xuiVmessClient = new XUIVmessClient(aladdinMember.getUuid(),
+                    XUIVmessClient xuiVmessClient = new XUIVmessClient(aladdinService.getUuid(),
                             Base64.encode(serverId + "_" + aladdinService.getId()).replace("=", ""),
                             0,
                             0,
@@ -80,24 +79,22 @@ public class XUIService {
                         continue;
                     }
                     AladdinService service = serviceList.get(0);
-                    AladdinMember member = memberList
-                            .stream().filter(e -> e.getId().equals(service.getMemberId())).collect(Collectors.toList()).get(0);
                     List<AladdinNodeVmess> nodeList = nodeVmessList
                             .stream().filter(e ->
                                     e.getServiceId().equals(serviceId)
-                                            && e.getNodeId().equals(member.getUuid())
+                                            && e.getNodeId().equals(service.getUuid())
                             )
                             .collect(Collectors.toList());
                     if (nodeList.isEmpty()) {
                         // 不存在用户当前UUID的节点，做新增节点操作
-                        log.info("创建本地节点流量操作：memberId:{}, serviceId:{}, uuid:{}, year：{}, month：{}",
-                                member.getId(), serverId, member.getUuid(), year, month);
+                        log.info("创建本地节点流量操作：serviceId:{}, serverId:{}, uuid:{}, year：{}, month：{}",
+                                service.getId(), serverId, service.getUuid(), year, month);
                         AladdinNodeVmess addNodeVmess = new AladdinNodeVmess();
                         addNodeVmess.setNodeType(Constant.NODE_TYPE_PRIVATE);
                         addNodeVmess.setNodePs(server.getSubscribeNamePrefix());
                         addNodeVmess.setNodeAdd(server.getSubscribeIp());
                         addNodeVmess.setNodePort(String.valueOf(server.getSubscribePort()));
-                        addNodeVmess.setNodeId(member.getUuid());
+                        addNodeVmess.setNodeId(service.getUuid());
                         addNodeVmess.setAid("0");
                         addNodeVmess.setNet("tcp");
                         addNodeVmess.setType("none");

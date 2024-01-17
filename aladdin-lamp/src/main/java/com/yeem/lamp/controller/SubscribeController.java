@@ -39,17 +39,15 @@ public class SubscribeController {
     @Autowired
     private XUIService xuiService;
 
-    @GetMapping("/refresh")
-    public String refresh() {
-        xuiService.sync();
-        return "ok";
-    }
-
     @GetMapping("/clash/{uuid}")
     public String clash(@PathVariable("uuid") String uuid) {
         int year = DateUtil.year(new Date());
         int month = DateUtil.month(new Date()) + 1;
-        AladdinMember aladdinMember = aladdinMemberService.getByUUID(uuid);
+        AladdinService aladdinService = aladdinServiceService.getByUUID(uuid);
+        if (Objects.isNull(aladdinService)) {
+            return null;
+        }
+        AladdinMember aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
@@ -58,34 +56,30 @@ public class SubscribeController {
         aladdinMemberService.updateById(aladdinMember);
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
-        String endDate = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
-        for (AladdinService aladdinService : aladdinServiceList) {
-            endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-            if (aladdinService.getDataTraffic() < 100) {
-                List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
-                Long up = 0L;
-                Long down = 0L;
-                for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                    up += aladdinNodeVmess.getServiceUp();
-                    down += aladdinNodeVmess.getServiceDown();
-                }
-                Double total = (double) ((up + down) / 1024 / 1024 / 1024);
-                if (total > aladdinService.getDataTraffic()) {
-                    log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
-                    continue;
-                }
-                String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
-                for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                    if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
-                        aladdinNodeVmess.setNodePs(aladdinNodeVmess.getNodePs() + surplus + "GB");
-                        nodeUrlList.add(aladdinNodeVmess.convert());
-                    }
-                }
-            } else {
-                List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByNodeType(Constant.NODE_TYPE_PUBLIC);
-                for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+        String endDate = endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
+        if (aladdinService.getDataTraffic() < 100) {
+            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+            Long up = 0L;
+            Long down = 0L;
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                up += aladdinNodeVmess.getServiceUp();
+                down += aladdinNodeVmess.getServiceDown();
+            }
+            Double total = (double) ((up + down) / 1024 / 1024 / 1024);
+            if (total > aladdinService.getDataTraffic()) {
+                log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
+            }
+            String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
+                    aladdinNodeVmess.setNodePs(aladdinNodeVmess.getNodePs() + surplus + "GB");
                     nodeUrlList.add(aladdinNodeVmess.convert());
                 }
+            }
+        } else {
+            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByNodeType(Constant.NODE_TYPE_PUBLIC);
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                nodeUrlList.add(aladdinNodeVmess.convert());
             }
         }
         AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();
@@ -108,7 +102,11 @@ public class SubscribeController {
     public String shadowrocket(@PathVariable("uuid") String uuid) {
         int year = DateUtil.year(new Date());
         int month = DateUtil.month(new Date()) + 1;
-        AladdinMember aladdinMember = aladdinMemberService.getByUUID(uuid);
+        AladdinService aladdinService = aladdinServiceService.getByUUID(uuid);
+        if (Objects.isNull(aladdinService)) {
+            return null;
+        }
+        AladdinMember aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
@@ -117,34 +115,31 @@ public class SubscribeController {
         aladdinMemberService.updateById(aladdinMember);
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
-        String endDate = DateUtil.format(new Date(), DatePattern.NORM_DATE_PATTERN);
-        for (AladdinService aladdinService : aladdinServiceList) {
-            endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-            if (aladdinService.getDataTraffic() < 100) {
-                List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
-                Long up = 0L;
-                Long down = 0L;
-                for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                    up += aladdinNodeVmess.getServiceUp();
-                    down += aladdinNodeVmess.getServiceDown();
-                }
-                Double total = (double) ((up + down) / 1024 / 1024 / 1024);
-                if (total > aladdinService.getDataTraffic()) {
-                    log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
-                    continue;
-                }
-                String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
-                for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                    if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
-                        aladdinNodeVmess.setNodePs(aladdinNodeVmess.getNodePs() + surplus + "GB");
-                        nodeUrlList.add(aladdinNodeVmess.convert());
-                    }
-                }
-            } else {
-                List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByNodeType(Constant.NODE_TYPE_PUBLIC);
-                for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+        String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
+        if (aladdinService.getDataTraffic() < 100) {
+            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+            Long up = 0L;
+            Long down = 0L;
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                up += aladdinNodeVmess.getServiceUp();
+                down += aladdinNodeVmess.getServiceDown();
+            }
+            Double total = (double) ((up + down) / 1024 / 1024 / 1024);
+            if (total > aladdinService.getDataTraffic()) {
+                log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
+                return null;
+            }
+            String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
+                    aladdinNodeVmess.setNodePs(aladdinNodeVmess.getNodePs() + surplus + "GB");
                     nodeUrlList.add(aladdinNodeVmess.convert());
                 }
+            }
+        } else {
+            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByNodeType(Constant.NODE_TYPE_PUBLIC);
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                nodeUrlList.add(aladdinNodeVmess.convert());
             }
         }
         AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();

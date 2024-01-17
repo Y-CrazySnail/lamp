@@ -11,16 +11,18 @@ import java.util.Date;
 @TableName(value = "aladdin_service", autoResultMap = true)
 public class AladdinService extends BaseEntity {
     private Long memberId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
     private Date beginDate;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
     private Date endDate;
     private Integer dataTraffic;
     private String period;
     private BigDecimal price;
     private String uuid;
     @TableField(exist = false)
-    private AladdinMember aladdinMember;
+    private String wechat;
+    @TableField(exist = false)
+    private String email;
 
     public Long getMemberId() {
         return memberId;
@@ -78,11 +80,19 @@ public class AladdinService extends BaseEntity {
         this.uuid = uuid;
     }
 
-    public AladdinMember getAladdinMember() {
-        return aladdinMember;
+    public String getWechat() {
+        return wechat;
     }
 
-    public void setAladdinMember(AladdinMember aladdinMember) {
-        this.aladdinMember = aladdinMember;
+    public void setWechat(String wechat) {
+        this.wechat = wechat;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

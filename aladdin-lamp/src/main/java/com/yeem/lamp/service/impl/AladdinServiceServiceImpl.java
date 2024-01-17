@@ -5,17 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.github.yulichang.query.MPJQueryWrapper;
-import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
-import com.yeem.lamp.entity.AladdinMember;
 import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.mapper.AladdinServiceMapper;
 import com.yeem.lamp.service.IAladdinServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -55,20 +51,20 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     }
 
     @Override
-    public IPage<AladdinService> pages(int current, int size, Long memberId, String status) {
+    public IPage<AladdinService> pages(int current, int size,
+                                       Long memberId,
+                                       String status,
+                                       String wechat,
+                                       String email) {
+        IPage<AladdinService> page = new Page<>(current, size);
+        return aladdinServiceMapper.selectPages(page, memberId, status, wechat, email);
+    }
+
+    @Override
+    public AladdinService getByUUID(String uuid) {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        if (!StringUtils.isEmpty(memberId)) {
-            queryWrapper.eq("member_id", memberId);
-        }
-        if (!StringUtils.isEmpty(status)) {
-            if (Constant.TRUE_STRING.equals(status)) {
-                queryWrapper.gt("end_date", new Date());
-            } else {
-                queryWrapper.le("end_date", new Date());
-            }
-        }
-        IPage<AladdinService> page = new Page<>(current, size);
-        return aladdinServiceMapper.selectPages(page);
+        queryWrapper.eq("uuid", uuid);
+        return super.getOne(queryWrapper);
     }
 }

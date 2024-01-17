@@ -1,4 +1,3 @@
 permit-url:
   - /subscribe/refresh
   - /web/**
-  - /manage/**
