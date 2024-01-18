@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @Slf4j
 @RestController
 @RequestMapping("/web/member")
@@ -60,10 +64,10 @@ public class WebAladdinMemberController {
     }
 
     /**
-     * 更改
+     * 登录
      *
      * @param aladdinMember aladdinMember
-     * @return 更新结果
+     * @return 登录token
      */
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody AladdinMember aladdinMember) {
@@ -73,14 +77,15 @@ public class WebAladdinMemberController {
             queryWrapper.eq("password", aladdinMember.getPassword());
             int count = aladdinMemberService.count(queryWrapper);
             if (count > 0) {
+                aladdinMember = aladdinMemberService.getOne(queryWrapper);
                 String token = WebJWTUtils.generateJWT(aladdinMember.getId());
                 return ResponseEntity.ok(token);
             } else {
                 return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
             }
         } catch (Exception e) {
-            log.error("update方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
+            log.error("login error", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("登录失败");
         }
     }
 }

@@ -3,7 +3,7 @@ package com.yeem.lamp.security;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import com.yeem.common.utils.WechatJWTUtils;
+import com.yeem.common.utils.WebJWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -22,11 +22,11 @@ public class LocalAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getRequestURI().startsWith("/server/web/")) {
             String token = request.getHeader("token");
-            if (!WechatJWTUtils.validate(token)) {
+            if (!WebJWTUtils.validate(token)) {
                 log.error("token is invalid. token:{}", token);
                 return false;
             }
-            ID.set(WechatJWTUtils.parseJWTId(token));
+            ID.set(WebJWTUtils.parseJWTId(token));
             Date currentDate = new Date();
             BEGIN_TIME.set(currentDate);
             log.info("start time:{}, uri:{}, memberId:{}",

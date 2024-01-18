@@ -14,7 +14,7 @@ import java.util.Map;
 @Slf4j
 public class WebJWTUtils {
 
-    private static final String KEY = "yeem-cloud";
+    private static final String KEY = "aladdin-lamp";
 
     public static String generateJWT(Long id) {
         DateTime now = DateTime.now();

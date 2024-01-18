@@ -1,5 +1,6 @@
 package com.yeem.lamp.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 
@@ -9,6 +10,8 @@ import java.util.Date;
 @TableName(value = "aladdin_order", autoResultMap = true)
 public class AladdinOrder extends BaseEntity {
     private Long memberId;
+    @TableField(exist = false)
+    private Long packageId;
     private String status;
     private Long serviceId;
     private Date orderTime;
@@ -24,6 +27,14 @@ public class AladdinOrder extends BaseEntity {
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
+    }
+
+    public Long getPackageId() {
+        return packageId;
+    }
+
+    public void setPackageId(Long packageId) {
+        this.packageId = packageId;
     }
 
     public String getStatus() {
