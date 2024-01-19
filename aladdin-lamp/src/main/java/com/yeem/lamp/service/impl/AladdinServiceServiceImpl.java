@@ -37,6 +37,14 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     public List<AladdinService> listByMemberId(Long memberId) {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        queryWrapper.eq("member_id", memberId);
+        return super.list(queryWrapper);
+    }
+
+    @Override
+    public List<AladdinService> listValidByMemberId(Long memberId) {
+        QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.ge("end_date", new Date());
         queryWrapper.eq("member_id", memberId);
         return super.list(queryWrapper);

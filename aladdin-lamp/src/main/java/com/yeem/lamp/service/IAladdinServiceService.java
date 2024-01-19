@@ -10,6 +10,8 @@ import java.util.List;
 public interface IAladdinServiceService extends IService<AladdinService> {
     List<AladdinService> listByMemberId(Long memberId);
 
+    List<AladdinService> listValidByMemberId(Long memberId);
+
     boolean removeByMemberId(Serializable id);
 
     public IPage<AladdinService> pages(int current, int size,

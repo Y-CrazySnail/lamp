@@ -54,7 +54,7 @@ public class SubscribeController {
         log.info("会员更新clash订阅：微信{}，邮箱：{}", aladdinMember.getWechat(), aladdinMember.getEmail());
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
-        List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
+        List<AladdinService> aladdinServiceList = aladdinServiceService.listValidByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
         if (aladdinService.getDataTraffic() < 100) {
@@ -113,7 +113,7 @@ public class SubscribeController {
         log.info("会员更新shadowrocket订阅：微信{}，邮箱：{}", aladdinMember.getWechat(), aladdinMember.getEmail());
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
-        List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinMember.getId());
+        List<AladdinService> aladdinServiceList = aladdinServiceService.listValidByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
         if (aladdinService.getDataTraffic() < 100) {
