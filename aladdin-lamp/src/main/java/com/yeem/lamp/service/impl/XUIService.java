@@ -123,6 +123,7 @@ public class XUIService {
                 aladdinNodeVmessService.updateByServerId(serverId, null, server.getSubscribeNamePrefix(), server.getSort());
                 log.info("结束同步{}服务器本地节点信息----------", server.getPostscript());
             }
+            aladdinServiceService.refreshStatus();
         } catch (IOException e) {
             e.printStackTrace();
         }

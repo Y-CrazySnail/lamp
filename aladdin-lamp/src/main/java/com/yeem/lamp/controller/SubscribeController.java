@@ -54,9 +54,8 @@ public class SubscribeController {
         log.info("会员更新clash订阅：微信{}，邮箱：{}", aladdinMember.getWechat(), aladdinMember.getEmail());
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
-        List<AladdinService> aladdinServiceList = aladdinServiceService.listValidByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
-        String endDate = endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
+        String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
         if (aladdinService.getDataTraffic() < 100) {
             List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
             Long up = 0L;
@@ -65,7 +64,7 @@ public class SubscribeController {
                 up += aladdinNodeVmess.getServiceUp();
                 down += aladdinNodeVmess.getServiceDown();
             }
-            Double total = (double) ((up + down) / 1024 / 1024 / 1024);
+            Double total = ((double) (up + down) / 1024 / 1024 / 1024);
             if (total > aladdinService.getDataTraffic()) {
                 log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
             }
@@ -113,7 +112,6 @@ public class SubscribeController {
         log.info("会员更新shadowrocket订阅：微信{}，邮箱：{}", aladdinMember.getWechat(), aladdinMember.getEmail());
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
-        List<AladdinService> aladdinServiceList = aladdinServiceService.listValidByMemberId(aladdinMember.getId());
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
         if (aladdinService.getDataTraffic() < 100) {
@@ -124,7 +122,7 @@ public class SubscribeController {
                 up += aladdinNodeVmess.getServiceUp();
                 down += aladdinNodeVmess.getServiceDown();
             }
-            Double total = (double) ((up + down) / 1024 / 1024 / 1024);
+            Double total = ((double)(up + down) / 1024 / 1024 / 1024);
             if (total > aladdinService.getDataTraffic()) {
                 log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
                 return null;

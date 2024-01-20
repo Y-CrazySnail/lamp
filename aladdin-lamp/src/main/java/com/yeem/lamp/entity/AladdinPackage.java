@@ -11,6 +11,8 @@ public class AladdinPackage extends BaseEntity {
     private Integer dataTraffic;
     private String period;
     private BigDecimal price;
+    private String title;
+    private String introduce;
 
     public String getType() {
         return type;
@@ -42,5 +44,21 @@ public class AladdinPackage extends BaseEntity {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getIntroduce() {
+        return introduce;
+    }
+
+    public void setIntroduce(String introduce) {
+        this.introduce = introduce;
     }
 }

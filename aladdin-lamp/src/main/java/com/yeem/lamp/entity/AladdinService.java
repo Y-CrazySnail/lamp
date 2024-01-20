@@ -19,10 +19,20 @@ public class AladdinService extends BaseEntity {
     private String period;
     private BigDecimal price;
     private String uuid;
+    /**
+     * 0未生效 1已生效 9已过期
+     */
+    private String status;
     @TableField(exist = false)
     private String wechat;
     @TableField(exist = false)
     private String email;
+    @TableField(exist = false)
+    private Long serviceUp;
+    @TableField(exist = false)
+    private Long serviceDown;
+    @TableField(exist = false)
+    private String surplus;
 
     public Long getMemberId() {
         return memberId;
@@ -72,6 +82,14 @@ public class AladdinService extends BaseEntity {
         this.price = price;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public String getUuid() {
         return uuid;
     }
@@ -94,5 +112,29 @@ public class AladdinService extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Long getServiceUp() {
+        return serviceUp;
+    }
+
+    public void setServiceUp(Long serviceUp) {
+        this.serviceUp = serviceUp;
+    }
+
+    public Long getServiceDown() {
+        return serviceDown;
+    }
+
+    public void setServiceDown(Long serviceDown) {
+        this.serviceDown = serviceDown;
+    }
+
+    public String getSurplus() {
+        return surplus;
+    }
+
+    public void setSurplus(String surplus) {
+        this.surplus = surplus;
     }
 }

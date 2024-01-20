@@ -1,5 +1,6 @@
 package com.yeem.lamp.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -7,8 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
+import com.yeem.lamp.entity.AladdinNodeVmess;
 import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.mapper.AladdinServiceMapper;
+import com.yeem.lamp.service.IAladdinNodeVmessService;
 import com.yeem.lamp.service.IAladdinServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +25,8 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
 
     @Autowired
     private AladdinServiceMapper aladdinServiceMapper;
+    @Autowired
+    private IAladdinNodeVmessService aladdinNodeVmessService;
 
     @Override
     public List<AladdinService> list() {
@@ -38,7 +43,22 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("member_id", memberId);
-        return super.list(queryWrapper);
+        List<AladdinService> aladdinServiceList = super.list(queryWrapper);
+        int year = DateUtil.year(new Date());
+        int month = DateUtil.month(new Date()) + 1;
+        for (AladdinService aladdinService : aladdinServiceList) {
+            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+            Long up = 0L;
+            Long down = 0L;
+            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+                up += aladdinNodeVmess.getServiceUp();
+                down += aladdinNodeVmess.getServiceDown();
+            }
+            Double total = ((double) (up + down) / 1024 / 1024 / 1024);
+            String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
+            aladdinService.setSurplus(surplus);
+        }
+        return aladdinServiceList;
     }
 
     @Override
@@ -74,5 +94,10 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("uuid", uuid);
         return super.getOne(queryWrapper);
+    }
+
+    @Override
+    public void refreshStatus() {
+        aladdinServiceMapper.refreshStatus();
     }
 }

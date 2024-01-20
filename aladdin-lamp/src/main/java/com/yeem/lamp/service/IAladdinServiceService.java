@@ -14,11 +14,13 @@ public interface IAladdinServiceService extends IService<AladdinService> {
 
     boolean removeByMemberId(Serializable id);
 
-    public IPage<AladdinService> pages(int current, int size,
+    IPage<AladdinService> pages(int current, int size,
                                        Long memberId,
                                        String status,
                                        String wechat,
                                        String email);
 
     AladdinService getByUUID(String uuid);
+
+    void refreshStatus();
 }

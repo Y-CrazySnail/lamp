@@ -13,4 +13,5 @@ public interface AladdinServiceMapper extends BaseMapper<AladdinService> {
                                       @Param("status") String status,
                                       @Param("wechat") String wechat,
                                       @Param("email") String email);
+    void refreshStatus();
 }

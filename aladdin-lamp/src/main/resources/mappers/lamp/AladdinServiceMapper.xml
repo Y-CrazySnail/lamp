@@ -5,7 +5,9 @@
         select
             s.*,
             m.email,
-            m.wechat
+            m.wechat,
+            (select sum(service_up) from aladdin_node_vmess where s.id = service_id and service_year = year(now()) and service_month = month(now()))/1024/1024/1024 as service_up,
+            (select sum(service_down) from aladdin_node_vmess where s.id = service_id and service_year = year(now()) and service_month = month(now()))/1024/1024/1024 as service_down
         from aladdin_service s
         inner join aladdin_member m on s.member_id = m.id
         <where>
@@ -27,4 +29,10 @@
             </if>
         </where>
     </select>
+
+    <update id="refreshStatus">
+        update aladdin_service
+        set status = case
+        when end_date &lt; curdate() then '9' else '1' end;
+    </update>
 </mapper>

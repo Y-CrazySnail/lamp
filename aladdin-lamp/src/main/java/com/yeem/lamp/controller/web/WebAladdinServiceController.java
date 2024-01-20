@@ -47,6 +47,7 @@ public class WebAladdinServiceController {
             Long memberId = LocalAuthInterceptor.getMemberId();
             UpdateWrapper<AladdinService> updateWrapper = new UpdateWrapper<>();
             updateWrapper.set("uuid", aladdinService.getUuid());
+            updateWrapper.set("status", "0");
             updateWrapper.eq(BaseEntity.BaseField.ID.getName(), aladdinService.getId());
             updateWrapper.eq("member_id", memberId);
             aladdinServiceService.update(updateWrapper);

@@ -4,7 +4,7 @@ BIN_DIR=`pwd`
 cd ..
 DEPLOY_DIR=`pwd`
 CONF_DIR=$DEPLOY_DIR/conf
-LOGS_DIR=../logs/yeem-auth
+LOGS_DIR=../logs/aladdin-lamp
 
 PIDS=`ps -ef | grep java | grep "$CONF_DIR"| grep -v grep |awk '{print $2}'`
 if [ -z "$PIDS" ]; then

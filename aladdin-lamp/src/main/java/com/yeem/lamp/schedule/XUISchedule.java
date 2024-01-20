@@ -13,7 +13,7 @@ public class XUISchedule {
     @Autowired
     private XUIService xuiService;
 
-//    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/5 * * * ?")
     public void refresh() {
         log.info("开始-同步节点定时任务执行---------->");
         xuiService.sync();
