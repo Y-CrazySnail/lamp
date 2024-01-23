@@ -10,13 +10,24 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class XUISchedule {
 
+    private static boolean STATUS = false;
+
     @Autowired
     private XUIService xuiService;
 
     @Scheduled(cron = "0 0/5 * * * ?")
     public void refresh() {
-        log.info("开始-同步节点定时任务执行---------->");
-        xuiService.sync();
-        log.info("结束-同步节点定时任务执行<----------");
+        try {
+            if (!STATUS) {
+                STATUS = true;
+                log.info("开始-同步节点定时任务执行---------->");
+                xuiService.sync();
+                log.info("结束-同步节点定时任务执行<----------");
+            }
+        } catch (Exception e) {
+            log.error("执行同步定时任务失败", e);
+        } finally {
+            STATUS = false;
+        }
     }
 }

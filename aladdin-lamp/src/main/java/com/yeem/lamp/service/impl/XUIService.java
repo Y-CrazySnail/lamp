@@ -36,7 +36,6 @@ public class XUIService {
     private IAladdinNodeVmessService aladdinNodeVmessService;
 
     public void sync() {
-        List<AladdinMember> memberList = aladdinMemberService.list();
         List<AladdinServer> serverList = aladdinServerService.list();
         List<AladdinService> aladdinServiceList = aladdinServiceService.list();
         try {

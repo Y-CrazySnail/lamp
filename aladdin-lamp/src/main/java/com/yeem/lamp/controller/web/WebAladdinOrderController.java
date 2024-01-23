@@ -6,6 +6,7 @@ import com.yeem.lamp.security.LocalAuthInterceptor;
 import com.yeem.lamp.service.IAladdinOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,13 @@ public class WebAladdinOrderController {
             log.error("下单", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("下单");
         }
+    }
+
+    @GetMapping("/pay")
+    public ResponseEntity<Object> pay(){
+        AladdinOrder aladdinOrder = new AladdinOrder();
+        aladdinOrderService.pay(aladdinOrder);
+        return ResponseEntity.ok("ok");
     }
 
     /**

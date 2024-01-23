@@ -2,6 +2,8 @@ package com.yeem.lamp.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.http.HttpRequest;
+import cn.hutool.http.HttpResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -14,13 +16,19 @@ import com.yeem.lamp.entity.AladdinPackage;
 import com.yeem.lamp.mapper.AladdinOrderMapper;
 import com.yeem.lamp.service.IAladdinOrderService;
 import com.yeem.lamp.service.IAladdinPackageService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
+import cn.hutool.crypto.digest.MD5;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, AladdinOrder> implements IAladdinOrderService {
 
@@ -28,6 +36,8 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     private AladdinOrderMapper aladdinOrderMapper;
     @Autowired
     private IAladdinPackageService aladdinPackageService;
+    @Autowired
+    private Environment environment;
 
     @Override
     public boolean removeByMemberId(Serializable id) {
@@ -65,6 +75,39 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
         aladdinOrder.setPeriod(aladdinPackage.getPeriod());
         aladdinOrder.setPrice(aladdinPackage.getPrice());
         super.save(aladdinOrder);
+    }
+
+    @Override
+    public void pay(AladdinOrder aladdinOrder) {
+        aladdinOrder.setOrderNo("test1234546678879");
+        String merchantApi = environment.getProperty("merchant.api");
+        Integer merchantId = Integer.valueOf(environment.getProperty("merchant.id"));
+        String merchantKey = environment.getProperty("merchant.key");
+        String sign = "clientip=" + "aladdinslamp.cc"
+                + "&device=" + "pc"
+                + "&money=" + "140.00"
+                + "&name=" + "VIP会员"
+                + "&notify_url=" + "http://aladdinslamp.cc/notify_url.php"
+                + "&out_trade_no=" + aladdinOrder.getOrderNo()
+                + "&pid=" + merchantId
+                + "&return_url=" + "http://aladdinslamp.cc/return_url.php"
+                + "&type=" + "alipay" + merchantKey;
+        String md5Hex = MD5.create().digestHex(sign);
+        Map<String, String> form = new HashMap<>();
+        HttpResponse response = HttpRequest.post(merchantApi)
+                .form("pid", merchantId)
+                .form("type", "alipay")
+                .form("out_trade_no", aladdinOrder.getOrderNo())
+                .form("notify_url", "http://aladdinslamp.cc/notify_url.php")
+                .form("return_url", "http://aladdinslamp.cc/return_url.php")
+                .form("name", "VIP会员")
+                .form("money", "140.00")
+                .form("clientip", "aladdinslamp.cc")
+                .form("device", "pc")
+                .form("sign", md5Hex)
+                .form("sign_type", "MD5")
+                .execute();
+        log.info(response.body());
     }
 
     @Override

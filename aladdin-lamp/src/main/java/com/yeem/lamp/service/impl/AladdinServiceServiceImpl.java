@@ -32,8 +32,6 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     public List<AladdinService> list() {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        // 临时只生成15G 50G流量的用户
-        queryWrapper.lt("data_traffic", 100);
         queryWrapper.ge("end_date", new Date());
         return super.list(queryWrapper);
     }

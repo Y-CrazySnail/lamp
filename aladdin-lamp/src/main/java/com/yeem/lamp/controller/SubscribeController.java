@@ -56,41 +56,43 @@ public class SubscribeController {
         aladdinMemberService.updateById(aladdinMember);
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-        if (aladdinService.getDataTraffic() < 100) {
-            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
-            Long up = 0L;
-            Long down = 0L;
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                up += aladdinNodeVmess.getServiceUp();
-                down += aladdinNodeVmess.getServiceDown();
-            }
-            Double total = ((double) (up + down) / 1024 / 1024 / 1024);
-            if (total > aladdinService.getDataTraffic()) {
-                log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
-            }
-            String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
-                    aladdinNodeVmess.setNodePs(aladdinNodeVmess.getNodePs() + surplus + "GB");
-                    nodeUrlList.add(aladdinNodeVmess.convert());
-                }
-            }
-        } else {
-            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByNodeType(Constant.NODE_TYPE_PUBLIC);
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+        List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+        Long up = 0L;
+        Long down = 0L;
+        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+            up += aladdinNodeVmess.getServiceUp();
+            down += aladdinNodeVmess.getServiceDown();
+        }
+        Double total = ((double) (up + down) / 1024 / 1024 / 1024);
+        if (total > aladdinService.getDataTraffic()) {
+            log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
+        }
+        String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
+        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+            if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
                 nodeUrlList.add(aladdinNodeVmess.convert());
             }
         }
-        AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();
-        aladdinNodeVmess.setNodePs(endDate + "-到期");
-        aladdinNodeVmess.setNodeAdd("google.com");
-        aladdinNodeVmess.setNodePort("443");
-        aladdinNodeVmess.setNodeId("00000000-0000-0000-0000-000000000000");
-        aladdinNodeVmess.setAid("0");
-        aladdinNodeVmess.setNet("tcp");
-        aladdinNodeVmess.setType("none");
-        aladdinNodeVmess.setTls("none");
-        nodeUrlList.add(aladdinNodeVmess.convert());
+        AladdinNodeVmess aladdinNodeVmessForTime = new AladdinNodeVmess();
+        aladdinNodeVmessForTime.setNodePs("到期:" + endDate);
+        aladdinNodeVmessForTime.setNodeAdd("google.com");
+        aladdinNodeVmessForTime.setNodePort("443");
+        aladdinNodeVmessForTime.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmessForTime.setAid("0");
+        aladdinNodeVmessForTime.setNet("tcp");
+        aladdinNodeVmessForTime.setType("none");
+        aladdinNodeVmessForTime.setTls("none");
+        nodeUrlList.add(aladdinNodeVmessForTime.convert());
+        AladdinNodeVmess aladdinNodeVmessForSurplus = new AladdinNodeVmess();
+        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + surplus + "GB");
+        aladdinNodeVmessForSurplus.setNodeAdd("google.com");
+        aladdinNodeVmessForSurplus.setNodePort("443");
+        aladdinNodeVmessForSurplus.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmessForSurplus.setAid("0");
+        aladdinNodeVmessForSurplus.setNet("tcp");
+        aladdinNodeVmessForSurplus.setType("none");
+        aladdinNodeVmessForSurplus.setTls("none");
+        nodeUrlList.add(aladdinNodeVmessForSurplus.convert());
         String url = String.join("|", nodeUrlList);
         log.info("URL:{}", url);
         String sub = "http://127.0.0.1:25500/sub?target=clash&url=" + URLEncodeUtil.encode(url);
@@ -114,44 +116,45 @@ public class SubscribeController {
         aladdinMemberService.updateById(aladdinMember);
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-        if (aladdinService.getDataTraffic() < 100) {
-            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
-            Long up = 0L;
-            Long down = 0L;
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                up += aladdinNodeVmess.getServiceUp();
-                down += aladdinNodeVmess.getServiceDown();
-            }
-            Double total = ((double)(up + down) / 1024 / 1024 / 1024);
-            if (total > aladdinService.getDataTraffic()) {
-                log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
-                return null;
-            }
-            String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
-                    aladdinNodeVmess.setNodePs(aladdinNodeVmess.getNodePs() + surplus + "GB");
-                    nodeUrlList.add(aladdinNodeVmess.convert());
-                }
-            }
-        } else {
-            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByNodeType(Constant.NODE_TYPE_PUBLIC);
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+        List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+        Long up = 0L;
+        Long down = 0L;
+        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+            up += aladdinNodeVmess.getServiceUp();
+            down += aladdinNodeVmess.getServiceDown();
+        }
+        Double total = ((double) (up + down) / 1024 / 1024 / 1024);
+        if (total > aladdinService.getDataTraffic()) {
+            log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
+            return null;
+        }
+        String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
+        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+            if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
                 nodeUrlList.add(aladdinNodeVmess.convert());
             }
         }
-        AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();
-        aladdinNodeVmess.setNodePs(endDate + "-到期");
-        aladdinNodeVmess.setNodeAdd("google.com");
-        aladdinNodeVmess.setNodePort("443");
-        aladdinNodeVmess.setNodeId("00000000-0000-0000-0000-000000000000");
-        aladdinNodeVmess.setAid("0");
-        aladdinNodeVmess.setNet("tcp");
-        aladdinNodeVmess.setType("none");
-        aladdinNodeVmess.setTls("none");
-        nodeUrlList.add(aladdinNodeVmess.convert());
+        AladdinNodeVmess aladdinNodeVmessForTime = new AladdinNodeVmess();
+        aladdinNodeVmessForTime.setNodePs("到期:"+endDate);
+        aladdinNodeVmessForTime.setNodeAdd("google.com");
+        aladdinNodeVmessForTime.setNodePort("443");
+        aladdinNodeVmessForTime.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmessForTime.setAid("0");
+        aladdinNodeVmessForTime.setNet("tcp");
+        aladdinNodeVmessForTime.setType("none");
+        aladdinNodeVmessForTime.setTls("none");
+        nodeUrlList.add(aladdinNodeVmessForTime.convert());
+        AladdinNodeVmess aladdinNodeVmessForSurplus = new AladdinNodeVmess();
+        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + surplus + "GB");
+        aladdinNodeVmessForSurplus.setNodeAdd("google.com");
+        aladdinNodeVmessForSurplus.setNodePort("443");
+        aladdinNodeVmessForSurplus.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmessForSurplus.setAid("0");
+        aladdinNodeVmessForSurplus.setNet("tcp");
+        aladdinNodeVmessForSurplus.setType("none");
+        aladdinNodeVmessForSurplus.setTls("none");
+        nodeUrlList.add(aladdinNodeVmessForSurplus.convert());
         String url = String.join("|", nodeUrlList);
-        log.info("URL:{}", url);
         String sub = "http://127.0.0.1:25500/sub?target=v2ray&url=" + URLEncodeUtil.encode(url);
         return HttpUtil.createRequest(Method.GET, sub).execute().body();
     }
