@@ -68,3 +68,5 @@ merchant:
   api: https://www.huanyingpay.com/mapi.php
   id: 1126
   key: Srg0Hf5aga5Un5aG2aXq5l6r09f0Na59
+  notify-url: http://aladdinslamp.cc/notify_url.php
+  return-url: http://aladdinslamp.cc/notify_url.php

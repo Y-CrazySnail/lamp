@@ -12,6 +12,6 @@ public interface IAladdinOrderService extends IService<AladdinOrder> {
     IPage<AladdinOrder> pages(int current, int size);
     List<AladdinOrder> listByMemberId(Long memberId);
     void place(AladdinOrder aladdinOrder);
-    void pay(AladdinOrder aladdinOrder);
+    String pay(AladdinOrder aladdinOrder);
     void finish(AladdinOrder aladdinOrder);
 }

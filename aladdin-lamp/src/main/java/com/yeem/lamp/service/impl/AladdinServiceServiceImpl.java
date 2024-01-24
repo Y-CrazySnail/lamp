@@ -42,19 +42,8 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("member_id", memberId);
         List<AladdinService> aladdinServiceList = super.list(queryWrapper);
-        int year = DateUtil.year(new Date());
-        int month = DateUtil.month(new Date()) + 1;
         for (AladdinService aladdinService : aladdinServiceList) {
-            List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
-            Long up = 0L;
-            Long down = 0L;
-            for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-                up += aladdinNodeVmess.getServiceUp();
-                down += aladdinNodeVmess.getServiceDown();
-            }
-            Double total = ((double) (up + down) / 1024 / 1024 / 1024);
-            String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
-            aladdinService.setSurplus(surplus);
+            dealDataTraffic(aladdinService);
         }
         return aladdinServiceList;
     }
@@ -83,6 +72,9 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
                                        String wechat,
                                        String email) {
         IPage<AladdinService> page = new Page<>(current, size);
+        for (AladdinService aladdinService : page.getRecords()) {
+            dealDataTraffic(aladdinService);
+        }
         return aladdinServiceMapper.selectPages(page, memberId, status, wechat, email);
     }
 
@@ -97,5 +89,20 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     @Override
     public void refreshStatus() {
         aladdinServiceMapper.refreshStatus();
+    }
+
+    private void dealDataTraffic(AladdinService aladdinService) {
+        int year = DateUtil.year(new Date());
+        int month = DateUtil.month(new Date()) + 1;
+        List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+        long up = 0L;
+        long down = 0L;
+        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
+            up += aladdinNodeVmess.getServiceUp() * aladdinNodeVmess.getMultiplyingPower();
+            down += aladdinNodeVmess.getServiceDown() * aladdinNodeVmess.getMultiplyingPower();
+        }
+        Double total = ((double) (up + down) / 1024 / 1024 / 1024);
+        String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
+        aladdinService.setSurplus(surplus);
     }
 }

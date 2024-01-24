@@ -21,12 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import cn.hutool.crypto.digest.MD5;
+import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -78,19 +76,29 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     }
 
     @Override
-    public void pay(AladdinOrder aladdinOrder) {
-        aladdinOrder.setOrderNo("test1234546678879");
+    public String pay(AladdinOrder aladdinOrder) {
+        aladdinOrder = aladdinOrderMapper.selectById(aladdinOrder.getId());
         String merchantApi = environment.getProperty("merchant.api");
-        Integer merchantId = Integer.valueOf(environment.getProperty("merchant.id"));
+        if (StringUtils.isEmpty(merchantApi)) {
+            log.error("未获取到商户API");
+            return null;
+        }
+        String merchantId = environment.getProperty("merchant.id");
+        if (StringUtils.isEmpty(merchantId)) {
+            log.error("未获取到商户ID");
+            return null;
+        }
         String merchantKey = environment.getProperty("merchant.key");
+        String notifyUrl = environment.getProperty("merchant.notify-url");
+        String returnUrl = environment.getProperty("merchant.return-url");
         String sign = "clientip=" + "aladdinslamp.cc"
                 + "&device=" + "pc"
-                + "&money=" + "140.00"
+                + "&money=" + aladdinOrder.getPrice()
                 + "&name=" + "VIP会员"
-                + "&notify_url=" + "http://aladdinslamp.cc/notify_url.php"
+                + "&notify_url=" + notifyUrl
                 + "&out_trade_no=" + aladdinOrder.getOrderNo()
                 + "&pid=" + merchantId
-                + "&return_url=" + "http://aladdinslamp.cc/return_url.php"
+                + "&return_url=" + returnUrl
                 + "&type=" + "alipay" + merchantKey;
         String md5Hex = MD5.create().digestHex(sign);
         Map<String, String> form = new HashMap<>();
@@ -98,16 +106,17 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
                 .form("pid", merchantId)
                 .form("type", "alipay")
                 .form("out_trade_no", aladdinOrder.getOrderNo())
-                .form("notify_url", "http://aladdinslamp.cc/notify_url.php")
-                .form("return_url", "http://aladdinslamp.cc/return_url.php")
+                .form("notify_url", notifyUrl)
+                .form("return_url", returnUrl)
                 .form("name", "VIP会员")
-                .form("money", "140.00")
+                .form("money", aladdinOrder.getPrice())
                 .form("clientip", "aladdinslamp.cc")
                 .form("device", "pc")
                 .form("sign", md5Hex)
                 .form("sign_type", "MD5")
                 .execute();
         log.info(response.body());
+        return response.body();
     }
 
     @Override

@@ -30,6 +30,7 @@ public class AladdinNodeVmess extends BaseEntity {
     private String tls;
     private String sni;
     private int sort;
+    private int multiplyingPower;
 
     public Long getServiceId() {
         return serviceId;
@@ -189,6 +190,14 @@ public class AladdinNodeVmess extends BaseEntity {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public int getMultiplyingPower() {
+        return multiplyingPower;
+    }
+
+    public void setMultiplyingPower(int multiplyingPower) {
+        this.multiplyingPower = multiplyingPower;
     }
 
     public String convert() {
