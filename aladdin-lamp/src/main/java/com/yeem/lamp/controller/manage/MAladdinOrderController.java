@@ -98,12 +98,17 @@ public class MAladdinOrderController {
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody AladdinOrder aladdinOrder) {
         try {
-            aladdinOrderService.save(aladdinOrder);
+            aladdinOrderService.place(aladdinOrder);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
         }
+    }
+
+    @PostMapping("/pay")
+    public ResponseEntity<Object> pay(@RequestBody AladdinOrder aladdinOrder) {
+        return ResponseEntity.ok(aladdinOrderService.pay(aladdinOrder));
     }
 
     /**

@@ -2,6 +2,7 @@ package com.yeem.lamp.service.impl;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -9,13 +10,17 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinOrder;
 import com.yeem.lamp.entity.AladdinPackage;
+import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.mapper.AladdinOrderMapper;
 import com.yeem.lamp.service.IAladdinOrderService;
 import com.yeem.lamp.service.IAladdinPackageService;
+import com.yeem.lamp.service.IAladdinServiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -23,6 +28,7 @@ import org.springframework.stereotype.Service;
 import cn.hutool.crypto.digest.MD5;
 import org.springframework.util.StringUtils;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 
@@ -34,6 +40,8 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     private AladdinOrderMapper aladdinOrderMapper;
     @Autowired
     private IAladdinPackageService aladdinPackageService;
+    @Autowired
+    private IAladdinServiceService aladdinServiceService;
     @Autowired
     private Environment environment;
 
@@ -115,13 +123,60 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
                 .form("sign", md5Hex)
                 .form("sign_type", "MD5")
                 .execute();
-        log.info(response.body());
+        log.info("{}", response.body());
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(response.body());
+            if ("1".equals(jsonNode.get("code").toString())) {
+                aladdinOrder.setTradeNo(jsonNode.get("trade_no").toString().replace("\"", ""));
+                aladdinOrderMapper.updateById(aladdinOrder);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return response.body();
     }
 
     @Override
     public void finish(AladdinOrder aladdinOrder) {
-        // todo 更新订单信息
-        // todo 创建Service
+        QueryWrapper<AladdinOrder> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("order_no", aladdinOrder.getOrderNo());
+        queryWrapper.eq("trade_no", aladdinOrder.getTradeNo());
+        aladdinOrder = aladdinOrderMapper.selectOne(queryWrapper);
+        if ("1".equals(aladdinOrder.getStatus())) {
+            log.info("已完成该订单：{}", aladdinOrder.getId());
+            return;
+        }
+        List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinOrder.getMemberId());
+        Long serviceId = null;
+        for (AladdinService aladdinService : aladdinServiceList) {
+            if (aladdinOrder.getDataTraffic().equals(aladdinService.getDataTraffic())) {
+                serviceId = aladdinService.getId();
+                aladdinService.setEndDate(DateUtil.offsetMonth(aladdinService.getEndDate(), Integer.parseInt(aladdinOrder.getPeriod())));
+                aladdinService.setPeriod(aladdinOrder.getPeriod());
+                aladdinService.setPrice(aladdinOrder.getPrice());
+                aladdinServiceService.updateById(aladdinService);
+                break;
+            }
+        }
+        if (StringUtils.isEmpty(serviceId)) {
+            AladdinService aladdinService = new AladdinService();
+            aladdinService.setMemberId(aladdinOrder.getMemberId());
+            aladdinService.setBeginDate(new Date());
+            aladdinService.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(aladdinOrder.getPeriod())).toJdkDate());
+            aladdinService.setDataTraffic(aladdinOrder.getDataTraffic());
+            aladdinService.setPeriod(aladdinOrder.getPeriod());
+            aladdinService.setPrice(aladdinOrder.getPrice());
+            aladdinService.setUuid(UUID.fastUUID().toString());
+            aladdinService.setStatus("0");
+            aladdinServiceService.save(aladdinService);
+            serviceId = aladdinService.getId();
+        }
+        // 更新状态
+        aladdinOrder.setServiceId(serviceId);
+        aladdinOrder.setCompleteTime(new Date());
+        aladdinOrder.setStatus("1");
+        log.info("service id:{}", aladdinOrder.getId());
+        aladdinOrderMapper.updateById(aladdinOrder);
     }
 }

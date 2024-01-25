@@ -13,6 +13,6 @@ public class LocalInterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LocalAuthInterceptor())
                 .addPathPatterns("/web/**")
                 .excludePathPatterns("/web/member/login")
-                .excludePathPatterns("/web/order/pay");
+                .excludePathPatterns("/web/order/finish");
     }
 }
