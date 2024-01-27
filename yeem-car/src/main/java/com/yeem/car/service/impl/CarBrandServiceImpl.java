@@ -34,7 +34,10 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
     @Override
     public List<BaseCarBrand> list() {
         // 拿到Brand表中没被软删除的
-        List<BaseCarBrand> baseCarBrandList = carBrandMapper.selectList(new QueryWrapper<BaseCarBrand>().eq("delete_flag", 0));
+        QueryWrapper<BaseCarBrand> queryWrapper = new QueryWrapper<BaseCarBrand>()
+                .eq("delete_flag", 0)
+                .orderByAsc("name_en");
+        List<BaseCarBrand> baseCarBrandList = carBrandMapper.selectList(queryWrapper);
         // 便利出来
         for (BaseCarBrand baseCarBrand : baseCarBrandList) {
             // 找到对应的数据 放进carBrand中
@@ -109,7 +112,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
         baseCarBrand.setNameEn(PinyinUtil.getPinyin(baseCarBrand.getName()));
         carBrandMapper.updateById(baseCarBrand);
         // 数据库-车型
-         List<BaseCarModel> databaseBaseCarModelList = this.getById(baseCarBrand.getId()).getCarModelList();
+        List<BaseCarModel> databaseBaseCarModelList = this.getById(baseCarBrand.getId()).getCarModelList();
         // 前端-车型
         List<BaseCarModel> baseCarModelList = baseCarBrand.getCarModelList();
         baseCarModelList.forEach(carModel -> {

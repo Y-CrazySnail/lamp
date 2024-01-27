@@ -16,6 +16,7 @@ public class AladdinServer extends BaseEntity {
     private String subscribeNamePrefix;
     private String postscript;
     private int sort;
+    private int multiplyingPower;
 
     public String getApiIp() {
         return apiIp;
@@ -103,5 +104,13 @@ public class AladdinServer extends BaseEntity {
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public int getMultiplyingPower() {
+        return multiplyingPower;
+    }
+
+    public void setMultiplyingPower(int multiplyingPower) {
+        this.multiplyingPower = multiplyingPower;
     }
 }

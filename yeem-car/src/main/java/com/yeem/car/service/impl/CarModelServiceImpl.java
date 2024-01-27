@@ -58,7 +58,11 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, BaseCarMode
      */
     @Override
     public List<BaseCarModel> listByBrandId(Long id) {
-        List<BaseCarModel> baseCarModels = carModelMapper.selectList(new QueryWrapper<BaseCarModel>().eq("brand_id", id).eq("delete_flag", 0));
+        QueryWrapper<BaseCarModel> queryWrapper = new QueryWrapper<BaseCarModel>()
+                .eq("brand_id", id)
+                .eq("delete_flag", 0)
+                .orderByAsc("name_en");
+        List<BaseCarModel> baseCarModels = carModelMapper.selectList(queryWrapper);
         List<BaseCarLevel> baseCarLevels = carLevelService.list();
         for (BaseCarModel baseCarModel : baseCarModels) {
             for (BaseCarLevel baseCarLevel : baseCarLevels) {

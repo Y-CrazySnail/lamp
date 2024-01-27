@@ -7,8 +7,10 @@ import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinNodeVmess;
+import com.yeem.lamp.entity.AladdinServer;
 import com.yeem.lamp.mapper.AladdinNodeVmessMapper;
 import com.yeem.lamp.service.IAladdinNodeVmessService;
+import com.yeem.lamp.service.IAladdinServerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,8 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
 
     @Autowired
     private AladdinNodeVmessMapper aladdinNodeVmessMapper;
+    @Autowired
+    private IAladdinServerService aladdinServerService;
 
     @Override
     public List<String> getNodeUrlList(String uuid, String label) {
@@ -85,7 +89,9 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
 
     @Override
     public boolean updateByServerId(Long serverId, String nodeType, String nodePs, Integer sort) {
+        AladdinServer aladdinServer = aladdinServerService.getById(serverId);
         UpdateWrapper<AladdinNodeVmess> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set("multiplying_power", aladdinServer.getMultiplyingPower());
         if (!StringUtils.isEmpty(nodePs)) {
             updateWrapper.set("node_ps", nodePs);
         }
