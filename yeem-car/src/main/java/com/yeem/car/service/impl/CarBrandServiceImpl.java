@@ -1,6 +1,5 @@
 package com.yeem.car.service.impl;
 
-import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.extra.pinyin.PinyinUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -33,14 +32,11 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
      */
     @Override
     public List<BaseCarBrand> list() {
-        // 拿到Brand表中没被软删除的
         QueryWrapper<BaseCarBrand> queryWrapper = new QueryWrapper<BaseCarBrand>()
                 .eq("delete_flag", 0)
                 .orderByAsc("name_en");
         List<BaseCarBrand> baseCarBrandList = carBrandMapper.selectList(queryWrapper);
-        // 便利出来
         for (BaseCarBrand baseCarBrand : baseCarBrandList) {
-            // 找到对应的数据 放进carBrand中
             baseCarBrand.setCarModelList(carModelService.listByBrandId(baseCarBrand.getId()));
         }
         return baseCarBrandList;
