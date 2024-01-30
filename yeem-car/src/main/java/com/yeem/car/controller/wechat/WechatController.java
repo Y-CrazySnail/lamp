@@ -144,7 +144,7 @@ public class WechatController {
     }
 
     @PostMapping("message")
-    public ResponseEntity<Object> message(CarFilmMessage carFilmMessage) {
+    public ResponseEntity<Object> message(@RequestBody CarFilmMessage carFilmMessage) {
         Long userId = WechatAuthInterceptor.getUserId();
         if (StringUtils.isEmpty(userId)) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
