@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,8 @@ public class WechatController {
     private ICarFilmQualityService carFilmQualityService;
     @Autowired
     private ICarFilmUserService carFilmUserService;
+    @Autowired
+    private ICarFilmMessageService carFilmMessageService;
 
     @Value("${tencent.cos.bucket-name}")
     private String TENCENT_COS_BUCKET_NAME;
@@ -138,6 +141,18 @@ public class WechatController {
             log.error("update user info error：", e);
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
+    }
+
+    @PostMapping("message")
+    public ResponseEntity<Object> message(CarFilmMessage carFilmMessage) {
+        Long userId = WechatAuthInterceptor.getUserId();
+        if (StringUtils.isEmpty(userId)) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        carFilmMessage.setProductNo(WechatAuthInterceptor.getApplication());
+        carFilmMessage.setDatetime(new Date());
+        carFilmMessageService.save(carFilmMessage);
+        return ResponseEntity.ok("ok");
     }
 
     @PostMapping("upload")
