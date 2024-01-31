@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface IAladdinServiceService extends IService<AladdinService> {
+    List<AladdinService> listValid();
     List<AladdinService> listByMemberId(Long memberId);
-
-    List<AladdinService> listValidByMemberId(Long memberId);
 
     boolean removeByMemberId(Serializable id);
 

@@ -37,13 +37,12 @@ public class XUIService {
 
     public void sync() {
         List<AladdinServer> serverList = aladdinServerService.list();
-        List<AladdinService> aladdinServiceList = aladdinServiceService.list();
+        List<AladdinService> aladdinServiceList = aladdinServiceService.listValid();
         try {
             for (AladdinServer server : serverList) {
                 Long serverId = server.getId();
                 List<XUIVmessClient> vmessClientList = new ArrayList<>();
                 for (AladdinService aladdinService : aladdinServiceList) {
-                    AladdinMember aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
                     XUIVmessClient xuiVmessClient = new XUIVmessClient(aladdinService.getUuid(),
                             Base64.encode(serverId + "_" + aladdinService.getId()).replace("=", ""),
                             0,

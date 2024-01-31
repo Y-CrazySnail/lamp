@@ -9,6 +9,7 @@ import java.util.Date;
 @TableName(value = "car_film_message")
 public class CarFilmMessage extends BaseEntity {
 
+    private Long userId;
     private String productNo;  // 产品代码
     private String name;  // 姓名
     private String phone;  // 手机｜电话
@@ -33,6 +34,14 @@ public class CarFilmMessage extends BaseEntity {
         this.sendStatus = sendStatus;
         this.sendDatetime = sendDatetime;
         this.sendResult = sendResult;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public String getProductNo() {

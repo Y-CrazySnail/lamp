@@ -32,8 +32,20 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     public List<AladdinService> list() {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        queryWrapper.ge("end_date", new Date());
         return super.list(queryWrapper);
+    }
+
+    @Override
+    public List<AladdinService> listValid() {
+        QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        queryWrapper.ge("end_date", new Date());
+        List<AladdinService> aladdinServiceList = super.list(queryWrapper);
+        for (AladdinService aladdinService : aladdinServiceList) {
+            dealDataTraffic(aladdinService);
+        }
+        aladdinServiceList.removeIf(aladdinService -> aladdinService.getSurplus().contains("-"));
+        return aladdinServiceList;
     }
 
     @Override
@@ -46,15 +58,6 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
             dealDataTraffic(aladdinService);
         }
         return aladdinServiceList;
-    }
-
-    @Override
-    public List<AladdinService> listValidByMemberId(Long memberId) {
-        QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        queryWrapper.ge("end_date", new Date());
-        queryWrapper.eq("member_id", memberId);
-        return super.list(queryWrapper);
     }
 
     @Override
@@ -83,7 +86,9 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("uuid", uuid);
-        return super.getOne(queryWrapper);
+        AladdinService aladdinService = super.getOne(queryWrapper);
+        dealDataTraffic(aladdinService);
+        return aladdinService;
     }
 
     @Override

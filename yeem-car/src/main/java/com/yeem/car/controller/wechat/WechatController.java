@@ -146,11 +146,30 @@ public class WechatController {
     @PostMapping("message")
     public ResponseEntity<Object> message(@RequestBody CarFilmMessage carFilmMessage) {
         Long userId = WechatAuthInterceptor.getUserId();
+        QueryWrapper<CarFilmMessage> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", userId);
+        int count = carFilmMessageService.count(queryWrapper);
+        if (count > 5) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("留言失败");
+        }
         if (StringUtils.isEmpty(userId)) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
         }
         carFilmMessage.setProductNo(WechatAuthInterceptor.getApplication());
         carFilmMessage.setDatetime(new Date());
+        if (!StringUtils.isEmpty(carFilmMessage.getName())) {
+            carFilmMessage.setName(filterChar(carFilmMessage.getName()));
+        }
+        if (!StringUtils.isEmpty(carFilmMessage.getPhone())) {
+            carFilmMessage.setPhone(filterChar(carFilmMessage.getPhone()));
+        }
+        if (!StringUtils.isEmpty(carFilmMessage.getEmail())) {
+            carFilmMessage.setEmail(filterChar(carFilmMessage.getEmail()));
+        }
+        if (!StringUtils.isEmpty(carFilmMessage.getContent())) {
+            carFilmMessage.setContent(filterChar(carFilmMessage.getContent()));
+        }
+        carFilmMessage.setUserId(userId);
         carFilmMessageService.save(carFilmMessage);
         return ResponseEntity.ok("ok");
     }
@@ -167,5 +186,19 @@ public class WechatController {
             log.error("upload file to tencent cos error:", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("upload file to tencent cos error");
         }
+    }
+
+    private String filterChar(String content) {
+        content = content.replace("$", "");
+        content = content.replace("#", "");
+        content = content.replace("{", "");
+        content = content.replace("}", "");
+        content = content.replace("script", "");
+        content = content.replace("document", "");
+        content = content.replace("select", "");
+        content = content.replace("delete", "");
+        content = content.replace("update", "");
+        content = content.replace("insert", "");
+        return content;
     }
 }
