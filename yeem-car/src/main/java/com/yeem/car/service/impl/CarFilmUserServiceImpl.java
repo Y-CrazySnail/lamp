@@ -44,6 +44,10 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
     private String WECHAT_AL0001_APP_ID;
     @Value("${wechat.al0001.app-secret}")
     private String WECHAT_AL0001_APP_SECRET;
+    @Value("${wechat.yxbb02.app-id}")
+    private String WECHAT_YXBB02_APP_ID;
+    @Value("${wechat.yxbb02.app-secret}")
+    private String WECHAT_YXBB02_APP_SECRET;
 
     @Override
     public IPage<CarFilmUser> pages(int current, int size, String productNo, String nickName, String phone) {
@@ -130,6 +134,8 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
             return WECHAT_WZ0005_APP_ID;
         } else if ("AL0001".equals(productNo)) {
             return WECHAT_AL0001_APP_ID;
+        } else if ("YXBB02".equals(productNo)) {
+            return WECHAT_YXBB02_APP_ID;
         }
         return null;
     }
@@ -145,6 +151,8 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
             return WECHAT_WZ0005_APP_SECRET;
         } else if ("AL0001".equals(productNo)) {
             return WECHAT_AL0001_APP_SECRET;
+        } else if ("YXBB02".equals(productNo)) {
+            return WECHAT_YXBB02_APP_SECRET;
         }
         return null;
     }

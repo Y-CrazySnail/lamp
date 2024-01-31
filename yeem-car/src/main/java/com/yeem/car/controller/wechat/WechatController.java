@@ -146,14 +146,14 @@ public class WechatController {
     @PostMapping("message")
     public ResponseEntity<Object> message(@RequestBody CarFilmMessage carFilmMessage) {
         Long userId = WechatAuthInterceptor.getUserId();
+        if (StringUtils.isEmpty(userId)) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
         QueryWrapper<CarFilmMessage> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id", userId);
         int count = carFilmMessageService.count(queryWrapper);
         if (count > 5) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("留言失败");
-        }
-        if (StringUtils.isEmpty(userId)) {
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
         }
         carFilmMessage.setProductNo(WechatAuthInterceptor.getApplication());
         carFilmMessage.setDatetime(new Date());
