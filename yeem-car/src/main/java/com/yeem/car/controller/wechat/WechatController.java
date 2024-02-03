@@ -38,6 +38,8 @@ public class WechatController {
     private ICarFilmUserService carFilmUserService;
     @Autowired
     private ICarFilmMessageService carFilmMessageService;
+    @Autowired
+    private ICarDictionaryService carDictionaryService;
 
     @Value("${tencent.cos.bucket-name}")
     private String TENCENT_COS_BUCKET_NAME;
@@ -63,6 +65,8 @@ public class WechatController {
             result.put("brandList", baseCarBrandList);
             List<CarFilmProduct> carFilmProductList = carFilmProductService.listWithPrice(productNo);
             result.put("productList", carFilmProductList);
+            List<BaseCarDictionary> carDictionaryList = carDictionaryService.list(productNo);
+            result.put("dictionaryList", carDictionaryList);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             log.error("查询失败", e);
