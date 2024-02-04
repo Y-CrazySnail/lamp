@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/car-film-tenant")
 public class CarFilmTenantController extends BaseController<CarFilmTenant> {
     @Autowired
-    private com.yeem.car.service.ICarFilmTenantService ICarFilmTenantService;
+    private com.yeem.car.service.ICarFilmTenantService carFilmTenantService;
 
     /**
      * 查询不被软删除的数据
@@ -32,7 +32,7 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
                                        @RequestParam(value = "miniProgramFlag", required = false) String miniProgramFlag,
                                        @RequestParam(value = "officialWebsiteFlag", required = false) String officialWebsiteFlag) {
         try {
-            return ResponseEntity.ok(ICarFilmTenantService.list(productNo, productName, companyName,
+            return ResponseEntity.ok(carFilmTenantService.list(productNo, productName, companyName,
                     companyNo, managerName, managerPhone, miniProgramFlag, officialWebsiteFlag));
         } catch (Exception e) {
             log.error("list方法", e);
@@ -60,7 +60,7 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
                                         @RequestParam(value = "miniProgramFlag", required = false) String miniProgramFlag,
                                         @RequestParam(value = "officialWebsiteFlag", required = false) String officialWebsiteFlag) {
         try {
-            return ResponseEntity.ok(ICarFilmTenantService.pages(current, size, productNo, productName,
+            return ResponseEntity.ok(carFilmTenantService.pages(current, size, productNo, productName,
                     companyName, companyNo, managerName, managerPhone, miniProgramFlag, officialWebsiteFlag));
         } catch (Exception e) {
             log.error("page方法", e);
@@ -79,8 +79,8 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
             //flag不是ture 可以显示
-            if (!ICarFilmTenantService.getById(id).getDeleteFlag()) {
-                return ResponseEntity.ok(ICarFilmTenantService.getById(id));
+            if (!carFilmTenantService.getById(id).getDeleteFlag()) {
+                return ResponseEntity.ok(carFilmTenantService.getById(id));
             } else {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("不可以查询到软删除的用户");
             }
@@ -100,7 +100,7 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody CarFilmTenant carFilmProduct) {
         try {
-            ICarFilmTenantService.remove(carFilmProduct);
+            carFilmTenantService.remove(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);
@@ -118,7 +118,7 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CarFilmTenant carFilmProduct) {
         try {
-            ICarFilmTenantService.save(carFilmProduct);
+            carFilmTenantService.save(carFilmProduct);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("save方法", e);
@@ -127,7 +127,7 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
     }
 
     /**
-     * 更改商品
+     * 更改租户
      *
      * @param carFilmTenant
      * @return
@@ -136,7 +136,7 @@ public class CarFilmTenantController extends BaseController<CarFilmTenant> {
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody CarFilmTenant carFilmTenant) {
         try {
-            ICarFilmTenantService.update(carFilmTenant);
+            carFilmTenantService.update(carFilmTenant);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("update方法", e);

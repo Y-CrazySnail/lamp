@@ -65,13 +65,14 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         if (!StringUtils.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StringUtils.isEmpty(phone)) {
             wrapper.like("phone", phone);
         }
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StringUtils.isEmpty(nickName)) {
             wrapper.like("nick_name", nickName);
         }
         wrapper.eq("delete_flag", 0);
+        wrapper.orderByAsc("quality_permission");
         return carFilmUserMapper.selectPage(page, wrapper);
     }
 
