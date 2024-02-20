@@ -78,25 +78,13 @@ public class SubscribeController {
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
         List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
-        long up = 0L;
-        long down = 0L;
-        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-            up += aladdinNodeVmess.getServiceUp() * aladdinNodeVmess.getMultiplyingPower();
-            down += aladdinNodeVmess.getServiceDown() * aladdinNodeVmess.getMultiplyingPower();
-        }
-        Double total = ((double) (up + down) / 1024 / 1024 / 1024);
-        if (total > aladdinService.getDataTraffic()) {
-            log.warn("流量已耗尽---memberId:{}, serviceId:{}", aladdinMember.getId(), aladdinService.getId());
-            return null;
-        }
-        String surplus = String.format("%.2f", aladdinService.getDataTraffic() - total);
         for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
             if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
                 nodeUrlList.add(aladdinNodeVmess.convert());
             }
         }
         AladdinNodeVmess aladdinNodeVmessForTime = new AladdinNodeVmess();
-        aladdinNodeVmessForTime.setNodePs("到期:"+endDate);
+        aladdinNodeVmessForTime.setNodePs("到期:" + endDate);
         aladdinNodeVmessForTime.setNodeAdd("google.com");
         aladdinNodeVmessForTime.setNodePort("443");
         aladdinNodeVmessForTime.setNodeId("00000000-0000-0000-0000-000000000000");
@@ -106,7 +94,7 @@ public class SubscribeController {
         aladdinNodeVmessForTime.setTls("none");
         nodeUrlList.add(aladdinNodeVmessForTime.convert());
         AladdinNodeVmess aladdinNodeVmessForSurplus = new AladdinNodeVmess();
-        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + surplus + "GB");
+        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + aladdinService.getSurplus() + "GB" + (aladdinService.getSurplus().contains("-") ? "-已超额" : ""));
         aladdinNodeVmessForSurplus.setNodeAdd("google.com");
         aladdinNodeVmessForSurplus.setNodePort("443");
         aladdinNodeVmessForSurplus.setNodeId("00000000-0000-0000-0000-000000000000");

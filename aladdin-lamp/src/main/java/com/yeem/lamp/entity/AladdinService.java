@@ -11,9 +11,13 @@ import java.util.Date;
 @TableName(value = "aladdin_service", autoResultMap = true)
 public class AladdinService extends BaseEntity {
     private Long memberId;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
+    /**
+     * 类型 0周期服务 1数据加量包
+     */
+    private String type;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date beginDate;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date endDate;
     private Integer dataTraffic;
     private String period;
@@ -28,9 +32,9 @@ public class AladdinService extends BaseEntity {
     @TableField(exist = false)
     private String email;
     @TableField(exist = false)
-    private Long serviceUp;
+    private Double serviceUp;
     @TableField(exist = false)
-    private Long serviceDown;
+    private Double serviceDown;
     @TableField(exist = false)
     private String surplus;
 
@@ -40,6 +44,14 @@ public class AladdinService extends BaseEntity {
 
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Date getBeginDate() {
@@ -114,19 +126,19 @@ public class AladdinService extends BaseEntity {
         this.email = email;
     }
 
-    public Long getServiceUp() {
+    public Double getServiceUp() {
         return serviceUp;
     }
 
-    public void setServiceUp(Long serviceUp) {
+    public void setServiceUp(Double serviceUp) {
         this.serviceUp = serviceUp;
     }
 
-    public Long getServiceDown() {
+    public Double getServiceDown() {
         return serviceDown;
     }
 
-    public void setServiceDown(Long serviceDown) {
+    public void setServiceDown(Double serviceDown) {
         this.serviceDown = serviceDown;
     }
 
@@ -136,5 +148,19 @@ public class AladdinService extends BaseEntity {
 
     public void setSurplus(String surplus) {
         this.surplus = surplus;
+    }
+
+    public enum TYPE {
+        SERVICE("0"),
+        DATA("1");
+        private final String value;
+
+        TYPE(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }

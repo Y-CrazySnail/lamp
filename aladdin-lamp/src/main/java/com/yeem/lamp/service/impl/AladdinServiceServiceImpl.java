@@ -29,17 +29,11 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     private IAladdinNodeVmessService aladdinNodeVmessService;
 
     @Override
-    public List<AladdinService> list() {
-        QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        return super.list(queryWrapper);
-    }
-
-    @Override
     public List<AladdinService> listValid() {
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.ge("end_date", new Date());
+        queryWrapper.eq("type", AladdinService.TYPE.SERVICE.getValue());
         List<AladdinService> aladdinServiceList = super.list(queryWrapper);
         for (AladdinService aladdinService : aladdinServiceList) {
             dealDataTraffic(aladdinService);
@@ -53,6 +47,7 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("member_id", memberId);
+        queryWrapper.eq("type", AladdinService.TYPE.SERVICE.getValue());
         List<AladdinService> aladdinServiceList = super.list(queryWrapper);
         for (AladdinService aladdinService : aladdinServiceList) {
             dealDataTraffic(aladdinService);
@@ -75,10 +70,11 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
                                        String wechat,
                                        String email) {
         IPage<AladdinService> page = new Page<>(current, size);
+        page = aladdinServiceMapper.selectPages(page, memberId, status, wechat, email);
         for (AladdinService aladdinService : page.getRecords()) {
             dealDataTraffic(aladdinService);
         }
-        return aladdinServiceMapper.selectPages(page, memberId, status, wechat, email);
+        return page;
     }
 
     @Override
@@ -86,6 +82,7 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
         QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("uuid", uuid);
+        queryWrapper.eq("type", AladdinService.TYPE.SERVICE.getValue());
         AladdinService aladdinService = super.getOne(queryWrapper);
         dealDataTraffic(aladdinService);
         return aladdinService;
@@ -97,6 +94,19 @@ public class AladdinServiceServiceImpl extends ServiceImpl<AladdinServiceMapper,
     }
 
     private void dealDataTraffic(AladdinService aladdinService) {
+        if (AladdinService.TYPE.DATA.getValue().equals(aladdinService.getType())) {
+            return;
+        }
+        // 查询数据加量包
+        QueryWrapper<AladdinService> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        queryWrapper.eq("member_id", aladdinService.getMemberId());
+        queryWrapper.ge("end_date", new Date());
+        queryWrapper.eq("type", AladdinService.TYPE.DATA.getValue());
+        List<AladdinService> aladdinServiceList = super.list(queryWrapper);
+        for (AladdinService service : aladdinServiceList) {
+            aladdinService.setDataTraffic(aladdinService.getDataTraffic() + service.getDataTraffic());
+        }
         int year = DateUtil.year(new Date());
         int month = DateUtil.month(new Date()) + 1;
         List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);

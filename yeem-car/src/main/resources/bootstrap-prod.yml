@@ -2,7 +2,8 @@ spring:
   cloud:
     nacos:
       username: nacos
-      password: ${NACOS_PASSWORD}
+      password: yeem_nacos_20240101
+#      password: ${NACOS_PASSWORD}
       config:
         server-addr: 43.143.181.174:8848
         group: DEFAULT_GROUP
