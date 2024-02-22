@@ -8,10 +8,10 @@
         <module>aladdin-lamp</module>
         <module>yeem-auth</module>
         <module>yeem-car</module>
-        <module>yeem-car-old</module>
-        <module>yeem-zero</module>
         <module>yeem-client</module>
         <module>yeem-im</module>
+        <module>yeem-zero</module>
+        <module>yeem-one</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

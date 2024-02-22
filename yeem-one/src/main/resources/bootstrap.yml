@@ -1,0 +1,10 @@
+server:
+  port: 11111
+  servlet:
+    context-path: /server
+  address: 0.0.0.0
+spring:
+  application:
+    name: yeem-one
+  profiles:
+    active: dev
