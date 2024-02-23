@@ -9,6 +9,10 @@ import lombok.EqualsAndHashCode;
 @TableName(value = "one_tenant", autoResultMap = true)
 @Data
 public class OneTenant extends BaseEntity {
+    private String tenantName;
+    private String tenantPhone;
+    private String tenantEmail;
     private String wechatAppId;
     private String wechatAppSecret;
+    private String belongUsername;
 }

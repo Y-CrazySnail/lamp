@@ -31,14 +31,14 @@ public class OperateLogAspect {
     private static ThreadLocal<Long> startTime = new ThreadLocal<>();
 
     // 设置操作日志切入点 记录操作日志 在注解的位置切入代码
-    @Pointcut("@annotation(com.yeem.zero.log.OperateLog)")
+    @Pointcut("@annotation(com.yeem.one.log.OperateLog)")
     public void operatePointCut() {
     }
 
     /**
      * 设置操作异常切入点记录异常日志 扫描所有controller包下操作
      */
-    @Pointcut("execution(* com.yeem.zero.*.controller.*.*(..))")
+    @Pointcut("execution(* com.yeem.one.*.controller.*.*(..))")
     public void operateExceptionPointCut() {
     }
 
