@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/manage/one/store")
+@RequestMapping("/manage/store")
 public class OneStoreController {
 
     @Autowired

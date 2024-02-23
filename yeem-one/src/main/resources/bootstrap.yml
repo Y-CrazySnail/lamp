@@ -1,7 +1,7 @@
 server:
   port: 11111
   servlet:
-    context-path: /server
+    context-path: /one
   address: 0.0.0.0
 spring:
   application:

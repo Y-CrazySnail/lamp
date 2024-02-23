@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/manage/one/tenant")
+@RequestMapping("/manage/tenant")
 public class OneTenantController {
 
     @Autowired
@@ -36,9 +36,9 @@ public class OneTenantController {
     @GetMapping("page")
     public ResponseEntity<IPage<OneTenant>> getPage(@RequestParam("current") Integer current,
                                                     @RequestParam("size") Integer size,
-                                                    @RequestParam(value = "name", required = false) String name,
-                                                    @RequestParam(value = "phone", required = false) String phone,
-                                                    @RequestParam(value = "email", required = false) String email) {
+                                                    @RequestParam(value = "tenantName", required = false) String tenantName,
+                                                    @RequestParam(value = "tenantPhone", required = false) String tenantPhone,
+                                                    @RequestParam(value = "tenantEmail", required = false) String tenantEmail) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -48,14 +48,14 @@ public class OneTenantController {
         IPage<OneTenant> page = new Page<>(current, size);
         QueryWrapper<OneTenant> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
-        if (!StringUtils.isEmpty(name)) {
-            queryWrapper.like("tenant_name", name);
+        if (!StringUtils.isEmpty(tenantName)) {
+            queryWrapper.like("tenant_name", tenantName);
         }
-        if (!StringUtils.isEmpty(phone)) {
-            queryWrapper.like("tenant_phone", phone);
+        if (!StringUtils.isEmpty(tenantPhone)) {
+            queryWrapper.like("tenant_phone", tenantPhone);
         }
-        if (!StringUtils.isEmpty(email)) {
-            queryWrapper.like("tenant_email", email);
+        if (!StringUtils.isEmpty(tenantEmail)) {
+            queryWrapper.like("tenant_email", tenantEmail);
         }
         try {
             return ResponseEntity.ok(oneTenantService.page(page, queryWrapper));
