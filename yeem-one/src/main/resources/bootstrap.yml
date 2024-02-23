@@ -1,5 +1,5 @@
 server:
-  port: 11111
+  port: 8111
   servlet:
     context-path: /one
   address: 0.0.0.0
