@@ -7,6 +7,7 @@ import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneStore;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneStoreService;
+import com.yeem.one.service.IOneTenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ public class OneStoreController {
 
     @Autowired
     private IOneStoreService service;
+    @Autowired
+    private IOneTenantService oneTenantService;
 
     /**
      * 分页查询
@@ -65,6 +68,10 @@ public class OneStoreController {
     @GetMapping(value = "getById")
     public ResponseEntity<OneStore> getById(@RequestParam(value = "id", required = false) Long id) {
         try {
+            if (!oneTenantService.authenticate(id)) {
+                log.error("authenticate fail");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
             return ResponseEntity.ok(service.getById(id));
         } catch (Exception e) {
             log.error("get store by id error:", e);
