@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+
 /**
  * 管理端-店铺
  */
@@ -38,7 +40,7 @@ public class OneStoreController {
     @GetMapping("page")
     public ResponseEntity<IPage<OneStore>> getPage(@RequestParam("current") Integer current,
                                                    @RequestParam("size") Integer size,
-                                                   @RequestParam(value = "name", required = false) String name) {
+                                                   @RequestParam(value = "storeName", required = false) String storeName) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -48,8 +50,9 @@ public class OneStoreController {
         IPage<OneStore> page = new Page<>(current, size);
         LambdaQueryWrapper<OneStore> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OneStore::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        if (!StringUtils.isEmpty(name)) {
-            lambdaQueryWrapper.like(OneStore::getStoreName, name);
+        lambdaQueryWrapper.in(OneStore::getTenantId, oneTenantService.authorizedTenantIdSet());
+        if (!StringUtils.isEmpty(storeName)) {
+            lambdaQueryWrapper.like(OneStore::getStoreName, storeName);
         }
         try {
             return ResponseEntity.ok(service.page(page, lambdaQueryWrapper));
@@ -63,15 +66,11 @@ public class OneStoreController {
      * 根据ID获取
      *
      * @param id 租户ID
-     * @return 租户信息
+     * @return 店铺信息
      */
     @GetMapping(value = "getById")
     public ResponseEntity<OneStore> getById(@RequestParam(value = "id", required = false) Long id) {
         try {
-            if (!oneTenantService.authenticate(id)) {
-                log.error("authenticate fail");
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-            }
             return ResponseEntity.ok(service.getById(id));
         } catch (Exception e) {
             log.error("get store by id error:", e);
@@ -80,15 +79,16 @@ public class OneStoreController {
     }
 
     /**
-     * 新增用户信息
+     * 新增店铺信息
      *
-     * @return 租户信息
-     * @apiNote 新增用户信息
+     * @return 店铺信息
+     * @apiNote 新增店铺信息
      */
-    @OperateLog(operateModule = "租户模块", operateType = "新增租户信息", operateDesc = "新增租户信息")
+    @OperateLog(operateModule = "店铺模块", operateType = "新增店铺信息", operateDesc = "新增店铺信息")
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneStore store) {
         try {
+            oneTenantService.authenticate(store.getTenantId());
             service.save(store);
         } catch (Exception e) {
             log.error("save store extra info error:", e);
@@ -98,15 +98,16 @@ public class OneStoreController {
     }
 
     /**
-     * 更新用户信息
+     * 更新店铺信息
      *
-     * @return 租户信息
-     * @apiNote 更新用户信息
+     * @return 店铺信息
+     * @apiNote 更新店铺信息
      */
-    @OperateLog(operateModule = "租户模块", operateType = "更新租户信息", operateDesc = "更新租户信息")
+    @OperateLog(operateModule = "店铺模块", operateType = "更新店铺信息", operateDesc = "更新店铺信息")
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneStore store) {
         try {
+            oneTenantService.authenticate(store.getTenantId());
             service.updateById(store);
         } catch (Exception e) {
             log.error("update store extra info error:", e);
@@ -116,15 +117,17 @@ public class OneStoreController {
     }
 
     /**
-     * 删除用户信息
+     * 删除店铺信息
      *
-     * @return 租户信息
-     * @apiNote 删除用户信息
+     * @return 店铺信息
+     * @apiNote 删除店铺信息
      */
-    @OperateLog(operateModule = "租户模块", operateType = "删除租户信息", operateDesc = "删除租户信息")
+    @OperateLog(operateModule = "店铺模块", operateType = "删除店铺信息", operateDesc = "删除店铺信息")
     @PutMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneStore store) {
         try {
+            store = service.getById(store.getId());
+            oneTenantService.authenticate(store.getTenantId());
             store.setDeleteFlag(true);
             service.updateById(store);
         } catch (Exception e) {
