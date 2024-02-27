@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
-import com.yeem.one.entity.OneStore;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneCategoryService;
 import com.yeem.one.service.IOneTenantService;
