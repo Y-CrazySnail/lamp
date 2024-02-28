@@ -2,8 +2,8 @@ package com.yeem.lamp.service.impl;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.yeem.lamp.config.Constant;
-import com.yeem.lamp.entity.AladdinMember;
 import com.yeem.lamp.entity.AladdinNodeVmess;
 import com.yeem.lamp.entity.AladdinServer;
 import com.yeem.lamp.entity.AladdinService;
@@ -36,27 +36,36 @@ public class XUIService {
     private IAladdinNodeVmessService aladdinNodeVmessService;
 
     public void sync() {
-        List<AladdinServer> serverList = aladdinServerService.list();
-        List<AladdinService> aladdinServiceList = aladdinServiceService.listValid();
         try {
+            List<AladdinServer> serverList = aladdinServerService.list();
+            List<AladdinService> aladdinServiceList = aladdinServiceService.listValid();
+            aladdinNodeVmessService.updateByValidServiceList(aladdinServiceList);
+            for (AladdinServer server : serverList) {
+                int year = DateUtil.year(new Date());
+                int month = DateUtil.month(new Date()) + 1;
+                for (AladdinService service : aladdinServiceList) {
+                    aladdinNodeVmessService.save(server, service, year, month);
+                }
+            }
             for (AladdinServer server : serverList) {
                 Long serverId = server.getId();
+                int year = DateUtil.year(new Date());
+                int month = DateUtil.month(new Date()) + 1;
+                List<AladdinNodeVmess> nodeVmessList = aladdinNodeVmessService.listByServerId(serverId, year, month);
                 List<XUIVmessClient> vmessClientList = new ArrayList<>();
-                for (AladdinService aladdinService : aladdinServiceList) {
-                    XUIVmessClient xuiVmessClient = new XUIVmessClient(aladdinService.getUuid(),
-                            Base64.encode(serverId + "_" + aladdinService.getId()).replace("=", ""),
+                for (AladdinNodeVmess nodeVmess : nodeVmessList) {
+                    XUIVmessClient xuiVmessClient = new XUIVmessClient(
+                            nodeVmess.getNodeId(),
+                            Base64.encode(String.valueOf(nodeVmess.getId())).replace("=", ""),
                             0,
                             0,
                             true,
                             "",
-                            Base64.encode(String.valueOf(aladdinService.getId())).replace("=", "") + serverId,
+                            Base64.encode(String.valueOf(nodeVmess.getId())).replace("=", "") + serverId,
                             0
                     );
                     vmessClientList.add(xuiVmessClient);
                 }
-                int year = DateUtil.year(new Date());
-                int month = DateUtil.month(new Date()) + 1;
-                List<AladdinNodeVmess> nodeVmessList = aladdinNodeVmessService.listByServerId(serverId, year, month);
                 String apiIp = server.getApiIp();
                 int apiPort = server.getApiPort();
                 String apiUsername = server.getApiUsername();
@@ -70,53 +79,12 @@ public class XUIService {
                 log.info("结束同步{}服务器远端节点信息----------", server.getPostscript());
                 log.info("开始同步{}服务器本地节点信息----------", server.getPostscript());
                 for (XUIInboundData.ClientStats clientStat : xuiInboundData.getClientStats()) {
-                    Long serviceId = Long.valueOf(Base64.decodeStr(clientStat.getEmail()).split("_")[1]);
-                    List<AladdinService> serviceList = aladdinServiceList.stream().filter(e -> e.getId().equals(serviceId)).collect(Collectors.toList());
-                    if (serviceList.isEmpty()) {
-                        log.error("service未查询到：{}", serviceId);
-                        continue;
-                    }
-                    AladdinService service = serviceList.get(0);
-                    List<AladdinNodeVmess> nodeList = nodeVmessList
-                            .stream().filter(e ->
-                                    e.getServiceId().equals(serviceId)
-                                            && e.getNodeId().equals(service.getUuid())
-                            )
-                            .collect(Collectors.toList());
-                    if (nodeList.isEmpty()) {
-                        // 不存在用户当前UUID的节点，做新增节点操作
-                        log.info("创建本地节点流量操作：serviceId:{}, serverId:{}, uuid:{}, year：{}, month：{}",
-                                service.getId(), serverId, service.getUuid(), year, month);
-                        AladdinNodeVmess addNodeVmess = new AladdinNodeVmess();
-                        addNodeVmess.setNodeType(Constant.NODE_TYPE_PRIVATE);
-                        addNodeVmess.setNodePs(server.getSubscribeNamePrefix());
-                        addNodeVmess.setNodeAdd(server.getSubscribeIp());
-                        addNodeVmess.setNodePort(String.valueOf(server.getSubscribePort()));
-                        addNodeVmess.setNodeId(service.getUuid());
-                        addNodeVmess.setAid("0");
-                        addNodeVmess.setNet("tcp");
-                        addNodeVmess.setType("none");
-                        addNodeVmess.setTls("none");
-                        addNodeVmess.setServerId(serverId);
-                        addNodeVmess.setServiceId(serviceId);
-                        addNodeVmess.setServiceYear(year);
-                        addNodeVmess.setServiceMonth(month);
-                        addNodeVmess.setServiceUp(0L);
-                        addNodeVmess.setServiceDown(0L);
-                        aladdinNodeVmessService.save(addNodeVmess);
-                    } else {
-                        for (AladdinNodeVmess nodeVmess : nodeList) {
-                            // 存在用户当前UUID的节点，做更新节点流量操作
-                            nodeVmess.setServiceUp(clientStat.getUp());
-                            nodeVmess.setServiceDown(clientStat.getDown());
-                            aladdinNodeVmessService.updateById(nodeVmess);
-                            nodeVmessList.removeIf(e -> nodeVmess.getId().equals(e.getId()));
-                        }
-                    }
-                }
-                for (AladdinNodeVmess nodeVmess : nodeVmessList) {
-                    nodeVmess.setNodeType(Constant.NODE_TYPE_EXPIRED);
-                    aladdinNodeVmessService.updateById(nodeVmess);
+                    Long nodeVmessId = Long.valueOf(Base64.decodeStr(clientStat.getEmail()));
+                    LambdaUpdateWrapper<AladdinNodeVmess> updateWrapper = new LambdaUpdateWrapper<>();
+                    updateWrapper.eq(AladdinNodeVmess::getId, nodeVmessId);
+                    updateWrapper.set(AladdinNodeVmess::getServiceUp, clientStat.getUp());
+                    updateWrapper.set(AladdinNodeVmess::getServiceDown, clientStat.getDown());
+                    aladdinNodeVmessService.update(updateWrapper);
                 }
                 aladdinNodeVmessService.updateByServerId(serverId, null, server.getSubscribeNamePrefix(), server.getSort());
                 log.info("结束同步{}服务器本地节点信息----------", server.getPostscript());

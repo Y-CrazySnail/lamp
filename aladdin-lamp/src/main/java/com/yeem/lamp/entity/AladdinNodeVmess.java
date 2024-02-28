@@ -3,11 +3,15 @@ package com.yeem.lamp.entity;
 import cn.hutool.core.codec.Base64;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.util.StringUtils;
 
 /**
  * vmess节点
  */
+@Data
+@EqualsAndHashCode(callSuper = true)
 @TableName(value = "aladdin_node_vmess", autoResultMap = true)
 public class AladdinNodeVmess extends BaseEntity {
     private Long serviceId;
@@ -31,174 +35,6 @@ public class AladdinNodeVmess extends BaseEntity {
     private String sni;
     private int sort;
     private int multiplyingPower;
-
-    public Long getServiceId() {
-        return serviceId;
-    }
-
-    public void setServiceId(Long serviceId) {
-        this.serviceId = serviceId;
-    }
-
-    public Long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(Long serverId) {
-        this.serverId = serverId;
-    }
-
-    public Integer getServiceYear() {
-        return serviceYear;
-    }
-
-    public void setServiceYear(Integer serviceYear) {
-        this.serviceYear = serviceYear;
-    }
-
-    public Integer getServiceMonth() {
-        return serviceMonth;
-    }
-
-    public void setServiceMonth(Integer serviceMonth) {
-        this.serviceMonth = serviceMonth;
-    }
-
-    public Long getServiceDown() {
-        return serviceDown;
-    }
-
-    public void setServiceDown(Long serviceDown) {
-        this.serviceDown = serviceDown;
-    }
-
-    public Long getServiceUp() {
-        return serviceUp;
-    }
-
-    public void setServiceUp(Long serviceUp) {
-        this.serviceUp = serviceUp;
-    }
-
-    public String getNodeType() {
-        return nodeType;
-    }
-
-    public void setNodeType(String nodeType) {
-        this.nodeType = nodeType;
-    }
-
-    public String getNodePs() {
-        return nodePs;
-    }
-
-    public void setNodePs(String nodePs) {
-        this.nodePs = nodePs;
-    }
-
-    public String getNodeAdd() {
-        return nodeAdd;
-    }
-
-    public void setNodeAdd(String nodeAdd) {
-        this.nodeAdd = nodeAdd;
-    }
-
-    public String getNodePort() {
-        return nodePort;
-    }
-
-    public void setNodePort(String nodePort) {
-        this.nodePort = nodePort;
-    }
-
-    public String getNodeId() {
-        return nodeId;
-    }
-
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
-    }
-
-    public String getAid() {
-        return aid;
-    }
-
-    public void setAid(String aid) {
-        this.aid = aid;
-    }
-
-    public String getScy() {
-        return scy;
-    }
-
-    public void setScy(String scy) {
-        this.scy = scy;
-    }
-
-    public String getNet() {
-        return net;
-    }
-
-    public void setNet(String net) {
-        this.net = net;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public String getTls() {
-        return tls;
-    }
-
-    public void setTls(String tls) {
-        this.tls = tls;
-    }
-
-    public String getSni() {
-        return sni;
-    }
-
-    public void setSni(String sni) {
-        this.sni = sni;
-    }
-
-    public int getSort() {
-        return sort;
-    }
-
-    public void setSort(int sort) {
-        this.sort = sort;
-    }
-
-    public int getMultiplyingPower() {
-        return multiplyingPower;
-    }
-
-    public void setMultiplyingPower(int multiplyingPower) {
-        this.multiplyingPower = multiplyingPower;
-    }
 
     public String convert() {
         StringBuilder url = new StringBuilder();

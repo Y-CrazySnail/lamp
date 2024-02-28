@@ -32,7 +32,8 @@
 
     <update id="refreshStatus">
         update aladdin_service
-        set status = case
-        when end_date &lt; curdate() then '9' else '1' end;
+        set status =
+        case when end_date &lt; curdate() then '9'
+        else '1' end
     </update>
 </mapper>

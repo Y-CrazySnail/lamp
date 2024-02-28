@@ -1,5 +1,6 @@
 package com.yeem.lamp.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -8,6 +9,7 @@ import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
 import com.yeem.lamp.entity.AladdinNodeVmess;
 import com.yeem.lamp.entity.AladdinServer;
+import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.mapper.AladdinNodeVmessMapper;
 import com.yeem.lamp.service.IAladdinNodeVmessService;
 import com.yeem.lamp.service.IAladdinServerService;
@@ -18,6 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -63,7 +66,7 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
         queryWrapper.eq("server_id", serverId);
         queryWrapper.eq("service_year", year);
         queryWrapper.eq("service_month", month);
-        queryWrapper.ne("node_type", "expired");
+        queryWrapper.eq("node_type", Constant.NODE_TYPE_PRIVATE);
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         return aladdinNodeVmessMapper.selectList(queryWrapper);
     }
@@ -103,5 +106,42 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
         }
         updateWrapper.eq("server_id", serverId);
         return super.update(updateWrapper);
+    }
+
+    @Override
+    public void updateByValidServiceList(List<AladdinService> serviceList) {
+        aladdinNodeVmessMapper.updateByValidServiceIdList(serviceList.stream().map(AladdinService::getId).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void save(AladdinServer server, AladdinService service, int year, int month) {
+        LambdaQueryWrapper<AladdinNodeVmess> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(AladdinNodeVmess::getDeleteFlag, false);
+        queryWrapper.eq(AladdinNodeVmess::getServerId, server.getId());
+        queryWrapper.eq(AladdinNodeVmess::getServiceId, service.getId());
+        queryWrapper.eq(AladdinNodeVmess::getServiceYear, year);
+        queryWrapper.eq(AladdinNodeVmess::getServiceMonth, month);
+        queryWrapper.eq(AladdinNodeVmess::getNodeType, Constant.NODE_TYPE_PRIVATE);
+        int count = aladdinNodeVmessMapper.selectCount(queryWrapper);
+        if (count == 0) {
+            AladdinNodeVmess aladdinNodeVmess = new AladdinNodeVmess();
+            aladdinNodeVmess.setNodeType(Constant.NODE_TYPE_PRIVATE);
+            aladdinNodeVmess.setNodePs(server.getSubscribeNamePrefix());
+            aladdinNodeVmess.setNodeAdd(server.getSubscribeIp());
+            aladdinNodeVmess.setNodePort(String.valueOf(server.getSubscribePort()));
+            aladdinNodeVmess.setNodeId(service.getUuid());
+            aladdinNodeVmess.setAid("0");
+            aladdinNodeVmess.setNet("tcp");
+            aladdinNodeVmess.setType("none");
+            aladdinNodeVmess.setTls("none");
+            aladdinNodeVmess.setServerId(server.getId());
+            aladdinNodeVmess.setServiceId(service.getId());
+            aladdinNodeVmess.setServiceYear(year);
+            aladdinNodeVmess.setServiceMonth(month);
+            aladdinNodeVmess.setServiceUp(0L);
+            aladdinNodeVmess.setServiceDown(0L);
+            log.info("本地不存在当前节点，创建本地节点：{}", aladdinNodeVmess);
+            aladdinNodeVmessMapper.insert(aladdinNodeVmess);
+        }
     }
 }

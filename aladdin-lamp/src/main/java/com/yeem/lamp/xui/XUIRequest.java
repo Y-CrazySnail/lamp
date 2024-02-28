@@ -13,9 +13,7 @@ import java.util.*;
 
 @Slf4j
 public class XUIRequest {
-    private static final String DEFAULT_REMARK = "ALADDIN";
-
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private String ip;
     private int port;
     private String nodeRemark;
