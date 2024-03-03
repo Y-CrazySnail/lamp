@@ -77,7 +77,7 @@ public class XUIService {
                         .login(apiUsername, apiPassword)
                         .syncNode(vmessClientList);
                 log.info("结束同步{}服务器远端节点信息----------", server.getPostscript());
-                log.info("开始同步{}服务器本地节点信息----------", server.getPostscript());
+                log.info("开始同步{}服务器本地节点流量信息----------", server.getPostscript());
                 for (XUIInboundData.ClientStats clientStat : xuiInboundData.getClientStats()) {
                     Long nodeVmessId = Long.valueOf(Base64.decodeStr(clientStat.getEmail()));
                     LambdaUpdateWrapper<AladdinNodeVmess> updateWrapper = new LambdaUpdateWrapper<>();
@@ -87,7 +87,7 @@ public class XUIService {
                     aladdinNodeVmessService.update(updateWrapper);
                 }
                 aladdinNodeVmessService.updateByServerId(serverId, null, server.getSubscribeNamePrefix(), server.getSort());
-                log.info("结束同步{}服务器本地节点信息----------", server.getPostscript());
+                log.info("结束同步{}服务器本地节点流量信息----------", server.getPostscript());
             }
             aladdinServiceService.refreshStatus();
         } catch (IOException e) {

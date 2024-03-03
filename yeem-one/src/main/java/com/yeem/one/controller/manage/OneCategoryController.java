@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
+import com.yeem.one.entity.OneStore;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneCategoryService;
+import com.yeem.one.service.IOneStoreService;
 import com.yeem.one.service.IOneTenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 管理端-分类
@@ -27,6 +31,8 @@ public class OneCategoryController {
     private IOneCategoryService service;
     @Autowired
     private IOneTenantService oneTenantService;
+    @Autowired
+    private IOneStoreService oneStoreService;
 
     /**
      * 分页查询
@@ -36,9 +42,10 @@ public class OneCategoryController {
      * @return 分类分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneCategory>> getPage(@RequestParam("current") Integer current,
-                                                      @RequestParam("size") Integer size,
-                                                      @RequestParam(value = "categoryName", required = false) String categoryName) {
+    public ResponseEntity<IPage<OneCategory>> page(@RequestParam("current") Integer current,
+                                                   @RequestParam("size") Integer size,
+                                                   @RequestParam(value = "storeId", required = false) Long storeId,
+                                                   @RequestParam(value = "categoryName", required = false) String categoryName) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -46,14 +53,22 @@ public class OneCategoryController {
             size = 10;
         }
         IPage<OneCategory> page = new Page<>(current, size);
-        LambdaQueryWrapper<OneCategory> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        lambdaQueryWrapper.in(OneCategory::getTenantId, oneTenantService.authorizedTenantIdSet());
+        LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);
+        queryWrapper.in(OneCategory::getTenantId, oneTenantService.authorizedTenantIdSet());
+        if (!StringUtils.isEmpty(storeId)) {
+            queryWrapper.eq(OneCategory::getStoreId, storeId);
+        }
         if (!StringUtils.isEmpty(categoryName)) {
-            lambdaQueryWrapper.like(OneCategory::getCategoryName, categoryName);
+            queryWrapper.like(OneCategory::getCategoryName, categoryName);
         }
         try {
-            return ResponseEntity.ok(service.page(page, lambdaQueryWrapper));
+            page = service.page(page, queryWrapper);
+            for (OneCategory record : page.getRecords()) {
+                OneStore store = oneStoreService.getById(record.getStoreId());
+                record.setStoreName(store.getStoreName());
+            }
+            return ResponseEntity.ok(service.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("get category page error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -71,7 +86,28 @@ public class OneCategoryController {
         try {
             OneCategory category = service.getById(id);
             oneTenantService.authenticate(category.getTenantId());
+            OneStore store = oneStoreService.getById(category.getStoreId());
+            category.setStoreName(store.getStoreName());
             return ResponseEntity.ok(category);
+        } catch (Exception e) {
+            log.error("get category by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    /**
+     * 获取所有
+     *
+     * @return 分类信息
+     */
+    @GetMapping(value = "getAll")
+    public ResponseEntity<List<OneCategory>> getAll() {
+        try {
+            LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            queryWrapper.in(OneCategory::getTenantId, oneTenantService.authorizedTenantIdSet());
+            return ResponseEntity.ok(service.list(queryWrapper));
         } catch (Exception e) {
             log.error("get category by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -123,7 +159,7 @@ public class OneCategoryController {
      * @apiNote 删除分类信息
      */
     @OperateLog(operateModule = "分类模块", operateType = "删除分类信息", operateDesc = "删除分类信息")
-    @PutMapping("remove")
+    @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneCategory category) {
         try {
             category = service.getById(category.getId());

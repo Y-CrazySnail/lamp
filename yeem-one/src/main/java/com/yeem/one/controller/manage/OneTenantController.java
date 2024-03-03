@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.common.entity.BaseEntity;
+import com.yeem.common.utils.OauthUtils;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneTenant;
 import com.yeem.one.log.OperateLog;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 管理端-租户
@@ -82,6 +85,22 @@ public class OneTenantController {
     }
 
     /**
+     * 获取所有
+     *
+     * @return 租户信息
+     */
+    @GetMapping(value = "getAll")
+    public ResponseEntity<List<OneTenant>> getAll() {
+        try {
+            String username = OauthUtils.getUsername();
+            return ResponseEntity.ok(oneTenantService.listByUsername(username));
+        } catch (Exception e) {
+            log.error("get tenant by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 新增用户信息
      *
      * @return 租户信息
@@ -124,7 +143,7 @@ public class OneTenantController {
      * @apiNote 删除用户信息
      */
     @OperateLog(operateModule = "租户模块", operateType = "删除租户信息", operateDesc = "删除租户信息")
-    @PutMapping("remove")
+    @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneTenant tenant) {
         try {
             tenant.setDeleteFlag(true);

@@ -119,7 +119,7 @@ public class OneSkuSpecificationController {
      * @apiNote 删除sku规格信息
      */
     @OperateLog(operateModule = "sku规格模块", operateType = "删除sku规格信息", operateDesc = "删除sku规格信息")
-    @PutMapping("remove")
+    @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneSkuSpecification sku) {
         try {
             sku = service.getById(sku.getId());

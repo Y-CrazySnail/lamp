@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 管理端-店铺
@@ -79,6 +79,24 @@ public class OneStoreController {
     }
 
     /**
+     * 获取所有
+     *
+     * @return 店铺信息
+     */
+    @GetMapping(value = "getAll")
+    public ResponseEntity<List<OneStore>> getAll() {
+        try {
+            LambdaQueryWrapper<OneStore> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(OneStore::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            lambdaQueryWrapper.in(OneStore::getTenantId, oneTenantService.authorizedTenantIdSet());
+            return ResponseEntity.ok(service.list(lambdaQueryWrapper));
+        } catch (Exception e) {
+            log.error("get tenant by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
      * 新增店铺信息
      *
      * @return 店铺信息
@@ -123,7 +141,7 @@ public class OneStoreController {
      * @apiNote 删除店铺信息
      */
     @OperateLog(operateModule = "店铺模块", operateType = "删除店铺信息", operateDesc = "删除店铺信息")
-    @PutMapping("remove")
+    @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneStore store) {
         try {
             store = service.getById(store.getId());

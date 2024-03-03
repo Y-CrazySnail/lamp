@@ -37,7 +37,7 @@ public class OneSkuController {
      */
     @GetMapping("page")
     public ResponseEntity<IPage<OneSku>> getPage(@RequestParam("current") Integer current,
-                                                      @RequestParam("size") Integer size) {
+                                                 @RequestParam("size") Integer size) {
         if (StringUtils.isEmpty(current)) {
             current = 1;
         }
@@ -119,7 +119,7 @@ public class OneSkuController {
      * @apiNote 删除sku信息
      */
     @OperateLog(operateModule = "sku模块", operateType = "删除sku信息", operateDesc = "删除sku信息")
-    @PutMapping("remove")
+    @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneSku sku) {
         try {
             sku = service.getById(sku.getId());

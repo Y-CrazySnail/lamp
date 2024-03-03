@@ -12,6 +12,7 @@ public class OneSku extends BaseEntity {
     private Long tenantId;
     private Long spuId;
     private String skuName;
+    private String skuAttribute;
     private Integer skuPrice;
     private Integer skuStock;
     private Integer skuSales;

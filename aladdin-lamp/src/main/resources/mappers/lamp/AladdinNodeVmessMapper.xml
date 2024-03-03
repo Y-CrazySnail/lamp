@@ -8,5 +8,6 @@
         <foreach item="serviceId" collection="serviceIdList" open="(" separator="," close=")">
             #{serviceId}
         </foreach>
+        or server_id not in (select id from aladdin_server where delete_flag != 1)
     </update>
 </mapper>

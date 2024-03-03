@@ -48,4 +48,12 @@ public class OneTenantServiceImpl extends ServiceImpl<OneTenantMapper, OneTenant
             return tenantList.stream().map(OneTenant::getId).collect(Collectors.toSet());
         }
     }
+
+    @Override
+    public List<OneTenant> listByUsername(String username) {
+        LambdaQueryWrapper<OneTenant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(OneTenant::getBelongUsername, ";" + username + ";");
+        queryWrapper.eq(OneTenant::getDeleteFlag, false);
+        return mapper.selectList(queryWrapper);
+    }
 }
