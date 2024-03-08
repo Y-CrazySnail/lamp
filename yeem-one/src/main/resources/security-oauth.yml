@@ -1,3 +1,2 @@
 permit-url:
-  - /manager-zero-tencent-cos/upload
   - /wechat/**

@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
-import com.yeem.one.entity.OneSku;
 import com.yeem.one.entity.OneSpu;
 import com.yeem.one.entity.OneStore;
 import com.yeem.one.log.OperateLog;
@@ -115,7 +114,7 @@ public class OneSpuController {
             oneTenantService.authenticate(spu.getTenantId());
             service.save(spu);
         } catch (Exception e) {
-            log.error("save spu extra info error:", e);
+            log.error("save spu info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(spu);

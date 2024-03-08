@@ -18,6 +18,8 @@ import java.io.IOException;
 @RequestMapping("/manage/cos")
 public class OneCosController {
 
+    private static final String APPLICATION = "yeem_one";
+
     @Autowired
     private Environment environment;
 
@@ -26,8 +28,9 @@ public class OneCosController {
                                          @RequestParam(value = "path", required = false) String path) {
         String key = UUID.fastUUID() + "/" + file.getOriginalFilename();
         if (!StringUtils.isEmpty(path)) {
-            key = String.format("%s%s", path, key);
+            key = String.format("%s/%s", path, key);
         }
+        key = String.format("%s%s", APPLICATION, key);
         try {
             TencentFileUtils.upload(
                     environment.getProperty("tencent.cos.bucket-name"),

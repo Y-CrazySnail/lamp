@@ -20,14 +20,7 @@ public class OneSpu extends BaseEntity {
     private String spuName;
     private String spuAttribute;
     private String spuShowImage;
-    private String spuSwiperImage1;
-    private String spuSwiperImage2;
-    private String spuSwiperImage3;
-    private String spuDetailImage1;
-    private String spuDetailImage2;
-    private String spuDetailImage3;
-    private String spuDetailImage4;
-    private String spuDetailImage5;
-    private String spuDetailImage6;
+    private String spuSwiperImage;
+    private String spuDetailImage;
     private Integer spuSort;
 }
