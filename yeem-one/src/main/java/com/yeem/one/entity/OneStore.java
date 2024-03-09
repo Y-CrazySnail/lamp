@@ -18,4 +18,8 @@ public class OneStore extends BaseEntity {
     private BigDecimal storeLongitude;
     private BigDecimal storeLatitude;
     private String storeAddress;
+    private String storeLogo;
+    private String storeDescription;
+    private String storeWechat;
+    private String storeWechatQrcode;
 }

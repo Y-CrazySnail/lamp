@@ -68,7 +68,7 @@ public class OneCategoryController {
                 OneStore store = oneStoreService.getById(record.getStoreId());
                 record.setStoreName(store.getStoreName());
             }
-            return ResponseEntity.ok(service.page(page, queryWrapper));
+            return ResponseEntity.ok(page);
         } catch (Exception e) {
             log.error("get category page error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
