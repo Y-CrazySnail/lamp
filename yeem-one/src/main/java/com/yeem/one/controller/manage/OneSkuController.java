@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneSku;
+import com.yeem.one.entity.OneStore;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneSkuService;
 import com.yeem.one.service.IOneTenantService;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 管理端-sku
@@ -73,6 +76,28 @@ public class OneSkuController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 获取所有
+     *
+     * @return 店铺信息
+     */
+    @GetMapping(value = "getAll")
+    public ResponseEntity<List<OneSku>> getAll(@RequestParam(value = "spuId", required = false) Long spuId) {
+        try {
+            LambdaQueryWrapper<OneSku> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            lambdaQueryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
+            if (!StringUtils.isEmpty(spuId)) {
+                lambdaQueryWrapper.eq(OneSku::getSpuId, spuId);
+            }
+            return ResponseEntity.ok(service.list(lambdaQueryWrapper));
+        } catch (Exception e) {
+            log.error("get sku list error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     /**
      * 新增sku信息
