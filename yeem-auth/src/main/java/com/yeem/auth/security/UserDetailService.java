@@ -15,7 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class UserDetailService implements UserDetailsService {
         // 查询用户
         User user = userMapper.selectOne(new QueryWrapper<User>().eq("username", username));
         String verificationCode = VerificationCodeCache.get(username);
-        if (!StringUtils.isEmpty(verificationCode)) {
+        if (!StrUtil.isEmpty(verificationCode)) {
             VerificationCodeCache.delete(username);
             user.setPassword(new BCryptPasswordEncoder().encode(verificationCode));
         }

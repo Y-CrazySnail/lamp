@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class ZeroOrderController {
     @OperateLog(operateModule = "订单模块", operateType = "下单", operateDesc = "下单")
     @PostMapping("order")
     public ResponseEntity<ZeroOrder> order(@RequestBody ZeroOrder zeroOrder) {
-        if (StringUtils.isEmpty(zeroOrder.getCartList()) || zeroOrder.getCartList().isEmpty()) {
+        if (null == zeroOrder.getCartList() || zeroOrder.getCartList().isEmpty()) {
             log.error("cart list is empty");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

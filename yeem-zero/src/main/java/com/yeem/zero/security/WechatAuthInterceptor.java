@@ -6,7 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import com.yeem.common.utils.WechatJWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +28,7 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
             if (request.getRequestURI().endsWith("zero-tencent-cos/upload") && "yeem".equals(token)) {
                 return true;
             }
-            if (request.getMethod().equalsIgnoreCase("GET") && StringUtils.isEmpty(token)) {
+            if (request.getMethod().equalsIgnoreCase("GET") && StrUtil.isEmpty(token)) {
                 return true;
             }
             if (!WechatJWTUtils.validate(token)) {
@@ -61,9 +61,9 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
                     DateUtil.format(new Date(), DatePattern.NORM_DATETIME_MS_PATTERN),
                     DateUtil.between(beginTime, endTime, DateUnit.MS),
                     request.getRequestURI(),
-                    StringUtils.isEmpty(APPLICATION.get()) ? "" : APPLICATION.get(),
-                    StringUtils.isEmpty(ID.get()) ? "" : ID.get(),
-                    StringUtils.isEmpty(OPEN_ID.get()) ? "" : OPEN_ID.get(),
+                    StrUtil.isEmpty(APPLICATION.get()) ? "" : APPLICATION.get(),
+                    null == ID.get() ? "" : ID.get(),
+                    StrUtil.isEmpty(OPEN_ID.get()) ? "" : OPEN_ID.get(),
                     Runtime.getRuntime().maxMemory() / 1024 / 1024,
                     Runtime.getRuntime().totalMemory() / 1024 / 1024,
                     Runtime.getRuntime().freeMemory() / 1024 / 1024

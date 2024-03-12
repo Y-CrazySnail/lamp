@@ -13,7 +13,7 @@ import com.yeem.car.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 
@@ -53,7 +53,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
     @Override
     public IPage<BaseCarBrand> pages(int current, int size, String name) {
         QueryWrapper<BaseCarBrand> carBrandQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             carBrandQueryWrapper.like("name", name);
         }
         IPage<BaseCarBrand> page = new Page<>(current, size);
@@ -76,7 +76,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
         QueryWrapper<BaseCarBrand> carBrandQueryWrapper = new QueryWrapper<>();
         carBrandQueryWrapper.eq("delete_flag", 0).eq("id", id);
         BaseCarBrand baseCarBrand = carBrandMapper.selectOne(carBrandQueryWrapper);
-        if (StringUtils.isEmpty(baseCarBrand)) {
+        if (null == baseCarBrand) {
             return null;
         }
         List<BaseCarModel> baseCarModelist = carModelService.listByBrandId(id);
@@ -113,7 +113,7 @@ public class CarBrandServiceImpl extends ServiceImpl<CarBrandMapper, BaseCarBran
         List<BaseCarModel> baseCarModelList = baseCarBrand.getCarModelList();
         baseCarModelList.forEach(carModel -> {
             carModel.setBrandId(baseCarBrand.getId());
-            if (StringUtils.isEmpty(carModel.getId())) {
+            if (null == carModel.getId()) {
                 carModelService.save(carModel);
             } else {
                 carModelService.updateById(carModel);

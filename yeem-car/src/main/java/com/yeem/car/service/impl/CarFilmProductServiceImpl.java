@@ -15,7 +15,7 @@ import com.yeem.car.service.ICarFilmTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,13 +35,13 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productLevelName)) {
+        if (!StrUtil.isEmpty(productLevelName)) {
             wrapper.like("product_level_name", productLevelName);
         }
-        if (!StringUtils.isEmpty(status)) {
+        if (!StrUtil.isEmpty(status)) {
             wrapper.eq("status", status);
         }
         wrapper.eq("delete_flag", 0);
@@ -72,13 +72,13 @@ public class CarFilmProductServiceImpl extends ServiceImpl<CarFilmProductMapper,
         QueryWrapper<CarFilmProduct> wrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productLevelName)) {
+        if (!StrUtil.isEmpty(productLevelName)) {
             wrapper.like("product_level_name", productLevelName);
         }
-        if (!StringUtils.isEmpty(status)) {
+        if (!StrUtil.isEmpty(status)) {
             wrapper.eq("status", status);
         }
         wrapper.eq("delete_flag", 0);

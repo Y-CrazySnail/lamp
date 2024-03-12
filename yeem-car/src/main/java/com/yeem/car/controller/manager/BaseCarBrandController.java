@@ -8,7 +8,7 @@ import com.yeem.common.conreoller.BaseController;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -65,7 +65,7 @@ public class BaseCarBrandController extends BaseController<BaseCarBrand> {
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
-            if (StringUtils.isEmpty(id)) {
+            if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
             return ResponseEntity.ok(carBrandService.getById(id));

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -317,7 +317,7 @@ public class CarFilmQuality extends BaseEntity {
     }
 
     public void setState() {
-        if (StringUtils.isEmpty(this.validityDate)) {
+        if (null == this.validityDate) {
             this.state = State.EXPIRED.value;
         }
         if (DateUtil.compare(validityDate, new Date()) > 0) {

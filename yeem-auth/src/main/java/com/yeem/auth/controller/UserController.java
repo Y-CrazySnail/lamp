@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +36,7 @@ public class UserController extends BaseController<User> {
     @PostMapping("/save")
     public ResponseEntity<Object> signIn(@RequestBody @Validated User user) {
         User checkUser = usersService.getOne(new QueryWrapper<User>().eq("username", user.getUsername()));
-        if (!StringUtils.isEmpty(checkUser)) {
+        if (null != checkUser) {
             return new ResponseEntity<>("用户名重复", HttpStatus.EXPECTATION_FAILED);
         }
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));

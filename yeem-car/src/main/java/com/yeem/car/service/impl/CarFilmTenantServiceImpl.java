@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,28 +36,28 @@ public class CarFilmTenantServiceImpl extends ServiceImpl<CarFilmTenantMapper, C
         QueryWrapper<CarFilmTenant> wrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = this.listByAuthorizedUsername();
         wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productName)) {
+        if (!StrUtil.isEmpty(productName)) {
             wrapper.like("product_name", productName);
         }
-        if (!StringUtils.isEmpty(companyName)) {
+        if (!StrUtil.isEmpty(companyName)) {
             wrapper.like("company_name", companyName);
         }
-        if (!StringUtils.isEmpty(companyNo)) {
+        if (!StrUtil.isEmpty(companyNo)) {
             wrapper.like("company_no", companyNo);
         }
-        if (!StringUtils.isEmpty(managerName)) {
+        if (!StrUtil.isEmpty(managerName)) {
             wrapper.like("manager_name", managerName);
         }
-        if (!StringUtils.isEmpty(managerPhone)) {
+        if (!StrUtil.isEmpty(managerPhone)) {
             wrapper.like("manager_phone", managerPhone);
         }
-        if (!StringUtils.isEmpty(miniProgramFlag)) {
+        if (!StrUtil.isEmpty(miniProgramFlag)) {
             wrapper.eq("mini_program_flag", miniProgramFlag);
         }
-        if (!StringUtils.isEmpty(officialWebsiteFlag)) {
+        if (!StrUtil.isEmpty(officialWebsiteFlag)) {
             wrapper.eq("official_website_flag", officialWebsiteFlag);
         }
         wrapper.eq("delete_flag", 0);
@@ -84,28 +84,28 @@ public class CarFilmTenantServiceImpl extends ServiceImpl<CarFilmTenantMapper, C
     @Override
     public IPage<CarFilmTenant> pages(int current, int size, String productNo, String productName, String companyName, String companyNo, String managerName, String managerPhone, String miniProgramFlag, String officialWebsiteFlag) {
         QueryWrapper<CarFilmTenant> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productName)) {
+        if (!StrUtil.isEmpty(productName)) {
             wrapper.like("product_name", productName);
         }
-        if (!StringUtils.isEmpty(companyName)) {
+        if (!StrUtil.isEmpty(companyName)) {
             wrapper.like("company_name", companyName);
         }
-        if (!StringUtils.isEmpty(companyNo)) {
+        if (!StrUtil.isEmpty(companyNo)) {
             wrapper.like("company_no", companyNo);
         }
-        if (!StringUtils.isEmpty(managerName)) {
+        if (!StrUtil.isEmpty(managerName)) {
             wrapper.like("manager_name", managerName);
         }
-        if (!StringUtils.isEmpty(managerPhone)) {
+        if (!StrUtil.isEmpty(managerPhone)) {
             wrapper.like("manager_phone", managerPhone);
         }
-        if (!StringUtils.isEmpty(miniProgramFlag)) {
+        if (!StrUtil.isEmpty(miniProgramFlag)) {
             wrapper.eq("mini_program_flag", miniProgramFlag);
         }
-        if (!StringUtils.isEmpty(officialWebsiteFlag)) {
+        if (!StrUtil.isEmpty(officialWebsiteFlag)) {
             wrapper.eq("official_website_flag", officialWebsiteFlag);
         }
         wrapper.eq("delete_flag", 0);

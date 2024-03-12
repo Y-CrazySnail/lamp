@@ -7,7 +7,7 @@ import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -86,15 +86,15 @@ public class ZeroProductController {
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody ZeroProduct zeroProduct) {
         try {
-            if (StringUtils.isEmpty(zeroProduct.getName())) {
+            if (StrUtil.isEmpty(zeroProduct.getName())) {
                 log.error("商品ID:{}, [商品名]为空", zeroProduct.getId());
                 throw new RuntimeException();
             }
-            if (!StringUtils.isEmpty(zeroProduct.getPrice())) {
+            if (null != zeroProduct.getPrice()) {
                 log.error("商品ID:{}, [商品价格]为空", zeroProduct.getId());
                 throw new RuntimeException();
             }
-            if (!StringUtils.isEmpty(zeroProduct.getStock())) {
+            if (null != zeroProduct.getStock()) {
                 log.error("商品ID:{}, [商品销量]为空", zeroProduct.getId());
                 throw new RuntimeException();
             }

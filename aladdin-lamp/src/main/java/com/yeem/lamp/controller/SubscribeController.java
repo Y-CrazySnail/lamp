@@ -13,7 +13,7 @@ import com.yeem.lamp.service.*;
 import com.yeem.lamp.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,7 +42,7 @@ public class SubscribeController {
     @GetMapping("/clash/{uuid}")
     public String clash(@PathVariable("uuid") String uuid) {
         List<String> nodeUrlList = getNodeUrlList(uuid);
-        if (StringUtils.isEmpty(nodeUrlList) || nodeUrlList.isEmpty()) {
+        if (null == nodeUrlList || nodeUrlList.isEmpty()) {
             return null;
         }
         String url = String.join("|", nodeUrlList);
@@ -53,7 +53,7 @@ public class SubscribeController {
     @GetMapping("/shadowrocket/{uuid}")
     public String shadowrocket(@PathVariable("uuid") String uuid) {
         List<String> nodeUrlList = getNodeUrlList(uuid);
-        if (StringUtils.isEmpty(nodeUrlList) || nodeUrlList.isEmpty()) {
+        if (null == nodeUrlList || nodeUrlList.isEmpty()) {
             return null;
         }
         String url = String.join("|", nodeUrlList);

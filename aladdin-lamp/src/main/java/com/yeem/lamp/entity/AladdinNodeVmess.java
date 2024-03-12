@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * vmess节点
@@ -39,40 +39,40 @@ public class AladdinNodeVmess extends BaseEntity {
     public String convert() {
         StringBuilder url = new StringBuilder();
         url.append("{");
-        if (!StringUtils.isEmpty(this.nodePs)) {
+        if (!StrUtil.isEmpty(this.nodePs)) {
             url.append("\"ps\":\"").append(this.nodePs).append("\",");
         }
-        if (!StringUtils.isEmpty(this.nodeAdd)) {
+        if (!StrUtil.isEmpty(this.nodeAdd)) {
             url.append("\"add\":\"").append(this.nodeAdd).append("\",");
         }
-        if (!StringUtils.isEmpty(this.nodePort)) {
+        if (!StrUtil.isEmpty(this.nodePort)) {
             url.append("\"port\":\"").append(this.nodePort).append("\",");
         }
-        if (!StringUtils.isEmpty(this.nodeId)) {
+        if (!StrUtil.isEmpty(this.nodeId)) {
             url.append("\"id\":\"").append(this.nodeId).append("\",");
         }
-        if (!StringUtils.isEmpty(this.aid)) {
+        if (!StrUtil.isEmpty(this.aid)) {
             url.append("\"aid\":\"").append(this.aid).append("\",");
         }
-        if (!StringUtils.isEmpty(this.scy)) {
+        if (!StrUtil.isEmpty(this.scy)) {
             url.append("\"scy\":\"").append(this.scy).append("\",");
         }
-        if (!StringUtils.isEmpty(this.net)) {
+        if (!StrUtil.isEmpty(this.net)) {
             url.append("\"net\":\"").append(this.net).append("\",");
         }
-        if (!StringUtils.isEmpty(this.type)) {
+        if (!StrUtil.isEmpty(this.type)) {
             url.append("\"type\":\"").append(this.type).append("\",");
         }
-        if (!StringUtils.isEmpty(this.host)) {
+        if (!StrUtil.isEmpty(this.host)) {
             url.append("\"host\":\"").append(this.host).append("\",");
         }
-        if (!StringUtils.isEmpty(this.path)) {
+        if (!StrUtil.isEmpty(this.path)) {
             url.append("\"path\":\"").append(this.path).append("\",");
         }
-        if (!StringUtils.isEmpty(this.tls)) {
+        if (!StrUtil.isEmpty(this.tls)) {
             url.append("\"tls\":\"").append(this.tls).append("\",");
         }
-        if (!StringUtils.isEmpty(this.sni)) {
+        if (!StrUtil.isEmpty(this.sni)) {
             url.append("\"sni\":\"").append(this.sni).append("\",");
         }
         url.deleteCharAt(url.length() - 1);

@@ -7,6 +7,8 @@ import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
 import com.yeem.one.entity.OneSpu;
 import com.yeem.one.entity.OneStore;
+import com.yeem.one.fs.entity.SysFS;
+import com.yeem.one.fs.service.ISysFSService;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneCategoryService;
 import com.yeem.one.service.IOneSpuService;
@@ -16,8 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.annotation.Resource;
 
 /**
  * 管理端-SPU
@@ -35,6 +40,8 @@ public class OneSpuController {
     private IOneStoreService oneStoreService;
     @Autowired
     private IOneCategoryService oneCategoryService;
+    @Resource(name = "COSSysFSServiceImpl")
+    private ISysFSService sysFSService;
 
     /**
      * 分页查询
@@ -49,23 +56,23 @@ public class OneSpuController {
                                                  @RequestParam(value = "storeId", required = false) Long storeId,
                                                  @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                  @RequestParam(value = "spuName", required = false) String spuName) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<OneSpu> page = new Page<>(current, size);
         LambdaQueryWrapper<OneSpu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
         queryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
-        if (!StringUtils.isEmpty(storeId)) {
+        if (null != storeId) {
             queryWrapper.eq(OneSpu::getStoreId, storeId);
         }
-        if (!StringUtils.isEmpty(categoryId)) {
+        if (null != categoryId) {
             queryWrapper.eq(OneSpu::getCategoryId, categoryId);
         }
-        if (!StringUtils.isEmpty(spuName)) {
+        if (!StrUtil.isEmpty(spuName)) {
             queryWrapper.like(OneSpu::getSpuName, spuName);
         }
         try {
@@ -158,5 +165,23 @@ public class OneSpuController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(spu);
+    }
+
+    /**
+     * 上传SPU文件
+     *
+     * @param file 文件
+     * @return URL
+     */
+    @PostMapping("upload")
+    public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
+        try {
+            SysFS sysFS = new SysFS("spu");
+            String url = sysFSService.upload(sysFS, file);
+            return ResponseEntity.ok(url);
+        } catch (Exception e) {
+            log.error("upload spu file error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

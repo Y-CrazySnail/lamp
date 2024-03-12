@@ -13,7 +13,7 @@ import com.yeem.car.service.ICarFilmTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,13 +31,13 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         carFilmPriceQueryWrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             carFilmPriceQueryWrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productLevelNo)) {
+        if (!StrUtil.isEmpty(productLevelNo)) {
             carFilmPriceQueryWrapper.eq("product_level_no", productLevelNo);
         }
-        if (!StringUtils.isEmpty(carLevelNo)) {
+        if (!StrUtil.isEmpty(carLevelNo)) {
             carFilmPriceQueryWrapper.eq("car_level_no", carLevelNo);
         }
         carFilmPriceQueryWrapper.eq("delete_flag", 0);
@@ -49,13 +49,13 @@ public class CarFilmPriceServiceImpl extends ServiceImpl<CarFilmPriceMapper, Car
         QueryWrapper<CarFilmPrice> carFilmPriceQueryWrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         carFilmPriceQueryWrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             carFilmPriceQueryWrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(productLevelNo)) {
+        if (!StrUtil.isEmpty(productLevelNo)) {
             carFilmPriceQueryWrapper.eq("product_level_no", productLevelNo);
         }
-        if (!StringUtils.isEmpty(carLevelNo)) {
+        if (!StrUtil.isEmpty(carLevelNo)) {
             carFilmPriceQueryWrapper.eq("car_level_no", carLevelNo);
         }
         carFilmPriceQueryWrapper.eq("delete_flag", 0);

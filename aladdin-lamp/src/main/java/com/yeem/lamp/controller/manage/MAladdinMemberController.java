@@ -6,7 +6,7 @@ import com.yeem.lamp.service.IAladdinMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -63,7 +63,7 @@ public class MAladdinMemberController {
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
-            if (StringUtils.isEmpty(id)) {
+            if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
             return ResponseEntity.ok(aladdinMemberService.getById(id));
@@ -116,7 +116,7 @@ public class MAladdinMemberController {
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody AladdinMember aladdinMember) {
         try {
-            if (StringUtils.isEmpty(aladdinMember.getId())) {
+            if (null == aladdinMember.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
             aladdinMemberService.removeById(aladdinMember.getId());

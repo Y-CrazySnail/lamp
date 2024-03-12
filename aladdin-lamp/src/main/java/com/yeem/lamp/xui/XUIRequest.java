@@ -5,7 +5,7 @@ import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.net.HttpCookie;
@@ -53,7 +53,7 @@ public class XUIRequest {
                 .body(objectMapper.writeValueAsString(xuiLogin))
                 .execute();
         XUIResponse xuiResponse = objectMapper.readValue(response.body(), XUIResponse.class);
-        if (!StringUtils.isEmpty(xuiResponse) && xuiResponse.isSuccess()) {
+        if (null != xuiResponse && xuiResponse.isSuccess()) {
             this.cookie = response.getCookie("session");
         } else {
             log.error(xuiResponse.getMsg());
@@ -110,7 +110,7 @@ public class XUIRequest {
                     .form(formData)
                     .execute();
             XUIResponse xuiResponseAdd = objectMapper.readValue(addResponse.body(), XUIResponse.class);
-            if (!StringUtils.isEmpty(xuiResponseAdd) && xuiResponseAdd.isSuccess()) {
+            if (null != xuiResponseAdd && xuiResponseAdd.isSuccess()) {
                 log.info("当前服务器未创建[备注]为ALADDIN的Vmess入口：{},结束创建<---------------", this.ip);
                 list();
             } else {
@@ -162,12 +162,12 @@ public class XUIRequest {
                 .cookie(this.cookie)
                 .execute();
         XUIResponse xuiResponse = objectMapper.readValue(response.body(), XUIResponse.class);
-        if (!StringUtils.isEmpty(xuiResponse) && xuiResponse.isSuccess()) {
+        if (null != xuiResponse && xuiResponse.isSuccess()) {
             String objStr = objectMapper.writeValueAsString(xuiResponse.getObj());
             List<XUIInboundData> xuiInboundDataList = objectMapper.readValue(objStr, new TypeReference<List<XUIInboundData>>() {
             });
             for (XUIInboundData xuiInboundData : xuiInboundDataList) {
-                if (!StringUtils.isEmpty(xuiInboundData) && this.nodeRemark.equals(xuiInboundData.getRemark())) {
+                if (null != xuiInboundData && this.nodeRemark.equals(xuiInboundData.getRemark())) {
                     this.xuiInboundData = xuiInboundData;
                     break;
                 }

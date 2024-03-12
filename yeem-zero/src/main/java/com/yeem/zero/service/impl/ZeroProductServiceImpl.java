@@ -15,7 +15,7 @@ import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -65,7 +65,7 @@ public class ZeroProductServiceImpl extends ServiceImpl<ZeroProductMapper, ZeroP
     public ZeroProduct getById(Long id) {
         ZeroProduct zeroProduct = zeroProductMapper.selectById(id);
         // 收藏标识
-        if (!StringUtils.isEmpty(WechatAuthInterceptor.getUserId())) {
+        if (null != WechatAuthInterceptor.getUserId()) {
             log.info("userid:{}", WechatAuthInterceptor.getUserId());
             QueryWrapper<ZeroFavorite> zeroFavoriteQueryWrapper = new QueryWrapper<>();
             zeroFavoriteQueryWrapper.eq("user_id", WechatAuthInterceptor.getUserId());

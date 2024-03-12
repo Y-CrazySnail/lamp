@@ -11,7 +11,7 @@ import com.yeem.car.service.ICarFilmMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 
@@ -29,13 +29,13 @@ public class CarFilmMessageServiceImpl extends ServiceImpl<CarFilmMessageMapper,
     @Override
     public List<CarFilmMessage> list(String productNo, String sendStatus, String name) {
         QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             carFilmMessageQueryWrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(sendStatus)) {
+        if (!StrUtil.isEmpty(sendStatus)) {
             carFilmMessageQueryWrapper.eq("send_status", sendStatus);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             carFilmMessageQueryWrapper.like("name", name);
         }
         carFilmMessageQueryWrapper.eq("delete_flag", 0);
@@ -45,13 +45,13 @@ public class CarFilmMessageServiceImpl extends ServiceImpl<CarFilmMessageMapper,
     @Override
     public IPage<CarFilmMessage> pages(int current, int size, String productNo, String sendStatus, String name) {
         QueryWrapper<CarFilmMessage> carFilmMessageQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             carFilmMessageQueryWrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(sendStatus)) {
+        if (!StrUtil.isEmpty(sendStatus)) {
             carFilmMessageQueryWrapper.eq("send_status", sendStatus);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             carFilmMessageQueryWrapper.like("name", name);
         }
         Page<CarFilmMessage> page = new Page<>(current, size);

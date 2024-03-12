@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -37,21 +37,21 @@ public class ZeroMOrderController {
                                                     @RequestParam(value = "userId", required = false) Long userId,
                                                     @RequestParam(value = "status", required = false) String status,
                                                     @RequestParam(value = "directReferrerUserId", required = false) Long distributionUserId) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<ZeroOrder> page = new Page<>(current, size);
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(userId)) {
+        if (null != userId) {
             zeroOrderQueryWrapper.eq("user_id", userId);
         }
-        if (!StringUtils.isEmpty(status)) {
+        if (!StrUtil.isEmpty(status)) {
             zeroOrderQueryWrapper.eq("status", status);
         }
-        if (!StringUtils.isEmpty(distributionUserId)) {
+        if (null != distributionUserId) {
             zeroOrderQueryWrapper.and(QueryWrapper -> QueryWrapper
                     .eq("direct_referrer_user_id", distributionUserId)
                     .or()

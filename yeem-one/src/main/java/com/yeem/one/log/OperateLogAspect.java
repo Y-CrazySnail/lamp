@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
@@ -85,7 +85,7 @@ public class OperateLogAspect {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpServletRequest request = null;
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
-        if (!StringUtils.isEmpty(requestAttributes)) {
+        if (null != requestAttributes) {
             // 从获取RequestAttributes中获取HttpServletRequest的信息
             request = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
         }
@@ -103,7 +103,7 @@ public class OperateLogAspect {
             // 请求方法
             sysLog.setOperateMethod(methodName);
             String params = "";
-            if (!StringUtils.isEmpty(request)) {
+            if (null != request) {
                 // 请求的参数
                 Map<String, String> requestMap = converMap(request.getParameterMap());
                 // 将参数所在的数组转换成json
@@ -127,12 +127,12 @@ public class OperateLogAspect {
             sysLog.setThread(threadId);
             sysLog.setRequestParam(params);
             sysLog.setResponseParam(objectMapper.writeValueAsString(keys));
-            if (!StringUtils.isEmpty(WechatAuthInterceptor.getUserId())) {
+            if (null != WechatAuthInterceptor.getUserId()) {
                 sysLog.setUserName(String.valueOf(WechatAuthInterceptor.getUserId()));
             } else {
                 sysLog.setUserName(OauthUtils.getUsername());
             }
-            if (!StringUtils.isEmpty(request)) {
+            if (null != request) {
                 sysLog.setIp(IPUtils.getIpAddress(request));
                 sysLog.setUri(request.getRequestURI());
             }

@@ -1,11 +1,11 @@
 package com.yeem.one.controller.manage;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneSku;
-import com.yeem.one.entity.OneStore;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneSkuService;
 import com.yeem.one.service.IOneTenantService;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,20 +38,28 @@ public class OneSkuController {
      * @return sku分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneSku>> getPage(@RequestParam("current") Integer current,
-                                                 @RequestParam("size") Integer size) {
-        if (StringUtils.isEmpty(current)) {
+    public ResponseEntity<IPage<OneSku>> getPage(@RequestParam(value = "current") Integer current,
+                                                 @RequestParam("size") Integer size,
+                                                 @RequestParam(value = "spuId", required = false) Long spuId,
+                                                 @RequestParam(value = "skuName", required = false) String skuName) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<OneSku> page = new Page<>(current, size);
-        LambdaQueryWrapper<OneSku> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        lambdaQueryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
+        LambdaQueryWrapper<OneSku> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
+        queryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
+        if (null != spuId) {
+            queryWrapper.eq(OneSku::getSpuId, spuId);
+        }
+        if (StrUtil.isNotEmpty(skuName)) {
+            queryWrapper.like(OneSku::getSkuName, skuName);
+        }
         try {
-            return ResponseEntity.ok(service.page(page, lambdaQueryWrapper));
+            return ResponseEntity.ok(service.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("get sku page error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -85,19 +92,18 @@ public class OneSkuController {
     @GetMapping(value = "getAll")
     public ResponseEntity<List<OneSku>> getAll(@RequestParam(value = "spuId", required = false) Long spuId) {
         try {
-            LambdaQueryWrapper<OneSku> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-            lambdaQueryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            lambdaQueryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
-            if (!StringUtils.isEmpty(spuId)) {
-                lambdaQueryWrapper.eq(OneSku::getSpuId, spuId);
+            LambdaQueryWrapper<OneSku> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            queryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
+            if (null != spuId) {
+                queryWrapper.eq(OneSku::getSpuId, spuId);
             }
-            return ResponseEntity.ok(service.list(lambdaQueryWrapper));
+            return ResponseEntity.ok(service.list(queryWrapper));
         } catch (Exception e) {
             log.error("get sku list error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     /**
      * 新增sku信息

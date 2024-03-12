@@ -16,7 +16,7 @@ import com.yeem.lamp.service.IAladdinServerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
         for (AladdinNodeVmess aladdinNodeVmess : privateAaladdinNodeVmessList) {
             nodeUrlList.add(aladdinNodeVmess.convert());
         }
-        if (!StringUtils.isEmpty(label) && label.contains("whatsapp")) {
+        if (!StrUtil.isEmpty(label) && label.contains("whatsapp")) {
             QueryWrapper<AladdinNodeVmess> whatsappAladdinNodeVmessQueryWrapper = new QueryWrapper<>();
             whatsappAladdinNodeVmessQueryWrapper.eq("node_type", "whatsapp");
             List<AladdinNodeVmess> whatsappAaladdinNodeVmessList = aladdinNodeVmessMapper.selectList(whatsappAladdinNodeVmessQueryWrapper);
@@ -95,13 +95,13 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
         AladdinServer aladdinServer = aladdinServerService.getById(serverId);
         UpdateWrapper<AladdinNodeVmess> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set("multiplying_power", aladdinServer.getMultiplyingPower());
-        if (!StringUtils.isEmpty(nodePs)) {
+        if (!StrUtil.isEmpty(nodePs)) {
             updateWrapper.set("node_ps", nodePs);
         }
-        if (!StringUtils.isEmpty(nodeType)) {
+        if (!StrUtil.isEmpty(nodeType)) {
             updateWrapper.set("node_type", nodeType);
         }
-        if (!StringUtils.isEmpty(sort)) {
+        if (null != sort) {
             updateWrapper.set("sort", sort);
         }
         updateWrapper.eq("server_id", serverId);

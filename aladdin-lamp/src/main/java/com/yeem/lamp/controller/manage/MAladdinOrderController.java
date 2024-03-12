@@ -9,7 +9,7 @@ import com.yeem.lamp.service.IAladdinOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -62,7 +62,7 @@ public class MAladdinOrderController {
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
-            if (StringUtils.isEmpty(id)) {
+            if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
             return ResponseEntity.ok(aladdinOrderService.getById(id));
@@ -120,7 +120,7 @@ public class MAladdinOrderController {
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody AladdinOrder aladdinOrder) {
         try {
-            if (StringUtils.isEmpty(aladdinOrder.getId())) {
+            if (null == aladdinOrder.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
             UpdateWrapper<AladdinOrder> updateWrapper = new UpdateWrapper<>();

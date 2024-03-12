@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,22 +42,22 @@ public class OneTenantController {
                                                     @RequestParam(value = "tenantName", required = false) String tenantName,
                                                     @RequestParam(value = "tenantPhone", required = false) String tenantPhone,
                                                     @RequestParam(value = "tenantEmail", required = false) String tenantEmail) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<OneTenant> page = new Page<>(current, size);
         QueryWrapper<OneTenant> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
-        if (!StringUtils.isEmpty(tenantName)) {
+        if (!StrUtil.isEmpty(tenantName)) {
             queryWrapper.like("tenant_name", tenantName);
         }
-        if (!StringUtils.isEmpty(tenantPhone)) {
+        if (!StrUtil.isEmpty(tenantPhone)) {
             queryWrapper.like("tenant_phone", tenantPhone);
         }
-        if (!StringUtils.isEmpty(tenantEmail)) {
+        if (!StrUtil.isEmpty(tenantEmail)) {
             queryWrapper.like("tenant_email", tenantEmail);
         }
         try {

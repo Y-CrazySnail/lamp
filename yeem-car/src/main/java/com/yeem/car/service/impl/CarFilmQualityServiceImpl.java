@@ -19,7 +19,7 @@ import com.yeem.im.service.ISysIMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -46,34 +46,34 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(phone)) {
+        if (!StrUtil.isEmpty(phone)) {
             wrapper.eq("phone", phone);
         }
-        if (!StringUtils.isEmpty(qualityCardNo)) {
+        if (!StrUtil.isEmpty(qualityCardNo)) {
             wrapper.eq("quality_card_no", qualityCardNo);
         }
-        if (!StringUtils.isEmpty(plateNo)) {
+        if (!StrUtil.isEmpty(plateNo)) {
             wrapper.eq("plate_no", plateNo);
         }
-        if (!StringUtils.isEmpty(vin)) {
+        if (!StrUtil.isEmpty(vin)) {
             wrapper.eq("vin", vin);
         }
-        if (!StringUtils.isEmpty(likeName)) {
+        if (!StrUtil.isEmpty(likeName)) {
             wrapper.like("name", likeName);
         }
-        if (!StringUtils.isEmpty(likePhone)) {
+        if (!StrUtil.isEmpty(likePhone)) {
             wrapper.like("phone", likePhone);
         }
-        if (!StringUtils.isEmpty(likeQualityCardNo)) {
+        if (!StrUtil.isEmpty(likeQualityCardNo)) {
             wrapper.like("quality_card_no", likeQualityCardNo);
         }
-        if (!StringUtils.isEmpty(likePlateNo)) {
+        if (!StrUtil.isEmpty(likePlateNo)) {
             wrapper.like("plate_no", plateNo);
         }
-        if (!StringUtils.isEmpty(likeVin)) {
+        if (!StrUtil.isEmpty(likeVin)) {
             wrapper.like("vin", likeVin);
         }
         wrapper.eq("delete_flag", 0);
@@ -85,19 +85,19 @@ public class CarFilmQualityServiceImpl extends ServiceImpl<CarFilmQualityMapper,
         QueryWrapper<CarFilmQuality> wrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(phone)) {
+        if (!StrUtil.isEmpty(phone)) {
             wrapper.like("phone", phone);
         }
-        if (!StringUtils.isEmpty(qualityCardNo)) {
+        if (!StrUtil.isEmpty(qualityCardNo)) {
             wrapper.like("quality_card_no", qualityCardNo);
         }
-        if (!StringUtils.isEmpty(plateNo)) {
+        if (!StrUtil.isEmpty(plateNo)) {
             wrapper.like("plate_no", plateNo);
         }
-        if (!StringUtils.isEmpty(vin)) {
+        if (!StrUtil.isEmpty(vin)) {
             wrapper.like("vin", vin);
         }
         wrapper.eq("delete_flag", 0);

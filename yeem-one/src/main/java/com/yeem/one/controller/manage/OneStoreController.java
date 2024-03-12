@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneStore;
+import com.yeem.one.fs.entity.SysFS;
+import com.yeem.one.fs.service.ISysFSService;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneStoreService;
 import com.yeem.one.service.IOneTenantService;
@@ -12,9 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -29,7 +33,8 @@ public class OneStoreController {
     private IOneStoreService service;
     @Autowired
     private IOneTenantService oneTenantService;
-
+    @Resource(name = "COSSysFSServiceImpl")
+    private ISysFSService sysFSService;
     /**
      * 分页查询
      *
@@ -41,17 +46,17 @@ public class OneStoreController {
     public ResponseEntity<IPage<OneStore>> getPage(@RequestParam("current") Integer current,
                                                    @RequestParam("size") Integer size,
                                                    @RequestParam(value = "storeName", required = false) String storeName) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<OneStore> page = new Page<>(current, size);
         LambdaQueryWrapper<OneStore> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OneStore::getDeleteFlag, Constant.BOOLEAN_FALSE);
         lambdaQueryWrapper.in(OneStore::getTenantId, oneTenantService.authorizedTenantIdSet());
-        if (!StringUtils.isEmpty(storeName)) {
+        if (!StrUtil.isEmpty(storeName)) {
             lambdaQueryWrapper.like(OneStore::getStoreName, storeName);
         }
         try {
@@ -153,5 +158,23 @@ public class OneStoreController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(store);
+    }
+
+    /**
+     * 上传店铺文件
+     *
+     * @param file 文件
+     * @return URL
+     */
+    @PostMapping("upload")
+    public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
+        try {
+            SysFS sysFS = new SysFS("spu");
+            String url = sysFSService.upload(sysFS, file);
+            return ResponseEntity.ok(url);
+        } catch (Exception e) {
+            log.error("upload spu file error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }

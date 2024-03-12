@@ -21,7 +21,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -61,7 +61,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     public ZeroUserExtra getById(Long userId) {
         log.info("get user info. user id:{}", userId);
         ZeroUserExtra userExtra = zeroUserExtraMapper.selectById(userId);
-        if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag() == 1) {
+        if (null != userExtra && userExtra.getDistributionFlag() == 1) {
             Integer referrerUserCount = 0;
             Integer referrerOrderCount = 0;
             // 直接推荐
@@ -86,7 +86,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     public ZeroUserExtra getDetailById(Long userId) {
         log.info("get user detail info. user id:{}", userId);
         ZeroUserExtra userExtra = zeroUserExtraMapper.selectById(userId);
-        if (!StringUtils.isEmpty(userExtra) && userExtra.getDistributionFlag() == 1) {
+        if (null != userExtra && userExtra.getDistributionFlag() == 1) {
             Integer referrerUserCount = 0;
             Integer referrerOrderCount = 0;
             // 直接推荐
@@ -168,7 +168,7 @@ public class ZeroUserExtraServiceImpl extends ServiceImpl<ZeroUserExtraMapper, Z
     public List<ZeroUserExtra> distributionUserList(String nickName) {
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
         zeroUserExtraQueryWrapper.eq("distribution_flag", Constant.BOOLEAN_TRUE);
-        if (!StringUtils.isEmpty(nickName)) {
+        if (!StrUtil.isEmpty(nickName)) {
             zeroUserExtraQueryWrapper.like("nick_name", nickName);
         }
         return zeroUserExtraMapper.selectList(zeroUserExtraQueryWrapper);

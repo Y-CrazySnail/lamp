@@ -1,2 +1,3 @@
 permit-url:
   - /wechat/**
+  - /manage/spu/upload

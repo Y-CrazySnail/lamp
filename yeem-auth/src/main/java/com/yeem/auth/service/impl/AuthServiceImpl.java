@@ -20,7 +20,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.util.Base64;
@@ -61,7 +61,7 @@ public class AuthServiceImpl implements IAuthService {
         } catch (IOException e) {
             log.error("wx login api error：", e);
         }
-        if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(sessionKey)) {
+        if (StrUtil.isEmpty(openId) || StrUtil.isEmpty(sessionKey)) {
             throw new RuntimeException("get openId and sessionKey error");
         }
 //        try {
@@ -70,11 +70,11 @@ public class AuthServiceImpl implements IAuthService {
 //        } catch (Exception e) {
 //            log.error("decryption phone number error:", e);
 //        }
-//        if (StringUtils.isEmpty(phoneNumber)) {
+//        if (StrUtil.isEmpty(phoneNumber)) {
 //            throw new RuntimeException("decryption phone number error");
 //        }
         ThirdPartyLogin thirdPartyLoginWechatMiniProgram = thirdPartyLoginService.getByWechatMiniProgram(wechatMiniProgramDTO.getApplication(), openId);
-        if (StringUtils.isEmpty(thirdPartyLoginWechatMiniProgram)) {
+        if (null == thirdPartyLoginWechatMiniProgram) {
             String usernameTemp = UUID.fastUUID().toString();
             user.setUsername(usernameTemp);
             user.setAccountNonExpired(true);

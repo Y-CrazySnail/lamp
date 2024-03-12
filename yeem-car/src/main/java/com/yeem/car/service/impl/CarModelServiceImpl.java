@@ -16,7 +16,7 @@ import com.yeem.car.service.ICarModelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class CarModelServiceImpl extends ServiceImpl<CarModelMapper, BaseCarMode
     @Override
     public IPage<BaseCarModel> pages(int current, int size, String name) {
         QueryWrapper<BaseCarModel> carModelQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             carModelQueryWrapper.like("name", name);
         }
         carModelQueryWrapper.eq("delete_flag", 0);

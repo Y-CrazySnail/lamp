@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,21 +42,21 @@ public class ZeroMUserController {
                                                         @RequestParam(value = "nickName", required = false) String nickName,
                                                         @RequestParam(value = "phoneNumber", required = false) String phoneNumber,
                                                         @RequestParam(value = "distributionFlag", required = false) Integer distributionFlag) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<ZeroUserExtra> page = new Page<>(current, size);
         QueryWrapper<ZeroUserExtra> zeroUserExtraQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(nickName)) {
+        if (!StrUtil.isEmpty(nickName)) {
             zeroUserExtraQueryWrapper.like("nick_name", nickName);
         }
-        if (!StringUtils.isEmpty(phoneNumber)) {
+        if (!StrUtil.isEmpty(phoneNumber)) {
             zeroUserExtraQueryWrapper.like("phone_number", phoneNumber);
         }
-        if (!StringUtils.isEmpty(distributionFlag)) {
+        if (null != distributionFlag) {
             zeroUserExtraQueryWrapper.eq("distribution_flag", distributionFlag);
         }
         zeroUserExtraQueryWrapper.isNotNull("phone_number");

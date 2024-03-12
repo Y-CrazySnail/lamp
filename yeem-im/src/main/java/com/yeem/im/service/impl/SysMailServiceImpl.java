@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         account.setUser(environment.getProperty("mail.user"));
         account.setPass(environment.getProperty("mail.pass"));
         try {
-            if (StringUtils.isEmpty(sysMail.getAttachment())) {
+            if (StrUtil.isEmpty(sysMail.getAttachment())) {
                 MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), sysMail.isHtmlFlag());
             } else {
                 List<File> attachmentFileList = new ArrayList<>();
@@ -108,7 +108,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         sysMail.setBusinessId(sysMailSendDTO.getBusinessId());
         sysMail.setBusinessName(sysTemplate.getName());
         sysMail.setHtmlFlag(sysTemplate.isHtmlFlag());
-        if (!StringUtils.isEmpty(sysMailSendDTO.getTimingTime())) {
+        if (null != sysMailSendDTO.getTimingTime()) {
             sysMail.setTimingFlag(1);
             sysMail.setTimingTime(sysMailSendDTO.getTimingTime());
             sysMailMapper.insert(sysMail);

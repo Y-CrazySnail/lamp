@@ -35,7 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -148,7 +148,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         // 获取用户信息
         Long id = WechatAuthInterceptor.getUserId();
         ZeroUserExtra zeroUserExtra = zeroUserExtraService.getById(id);
-        if (StringUtils.isEmpty(zeroUserExtra)) {
+        if (null == zeroUserExtra) {
             throw new RuntimeException("user info is null when save cart");
         }
         zeroOrder = getById(zeroOrder.getId());
@@ -198,17 +198,17 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         zeroOrder.setCompleteTime(new Date());
         super.updateById(zeroOrder);
         // 直接分销处理
-        if (!StringUtils.isEmpty(zeroOrder.getDistributionFlag())
+        if (null != zeroOrder.getDistributionFlag()
                 && zeroOrder.getDistributionFlag()) {
-            if (!StringUtils.isEmpty(zeroOrder.getDirectReferrerUserId())
-                    && !StringUtils.isEmpty(zeroOrder.getDirectBonus())) {
+            if (null != zeroOrder.getDirectReferrerUserId()
+                    && null != zeroOrder.getDirectBonus()) {
                 zeroUserExtraService.subtractTodoBalance(zeroOrder.getDirectReferrerUserId(), zeroOrder.getDirectBonus());
                 zeroUserExtraService.addBalance(zeroOrder.getDirectReferrerUserId(), zeroOrder.getDirectBonus());
                 ZeroBalanceRecord zeroBalanceRecord = new ZeroBalanceRecord();
                 zeroBalanceRecord.setType(ZeroBalanceRecord.Type.WITHDRAW.getValue());
                 zeroBalanceRecord.setDealTime(new Date());
                 ZeroUserExtra zeroUserExtra = zeroUserExtraService.getById(zeroOrder.getDirectReferrerUserId());
-                if (!StringUtils.isEmpty(zeroUserExtra)) {
+                if (null != zeroUserExtra) {
                     zeroBalanceRecord.setAmount(zeroOrder.getDirectBonus());
                     zeroBalanceRecord.setUserId(zeroUserExtra.getId());
                     zeroBalanceRecord.setBalance(zeroUserExtra.getBalance());
@@ -217,10 +217,10 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             }
         }
         // 间接分销处理
-        if (!StringUtils.isEmpty(zeroOrder.getDistributionFlag())
+        if (null != zeroOrder.getDistributionFlag()
                 && zeroOrder.getDistributionFlag()) {
-            if (!StringUtils.isEmpty(zeroOrder.getIndirectReferrerUserId())
-                    && !StringUtils.isEmpty(zeroOrder.getIndirectBonus())) {
+            if (null != zeroOrder.getIndirectReferrerUserId()
+                    && null != zeroOrder.getIndirectBonus()) {
                 zeroUserExtraService.subtractTodoBalance(zeroOrder.getIndirectReferrerUserId(),
                         zeroOrder.getIndirectBonus());
                 zeroUserExtraService.addBalance(zeroOrder.getIndirectReferrerUserId(),
@@ -229,7 +229,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
                 zeroBalanceRecord.setType(ZeroBalanceRecord.Type.WITHDRAW.getValue());
                 zeroBalanceRecord.setDealTime(new Date());
                 ZeroUserExtra zeroUserExtra = zeroUserExtraService.getById(zeroOrder.getIndirectReferrerUserId());
-                if (!StringUtils.isEmpty(zeroUserExtra)) {
+                if (null != zeroUserExtra) {
                     zeroBalanceRecord.setAmount(zeroOrder.getIndirectBonus());
                     zeroBalanceRecord.setUserId(zeroUserExtra.getId());
                     zeroBalanceRecord.setBalance(zeroUserExtra.getBalance().add(zeroOrder.getIndirectBonus()));
@@ -255,10 +255,10 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
     @Override
     public List<ZeroOrder> list(Long userId, String status, String name) {
         QueryWrapper<ZeroOrder> zeroOrderQueryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(status)) {
+        if (!StrUtil.isEmpty(status)) {
             zeroOrderQueryWrapper.eq("status", status);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             zeroOrderQueryWrapper.like("order_name", name);
         }
         zeroOrderQueryWrapper.eq("user_id", userId);
@@ -363,7 +363,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     private void calculateDirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
         Long directReferrerUserId = zeroUserExtra.getDirectReferrerUserId();
-        if (StringUtils.isEmpty(directReferrerUserId)) {
+        if (null == directReferrerUserId) {
             return;
         }
         ZeroUserExtra directZeroUserExtra = zeroUserExtraService.getById(directReferrerUserId);
@@ -372,7 +372,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             return;
         }
         // 无直接推荐人
-        if (StringUtils.isEmpty(directZeroUserExtra)) {
+        if (null == directZeroUserExtra) {
             return;
         }
         // 直接推荐人不是分销商
@@ -381,13 +381,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         }
         BigDecimal bound = new BigDecimal(0);
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
-            if (!StringUtils.isEmpty(zeroOrderItem.getZeroProduct().getDirectReferrerRate())
+            if (null != zeroOrderItem.getZeroProduct().getDirectReferrerRate()
                     && zeroOrderItem.getZeroProduct().getDirectReferrerRate() > 0) {
                 // 根据商品佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
                         .multiply(BigDecimal.valueOf(zeroOrderItem.getZeroProduct().getDirectReferrerRate()))
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-            } else if (!StringUtils.isEmpty(directZeroUserExtra.getDirectReferrerRate())
+            } else if (null != directZeroUserExtra.getDirectReferrerRate()
                     && directZeroUserExtra.getDirectReferrerRate() > 0) {
                 // 根据分销商佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
@@ -408,7 +408,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
 
     private void calculateIndirectBonus(ZeroOrder zeroOrder, ZeroUserExtra zeroUserExtra) {
         Long indirectReferrerUserId = zeroUserExtra.getIndirectReferrerUserId();
-        if (StringUtils.isEmpty(indirectReferrerUserId)) {
+        if (null == indirectReferrerUserId) {
             return;
         }
         ZeroUserExtra indirectZeroUserExtra = zeroUserExtraService.getById(indirectReferrerUserId);
@@ -417,7 +417,7 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
             return;
         }
         // 无间接推荐人
-        if (StringUtils.isEmpty(indirectZeroUserExtra)) {
+        if (null == indirectZeroUserExtra) {
             return;
         }
         // 间接推荐人不是分销商
@@ -426,13 +426,13 @@ public class ZeroOrderServiceImpl extends ServiceImpl<ZeroOrderMapper, ZeroOrder
         }
         BigDecimal bound = new BigDecimal(0);
         for (ZeroOrderItem zeroOrderItem : zeroOrder.getOrderItemList()) {
-            if (!StringUtils.isEmpty(zeroOrderItem.getZeroProduct().getIndirectReferrerRate())
+            if (null != zeroOrderItem.getZeroProduct().getIndirectReferrerRate()
                     && zeroOrderItem.getZeroProduct().getIndirectReferrerRate() > 0) {
                 // 根据商品佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()
                         .multiply(BigDecimal.valueOf(zeroOrderItem.getZeroProduct().getIndirectReferrerRate()))
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
-            } else if (!StringUtils.isEmpty(indirectZeroUserExtra.getIndirectReferrerRate())
+            } else if (null != indirectZeroUserExtra.getIndirectReferrerRate()
                     && indirectZeroUserExtra.getIndirectReferrerRate() > 0) {
                 // 根据分销商佣金比例
                 bound = bound.add(zeroOrderItem.getAmount()

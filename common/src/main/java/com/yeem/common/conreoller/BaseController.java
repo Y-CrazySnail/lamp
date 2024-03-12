@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.yeem.common.entity.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 public class BaseController<T extends BaseEntity> {
@@ -30,10 +30,10 @@ public class BaseController<T extends BaseEntity> {
     public ResponseEntity<Object> getPage(Integer current,
                                           Integer size,
                                           QueryWrapper<T> queryWrapper) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         queryWrapper.orderByDesc(BaseEntity.BaseField.CREATE_TIME.getName());

@@ -12,7 +12,7 @@ import com.yeem.zero.service.IZeroProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -45,16 +45,16 @@ public class ZeroMProductController {
         try {
             QueryWrapper<ZeroProduct> zeroProductQueryWrapper = new QueryWrapper<>();
             zeroProductQueryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
-            if (StringUtils.isEmpty(current)) {
+            if (null == current) {
                 current = 1;
             }
-            if (StringUtils.isEmpty(size)) {
+            if (null == size) {
                 size = 10;
             }
-            if (!StringUtils.isEmpty(name)) {
+            if (!StrUtil.isEmpty(name)) {
                 zeroProductQueryWrapper.like("name", name);
             }
-            if (!StringUtils.isEmpty(categoryId)) {
+            if (null != categoryId) {
                 zeroProductQueryWrapper.eq("category_id", categoryId);
             }
             IPage<ZeroProduct> page = new Page<>(current, size);

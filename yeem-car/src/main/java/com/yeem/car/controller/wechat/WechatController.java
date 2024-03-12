@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -84,7 +84,7 @@ public class WechatController {
     @GetMapping("getQualityInfo")
     public ResponseEntity<Object> getQualityInfo(@RequestParam(value = "productNo") String productNo,
                                                  @RequestParam(value = "queryKey") String queryKey) {
-        if (StringUtils.isEmpty(queryKey)) {
+        if (StrUtil.isEmpty(queryKey)) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询失败");
         }
         try {
@@ -99,7 +99,7 @@ public class WechatController {
     @PostMapping("saveQualityInfo")
     public ResponseEntity<Object> saveQualityInfo(@RequestBody CarFilmQuality carFilmQuality) {
         Long userId = WechatAuthInterceptor.getUserId();
-        if (StringUtils.isEmpty(userId)) {
+        if (null == userId) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
         }
         CarFilmUser carFilmUser = carFilmUserService.getById(userId);
@@ -134,7 +134,7 @@ public class WechatController {
     @PutMapping("updateUserInfo")
     public ResponseEntity<Object> update(@RequestBody CarFilmUser carFilmUser) {
         Long userId = WechatAuthInterceptor.getUserId();
-        if (StringUtils.isEmpty(userId)) {
+        if (null == userId) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
         }
         carFilmUser.setId(userId);
@@ -150,7 +150,7 @@ public class WechatController {
     @PostMapping("message")
     public ResponseEntity<Object> message(@RequestBody CarFilmMessage carFilmMessage) {
         Long userId = WechatAuthInterceptor.getUserId();
-        if (StringUtils.isEmpty(userId)) {
+        if (null == userId) {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
         }
         QueryWrapper<CarFilmMessage> queryWrapper = new QueryWrapper<>();
@@ -161,16 +161,16 @@ public class WechatController {
         }
         carFilmMessage.setProductNo(WechatAuthInterceptor.getApplication());
         carFilmMessage.setDatetime(new Date());
-        if (!StringUtils.isEmpty(carFilmMessage.getName())) {
+        if (!StrUtil.isEmpty(carFilmMessage.getName())) {
             carFilmMessage.setName(filterChar(carFilmMessage.getName()));
         }
-        if (!StringUtils.isEmpty(carFilmMessage.getPhone())) {
+        if (!StrUtil.isEmpty(carFilmMessage.getPhone())) {
             carFilmMessage.setPhone(filterChar(carFilmMessage.getPhone()));
         }
-        if (!StringUtils.isEmpty(carFilmMessage.getEmail())) {
+        if (!StrUtil.isEmpty(carFilmMessage.getEmail())) {
             carFilmMessage.setEmail(filterChar(carFilmMessage.getEmail()));
         }
-        if (!StringUtils.isEmpty(carFilmMessage.getContent())) {
+        if (!StrUtil.isEmpty(carFilmMessage.getContent())) {
             carFilmMessage.setContent(filterChar(carFilmMessage.getContent()));
         }
         carFilmMessage.setUserId(userId);

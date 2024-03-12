@@ -1,5 +1,7 @@
 package com.yeem.im.service.impl;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -28,7 +30,7 @@ import com.yeem.common.utils.FreeMakerUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.Date;
 import java.util.List;
@@ -67,7 +69,7 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
         sysSMS.setBusinessId(sysSMSSendDTO.getBusinessId());
         sysSMS.setBusinessName(sysSMSSendDTO.getTemplateName());
         sysSMS.setTemplateId(sysTemplate.getTemplateId());
-        if (!StringUtils.isEmpty(sysSMS.getTimingTime())) {
+        if (sysSMS.getTimingTime() != null) {
             sysSMS.setTimingFlag(1);
             sysSMS.setTimingTime(sysSMSSendDTO.getTimingTime());
             sysSmsMapper.insert(sysSMS);
@@ -134,8 +136,8 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
             /* 下发手机号码，采用 E.164 标准，+[国家或地区码][手机号]最多不要超过200个手机号 */
             String[] splitPhone = sysSMS.getToPhone().split(",");
             for (String phone : splitPhone) {
-                if (!phone.startsWith("+86")){
-                    phone="+86"+phone;
+                if (!phone.startsWith("+86")) {
+                    phone = "+86" + phone;
                 }
             }
             req.setPhoneNumberSet(splitPhone);

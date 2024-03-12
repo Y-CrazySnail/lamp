@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -53,13 +53,13 @@ public class ZeroUserController {
             log.info("openId:{}", openId);
             log.info("sessionKey:{}", sessionKey);
             ZeroUserExtra checkZeroUserExtra = zeroUserExtraService.getByWechatOpenId(openId);
-            if (StringUtils.isEmpty(checkZeroUserExtra) || StringUtils.isEmpty(checkZeroUserExtra.getId())) {
+            if (null == checkZeroUserExtra || null == checkZeroUserExtra.getId()) {
                 zeroUserExtra.setWechatOpenId(openId);
                 zeroUserExtraService.save(zeroUserExtra);
             }
             ZeroUserExtra resZeroUserExtra = zeroUserExtraService.getByWechatOpenId(openId);
             resZeroUserExtra.setSessionKey(sessionKey);
-            if (!StringUtils.isEmpty(resZeroUserExtra.getPhoneNumber())) {
+            if (!StrUtil.isEmpty(resZeroUserExtra.getPhoneNumber())) {
                 String token = WechatJWTUtils.generateJWT(active, resZeroUserExtra.getId(), resZeroUserExtra.getWechatOpenId());
                 resZeroUserExtra.setToken(token);
             }
@@ -88,7 +88,7 @@ public class ZeroUserController {
         } catch (Exception e) {
             log.error("decryption phone number error:", e);
         }
-        if (StringUtils.isEmpty(phoneNumber)) {
+        if (StrUtil.isEmpty(phoneNumber)) {
             throw new RuntimeException("decryption phone number error");
         }
         ZeroUserExtra zeroUserExtraSet = zeroUserExtraService.getByWechatOpenId(zeroUserExtra.getWechatOpenId());

@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import cn.hutool.crypto.digest.MD5;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -87,12 +87,12 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     public String pay(AladdinOrder aladdinOrder) {
         aladdinOrder = aladdinOrderMapper.selectById(aladdinOrder.getId());
         String merchantApi = environment.getProperty("merchant.api");
-        if (StringUtils.isEmpty(merchantApi)) {
+        if (StrUtil.isEmpty(merchantApi)) {
             log.error("未获取到商户API");
             return null;
         }
         String merchantId = environment.getProperty("merchant.id");
-        if (StringUtils.isEmpty(merchantId)) {
+        if (StrUtil.isEmpty(merchantId)) {
             log.error("未获取到商户ID");
             return null;
         }
@@ -159,7 +159,7 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
                 break;
             }
         }
-        if (StringUtils.isEmpty(serviceId)) {
+        if (null == serviceId) {
             AladdinService aladdinService = new AladdinService();
             aladdinService.setMemberId(aladdinOrder.getMemberId());
             aladdinService.setBeginDate(new Date());

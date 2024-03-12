@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -62,13 +62,13 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         QueryWrapper<CarFilmUser> wrapper = new QueryWrapper<>();
         List<CarFilmTenant> carFilmTenantList = carFilmTenantService.listByAuthorizedUsername();
         wrapper.in("product_no", carFilmTenantList.stream().map(CarFilmTenant::getProductNo).collect(Collectors.toList()));
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(phone)) {
+        if (!StrUtil.isEmpty(phone)) {
             wrapper.like("phone", phone);
         }
-        if (!StringUtils.isEmpty(nickName)) {
+        if (!StrUtil.isEmpty(nickName)) {
             wrapper.like("nick_name", nickName);
         }
         wrapper.eq("delete_flag", 0);
@@ -95,22 +95,22 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (StringUtils.isEmpty(wxLoginResponse) || StringUtils.isEmpty(wxLoginResponse.getOpenid())) {
+        if (null == wxLoginResponse || StrUtil.isEmpty(wxLoginResponse.getOpenid())) {
             throw new RuntimeException("小程序认证失败");
         }
         openId = wxLoginResponse.getOpenid();
         log.info("openId:{}", openId);
         CarFilmUser checkZeroUserExtra = this.get(carFilmUser.getProductNo(), openId);
-        if (StringUtils.isEmpty(checkZeroUserExtra) || StringUtils.isEmpty(checkZeroUserExtra.getId())) {
+        if (null == checkZeroUserExtra || null == checkZeroUserExtra.getId()) {
             carFilmUser.setOpenId(openId);
             this.save(carFilmUser);
         }
         carFilmUser = this.get(carFilmUser.getProductNo(), openId);
-        if (StringUtils.isEmpty(carFilmUser)) {
+        if (null == carFilmUser) {
             throw new RuntimeException("小程序认证失败");
         }
         // 在保 过期数量设置
-        if (StringUtils.isEmpty(carFilmUser.getPhone())) {
+        if (StrUtil.isEmpty(carFilmUser.getPhone())) {
             carFilmUser.setNormalQualityNumber(0);
             carFilmUser.setExpiredQualityNumber(0);
         } else {

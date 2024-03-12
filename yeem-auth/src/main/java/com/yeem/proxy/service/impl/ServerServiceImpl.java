@@ -14,7 +14,7 @@ import com.yeem.common.utils.FreeMakerUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -87,7 +87,7 @@ public class ServerServiceImpl extends ServiceImpl<ServerMapper, Server> impleme
             try {
                 map = objectMapper.readValue(catCommandRecord.getResult(), new TypeReference<Map<String, Object>>() {
                 });
-                if (!StringUtils.isEmpty(map.get("stat"))) {
+                if (null != map.get("stat")) {
                     List<Map<String, Object>> infoList = (List<Map<String, Object>>) map.get("stat");
                     infoList.forEach(info -> {
                         String name = (String) info.get("name");

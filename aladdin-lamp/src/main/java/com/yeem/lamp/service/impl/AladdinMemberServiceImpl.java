@@ -14,7 +14,7 @@ import com.yeem.lamp.service.IAladdinOrderService;
 import com.yeem.lamp.service.IAladdinServiceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -48,10 +48,10 @@ public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, A
     public IPage<AladdinMember> pages(int current, int size, String email, String wechat) {
         QueryWrapper<AladdinMember> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        if (!StringUtils.isEmpty(email)) {
+        if (!StrUtil.isEmpty(email)) {
             queryWrapper.like("email", email);
         }
-        if (!StringUtils.isEmpty(wechat)) {
+        if (!StrUtil.isEmpty(wechat)) {
             queryWrapper.like("wechat", wechat);
         }
         IPage<AladdinMember> page = new Page<>(current, size);

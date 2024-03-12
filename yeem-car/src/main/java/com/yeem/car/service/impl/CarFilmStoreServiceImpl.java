@@ -13,7 +13,7 @@ import com.yeem.car.service.ICarFilmTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,25 +32,25 @@ public class CarFilmStoreServiceImpl extends ServiceImpl<CarFilmStoreMapper, Car
     @Override
     public List<CarFilmStore> list(String productNo, String name, String province, String city, String county, String contactName, String contactPhone) {
         QueryWrapper<CarFilmStore> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             wrapper.like("name", name);
         }
-        if (!StringUtils.isEmpty(province)) {
+        if (!StrUtil.isEmpty(province)) {
             wrapper.eq("province", province);
         }
-        if (!StringUtils.isEmpty(city)) {
+        if (!StrUtil.isEmpty(city)) {
             wrapper.eq("city", city);
         }
-        if (!StringUtils.isEmpty(county)) {
+        if (!StrUtil.isEmpty(county)) {
             wrapper.eq("county", county);
         }
-        if (!StringUtils.isEmpty(contactName)) {
+        if (!StrUtil.isEmpty(contactName)) {
             wrapper.like("contact_name", contactName);
         }
-        if (!StringUtils.isEmpty(contactPhone)) {
+        if (!StrUtil.isEmpty(contactPhone)) {
             wrapper.like("contact_phone", contactPhone);
         }
         wrapper.eq("delete_flag", 0);
@@ -60,25 +60,25 @@ public class CarFilmStoreServiceImpl extends ServiceImpl<CarFilmStoreMapper, Car
     @Override
     public IPage<CarFilmStore> pages(int current, int size, String productNo, String name, String province, String city, String county, String contactName, String contactPhone) {
         QueryWrapper<CarFilmStore> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             wrapper.like("name", name);
         }
-        if (!StringUtils.isEmpty(province)) {
+        if (!StrUtil.isEmpty(province)) {
             wrapper.eq("province", province);
         }
-        if (!StringUtils.isEmpty(city)) {
+        if (!StrUtil.isEmpty(city)) {
             wrapper.eq("city", city);
         }
-        if (!StringUtils.isEmpty(county)) {
+        if (!StrUtil.isEmpty(county)) {
             wrapper.eq("county", county);
         }
-        if (!StringUtils.isEmpty(contactName)) {
+        if (!StrUtil.isEmpty(contactName)) {
             wrapper.like("contact_name", contactName);
         }
-        if (!StringUtils.isEmpty(contactPhone)) {
+        if (!StrUtil.isEmpty(contactPhone)) {
             wrapper.like("contact_phone", contactPhone);
         }
         wrapper.eq("delete_flag", 0);

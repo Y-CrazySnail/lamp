@@ -6,7 +6,7 @@ import com.yeem.proxy.entity.Member;
 import com.yeem.proxy.service.IMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,16 +25,16 @@ public class MemberController extends BaseController<Member> {
                                           String dataOver,
                                           Long id) {
         QueryWrapper<Member> queryWrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(wechat)) {
+        if (!StrUtil.isEmpty(wechat)) {
             queryWrapper.like("wechat", wechat);
         }
-        if (!StringUtils.isEmpty(qq)) {
+        if (!StrUtil.isEmpty(qq)) {
             queryWrapper.like("qq", qq);
         }
-        if (!StringUtils.isEmpty(createUser)) {
+        if (!StrUtil.isEmpty(createUser)) {
             queryWrapper.eq("create_user", createUser);
         }
-        if (!StringUtils.isEmpty(id)) {
+        if (null != id) {
             queryWrapper.eq("id", id);
         }
         if ("1".equals(dataOver)) {

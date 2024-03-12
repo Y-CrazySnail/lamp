@@ -3,7 +3,7 @@ package com.yeem.lamp.entity;
 import cn.hutool.core.codec.Base64;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 /**
  * vmess节点
@@ -69,19 +69,19 @@ public class AladdinNodeSocks5 extends BaseEntity {
         StringBuilder url = new StringBuilder();
         // tg://socks5?
         url.append("tg://socks5?");
-        if (!StringUtils.isEmpty(this.nodeServer)) {
+        if (!StrUtil.isEmpty(this.nodeServer)) {
             url.append("server=").append(this.nodeServer);
         }
-        if (!StringUtils.isEmpty(this.nodePort)) {
+        if (!StrUtil.isEmpty(this.nodePort)) {
             url.append("port=").append(this.nodePort);
         }
-        if (!StringUtils.isEmpty(this.nodeUser)) {
+        if (!StrUtil.isEmpty(this.nodeUser)) {
             url.append("user=").append(this.nodeUser);
         }
-        if (!StringUtils.isEmpty(this.nodePass)) {
+        if (!StrUtil.isEmpty(this.nodePass)) {
             url.append("pass=").append(this.nodePass);
         }
-        if (!StringUtils.isEmpty(this.nodeRemark)) {
+        if (!StrUtil.isEmpty(this.nodeRemark)) {
             url.append("remark=").append(this.nodeRemark);
         }
         return url.toString();

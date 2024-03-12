@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -112,7 +112,7 @@ public class ZeroAddressController {
     @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody ZeroAddress zeroAddress) {
         try {
-            if (StringUtils.isEmpty(zeroAddress.getId())) {
+            if (null == zeroAddress.getId()) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("address id is null");
             }
             zeroAddressService.removeById(zeroAddress);

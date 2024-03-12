@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.io.File;
 import java.util.HashSet;
@@ -71,14 +71,14 @@ public class ClientSchedule {
     public void requestCommand() {
         try {
             HttpResponse httpResponse = HttpRequest.get(COMMAND_SERVER + "/command_record/get?ip=" + COMMAND_CLIENT).execute();
-            if (httpResponse.getStatus() == HttpStatus.HTTP_OK && !StringUtils.isEmpty(httpResponse.body())) {
+            if (httpResponse.getStatus() == HttpStatus.HTTP_OK && !StrUtil.isEmpty(httpResponse.body())) {
                 Map<String, Object> requestResult = objectMapper.readValue(
                         httpResponse.body(),
                         new TypeReference<Map<String, Object>>() {
                         }
                 );
                 log.info("响应体：{}", httpResponse.body());
-                if (requestResult.containsKey("command") && !StringUtils.isEmpty(requestResult.get("command"))) {
+                if (requestResult.containsKey("command") && null != requestResult.get("command")) {
                     String command = String.valueOf(requestResult.get("command"));
                     String uuid = IdUtil.simpleUUID();
                     String path = File.separator + "data" + File.separator + "snail" + File.separator + "sh" + File.separator + uuid;

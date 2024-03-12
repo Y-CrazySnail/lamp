@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,20 +46,20 @@ public class OneCategoryController {
                                                    @RequestParam("size") Integer size,
                                                    @RequestParam(value = "storeId", required = false) Long storeId,
                                                    @RequestParam(value = "categoryName", required = false) String categoryName) {
-        if (StringUtils.isEmpty(current)) {
+        if (null == current) {
             current = 1;
         }
-        if (StringUtils.isEmpty(size)) {
+        if (null == size) {
             size = 10;
         }
         IPage<OneCategory> page = new Page<>(current, size);
         LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);
         queryWrapper.in(OneCategory::getTenantId, oneTenantService.authorizedTenantIdSet());
-        if (!StringUtils.isEmpty(storeId)) {
+        if (null != storeId) {
             queryWrapper.eq(OneCategory::getStoreId, storeId);
         }
-        if (!StringUtils.isEmpty(categoryName)) {
+        if (!StrUtil.isEmpty(categoryName)) {
             queryWrapper.like(OneCategory::getCategoryName, categoryName);
         }
         try {

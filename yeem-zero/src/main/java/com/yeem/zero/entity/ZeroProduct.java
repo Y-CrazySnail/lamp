@@ -3,7 +3,7 @@ package com.yeem.zero.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -392,7 +392,7 @@ public class ZeroProduct extends BaseEntity {
     public void dealProductImage(ZeroProduct zeroProduct) {
         // 展示图处理
         List<ZeroProductImage> zeroProductImageShowList = new ArrayList<>();
-        if (!StringUtils.isEmpty(zeroProduct.getImageShowPath())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageShowPath())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SHOW.getType(),
                     zeroProduct.getImageShowPath()
@@ -403,35 +403,35 @@ public class ZeroProduct extends BaseEntity {
 
         // 轮播图处理
         List<ZeroProductImage> zeroProductImageSwiperList = new ArrayList<>();
-        if (!StringUtils.isEmpty(zeroProduct.getImageSwiperPath1())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageSwiperPath1())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageSwiperPath1()
             );
             zeroProductImageSwiperList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageSwiperPath2())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageSwiperPath2())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageSwiperPath2()
             );
             zeroProductImageSwiperList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageSwiperPath3())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageSwiperPath3())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageSwiperPath3()
             );
             zeroProductImageSwiperList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageSwiperPath4())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageSwiperPath4())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageSwiperPath4()
             );
             zeroProductImageSwiperList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageSwiperPath5())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageSwiperPath5())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageSwiperPath5()
@@ -442,70 +442,70 @@ public class ZeroProduct extends BaseEntity {
 
         // 详情图处理
         List<ZeroProductImage> zeroProductImageDetailList = new ArrayList<>();
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath1())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath1())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath1()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath2())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath2())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath2()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath3())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath3())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath3()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath4())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath4())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath4()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath5())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath5())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath5()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath6())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath6())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath6()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath7())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath7())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath7()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath8())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath8())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath8()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath9())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath9())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath9()
             );
             zeroProductImageDetailList.add(zeroProductImage);
         }
-        if (!StringUtils.isEmpty(zeroProduct.getImageDetailPath10())) {
+        if (!StrUtil.isEmpty(zeroProduct.getImageDetailPath10())) {
             ZeroProductImage zeroProductImage = new ZeroProductImage(
                     ZeroProductImage.Type.TYPE_SWIPER.getType(),
                     zeroProduct.getImageDetailPath10()

@@ -13,7 +13,7 @@ import com.yeem.car.service.ICarFilmTenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,22 +29,22 @@ public class CarFilmTechnicianServiceImpl extends ServiceImpl<CarFilmTechnicianM
     @Override
     public List<CarFilmTechnician> list(String productNo, String name, String province, String city, String county, String level) {
         QueryWrapper<CarFilmTechnician> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             wrapper.like("name", name);
         }
-        if (!StringUtils.isEmpty(province)) {
+        if (!StrUtil.isEmpty(province)) {
             wrapper.eq("province", province);
         }
-        if (!StringUtils.isEmpty(city)) {
+        if (!StrUtil.isEmpty(city)) {
             wrapper.eq("city", city);
         }
-        if (!StringUtils.isEmpty(county)) {
+        if (!StrUtil.isEmpty(county)) {
             wrapper.eq("county", county);
         }
-        if (!StringUtils.isEmpty(level)) {
+        if (!StrUtil.isEmpty(level)) {
             wrapper.eq("level", level);
         }
         wrapper.eq("delete_flag", 0);
@@ -54,22 +54,22 @@ public class CarFilmTechnicianServiceImpl extends ServiceImpl<CarFilmTechnicianM
     @Override
     public IPage<CarFilmTechnician> pages(int current, int size, String productNo, String name, String province, String city, String county, String level) {
         QueryWrapper<CarFilmTechnician> wrapper = new QueryWrapper<>();
-        if (!StringUtils.isEmpty(productNo)) {
+        if (!StrUtil.isEmpty(productNo)) {
             wrapper.eq("product_no", productNo);
         }
-        if (!StringUtils.isEmpty(name)) {
+        if (!StrUtil.isEmpty(name)) {
             wrapper.like("name", name);
         }
-        if (!StringUtils.isEmpty(province)) {
+        if (!StrUtil.isEmpty(province)) {
             wrapper.eq("province", province);
         }
-        if (!StringUtils.isEmpty(city)) {
+        if (!StrUtil.isEmpty(city)) {
             wrapper.eq("city", city);
         }
-        if (!StringUtils.isEmpty(county)) {
+        if (!StrUtil.isEmpty(county)) {
             wrapper.eq("county", county);
         }
-        if (!StringUtils.isEmpty(level)) {
+        if (!StrUtil.isEmpty(level)) {
             wrapper.eq("level", level);
         }
         wrapper.eq("delete_flag", 0);
