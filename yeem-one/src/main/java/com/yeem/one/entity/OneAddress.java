@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
 @TableName(value = "one_address", autoResultMap = true)
 @Data
 public class OneAddress extends BaseEntity {
-    private int tenantId;
-    private int userId;
+    private Long tenantId;
+    private Long userId;
     private String addressName;
     private String addressPhone;
     private String addressProvince;

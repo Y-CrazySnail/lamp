@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneUser;
 import com.yeem.one.log.OperateLog;
-import com.yeem.one.service.IOneAddressService;
 import com.yeem.one.service.IOneTenantService;
 import com.yeem.one.service.IOneUserService;
 import lombok.extern.slf4j.Slf4j;
@@ -70,7 +69,7 @@ public class OneUserController {
     @GetMapping(value = "getById")
     public ResponseEntity<OneUser> getById(@RequestParam(value = "id") Long id) {
         try {
-            OneUser user = service.getByIdWithAddress(id);
+            OneUser user = service.getByIdWithOther(id);
             oneTenantService.authenticate(user.getTenantId());
             return ResponseEntity.ok(user);
         } catch (Exception e) {

@@ -6,19 +6,18 @@ import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.util.List;
-
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "one_user", autoResultMap = true)
+@TableName(value = "one_cart", autoResultMap = true)
 @Data
-public class OneUser extends BaseEntity {
+public class OneCart extends BaseEntity {
     private Long tenantId;
-    private String wechatOpenId;
-    private String nickName;
-    private String userAvatar;
-    private String userPhone;
+    private Long storeId;
+    private Long spuId;
+    private Long skuId;
+    private Long userId;
+    private int quantity;
     @TableField(exist = false)
-    private List<OneAddress> addressList;
+    private OneSpu spu;
     @TableField(exist = false)
-    private List<OneCart> cartList;
+    private OneSku sku;
 }
