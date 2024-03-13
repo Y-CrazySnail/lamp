@@ -11,7 +11,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class OneCategory extends BaseEntity {
     private Long tenantId;
-    private String storeId;
+    private Long storeId;
     @TableField(exist = false)
     private String storeName;
     private String categoryName;
