@@ -51,17 +51,11 @@ public class OneSpuController {
      * @return SPU分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneSpu>> getPage(@RequestParam("current") Integer current,
-                                                 @RequestParam("size") Integer size,
+    public ResponseEntity<IPage<OneSpu>> getPage(@RequestParam(value = "current",defaultValue = "1") Integer current,
+                                                 @RequestParam(value = "size",defaultValue = "10") Integer size,
                                                  @RequestParam(value = "storeId", required = false) Long storeId,
                                                  @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                  @RequestParam(value = "spuName", required = false) String spuName) {
-        if (null == current) {
-            current = 1;
-        }
-        if (null == size) {
-            size = 10;
-        }
         IPage<OneSpu> page = new Page<>(current, size);
         LambdaQueryWrapper<OneSpu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
@@ -93,7 +87,7 @@ public class OneSpuController {
     /**
      * 根据ID获取
      *
-     * @param id 租户ID
+     * @param id SPU ID
      * @return SPU信息
      */
     @GetMapping(value = "getById")
@@ -140,7 +134,7 @@ public class OneSpuController {
             oneTenantService.authenticate(spu.getTenantId());
             service.updateById(spu);
         } catch (Exception e) {
-            log.error("update spu extra info error:", e);
+            log.error("update spu info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(spu);
@@ -161,7 +155,7 @@ public class OneSpuController {
             spu.setDeleteFlag(true);
             service.updateById(spu);
         } catch (Exception e) {
-            log.error("remove spu extra info error:", e);
+            log.error("remove spu info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(spu);

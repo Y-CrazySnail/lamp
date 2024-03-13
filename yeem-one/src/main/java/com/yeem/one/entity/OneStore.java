@@ -1,6 +1,5 @@
 package com.yeem.one.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;

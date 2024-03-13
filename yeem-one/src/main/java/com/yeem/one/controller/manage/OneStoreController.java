@@ -43,15 +43,9 @@ public class OneStoreController {
      * @return 店铺分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneStore>> getPage(@RequestParam("current") Integer current,
-                                                   @RequestParam("size") Integer size,
+    public ResponseEntity<IPage<OneStore>> getPage(@RequestParam(value = "current",defaultValue = "1") Integer current,
+                                                   @RequestParam(value = "size",defaultValue = "10") Integer size,
                                                    @RequestParam(value = "storeName", required = false) String storeName) {
-        if (null == current) {
-            current = 1;
-        }
-        if (null == size) {
-            size = 10;
-        }
         IPage<OneStore> page = new Page<>(current, size);
         LambdaQueryWrapper<OneStore> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OneStore::getDeleteFlag, Constant.BOOLEAN_FALSE);
@@ -169,11 +163,11 @@ public class OneStoreController {
     @PostMapping("upload")
     public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
         try {
-            SysFS sysFS = new SysFS("spu");
+            SysFS sysFS = new SysFS("store");
             String url = sysFSService.upload(sysFS, file);
             return ResponseEntity.ok(url);
         } catch (Exception e) {
-            log.error("upload spu file error:", e);
+            log.error("upload store file error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }

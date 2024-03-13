@@ -42,16 +42,10 @@ public class OneCategoryController {
      * @return 分类分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneCategory>> page(@RequestParam("current") Integer current,
-                                                   @RequestParam("size") Integer size,
+    public ResponseEntity<IPage<OneCategory>> page(@RequestParam(value = "current", defaultValue = "1") Integer current,
+                                                   @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                    @RequestParam(value = "storeId", required = false) Long storeId,
                                                    @RequestParam(value = "categoryName", required = false) String categoryName) {
-        if (null == current) {
-            current = 1;
-        }
-        if (null == size) {
-            size = 10;
-        }
         IPage<OneCategory> page = new Page<>(current, size);
         LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);

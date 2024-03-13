@@ -1,5 +1,9 @@
 package com.yeem.one.controller.manage;
 
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -26,6 +30,8 @@ import java.util.List;
 @RequestMapping("/manage/tenant")
 public class OneTenantController {
 
+    public static final String KEY = "yeem_one";
+
     @Autowired
     private IOneTenantService oneTenantService;
 
@@ -37,17 +43,11 @@ public class OneTenantController {
      * @return 租户分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneTenant>> getPage(@RequestParam("current") Integer current,
-                                                    @RequestParam("size") Integer size,
+    public ResponseEntity<IPage<OneTenant>> getPage(@RequestParam(value = "current", defaultValue = "1") Integer current,
+                                                    @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                     @RequestParam(value = "tenantName", required = false) String tenantName,
                                                     @RequestParam(value = "tenantPhone", required = false) String tenantPhone,
                                                     @RequestParam(value = "tenantEmail", required = false) String tenantEmail) {
-        if (null == current) {
-            current = 1;
-        }
-        if (null == size) {
-            size = 10;
-        }
         IPage<OneTenant> page = new Page<>(current, size);
         QueryWrapper<OneTenant> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.BOOLEAN_FALSE);
@@ -110,6 +110,9 @@ public class OneTenantController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneTenant tenant) {
         try {
+            SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, KEY.getBytes());
+            String appSecret = aes.encryptHex(tenant.getWechatAppSecret());
+            tenant.setWechatAppSecret(appSecret);
             oneTenantService.save(tenant);
         } catch (Exception e) {
             log.error("save tenant extra info error:", e);
@@ -128,6 +131,13 @@ public class OneTenantController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneTenant tenant) {
         try {
+            OneTenant historyTenant = oneTenantService.getById(tenant.getId());
+            if (StrUtil.isNotEmpty(tenant.getWechatAppSecret())
+                    && !tenant.getWechatAppSecret().equals(historyTenant.getWechatAppSecret())) {
+                SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, KEY.getBytes());
+                String appSecret = aes.encryptHex(tenant.getWechatAppSecret());
+                tenant.setWechatAppSecret(appSecret);
+            }
             oneTenantService.updateById(tenant);
         } catch (Exception e) {
             log.error("update tenant extra info error:", e);

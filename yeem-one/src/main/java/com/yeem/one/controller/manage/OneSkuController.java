@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneSku;
+import com.yeem.one.fs.entity.SysFS;
+import com.yeem.one.fs.service.ISysFSService;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneSkuService;
 import com.yeem.one.service.IOneTenantService;
@@ -14,7 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -29,6 +33,8 @@ public class OneSkuController {
     private IOneSkuService service;
     @Autowired
     private IOneTenantService oneTenantService;
+    @Resource(name = "COSSysFSServiceImpl")
+    private ISysFSService sysFSService;
 
     /**
      * 分页查询
@@ -38,16 +44,10 @@ public class OneSkuController {
      * @return sku分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneSku>> getPage(@RequestParam(value = "current") Integer current,
-                                                 @RequestParam("size") Integer size,
+    public ResponseEntity<IPage<OneSku>> getPage(@RequestParam(value = "current", defaultValue = "1") Integer current,
+                                                 @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                  @RequestParam(value = "spuId", required = false) Long spuId,
                                                  @RequestParam(value = "skuName", required = false) String skuName) {
-        if (null == current) {
-            current = 1;
-        }
-        if (null == size) {
-            size = 10;
-        }
         IPage<OneSku> page = new Page<>(current, size);
         LambdaQueryWrapper<OneSku> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
@@ -69,8 +69,8 @@ public class OneSkuController {
     /**
      * 根据ID获取
      *
-     * @param id sku ID
-     * @return sku信息
+     * @param id SKU ID
+     * @return SKU信息
      */
     @GetMapping(value = "getById")
     public ResponseEntity<OneSku> getById(@RequestParam(value = "id") Long id) {
@@ -87,7 +87,7 @@ public class OneSkuController {
     /**
      * 获取所有
      *
-     * @return 店铺信息
+     * @return SKU信息
      */
     @GetMapping(value = "getAll")
     public ResponseEntity<List<OneSku>> getAll(@RequestParam(value = "spuId", required = false) Long spuId) {
@@ -111,14 +111,14 @@ public class OneSkuController {
      * @return sku信息
      * @apiNote 新增sku信息
      */
-    @OperateLog(operateModule = "sku模块", operateType = "新增sku信息", operateDesc = "新增sku信息")
+    @OperateLog(operateModule = "SKU模块", operateType = "新增SKU信息", operateDesc = "新增SKU信息")
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneSku sku) {
         try {
             oneTenantService.authenticate(sku.getTenantId());
             service.save(sku);
         } catch (Exception e) {
-            log.error("save sku extra info error:", e);
+            log.error("save sku error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(sku);
@@ -130,26 +130,26 @@ public class OneSkuController {
      * @return sku信息
      * @apiNote 更新sku信息
      */
-    @OperateLog(operateModule = "sku模块", operateType = "更新sku信息", operateDesc = "更新sku信息")
+    @OperateLog(operateModule = "SKU模块", operateType = "更新SKU信息", operateDesc = "更新SKU信息")
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneSku sku) {
         try {
             oneTenantService.authenticate(sku.getTenantId());
             service.updateById(sku);
         } catch (Exception e) {
-            log.error("update sku extra info error:", e);
+            log.error("update sku error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(sku);
     }
 
     /**
-     * 删除sku信息
+     * 删除SKU信息
      *
-     * @return sku信息
-     * @apiNote 删除sku信息
+     * @return SKU信息
+     * @apiNote 删除SKU信息
      */
-    @OperateLog(operateModule = "sku模块", operateType = "删除sku信息", operateDesc = "删除sku信息")
+    @OperateLog(operateModule = "SKU模块", operateType = "删除SKU信息", operateDesc = "删除SKU信息")
     @DeleteMapping("remove")
     public ResponseEntity<Object> remove(@RequestBody OneSku sku) {
         try {
@@ -158,9 +158,28 @@ public class OneSkuController {
             sku.setDeleteFlag(true);
             service.updateById(sku);
         } catch (Exception e) {
-            log.error("remove sku extra info error:", e);
+            log.error("remove sku error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(sku);
+    }
+
+
+    /**
+     * 上传SKU文件
+     *
+     * @param file 文件
+     * @return URL
+     */
+    @PostMapping("upload")
+    public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
+        try {
+            SysFS sysFS = new SysFS("sku");
+            String url = sysFSService.upload(sysFS, file);
+            return ResponseEntity.ok(url);
+        } catch (Exception e) {
+            log.error("upload sku file error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
     }
 }
