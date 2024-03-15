@@ -5,6 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yeem.common.utils.OauthUtils;
 import com.yeem.common.utils.TencentFileUtils;
 import com.yeem.one.fs.entity.SysFS;
 import com.yeem.one.fs.mapper.SysFSMapper;
@@ -33,6 +34,10 @@ public class COSSysFSServiceImpl extends ServiceImpl<SysFSMapper, SysFS> impleme
     public String upload(SysFS sysFS, MultipartFile file) {
         String dateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
         String key = APPLICATION;
+        String username = OauthUtils.getUsername();
+        if (StrUtil.isNotEmpty(username)) {
+            key = key + "/" + username;
+        }
         if (StrUtil.isEmpty(sysFS.getFsBusiness())) {
             log.warn("sys fs business is null, file:{}", file.getOriginalFilename());
             key += "/none_business";
