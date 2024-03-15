@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
+import com.yeem.one.entity.OneSku;
 import com.yeem.one.entity.OneSpu;
 import com.yeem.one.entity.OneStore;
 import com.yeem.one.fs.entity.SysFS;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 管理端-SPU
@@ -51,8 +53,8 @@ public class OneSpuController {
      * @return SPU分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneSpu>> getPage(@RequestParam(value = "current",defaultValue = "1") Integer current,
-                                                 @RequestParam(value = "size",defaultValue = "10") Integer size,
+    public ResponseEntity<IPage<OneSpu>> getPage(@RequestParam(value = "current", defaultValue = "1") Integer current,
+                                                 @RequestParam(value = "size", defaultValue = "10") Integer size,
                                                  @RequestParam(value = "storeId", required = false) Long storeId,
                                                  @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                  @RequestParam(value = "spuName", required = false) String spuName) {
@@ -101,6 +103,29 @@ public class OneSpuController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 获取所有
+     * @param spuName spu名称（模糊查询）
+     *
+     * @return SPU信息
+     */
+    @GetMapping(value = "getAll")
+    public ResponseEntity<List<OneSpu>> getAll(@RequestParam(value = "spuName", required = false) String spuName) {
+        try {
+            LambdaQueryWrapper<OneSpu> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            queryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
+            if (StrUtil.isNotEmpty(spuName)) {
+                queryWrapper.like(OneSpu::getSpuName, spuName);
+            }
+            return ResponseEntity.ok(service.list(queryWrapper));
+        } catch (Exception e) {
+            log.error("get spu list error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
     /**
      * 新增SPU信息
