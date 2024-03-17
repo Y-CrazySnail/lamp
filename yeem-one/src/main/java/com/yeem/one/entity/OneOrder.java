@@ -16,6 +16,8 @@ import java.util.List;
 public class OneOrder extends BaseEntity {
     private Long tenantId;
     private Long storeId;
+    @TableField(exist = false)
+    private String storeName;
     private Long userId;
     private String orderNo;
     private String orderName;

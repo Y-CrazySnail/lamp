@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 管理端-SPU
@@ -95,7 +96,29 @@ public class OneSpuController {
         try {
             OneSpu spu = service.getById(id);
             oneTenantService.authenticate(spu.getTenantId());
+            OneStore store = oneStoreService.getById(spu.getStoreId());
+            spu.setStoreName(store.getStoreName());
+            OneCategory category = oneCategoryService.getById(spu.getCategoryId());
+            spu.setCategoryName(category.getCategoryName());
             return ResponseEntity.ok(spu);
+        } catch (Exception e) {
+            log.error("get spu by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 获取所有
+     *
+     * @return SPU信息
+     */
+    @GetMapping(value = "getAll")
+    public ResponseEntity<List<OneSpu>> getAll() {
+        try {
+            LambdaQueryWrapper<OneSpu> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            lambdaQueryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
+            return ResponseEntity.ok(service.list(lambdaQueryWrapper));
         } catch (Exception e) {
             log.error("get spu by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

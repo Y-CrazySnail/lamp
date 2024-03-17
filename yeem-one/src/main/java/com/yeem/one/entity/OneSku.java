@@ -17,4 +17,6 @@ public class OneSku extends BaseEntity {
     private Integer skuStock;
     private Integer skuSales;
     private Integer skuSort;
+    private Boolean skuStatus;
+    private String skuShowImage;
 }
