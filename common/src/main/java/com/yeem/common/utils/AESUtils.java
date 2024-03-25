@@ -42,7 +42,6 @@ public class AESUtils {
             return new String(cipher.doFinal(Base64.decodeBase64(content)), CHARSET_NAME);
         } catch (Exception e) {
             log.error("解密失败：", e);
-            e.printStackTrace();
         }
         return null;
     }

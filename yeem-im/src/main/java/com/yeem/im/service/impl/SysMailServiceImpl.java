@@ -117,6 +117,5 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
             sysMailMapper.insert(sysMail);
             this.send(sysMail);
         }
-        log.info("发送邮件");
     }
 }

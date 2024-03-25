@@ -8,6 +8,7 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 public class FreeMakerUtils {
@@ -57,5 +58,13 @@ public class FreeMakerUtils {
         } catch (IOException | TemplateException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void main(String[] args) {
+        String template = "你好：${param1},我是：${param2}";
+        Map<String, Object> map = new HashMap<>();
+        map.put("param1", "张三");
+        map.put("param2", "李四");
+        System.out.println(getContent(template, map));
     }
 }
