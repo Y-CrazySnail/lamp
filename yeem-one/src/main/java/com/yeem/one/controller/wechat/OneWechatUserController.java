@@ -46,8 +46,9 @@ public class OneWechatUserController {
     public ResponseEntity<Object> login(@RequestBody OneUser user) {
         try {
             // 登录
+            user = service.login(user);
         } catch (Exception e) {
-            log.error("update user info error:", e);
+            log.error("login error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.ok(user);

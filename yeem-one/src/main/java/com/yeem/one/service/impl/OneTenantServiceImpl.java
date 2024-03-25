@@ -56,4 +56,12 @@ public class OneTenantServiceImpl extends ServiceImpl<OneTenantMapper, OneTenant
         queryWrapper.eq(OneTenant::getDeleteFlag, false);
         return mapper.selectList(queryWrapper);
     }
+
+    @Override
+    public OneTenant getByWechatAppId(String wechatAppId) {
+        LambdaQueryWrapper<OneTenant> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OneTenant::getWechatAppId, wechatAppId);
+        queryWrapper.eq(OneTenant::getDeleteFlag, false);
+        return mapper.selectOne(queryWrapper);
+    }
 }

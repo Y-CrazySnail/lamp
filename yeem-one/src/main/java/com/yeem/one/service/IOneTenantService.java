@@ -12,4 +12,6 @@ public interface IOneTenantService extends IService<OneTenant> {
     Set<Long> authorizedTenantIdSet();
 
     List<OneTenant> listByUsername(String username);
+
+    OneTenant getByWechatAppId(String wechatAppId);
 }

@@ -18,6 +18,16 @@ public class OneUser extends BaseEntity {
     private String userAvatar;
     private String userPhone;
     @TableField(exist = false)
+    private String wechatAppId;
+    @TableField(exist = false)
+    private String wechatCode;
+    @TableField(exist = false)
+    private String token;
+    @TableField(exist = false)
+    private Integer userAddressCount;
+    @TableField(exist = false)
+    private Integer userOrderCount;
+    @TableField(exist = false)
     private List<OneAddress> addressList;
     @TableField(exist = false)
     private List<OneCart> cartList;
