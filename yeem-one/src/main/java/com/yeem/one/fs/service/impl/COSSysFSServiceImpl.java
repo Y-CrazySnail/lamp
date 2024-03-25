@@ -32,6 +32,7 @@ public class COSSysFSServiceImpl extends ServiceImpl<SysFSMapper, SysFS> impleme
 
     @Override
     public String upload(SysFS sysFS, MultipartFile file) {
+        int year = DateUtil.year(new Date());
         String dateStr = DateUtil.format(new Date(), DatePattern.PURE_DATE_PATTERN);
         String key = APPLICATION;
         String username = OauthUtils.getUsername();
@@ -44,7 +45,7 @@ public class COSSysFSServiceImpl extends ServiceImpl<SysFSMapper, SysFS> impleme
         } else {
             key = key + "/" + sysFS.getFsBusiness();
         }
-        key = key + "/" + dateStr + "_" + UUID.fastUUID() + "_" + file.getOriginalFilename();
+        key = key + "/" + year + "/" + dateStr + "_" + UUID.fastUUID() + "_" + file.getOriginalFilename();
         try {
             TencentFileUtils.upload(
                     environment.getProperty("tencent.cos.bucket-name"),
