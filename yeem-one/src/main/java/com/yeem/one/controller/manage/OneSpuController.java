@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
-import com.yeem.one.entity.OneSku;
 import com.yeem.one.entity.OneSpu;
 import com.yeem.one.entity.OneStore;
 import com.yeem.one.fs.entity.SysFS;
@@ -53,8 +52,8 @@ public class OneSpuController {
      * @return SPU分页
      */
     @GetMapping("page")
-    public ResponseEntity<IPage<OneSpu>> getPage(@RequestParam(value = "current", defaultValue = "1") Integer current,
-                                                 @RequestParam(value = "size", defaultValue = "10") Integer size,
+    public ResponseEntity<IPage<OneSpu>> getPage(@RequestParam(value = "current",defaultValue = "1") Integer current,
+                                                 @RequestParam(value = "size",defaultValue = "10") Integer size,
                                                  @RequestParam(value = "storeId", required = false) Long storeId,
                                                  @RequestParam(value = "categoryId", required = false) Long categoryId,
                                                  @RequestParam(value = "spuName", required = false) String spuName) {
@@ -97,6 +96,10 @@ public class OneSpuController {
         try {
             OneSpu spu = service.getById(id);
             oneTenantService.authenticate(spu.getTenantId());
+            OneStore store = oneStoreService.getById(spu.getStoreId());
+            spu.setStoreName(store.getStoreName());
+            OneCategory category = oneCategoryService.getById(spu.getCategoryId());
+            spu.setCategoryName(category.getCategoryName());
             return ResponseEntity.ok(spu);
         } catch (Exception e) {
             log.error("get spu by id error:", e);
@@ -106,26 +109,21 @@ public class OneSpuController {
 
     /**
      * 获取所有
-     * @param spuName spu名称（模糊查询）
      *
      * @return SPU信息
      */
     @GetMapping(value = "getAll")
-    public ResponseEntity<List<OneSpu>> getAll(@RequestParam(value = "spuName", required = false) String spuName) {
+    public ResponseEntity<List<OneSpu>> getAll() {
         try {
-            LambdaQueryWrapper<OneSpu> queryWrapper = new LambdaQueryWrapper<>();
-            queryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            queryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
-            if (StrUtil.isNotEmpty(spuName)) {
-                queryWrapper.like(OneSpu::getSpuName, spuName);
-            }
-            return ResponseEntity.ok(service.list(queryWrapper));
+            LambdaQueryWrapper<OneSpu> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+            lambdaQueryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
+            lambdaQueryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
+            return ResponseEntity.ok(service.list(lambdaQueryWrapper));
         } catch (Exception e) {
-            log.error("get spu list error:", e);
+            log.error("get spu by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
 
     /**
      * 新增SPU信息
