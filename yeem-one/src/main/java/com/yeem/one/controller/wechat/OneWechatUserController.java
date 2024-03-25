@@ -45,7 +45,6 @@ public class OneWechatUserController {
     @PostMapping("login")
     public ResponseEntity<Object> login(@RequestBody OneUser user) {
         try {
-            // 登录
             user = service.login(user);
         } catch (Exception e) {
             log.error("login error:", e);
