@@ -35,4 +35,21 @@ public class OneWechatStoreController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+    /**
+     * 获取店铺信息列表
+     *
+     * @return 店铺信息列表
+     */
+    @GetMapping(value = "listForDistance")
+    public ResponseEntity<OneStore> listForDistance(@RequestParam(value = "longitude", required = false) String longitude,
+                                                    @RequestParam(value = "latitude", required = false) String latitude) {
+        try {
+            Long tenantId = WechatAuthInterceptor.getTenantId();
+            return ResponseEntity.ok(service.getDefault(tenantId));
+        } catch (Exception e) {
+            log.error("get default store error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 }
