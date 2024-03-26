@@ -6,7 +6,7 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.utils.OauthUtils;
-import com.yeem.fss.util.TencentFileUtils;
+import com.yeem.fss.util.TencentCOSUtils;
 import com.yeem.fss.entity.SysFS;
 import com.yeem.fss.service.ISysFSService;
 import com.yeem.fss.mapper.SysFSMapper;
@@ -52,9 +52,9 @@ public class COSSysFSServiceImpl extends ServiceImpl<SysFSMapper, SysFS> impleme
         }
         key = key + "/" + year + "/" + dateStr + "_" + UUID.fastUUID() + "_" + file.getOriginalFilename();
         try {
-            TencentFileUtils.upload(TENCENT_COS_BUCKET_NAME, TENCENT_SECRET_ID, TENCENT_SECRET_KEY, TENCENT_COS_REGION, key, file.getInputStream());
+            TencentCOSUtils.upload(TENCENT_COS_BUCKET_NAME, TENCENT_SECRET_ID, TENCENT_SECRET_KEY, TENCENT_COS_REGION, key, file.getInputStream());
             log.info("upload file to tencent cos, key:{}", key);
-            String url = TencentFileUtils.getUrl(TENCENT_COS_BUCKET_NAME, TENCENT_COS_REGION, key).toString();
+            String url = TencentCOSUtils.getUrl(TENCENT_COS_BUCKET_NAME, TENCENT_COS_REGION, key).toString();
             sysFS.setFsKey(key);
             sysFS.setFsUrl(url);
             sysFS.setFsType("cos");

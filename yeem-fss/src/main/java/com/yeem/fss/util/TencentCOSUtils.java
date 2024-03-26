@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Slf4j
-public class TencentFileUtils {
+public class TencentCOSUtils {
 
     /**
      * 获取无签名路径

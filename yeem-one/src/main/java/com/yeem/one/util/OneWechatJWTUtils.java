@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-public class WechatJWTUtils {
+public class OneWechatJWTUtils {
 
     private static final String KEY = "yeem-cloud";
 

@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.dto.WxLoginResponse;
-import com.yeem.one.util.WechatJWTUtils;
+import com.yeem.one.util.OneWechatJWTUtils;
 import com.yeem.common.utils.WechatUtils;
 import com.yeem.one.entity.OneAddress;
 import com.yeem.one.entity.OneCart;
@@ -101,7 +101,7 @@ public class OneUserServiceImpl extends ServiceImpl<OneUserMapper, OneUser> impl
             mapper.insert(user);
         }
         OneUser resOneUser = this.getByWechatOpenId(wechatOpenId);
-        String token = WechatJWTUtils.generateJWT(tenant.getId(), resOneUser.getId(), resOneUser.getWechatOpenId());
+        String token = OneWechatJWTUtils.generateJWT(tenant.getId(), resOneUser.getId(), resOneUser.getWechatOpenId());
         resOneUser.setToken(token);
         return resOneUser;
     }

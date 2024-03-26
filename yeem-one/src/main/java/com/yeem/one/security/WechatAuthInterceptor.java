@@ -3,7 +3,7 @@ package com.yeem.one.security;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import com.yeem.one.util.WechatJWTUtils;
+import com.yeem.one.util.OneWechatJWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
 import cn.hutool.core.util.StrUtil;
@@ -25,13 +25,13 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getRequestURI().startsWith("/one/wechat/")) {
             String token = request.getHeader("token");
-            if (!WechatJWTUtils.validate(token)) {
+            if (!OneWechatJWTUtils.validate(token)) {
                 log.error("token is invalid. token:{}", token);
                 return false;
             }
-            TENANT_ID.set(WechatJWTUtils.parseJWTTenantId(token));
-            ID.set(WechatJWTUtils.parseJWTId(token));
-            OPEN_ID.set(WechatJWTUtils.parseJWTOpenId(token));
+            TENANT_ID.set(OneWechatJWTUtils.parseJWTTenantId(token));
+            ID.set(OneWechatJWTUtils.parseJWTId(token));
+            OPEN_ID.set(OneWechatJWTUtils.parseJWTOpenId(token));
             Date currentDate = new Date();
             BEGIN_TIME.set(currentDate);
             log.info("start time:{}, uri:{}, tenantId:{}, id:{}, openId: {}",
