@@ -52,7 +52,7 @@ public class OneWechatJWTUtils {
         } else {
             JWT jwt = JWT.of(token);
             jwt.setKey(KEY.getBytes(StandardCharsets.UTF_8));
-            return Long.valueOf(jwt.getPayload("id").toString());
+            return Long.valueOf(jwt.getPayload("tenantId").toString());
         }
     }
 
