@@ -27,12 +27,11 @@ public class OneCategoryServiceImpl extends ServiceImpl<OneCategoryMapper, OneCa
     @Override
     public List<OneCategory> listForWechat(OneCategory category) {
         if (null == category.getStoreId()) {
-            List<OneStore> storeList = oneStoreService.listByTenantId(category.getTenantId());
-            if (storeList.isEmpty()) {
-                log.error("store is null");
+            OneStore store = oneStoreService.getDefault(category.getTenantId());
+            if (null == store) {
                 return null;
             } else {
-                category.setStoreId(storeList.get(0).getId());
+                category.setStoreId(store.getId());
             }
         }
         LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();

@@ -25,4 +25,16 @@ public class OneStoreServiceImpl extends ServiceImpl<OneStoreMapper, OneStore> i
         queryWrapper.eq(OneStore::getTenantId, tenantId);
         return mapper.selectList(queryWrapper);
     }
+
+    @Override
+    public OneStore getDefault(Long tenantId) {
+        log.info("get default store info, tenantId:{}", tenantId);
+        List<OneStore> storeList = listByTenantId(tenantId);
+        if (storeList.isEmpty()) {
+            log.error("the current tenant does not have any store information");
+            return null;
+        } else {
+            return storeList.get(0);
+        }
+    }
 }

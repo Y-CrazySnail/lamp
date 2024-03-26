@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IOneStoreService extends IService<OneStore> {
     List<OneStore> listByTenantId(Long tenantId);
+
+    OneStore getDefault(Long tenantId);
 }
