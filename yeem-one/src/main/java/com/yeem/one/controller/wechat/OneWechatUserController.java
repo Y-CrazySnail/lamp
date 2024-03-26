@@ -1,5 +1,6 @@
 package com.yeem.one.controller.wechat;
 
+import cn.hutool.core.util.StrUtil;
 import com.yeem.one.entity.OneUser;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneTenantService;
@@ -11,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * 管理端-用户
+ * 微信小程序端-用户
  */
 @Slf4j
 @RestController
@@ -41,10 +42,21 @@ public class OneWechatUserController {
         }
     }
 
+    /**
+     * 登录
+     * @param user 用户信息
+     * @return 登陆后用户信息
+     */
     @OperateLog(operateModule = "用户模块", operateType = "用户登录", operateDesc = "用户注册、登录")
     @PostMapping("login")
     public ResponseEntity<Object> login(@RequestBody OneUser user) {
         try {
+            if (StrUtil.isEmpty(user.getWechatCode())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("wechat code is null");
+            }
+            if (StrUtil.isEmpty(user.getWechatAppId())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("wechat app id is null");
+            }
             user = service.login(user);
         } catch (Exception e) {
             log.error("login error:", e);

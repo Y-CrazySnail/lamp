@@ -8,8 +8,8 @@
         <module>aladdin-lamp</module>
         <module>yeem-auth</module>
         <module>yeem-car</module>
-        <module>yeem-client</module>
         <module>yeem-im</module>
+        <module>yeem-fss</module>
         <module>yeem-zero</module>
         <module>yeem-one</module>
     </modules>
@@ -17,7 +17,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.6.RELEASE</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath/>
     </parent>
     <groupId>com.yeem</groupId>
     <artifactId>server</artifactId>

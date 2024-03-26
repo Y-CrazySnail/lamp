@@ -1,6 +1,9 @@
 package com.yeem.one.config;
 
 public class Constant {
+
+    public static final String APPLICATION = "yeem_one";
+
     /**
      * 布尔标识 0否 1是
      */

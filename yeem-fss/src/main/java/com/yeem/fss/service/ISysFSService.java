@@ -1,9 +1,9 @@
-package com.yeem.one.fs.service;
+package com.yeem.fss.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yeem.one.fs.entity.SysFS;
+import com.yeem.fss.entity.SysFS;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ISysFSService extends IService<SysFS> {
-    String upload(SysFS sysFS, MultipartFile file);
+    String upload(String application, SysFS sysFS, MultipartFile file);
 }

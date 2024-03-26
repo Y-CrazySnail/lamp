@@ -1,4 +1,4 @@
-package com.yeem.one.fs.entity;
+package com.yeem.fss.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;

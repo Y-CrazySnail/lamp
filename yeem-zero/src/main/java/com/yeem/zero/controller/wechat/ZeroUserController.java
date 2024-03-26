@@ -46,7 +46,7 @@ public class ZeroUserController {
         String openId;
         String sessionKey;
         try {
-            WxLoginResponse wxLoginResponse = WechatUtils.getWxLoginResponse(appId, appSecret, zeroUserExtra.getWechatLoginCode());
+            WxLoginResponse wxLoginResponse = WechatUtils.wechatLogin(appId, appSecret, zeroUserExtra.getWechatLoginCode());
             log.info("wx login api response:{}", wxLoginResponse.getOpenid());
             openId = wxLoginResponse.getOpenid();
             sessionKey = wxLoginResponse.getSession_key();

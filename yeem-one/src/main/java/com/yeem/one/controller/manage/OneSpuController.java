@@ -3,12 +3,12 @@ package com.yeem.one.controller.manage;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yeem.fss.entity.SysFS;
+import com.yeem.fss.service.ISysFSService;
 import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneCategory;
 import com.yeem.one.entity.OneSpu;
 import com.yeem.one.entity.OneStore;
-import com.yeem.one.fs.entity.SysFS;
-import com.yeem.one.fs.service.ISysFSService;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.service.IOneCategoryService;
 import com.yeem.one.service.IOneSpuService;
@@ -194,7 +194,7 @@ public class OneSpuController {
     public ResponseEntity<Object> upload(@RequestPart("file") MultipartFile file) {
         try {
             SysFS sysFS = new SysFS("spu");
-            String url = sysFSService.upload(sysFS, file);
+            String url = sysFSService.upload(Constant.APPLICATION, sysFS, file);
             return ResponseEntity.ok(url);
         } catch (Exception e) {
             log.error("upload spu file error:", e);

@@ -1,7 +1,7 @@
-package com.yeem.one.fs.mapper;
+package com.yeem.fss.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yeem.one.fs.entity.SysFS;
+import com.yeem.fss.entity.SysFS;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

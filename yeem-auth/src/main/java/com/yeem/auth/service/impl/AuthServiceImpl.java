@@ -10,7 +10,6 @@ import com.yeem.auth.security.VerificationCodeCache;
 import com.yeem.auth.service.IAuthService;
 import com.yeem.auth.service.IThirdPartyLoginService;
 import com.yeem.auth.service.IUserService;
-import com.yeem.common.dto.PhoneNumberDTO;
 import com.yeem.common.dto.WxLoginResponse;
 import com.yeem.common.utils.WechatUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,7 @@ public class AuthServiceImpl implements IAuthService {
         String phoneNumber = null;
         User user = new User();
         try {
-            WxLoginResponse wxLoginResponse = WechatUtils.getWxLoginResponse(appId, appSecret, wechatMiniProgramDTO.getCode());
+            WxLoginResponse wxLoginResponse = WechatUtils.wechatLogin(appId, appSecret, wechatMiniProgramDTO.getCode());
             log.info("wx login api response:{}", wxLoginResponse.getOpenid());
             openId = wxLoginResponse.getOpenid();
             sessionKey = wxLoginResponse.getSession_key();

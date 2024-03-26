@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.dto.WxLoginResponse;
-import com.yeem.common.utils.WechatJWTUtils;
+import com.yeem.one.util.WechatJWTUtils;
 import com.yeem.common.utils.WechatUtils;
 import com.yeem.one.entity.OneAddress;
 import com.yeem.one.entity.OneCart;
@@ -20,8 +20,6 @@ import com.yeem.one.service.IOneTenantService;
 import com.yeem.one.service.IOneUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -76,29 +74,34 @@ public class OneUserServiceImpl extends ServiceImpl<OneUserMapper, OneUser> impl
     public OneUser login(OneUser user) {
         String wechatAppId = Base64.decodeStr(user.getWechatAppId());
         OneTenant tenant = oneTenantService.getByWechatAppId(wechatAppId);
-        if (null != tenant) {
-            user.setTenantId(tenant.getId());
+        if (null == tenant || StrUtil.isEmpty(tenant.getWechatAppId())) {
+            throw new RuntimeException("tenant info error");
         }
+        user.setTenantId(tenant.getId());
         String wechatOpenId;
         String sessionKey;
         WxLoginResponse wxLoginResponse = null;
         try {
-            wxLoginResponse = WechatUtils.getWxLoginResponse(tenant.getWechatAppId(), tenant.getWechatAppSecret(), user.getWechatCode());
+            wxLoginResponse = WechatUtils.wechatLogin(tenant.getWechatAppId(), tenant.getWechatAppSecret(), user.getWechatCode());
         } catch (IOException e) {
             log.error("wechat login error", e);
         }
-        log.info("wechat login api response:{}", wxLoginResponse.getOpenid());
+        if (null == wxLoginResponse || StrUtil.isEmpty(wxLoginResponse.getOpenid())) {
+            log.error("wechat login error");
+            throw new RuntimeException("wechat login error");
+        }
         wechatOpenId = wxLoginResponse.getOpenid();
         sessionKey = wxLoginResponse.getSession_key();
-        log.info("openId:{}", wechatOpenId);
-        log.info("sessionKey:{}", sessionKey);
+        log.info("wechat login openId:{}", wechatOpenId);
+        log.info("wechat login sessionKey:{}", sessionKey);
         OneUser checkOneUser = this.getByWechatOpenId(wechatOpenId);
         if (null == checkOneUser || null == checkOneUser.getId()) {
+            log.info("the user has not registered before:{}", user);
             user.setWechatOpenId(wechatOpenId);
             mapper.insert(user);
         }
         OneUser resOneUser = this.getByWechatOpenId(wechatOpenId);
-        String token = WechatJWTUtils.generateJWT(String.valueOf(tenant.getId()), resOneUser.getId(), resOneUser.getWechatOpenId());
+        String token = WechatJWTUtils.generateJWT(tenant.getId(), resOneUser.getId(), resOneUser.getWechatOpenId());
         resOneUser.setToken(token);
         return resOneUser;
     }

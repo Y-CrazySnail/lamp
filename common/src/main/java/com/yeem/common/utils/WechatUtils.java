@@ -5,13 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.common.dto.PhoneNumberDTO;
 import com.yeem.common.dto.WxLoginResponse;
 import lombok.extern.slf4j.Slf4j;
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import org.springframework.util.Base64Utils;
-import java.security.spec.AlgorithmParameterSpec;
 
 @Slf4j
 public class WechatUtils {
@@ -23,7 +17,7 @@ public class WechatUtils {
      * @return
      * @throws IOException
      */
-    public static WxLoginResponse getWxLoginResponse(String appId, String appSecret, String code) throws IOException {
+    public static WxLoginResponse wechatLogin(String appId, String appSecret, String code) throws IOException {
         String wxLoginUrl = "https://api.weixin.qq.com/sns/jscode2session" +
                 "?appid=" + appId +
                 "&secret=" + appSecret +

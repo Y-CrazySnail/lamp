@@ -3,7 +3,7 @@ package com.yeem.one.security;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
-import com.yeem.common.utils.WechatJWTUtils;
+import com.yeem.one.util.WechatJWTUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
 import cn.hutool.core.util.StrUtil;
@@ -16,34 +16,28 @@ import java.util.Date;
 @Slf4j
 public class WechatAuthInterceptor implements HandlerInterceptor {
 
-    private final static ThreadLocal<String> APPLICATION = new ThreadLocal<>();
+    private final static ThreadLocal<Long> TENANT_ID = new ThreadLocal<>();
     private final static ThreadLocal<Long> ID = new ThreadLocal<>();
     private final static ThreadLocal<String> OPEN_ID = new ThreadLocal<>();
     private static final ThreadLocal<Date> BEGIN_TIME = new NamedThreadLocal<>("ThreadLocal StartTime");
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
-        if (request.getRequestURI().startsWith("/server/wechat/")) {
+        if (request.getRequestURI().startsWith("/one/wechat/")) {
             String token = request.getHeader("token");
-            if (request.getRequestURI().endsWith("zero-tencent-cos/upload") && "yeem".equals(token)) {
-                return true;
-            }
-            if (request.getMethod().equalsIgnoreCase("GET") && StrUtil.isEmpty(token)) {
-                return true;
-            }
             if (!WechatJWTUtils.validate(token)) {
                 log.error("token is invalid. token:{}", token);
                 return false;
             }
-            APPLICATION.set(WechatJWTUtils.parseJWTApplication(token));
+            TENANT_ID.set(WechatJWTUtils.parseJWTTenantId(token));
             ID.set(WechatJWTUtils.parseJWTId(token));
             OPEN_ID.set(WechatJWTUtils.parseJWTOpenId(token));
             Date currentDate = new Date();
             BEGIN_TIME.set(currentDate);
-            log.info("start time:{}, uri:{}, application:{}, id:{}, openId: {}",
+            log.info("start time:{}, uri:{}, tenantId:{}, id:{}, openId: {}",
                     DateUtil.format(new Date(), DatePattern.NORM_DATETIME_MS_PATTERN),
                     request.getRequestURI(),
-                    APPLICATION.get(),
+                    TENANT_ID.get(),
                     ID.get(),
                     OPEN_ID.get()
             );
@@ -61,7 +55,7 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
                     DateUtil.format(new Date(), DatePattern.NORM_DATETIME_MS_PATTERN),
                     DateUtil.between(beginTime, endTime, DateUnit.MS),
                     request.getRequestURI(),
-                    StrUtil.isEmpty(APPLICATION.get()) ? "" : APPLICATION.get(),
+                    null != TENANT_ID.get() ? "" : TENANT_ID.get(),
                     null == ID.get() ? "" : ID.get(),
                     StrUtil.isEmpty(OPEN_ID.get()) ? "" : OPEN_ID.get(),
                     Runtime.getRuntime().maxMemory() / 1024 / 1024,
@@ -69,7 +63,7 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
                     Runtime.getRuntime().freeMemory() / 1024 / 1024
             );
             try {
-                APPLICATION.remove();
+                TENANT_ID.remove();
                 ID.remove();
                 OPEN_ID.remove();
                 BEGIN_TIME.remove();
@@ -78,8 +72,8 @@ public class WechatAuthInterceptor implements HandlerInterceptor {
         }
     }
 
-    public static String getApplication() {
-        return APPLICATION.get();
+    public static Long getTenantId() {
+        return TENANT_ID.get();
     }
 
     public static Long getUserId() {

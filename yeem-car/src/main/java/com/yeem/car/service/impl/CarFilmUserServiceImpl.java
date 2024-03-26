@@ -91,7 +91,7 @@ public class CarFilmUserServiceImpl extends ServiceImpl<CarFilmUserMapper, CarFi
         String openId;
         WxLoginResponse wxLoginResponse = null;
         try {
-            wxLoginResponse = WechatUtils.getWxLoginResponse(appId, appSecret, carFilmUser.getCode());
+            wxLoginResponse = WechatUtils.wechatLogin(appId, appSecret, carFilmUser.getCode());
         } catch (IOException e) {
             e.printStackTrace();
         }
