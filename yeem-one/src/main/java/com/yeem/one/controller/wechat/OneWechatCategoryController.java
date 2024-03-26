@@ -34,10 +34,12 @@ public class OneWechatCategoryController {
      * @return 分类信息
      */
     @GetMapping(value = "list")
-    public ResponseEntity<List<OneCategory>> list(@RequestBody OneCategory category) {
+    public ResponseEntity<List<OneCategory>> list(@RequestParam(value = "storeId", required = false) Long storeId) {
         try {
+            OneCategory category = new OneCategory();
             Long tenantId = WechatAuthInterceptor.getTenantId();
             category.setTenantId(tenantId);
+            category.setStoreId(storeId);
             return ResponseEntity.ok(service.listForWechat(category));
         } catch (Exception e) {
             log.error("get category by id error:", e);
