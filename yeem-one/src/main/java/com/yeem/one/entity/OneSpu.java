@@ -6,6 +6,8 @@ import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "one_spu", autoResultMap = true)
 @Data
@@ -24,4 +26,6 @@ public class OneSpu extends BaseEntity {
     private String spuDetailImage;
     private Integer spuSort;
     private Boolean spuStatus;
+    @TableField(exist = false)
+    private List<OneSku> skuList;
 }
