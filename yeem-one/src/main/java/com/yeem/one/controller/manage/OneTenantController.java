@@ -31,7 +31,7 @@ public class OneTenantController {
     public static final String KEY = "yeem_one";
 
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService service;
 
     /**
      * 分页查询
@@ -59,7 +59,7 @@ public class OneTenantController {
             queryWrapper.like("tenant_email", tenantEmail);
         }
         try {
-            return ResponseEntity.ok(oneTenantService.page(page, queryWrapper));
+            return ResponseEntity.ok(service.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("get tenant page error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -75,7 +75,7 @@ public class OneTenantController {
     @GetMapping(value = "getById")
     public ResponseEntity<OneTenant> getById(@RequestParam(value = "id", required = false) Long id) {
         try {
-            return ResponseEntity.ok(oneTenantService.getById(id));
+            return ResponseEntity.ok(service.getById(id));
         } catch (Exception e) {
             log.error("get tenant by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -91,7 +91,7 @@ public class OneTenantController {
     public ResponseEntity<List<OneTenant>> getAll() {
         try {
             String username = OauthUtils.getUsername();
-            return ResponseEntity.ok(oneTenantService.listByUsername(username));
+            return ResponseEntity.ok(service.listByUsername(username));
         } catch (Exception e) {
             log.error("get tenant by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -111,7 +111,7 @@ public class OneTenantController {
             SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, KEY.getBytes());
             String appSecret = aes.encryptHex(tenant.getWechatAppSecret());
             tenant.setWechatAppSecret(appSecret);
-            oneTenantService.save(tenant);
+            service.save(tenant);
         } catch (Exception e) {
             log.error("save tenant extra info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -129,14 +129,14 @@ public class OneTenantController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneTenant tenant) {
         try {
-            OneTenant historyTenant = oneTenantService.getById(tenant.getId());
+            OneTenant historyTenant = service.getById(tenant.getId());
             if (StrUtil.isNotEmpty(tenant.getWechatAppSecret())
                     && !tenant.getWechatAppSecret().equals(historyTenant.getWechatAppSecret())) {
                 SymmetricCrypto aes = new SymmetricCrypto(SymmetricAlgorithm.AES, KEY.getBytes());
                 String appSecret = aes.encryptHex(tenant.getWechatAppSecret());
                 tenant.setWechatAppSecret(appSecret);
             }
-            oneTenantService.updateById(tenant);
+            service.updateById(tenant);
         } catch (Exception e) {
             log.error("update tenant extra info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -155,7 +155,7 @@ public class OneTenantController {
     public ResponseEntity<Object> remove(@RequestBody OneTenant tenant) {
         try {
             tenant.setDeleteFlag(true);
-            oneTenantService.updateById(tenant);
+            service.updateById(tenant);
         } catch (Exception e) {
             log.error("remove tenant extra info error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());

@@ -32,7 +32,7 @@ public class OneStoreController {
     @Autowired
     private IOneStoreService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
     @Resource(name = "COSSysFSServiceImpl")
     private ISysFSService sysFSService;
     /**
@@ -49,7 +49,7 @@ public class OneStoreController {
         IPage<OneStore> page = new Page<>(current, size);
         LambdaQueryWrapper<OneStore> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(OneStore::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        lambdaQueryWrapper.in(OneStore::getTenantId, oneTenantService.authorizedTenantIdSet());
+        lambdaQueryWrapper.in(OneStore::getTenantId, tenantService.authorizedTenantIdSet());
         if (!StrUtil.isEmpty(storeName)) {
             lambdaQueryWrapper.like(OneStore::getStoreName, storeName);
         }
@@ -87,7 +87,7 @@ public class OneStoreController {
         try {
             LambdaQueryWrapper<OneStore> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(OneStore::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            lambdaQueryWrapper.in(OneStore::getTenantId, oneTenantService.authorizedTenantIdSet());
+            lambdaQueryWrapper.in(OneStore::getTenantId, tenantService.authorizedTenantIdSet());
             return ResponseEntity.ok(service.list(lambdaQueryWrapper));
         } catch (Exception e) {
             log.error("get tenant by id error:", e);
@@ -105,7 +105,7 @@ public class OneStoreController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneStore store) {
         try {
-            oneTenantService.authenticate(store.getTenantId());
+            tenantService.authenticate(store.getTenantId());
             service.save(store);
         } catch (Exception e) {
             log.error("save store extra info error:", e);
@@ -124,7 +124,7 @@ public class OneStoreController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneStore store) {
         try {
-            oneTenantService.authenticate(store.getTenantId());
+            tenantService.authenticate(store.getTenantId());
             service.updateById(store);
         } catch (Exception e) {
             log.error("update store extra info error:", e);
@@ -144,7 +144,7 @@ public class OneStoreController {
     public ResponseEntity<Object> remove(@RequestBody OneStore store) {
         try {
             store = service.getById(store.getId());
-            oneTenantService.authenticate(store.getTenantId());
+            tenantService.authenticate(store.getTenantId());
             store.setDeleteFlag(true);
             service.updateById(store);
         } catch (Exception e) {

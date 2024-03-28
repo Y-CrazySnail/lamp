@@ -45,4 +45,12 @@ public class OneSpuServiceImpl extends ServiceImpl<OneSpuMapper, OneSpu> impleme
         }
         return spuList;
     }
+
+    @Override
+    public OneSpu getWithOther(Long id) {
+        OneSpu spu = mapper.selectById(id);
+        List<OneSku> skuList = skuService.listBySpuId(id);
+        spu.setSkuList(skuList);
+        return spu;
+    }
 }

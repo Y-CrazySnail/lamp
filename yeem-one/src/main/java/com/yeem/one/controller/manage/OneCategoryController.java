@@ -30,9 +30,9 @@ public class OneCategoryController {
     @Autowired
     private IOneCategoryService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
     @Autowired
-    private IOneStoreService oneStoreService;
+    private IOneStoreService storeService;
 
     /**
      * 分页查询
@@ -49,7 +49,7 @@ public class OneCategoryController {
         IPage<OneCategory> page = new Page<>(current, size);
         LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        queryWrapper.in(OneCategory::getTenantId, oneTenantService.authorizedTenantIdSet());
+        queryWrapper.in(OneCategory::getTenantId, tenantService.authorizedTenantIdSet());
         if (null != storeId) {
             queryWrapper.eq(OneCategory::getStoreId, storeId);
         }
@@ -59,7 +59,7 @@ public class OneCategoryController {
         try {
             page = service.page(page, queryWrapper);
             for (OneCategory record : page.getRecords()) {
-                OneStore store = oneStoreService.getById(record.getStoreId());
+                OneStore store = storeService.getById(record.getStoreId());
                 record.setStoreName(store.getStoreName());
             }
             return ResponseEntity.ok(page);
@@ -79,8 +79,8 @@ public class OneCategoryController {
     public ResponseEntity<OneCategory> getById(@RequestParam(value = "id", required = false) Long id) {
         try {
             OneCategory category = service.getById(id);
-            oneTenantService.authenticate(category.getTenantId());
-            OneStore store = oneStoreService.getById(category.getStoreId());
+            tenantService.authenticate(category.getTenantId());
+            OneStore store = storeService.getById(category.getStoreId());
             category.setStoreName(store.getStoreName());
             return ResponseEntity.ok(category);
         } catch (Exception e) {
@@ -100,7 +100,7 @@ public class OneCategoryController {
         try {
             LambdaQueryWrapper<OneCategory> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(OneCategory::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            queryWrapper.in(OneCategory::getTenantId, oneTenantService.authorizedTenantIdSet());
+            queryWrapper.in(OneCategory::getTenantId, tenantService.authorizedTenantIdSet());
             return ResponseEntity.ok(service.list(queryWrapper));
         } catch (Exception e) {
             log.error("get category by id error:", e);
@@ -118,7 +118,7 @@ public class OneCategoryController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneCategory category) {
         try {
-            oneTenantService.authenticate(category.getTenantId());
+            tenantService.authenticate(category.getTenantId());
             service.save(category);
         } catch (Exception e) {
             log.error("save category extra info error:", e);
@@ -137,7 +137,7 @@ public class OneCategoryController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneCategory category) {
         try {
-            oneTenantService.authenticate(category.getTenantId());
+            tenantService.authenticate(category.getTenantId());
             service.updateById(category);
         } catch (Exception e) {
             log.error("update category extra info error:", e);
@@ -157,7 +157,7 @@ public class OneCategoryController {
     public ResponseEntity<Object> remove(@RequestBody OneCategory category) {
         try {
             category = service.getById(category.getId());
-            oneTenantService.authenticate(category.getTenantId());
+            tenantService.authenticate(category.getTenantId());
             category.setDeleteFlag(true);
             service.updateById(category);
         } catch (Exception e) {

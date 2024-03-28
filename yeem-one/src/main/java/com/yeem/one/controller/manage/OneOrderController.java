@@ -31,7 +31,7 @@ public class OneOrderController {
     @Autowired
     private IOneOrderService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
     @Resource(name = "COSSysFSServiceImpl")
     private ISysFSService sysFSService;
 
@@ -53,7 +53,7 @@ public class OneOrderController {
         IPage<OneOrder> page = new Page<>(current, size);
         LambdaQueryWrapper<OneOrder> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneOrder::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        queryWrapper.in(OneOrder::getTenantId, oneTenantService.authorizedTenantIdSet());
+        queryWrapper.in(OneOrder::getTenantId, tenantService.authorizedTenantIdSet());
         if (!StrUtil.isEmpty(orderNo)) {
             queryWrapper.like(OneOrder::getOrderNo, orderNo);
         }
@@ -103,7 +103,7 @@ public class OneOrderController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneOrder order) {
         try {
-            oneTenantService.authenticate(order.getTenantId());
+            tenantService.authenticate(order.getTenantId());
             service.updateById(order);
         } catch (Exception e) {
             log.error("update order info error:", e);

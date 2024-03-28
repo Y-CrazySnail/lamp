@@ -32,7 +32,7 @@ public class OneSkuController {
     @Autowired
     private IOneSkuService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
     @Resource(name = "COSSysFSServiceImpl")
     private ISysFSService sysFSService;
 
@@ -51,7 +51,7 @@ public class OneSkuController {
         IPage<OneSku> page = new Page<>(current, size);
         LambdaQueryWrapper<OneSku> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        queryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
+        queryWrapper.in(OneSku::getTenantId, tenantService.authorizedTenantIdSet());
         if (null != spuId) {
             queryWrapper.eq(OneSku::getSpuId, spuId);
         }
@@ -76,7 +76,7 @@ public class OneSkuController {
     public ResponseEntity<OneSku> getById(@RequestParam(value = "id") Long id) {
         try {
             OneSku sku = service.getById(id);
-            oneTenantService.authenticate(sku.getTenantId());
+            tenantService.authenticate(sku.getTenantId());
             return ResponseEntity.ok(sku);
         } catch (Exception e) {
             log.error("get sku by id error:", e);
@@ -94,7 +94,7 @@ public class OneSkuController {
         try {
             LambdaQueryWrapper<OneSku> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(OneSku::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            queryWrapper.in(OneSku::getTenantId, oneTenantService.authorizedTenantIdSet());
+            queryWrapper.in(OneSku::getTenantId, tenantService.authorizedTenantIdSet());
             if (null != spuId) {
                 queryWrapper.eq(OneSku::getSpuId, spuId);
             }
@@ -115,7 +115,7 @@ public class OneSkuController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneSku sku) {
         try {
-            oneTenantService.authenticate(sku.getTenantId());
+            tenantService.authenticate(sku.getTenantId());
             service.save(sku);
         } catch (Exception e) {
             log.error("save sku error:", e);
@@ -134,7 +134,7 @@ public class OneSkuController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneSku sku) {
         try {
-            oneTenantService.authenticate(sku.getTenantId());
+            tenantService.authenticate(sku.getTenantId());
             service.updateById(sku);
         } catch (Exception e) {
             log.error("update sku error:", e);
@@ -154,7 +154,7 @@ public class OneSkuController {
     public ResponseEntity<Object> remove(@RequestBody OneSku sku) {
         try {
             sku = service.getById(sku.getId());
-            oneTenantService.authenticate(sku.getTenantId());
+            tenantService.authenticate(sku.getTenantId());
             sku.setDeleteFlag(true);
             service.updateById(sku);
         } catch (Exception e) {

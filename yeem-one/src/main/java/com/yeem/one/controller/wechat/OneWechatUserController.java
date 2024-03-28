@@ -22,7 +22,7 @@ public class OneWechatUserController {
     @Autowired
     private IOneUserService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
 
     /**
      * 根据ID获取
@@ -34,7 +34,7 @@ public class OneWechatUserController {
     public ResponseEntity<OneUser> getById(@RequestParam(value = "id") Long id) {
         try {
             OneUser user = service.getByIdWithOther(id);
-            oneTenantService.authenticate(user.getTenantId());
+            tenantService.authenticate(user.getTenantId());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             log.error("get user by id error:", e);

@@ -36,11 +36,11 @@ public class OneSpuController {
     @Autowired
     private IOneSpuService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService iOneTenantService;
     @Autowired
-    private IOneStoreService oneStoreService;
+    private IOneStoreService storeService;
     @Autowired
-    private IOneCategoryService oneCategoryService;
+    private IOneCategoryService categoryService;
     @Resource(name = "COSSysFSServiceImpl")
     private ISysFSService sysFSService;
 
@@ -60,7 +60,7 @@ public class OneSpuController {
         IPage<OneSpu> page = new Page<>(current, size);
         LambdaQueryWrapper<OneSpu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        queryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
+        queryWrapper.in(OneSpu::getTenantId, iOneTenantService.authorizedTenantIdSet());
         if (null != storeId) {
             queryWrapper.eq(OneSpu::getStoreId, storeId);
         }
@@ -73,9 +73,9 @@ public class OneSpuController {
         try {
             page = service.page(page, queryWrapper);
             for (OneSpu record : page.getRecords()) {
-                OneStore store = oneStoreService.getById(record.getStoreId());
+                OneStore store = storeService.getById(record.getStoreId());
                 record.setStoreName(store.getStoreName());
-                OneCategory category = oneCategoryService.getById(record.getCategoryId());
+                OneCategory category = categoryService.getById(record.getCategoryId());
                 record.setCategoryName(category.getCategoryName());
             }
             return ResponseEntity.ok(page);
@@ -95,10 +95,10 @@ public class OneSpuController {
     public ResponseEntity<OneSpu> getById(@RequestParam(value = "id", required = false) Long id) {
         try {
             OneSpu spu = service.getById(id);
-            oneTenantService.authenticate(spu.getTenantId());
-            OneStore store = oneStoreService.getById(spu.getStoreId());
+            iOneTenantService.authenticate(spu.getTenantId());
+            OneStore store = storeService.getById(spu.getStoreId());
             spu.setStoreName(store.getStoreName());
-            OneCategory category = oneCategoryService.getById(spu.getCategoryId());
+            OneCategory category = categoryService.getById(spu.getCategoryId());
             spu.setCategoryName(category.getCategoryName());
             return ResponseEntity.ok(spu);
         } catch (Exception e) {
@@ -117,7 +117,7 @@ public class OneSpuController {
         try {
             LambdaQueryWrapper<OneSpu> lambdaQueryWrapper = new LambdaQueryWrapper<>();
             lambdaQueryWrapper.eq(OneSpu::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            lambdaQueryWrapper.in(OneSpu::getTenantId, oneTenantService.authorizedTenantIdSet());
+            lambdaQueryWrapper.in(OneSpu::getTenantId, iOneTenantService.authorizedTenantIdSet());
             return ResponseEntity.ok(service.list(lambdaQueryWrapper));
         } catch (Exception e) {
             log.error("get spu by id error:", e);
@@ -135,7 +135,7 @@ public class OneSpuController {
     @PostMapping("save")
     public ResponseEntity<Object> save(@RequestBody OneSpu spu) {
         try {
-            oneTenantService.authenticate(spu.getTenantId());
+            iOneTenantService.authenticate(spu.getTenantId());
             service.save(spu);
         } catch (Exception e) {
             log.error("save spu info error:", e);
@@ -154,7 +154,7 @@ public class OneSpuController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneSpu spu) {
         try {
-            oneTenantService.authenticate(spu.getTenantId());
+            iOneTenantService.authenticate(spu.getTenantId());
             service.updateById(spu);
         } catch (Exception e) {
             log.error("update spu info error:", e);
@@ -174,7 +174,7 @@ public class OneSpuController {
     public ResponseEntity<Object> remove(@RequestBody OneSpu spu) {
         try {
             spu = service.getById(spu.getId());
-            oneTenantService.authenticate(spu.getTenantId());
+            iOneTenantService.authenticate(spu.getTenantId());
             spu.setDeleteFlag(true);
             service.updateById(spu);
         } catch (Exception e) {

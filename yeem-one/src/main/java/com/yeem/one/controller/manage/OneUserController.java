@@ -28,7 +28,7 @@ public class OneUserController {
     @Autowired
     private IOneUserService service;
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
 
     /**
      * 分页查询
@@ -45,7 +45,7 @@ public class OneUserController {
         IPage<OneUser> page = new Page<>(current, size);
         LambdaQueryWrapper<OneUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneUser::getDeleteFlag, Constant.BOOLEAN_FALSE);
-        queryWrapper.in(OneUser::getTenantId, oneTenantService.authorizedTenantIdSet());
+        queryWrapper.in(OneUser::getTenantId, tenantService.authorizedTenantIdSet());
         if (StrUtil.isNotEmpty(nickName)) {
             queryWrapper.like(OneUser::getNickName, nickName);
         }
@@ -70,7 +70,7 @@ public class OneUserController {
     public ResponseEntity<OneUser> getById(@RequestParam(value = "id") Long id) {
         try {
             OneUser user = service.getByIdWithOther(id);
-            oneTenantService.authenticate(user.getTenantId());
+            tenantService.authenticate(user.getTenantId());
             return ResponseEntity.ok(user);
         } catch (Exception e) {
             log.error("get user by id error:", e);
@@ -88,7 +88,7 @@ public class OneUserController {
         try {
             LambdaQueryWrapper<OneUser> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.eq(OneUser::getDeleteFlag, Constant.BOOLEAN_FALSE);
-            queryWrapper.in(OneUser::getTenantId, oneTenantService.authorizedTenantIdSet());
+            queryWrapper.in(OneUser::getTenantId, tenantService.authorizedTenantIdSet());
             return ResponseEntity.ok(service.list(queryWrapper));
         } catch (Exception e) {
             log.error("get user list error:", e);
@@ -106,7 +106,7 @@ public class OneUserController {
     @PutMapping("update")
     public ResponseEntity<Object> update(@RequestBody OneUser user) {
         try {
-            oneTenantService.authenticate(user.getTenantId());
+            tenantService.authenticate(user.getTenantId());
             service.updateById(user);
         } catch (Exception e) {
             log.error("update user info error:", e);
@@ -126,7 +126,7 @@ public class OneUserController {
     public ResponseEntity<Object> remove(@RequestBody OneUser user) {
         try {
             user = service.getById(user.getId());
-            oneTenantService.authenticate(user.getTenantId());
+            tenantService.authenticate(user.getTenantId());
             user.setDeleteFlag(true);
             service.updateById(user);
         } catch (Exception e) {
