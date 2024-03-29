@@ -3,7 +3,7 @@ package com.yeem.one.controller.wechat;
 import cn.hutool.core.util.StrUtil;
 import com.yeem.one.entity.OneUser;
 import com.yeem.one.log.OperateLog;
-import com.yeem.one.service.IOneTenantService;
+import com.yeem.one.security.WechatAuthInterceptor;
 import com.yeem.one.service.IOneUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,29 +21,26 @@ public class OneWechatUserController {
 
     @Autowired
     private IOneUserService service;
-    @Autowired
-    private IOneTenantService tenantService;
 
     /**
      * 根据ID获取
      *
-     * @param id 用户 ID
      * @return 用户信息
      */
-    @GetMapping(value = "getById")
-    public ResponseEntity<OneUser> getById(@RequestParam(value = "id") Long id) {
+    @GetMapping(value = "get")
+    public ResponseEntity<OneUser> get() {
         try {
-            OneUser user = service.getByIdWithOther(id);
-            tenantService.authenticate(user.getTenantId());
-            return ResponseEntity.ok(user);
+            Long id = WechatAuthInterceptor.getUserId();
+            return ResponseEntity.ok(service.getById(id));
         } catch (Exception e) {
-            log.error("get user by id error:", e);
+            log.error("get user error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
     /**
      * 登录
+     *
      * @param user 用户信息
      * @return 登陆后用户信息
      */

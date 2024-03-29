@@ -30,11 +30,11 @@ import java.util.List;
 public class OneUserServiceImpl extends ServiceImpl<OneUserMapper, OneUser> implements IOneUserService {
 
     @Autowired
-    private IOneTenantService oneTenantService;
+    private IOneTenantService tenantService;
     @Autowired
-    private IOneAddressService oneAddressService;
+    private IOneAddressService addressService;
     @Autowired
-    private IOneCartService oneCartService;
+    private IOneCartService cartService;
     @Autowired
     private OneUserMapper mapper;
 
@@ -42,7 +42,7 @@ public class OneUserServiceImpl extends ServiceImpl<OneUserMapper, OneUser> impl
     public <E extends IPage<OneUser>> E page(E page, Wrapper<OneUser> queryWrapper) {
         page = super.page(page, queryWrapper);
         for (OneUser user : page.getRecords()) {
-            List<OneAddress> addressList = oneAddressService.listByUserId(user.getId());
+            List<OneAddress> addressList = addressService.listByUserId(user.getId());
             user.setAddressList(addressList);
             user.setUserAddressCount(addressList.size());
         }
@@ -54,10 +54,10 @@ public class OneUserServiceImpl extends ServiceImpl<OneUserMapper, OneUser> impl
         // 查询用户信息
         OneUser user = super.getById(id);
         // 查询地址列表
-        List<OneAddress> addressList = oneAddressService.listByUserId(id);
+        List<OneAddress> addressList = addressService.listByUserId(id);
         user.setAddressList(addressList);
         // 查询购物车列表
-        List<OneCart> cartList = oneCartService.listByUserId(id);
+        List<OneCart> cartList = cartService.listByUserId(id);
         user.setCartList(cartList);
         return user;
     }
@@ -73,7 +73,7 @@ public class OneUserServiceImpl extends ServiceImpl<OneUserMapper, OneUser> impl
     @Override
     public OneUser login(OneUser user) {
         String wechatAppId = Base64.decodeStr(user.getWechatAppId());
-        OneTenant tenant = oneTenantService.getByWechatAppId(wechatAppId);
+        OneTenant tenant = tenantService.getByWechatAppId(wechatAppId);
         if (null == tenant || StrUtil.isEmpty(tenant.getWechatAppId())) {
             throw new RuntimeException("tenant info error");
         }

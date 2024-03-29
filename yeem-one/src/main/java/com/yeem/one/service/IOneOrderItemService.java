@@ -6,5 +6,5 @@ import com.yeem.one.entity.OneOrderItem;
 import java.util.List;
 
 public interface IOneOrderItemService extends IService<OneOrderItem> {
-    List<OneOrderItem> listByOrderId(Long id);
+    List<OneOrderItem> listByOrderId(Long orderId);
 }

@@ -19,7 +19,7 @@ import java.util.List;
 public class OneCategoryServiceImpl extends ServiceImpl<OneCategoryMapper, OneCategory> implements IOneCategoryService {
 
     @Autowired
-    private IOneStoreService oneStoreService;
+    private IOneStoreService storeService;
 
     @Autowired
     private OneCategoryMapper mapper;
@@ -27,7 +27,7 @@ public class OneCategoryServiceImpl extends ServiceImpl<OneCategoryMapper, OneCa
     @Override
     public List<OneCategory> listForWechat(OneCategory category) {
         if (null == category.getStoreId()) {
-            OneStore store = oneStoreService.getDefault(category.getTenantId());
+            OneStore store = storeService.getDefault(category.getTenantId());
             if (null == store) {
                 return null;
             } else {

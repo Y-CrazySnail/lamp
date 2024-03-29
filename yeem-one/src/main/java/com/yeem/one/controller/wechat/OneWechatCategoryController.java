@@ -23,10 +23,6 @@ public class OneWechatCategoryController {
 
     @Autowired
     private IOneCategoryService service;
-    @Autowired
-    private IOneTenantService tenantService;
-    @Autowired
-    private IOneStoreService storeService;
 
     /**
      * 获取所有

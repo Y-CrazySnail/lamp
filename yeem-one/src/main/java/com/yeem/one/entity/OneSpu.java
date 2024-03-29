@@ -28,4 +28,6 @@ public class OneSpu extends BaseEntity {
     private Boolean spuStatus;
     @TableField(exist = false)
     private List<OneSku> skuList;
+    @TableField(exist = false)
+    private List<OneEvaluation> evaluationList;
 }

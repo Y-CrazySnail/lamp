@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.util.Date;
 import java.util.List;
@@ -24,17 +25,18 @@ public class OneOrder extends BaseEntity {
     private Integer orderAmount;
     private String orderStatus;
     private String orderRemark;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    private String deliveryType;
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date orderTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date paymentTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date estimatedShipmentTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date shipmentTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completeTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date closeTime;
     private String waybillNo;
     private Integer deliveryCharge;
@@ -67,4 +69,21 @@ public class OneOrder extends BaseEntity {
     private Long refundFee;
     @TableField(exist = false)
     private List<OneOrderItem> orderItemList;
+    @TableField(exist = false)
+    private List<OneCart> cartList;
+
+    @Getter
+    public enum DeliveryTypeEnum {
+        EXPRESS_DELIVERY("快递", "express-delivery"),
+        SELF_PICKUP("自提", "self-pickup"),
+        MERCHANT_FULFILLED("商家配送", "merchant-fulfilled");
+
+        private final String label;
+        private final String value;
+
+        DeliveryTypeEnum(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
+    }
 }

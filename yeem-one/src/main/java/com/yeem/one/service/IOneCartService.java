@@ -7,4 +7,6 @@ import java.util.List;
 
 public interface IOneCartService extends IService<OneCart> {
     List<OneCart> listByUserId(Long userId);
+
+    OneCart getByIdWithOther(Long id);
 }

@@ -20,4 +20,9 @@ public class OneCart extends BaseEntity {
     private OneSpu spu;
     @TableField(exist = false)
     private OneSku sku;
+    /**
+     * 生效标识
+     */
+    @TableField(exist = false)
+    private Boolean valid;
 }

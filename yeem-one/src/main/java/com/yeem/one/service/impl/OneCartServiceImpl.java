@@ -23,9 +23,9 @@ public class OneCartServiceImpl extends ServiceImpl<OneCartMapper, OneCart> impl
     @Autowired
     private OneCartMapper mapper;
     @Autowired
-    private IOneSpuService oneSpuService;
+    private IOneSpuService spuService;
     @Autowired
-    private IOneSkuService oneSkuService;
+    private IOneSkuService skuService;
 
     @Override
     public List<OneCart> listByUserId(Long userId) {
@@ -34,11 +34,23 @@ public class OneCartServiceImpl extends ServiceImpl<OneCartMapper, OneCart> impl
         queryWrapper.eq(OneCart::getUserId, userId);
         List<OneCart> cartList = mapper.selectList(queryWrapper);
         for (OneCart cart : cartList) {
-            OneSpu spu = oneSpuService.getById(cart.getSkuId());
+            OneSpu spu = spuService.getById(cart.getSkuId());
             cart.setSpu(spu);
-            OneSku sku = oneSkuService.getById(cart.getSkuId());
+            OneSku sku = skuService.getById(cart.getSkuId());
             cart.setSku(sku);
+            cart.setValid(spu.getSpuStatus() && sku.getSkuStatus() && null != sku.getSkuStock() && sku.getSkuStock() >= cart.getQuantity());
         }
         return cartList;
+    }
+
+    @Override
+    public OneCart getByIdWithOther(Long id) {
+        OneCart cart = mapper.selectById(id);
+        OneSpu spu = spuService.getById(cart.getSkuId());
+        cart.setSpu(spu);
+        OneSku sku = skuService.getById(cart.getSkuId());
+        cart.setSku(sku);
+        cart.setValid(spu.getSpuStatus() && sku.getSkuStatus() && null != sku.getSkuStock() && sku.getSkuStock() >= cart.getQuantity());
+        return cart;
     }
 }

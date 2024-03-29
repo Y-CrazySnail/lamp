@@ -23,6 +23,7 @@ public class OneSkuServiceImpl extends ServiceImpl<OneSkuMapper, OneSku> impleme
         LambdaQueryWrapper<OneSku> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSku::getDeleteFlag, false);
         queryWrapper.eq(OneSku::getSpuId, spuId);
+        queryWrapper.eq(OneSku::getSkuStatus, true);
         return mapper.selectList(queryWrapper);
     }
 }

@@ -1,18 +1,14 @@
 package com.yeem.one.controller.wechat;
 
-import com.yeem.fss.service.ISysFSService;
 import com.yeem.one.entity.OneSpu;
-import com.yeem.one.service.IOneCategoryService;
+import com.yeem.one.security.WechatAuthInterceptor;
 import com.yeem.one.service.IOneSpuService;
-import com.yeem.one.service.IOneStoreService;
-import com.yeem.one.service.IOneTenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,14 +21,6 @@ public class OneWechatSpuController {
 
     @Autowired
     private IOneSpuService service;
-    @Autowired
-    private IOneTenantService tenantService;
-    @Autowired
-    private IOneStoreService storeService;
-    @Autowired
-    private IOneCategoryService categoryService;
-    @Resource(name = "COSSysFSServiceImpl")
-    private ISysFSService sysFSService;
 
     /**
      * 获取所有
@@ -43,9 +31,11 @@ public class OneWechatSpuController {
     public ResponseEntity<List<OneSpu>> list(@RequestParam(value = "categoryId", required = false) Long categoryId,
                                              @RequestParam(value = "spuName", required = false) String spuName) {
         try {
+            Long tenantId = WechatAuthInterceptor.getTenantId();
             OneSpu spu = new OneSpu();
             spu.setCategoryId(categoryId);
             spu.setSpuName(spuName);
+            spu.setTenantId(tenantId);
             return ResponseEntity.ok(service.listForWechat(spu));
         } catch (Exception e) {
             log.error("list spu error:", e);
@@ -61,7 +51,8 @@ public class OneWechatSpuController {
     @GetMapping(value = "get")
     public ResponseEntity<OneSpu> get(@RequestParam(value = "id") Long id) {
         try {
-            return ResponseEntity.ok(service.getWithOther(id));
+            Long tenantId = WechatAuthInterceptor.getTenantId();
+            return ResponseEntity.ok(service.getWithOther(id, tenantId));
         } catch (Exception e) {
             log.error("get spu by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

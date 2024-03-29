@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface IOneSpuService extends IService<OneSpu> {
     List<OneSpu> listForWechat(OneSpu spu);
-    OneSpu getWithOther(Long id);
+    OneSpu getWithOther(Long id, Long tenantId);
 }

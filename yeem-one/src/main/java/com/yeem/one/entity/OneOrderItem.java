@@ -19,4 +19,22 @@ public class OneOrderItem extends BaseEntity {
     private Integer skuPrice;
     private String skuAttribute;
     private String skuShowImage;
+    private Integer orderItemQuantity;
+    private Integer orderItemAmount;
+
+    public static OneOrderItem convert(OneCart cart) {
+        OneOrderItem orderItem = new OneOrderItem();
+        orderItem.setSpuId(cart.getSpu().getId());
+        orderItem.setSpuName(cart.getSpu().getSpuName());
+        orderItem.setSpuAttribute(cart.getSpu().getSpuAttribute());
+        orderItem.setSpuShowImage(cart.getSpu().getSpuShowImage());
+        orderItem.setSkuId(cart.getSku().getId());
+        orderItem.setSkuName(cart.getSku().getSkuName());
+        orderItem.setSkuPrice(cart.getSku().getSkuPrice());
+        orderItem.setSkuAttribute(cart.getSku().getSkuAttribute());
+        orderItem.setSkuShowImage(cart.getSku().getSkuShowImage());
+        orderItem.setOrderItemQuantity(cart.getQuantity());
+        orderItem.setOrderItemAmount(cart.getQuantity() * cart.getSku().getSkuPrice());
+        return orderItem;
+    }
 }
