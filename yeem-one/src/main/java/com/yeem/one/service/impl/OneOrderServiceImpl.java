@@ -1,8 +1,10 @@
 package com.yeem.one.service.impl;
 
+import cn.hutool.core.text.StrBuilder;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.one.entity.*;
 import com.yeem.one.mapper.OneOrderMapper;
+import com.yeem.one.security.WechatAuthInterceptor;
 import com.yeem.one.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -26,6 +29,8 @@ public class OneOrderServiceImpl extends ServiceImpl<OneOrderMapper, OneOrder> i
     private IOneSpuService spuService;
     @Autowired
     private IOneSkuService skuService;
+    @Autowired
+    private IOneAddressService addressService;
 
     @Override
     public OneOrder getByIdWithOther(Long id) {
@@ -74,13 +79,22 @@ public class OneOrderServiceImpl extends ServiceImpl<OneOrderMapper, OneOrder> i
         return order;
     }
 
+    /**
+     * 下单
+     *
+     * @param order 订单信息
+     * @return 订单信息
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public OneOrder placeOrder(OneOrder order) {
+        Long tenantId = WechatAuthInterceptor.getTenantId();
+        Long userId = WechatAuthInterceptor.getUserId();
         List<OneCart> cartList = new ArrayList<>();
         List<OneOrderItem> orderItemList = new ArrayList<>();
         // -：计算总价
         int orderAmount = 0;
+        StrBuilder orderName = new StrBuilder();
         for (OneCart cart : order.getCartList()) {
             if (null != cart.getId()) {
                 cart = cartService.getByIdWithOther(cart.getId());
@@ -100,20 +114,43 @@ public class OneOrderServiceImpl extends ServiceImpl<OneOrderMapper, OneOrder> i
             if (cart.getValid()) {
                 OneOrderItem orderItem = OneOrderItem.convert(cart);
                 orderAmount = orderAmount + cart.getQuantity() * cart.getSku().getSkuPrice();
+                orderName.append(orderItem.getSpuName()).append("_").append(orderItem.getSkuName()).append("_");
                 orderItemList.add(orderItem);
             }
         }
         order.setOrderAmount(orderAmount);
         order.setOrderItemList(orderItemList);
-        // todo 设置其他属性
-        mapper.insert(order);
-        order.getOrderItemList().forEach(orderItem -> orderItem.setOrderId(order.getId()));
-        orderItemService.saveBatch(order.getOrderItemList());
+        order.setTenantId(tenantId);
+        order.setUserId(userId);
+        order.setOrderNo(OneOrder.generateOrderNo(tenantId, userId));
+        order.setOrderName(orderName.toString());
+        order.setOrderStatus(OneOrder.OrderStatusEnum.PENDING_PAYMENT.getValue());
+        order.setOrderTime(new Date());
+        OneAddress address = addressService.getById(order.getAddressId());
+        order.setAddress(address);
+        save(order);
+        return order;
+    }
+
+    /**
+     * 关闭订单
+     *
+     * @param order 订单信息
+     * @return 订单信息
+     */
+    @Override
+    public OneOrder closeOrder(OneOrder order) {
+        order.setOrderStatus(OneOrder.OrderStatusEnum.CANCELED.getValue());
+        order.setCloseTime(new Date());
+        mapper.updateById(order);
         return order;
     }
 
     @Override
-    public OneOrder closeOrder(OneOrder order) {
-        return null;
+    public boolean save(OneOrder order) {
+        mapper.insert(order);
+        order.getOrderItemList().forEach(orderItem -> orderItem.setOrderId(order.getId()));
+        orderItemService.saveBatch(order.getOrderItemList());
+        return true;
     }
 }

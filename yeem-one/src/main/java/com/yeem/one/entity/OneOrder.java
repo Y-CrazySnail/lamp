@@ -1,5 +1,6 @@
 package com.yeem.one.entity;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -40,6 +41,8 @@ public class OneOrder extends BaseEntity {
     private Date closeTime;
     private String waybillNo;
     private Integer deliveryCharge;
+    @TableField(exist = false)
+    private Long addressId;
     private String addressName;
     private String addressPhone;
     private String addressProvince;
@@ -72,6 +75,9 @@ public class OneOrder extends BaseEntity {
     @TableField(exist = false)
     private List<OneCart> cartList;
 
+    /**
+     * 交付方式
+     */
     @Getter
     public enum DeliveryTypeEnum {
         EXPRESS_DELIVERY("快递", "express-delivery"),
@@ -85,5 +91,47 @@ public class OneOrder extends BaseEntity {
             this.label = label;
             this.value = value;
         }
+    }
+
+    /**
+     * 订单状态
+     */
+    @Getter
+    public enum OrderStatusEnum {
+        PENDING_PAYMENT("待支付", "pending-payment"),
+        PENDING_SHIPMENT("待发货", "pending-shipment"),
+        PENDING_DELIVERY("待收货", "pending-delivery"),
+        PENDING_REVIEW("待评价", "pending-review"),
+        COMPLETE("已完成", "complete"),
+        CANCELED("已关闭", "canceled");
+        private final String label;
+        private final String value;
+
+        OrderStatusEnum(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
+    }
+
+    /**
+     * 生成订单编号
+     * 生成规则 租户ID + 时间戳(秒) + 用户ID + 一位随机数
+     *
+     * @return 订单ID
+     */
+    public static String generateOrderNo(Long tenantId, Long userId) {
+        String second = String.valueOf(DateUtil.currentSeconds());
+        String random = String.valueOf((int) (Math.random() * 10));
+        return tenantId + second + userId + random;
+    }
+
+    public void setAddress(OneAddress address) {
+        this.addressName = address.getAddressName();
+        this.addressPhone = address.getAddressPhone();
+        this.addressProvince = address.getAddressProvince();
+        this.addressCity = address.getAddressCity();
+        this.addressDistrict = address.getAddressDistrict();
+        this.addressStreet = address.getAddressStreet();
+        this.addressDetail = address.getAddressDetail();
     }
 }
