@@ -1,5 +1,6 @@
 package com.yeem.one.controller.wechat;
 
+import com.yeem.one.entity.OneSku;
 import com.yeem.one.entity.OneSpu;
 import com.yeem.one.security.WechatAuthInterceptor;
 import com.yeem.one.service.IOneSpuService;
@@ -36,7 +37,7 @@ public class OneWechatSpuController {
             spu.setCategoryId(categoryId);
             spu.setSpuName(spuName);
             spu.setTenantId(tenantId);
-            return ResponseEntity.ok(service.listForWechat(spu));
+            return ResponseEntity.ok(service.list(spu));
         } catch (Exception e) {
             log.error("list spu error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();

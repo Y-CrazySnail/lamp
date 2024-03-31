@@ -29,7 +29,7 @@ public class OneSpuServiceImpl extends ServiceImpl<OneSpuMapper, OneSpu> impleme
     private IOneEvaluationService evaluationService;
 
     @Override
-    public List<OneSpu> listForWechat(OneSpu spu) {
+    public List<OneSpu> list(OneSpu spu) {
         LambdaQueryWrapper<OneSpu> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OneSpu::getDeleteFlag, false);
         queryWrapper.eq(OneSpu::getTenantId, spu.getTenantId());
@@ -49,6 +49,7 @@ public class OneSpuServiceImpl extends ServiceImpl<OneSpuMapper, OneSpu> impleme
             List<OneSku> skuList = skuService.listBySpuId(item.getId());
             item.setSkuList(skuList);
         }
+        spuList.removeIf(oneSpu -> oneSpu.getSkuList().isEmpty());
         return spuList;
     }
 
