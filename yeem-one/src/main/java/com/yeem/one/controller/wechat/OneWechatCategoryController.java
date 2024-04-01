@@ -3,8 +3,6 @@ package com.yeem.one.controller.wechat;
 import com.yeem.one.entity.OneCategory;
 import com.yeem.one.security.WechatAuthInterceptor;
 import com.yeem.one.service.IOneCategoryService;
-import com.yeem.one.service.IOneStoreService;
-import com.yeem.one.service.IOneTenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

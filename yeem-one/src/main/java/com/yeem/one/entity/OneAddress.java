@@ -18,5 +18,5 @@ public class OneAddress extends BaseEntity {
     private String addressDistrict;
     private String addressStreet;
     private String addressDetail;
-    private boolean addressDefaultFlag;
+    private Boolean addressDefaultFlag;
 }

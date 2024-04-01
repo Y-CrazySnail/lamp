@@ -7,4 +7,10 @@ import java.util.List;
 
 public interface IOneAddressService extends IService<OneAddress> {
     List<OneAddress> listByUserId(Long userId);
+
+    List<OneAddress> saveForWechat(OneAddress address);
+
+    List<OneAddress> updateForWechat(OneAddress address);
+
+    List<OneAddress> removeForWechat(OneAddress address);
 }

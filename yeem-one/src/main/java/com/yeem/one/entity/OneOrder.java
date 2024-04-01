@@ -4,6 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.wechat.pay.java.service.payments.jsapi.model.PrepayWithRequestPaymentResponse;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,26 +22,38 @@ public class OneOrder extends BaseEntity {
     @TableField(exist = false)
     private String storeName;
     private Long userId;
+    /**
+     * 订单信息
+     */
     private String orderNo;
     private String orderName;
     private Integer orderAmount;
     private String orderStatus;
     private String orderRemark;
-    private String deliveryType;
+    private String orderDeliveryType;
+    /**
+     * 订单时间信息
+     */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date orderTime;
+    private Date timeOrder;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date paymentTime;
+    private Date timePayment;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date estimatedShipmentTime;
+    private Date timeLead;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date shipmentTime;
+    private Date timeShipment;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date completeTime;
+    private Date timeDelivery;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date closeTime;
-    private String waybillNo;
-    private Integer deliveryCharge;
+    private Date timeClose;
+    /**
+     * 快递信息
+     */
+    private String expressTrackingNo;
+    private Integer expressCharge;
+    /**
+     * 地址信息
+     */
     @TableField(exist = false)
     private Long addressId;
     private String addressName;
@@ -50,6 +63,9 @@ public class OneOrder extends BaseEntity {
     private String addressDistrict;
     private String addressStreet;
     private String addressDetail;
+    /**
+     * 付款信息
+     */
     private String paymentTransactionId;
     private String paymentTradeType;
     private String paymentTradeState;
@@ -57,6 +73,9 @@ public class OneOrder extends BaseEntity {
     private String paymentBankType;
     private String paymentCurrency;
     private Long paymentTotal;
+    /**
+     * 退款信息
+     */
     private Boolean refundFlag;
     private String refundType;
     private Integer refundAmount;
@@ -70,10 +89,13 @@ public class OneOrder extends BaseEntity {
     private String refundFundsAccount;
     private Long refundPayerRefund;
     private Long refundFee;
+
     @TableField(exist = false)
     private List<OneOrderItem> orderItemList;
     @TableField(exist = false)
     private List<OneCart> cartList;
+    @TableField(exist = false)
+    private PrepayWithRequestPaymentResponse prepayWithRequestPaymentResponse;
 
     /**
      * 交付方式
@@ -108,6 +130,22 @@ public class OneOrder extends BaseEntity {
         private final String value;
 
         OrderStatusEnum(String label, String value) {
+            this.label = label;
+            this.value = value;
+        }
+    }
+
+    /**
+     * 退款类型
+     */
+    @Getter
+    public enum RefundTypeEnum {
+        REFUND("仅退款", "refund"),
+        RETURN_AND_REFUND("退货退款", "return-and-refund");
+        private final String label;
+        private final String value;
+
+        RefundTypeEnum(String label, String value) {
             this.label = label;
             this.value = value;
         }
