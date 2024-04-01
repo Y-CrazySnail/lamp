@@ -28,6 +28,7 @@ import com.yeem.one.security.WechatAuthInterceptor;
 import com.yeem.one.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +55,8 @@ public class OneOrderServiceImpl extends ServiceImpl<OneOrderMapper, OneOrder> i
     private IOneSkuService skuService;
     @Autowired
     private IOneAddressService addressService;
+    @Value("${wechat.notify-url}")
+    private String WECHAT_NOTIFY_URL;
 
     @Override
     public OneOrder getByIdWithOther(Long id) {
@@ -179,7 +182,7 @@ public class OneOrderServiceImpl extends ServiceImpl<OneOrderMapper, OneOrder> i
         String privateKeyPath = tenant.getWechatPrivateKeyPath();
         String merchantSerialNumber = tenant.getWechatMerchantSerialNumber();
         String apiV3Key = tenant.getWechatApiV3Key();
-        String notifyUrl = "";
+        String notifyUrl = WECHAT_NOTIFY_URL + "paymentCallback/" + order.getOrderNo();
         log.info("tenantId:{}, userId:{}, openId:{}, appId:{}, merchantId:{}, privateKeyPath:{}, merchantSerialNumber:{}, apiV3Key:{}",
                 tenantId, userId, openId, appId, merchantId, privateKeyPath, merchantSerialNumber, apiV3Key);
         // 组装校验配置信息
@@ -241,7 +244,7 @@ public class OneOrderServiceImpl extends ServiceImpl<OneOrderMapper, OneOrder> i
         String privateKeyPath = tenant.getWechatPrivateKeyPath();
         String merchantSerialNumber = tenant.getWechatMerchantSerialNumber();
         String apiV3Key = tenant.getWechatApiV3Key();
-        String notifyUrl = "";
+        String notifyUrl = WECHAT_NOTIFY_URL + "refundCallback/" + order.getOrderNo();
         // 组装校验配置信息
         RSAAutoCertificateConfig config = new RSAAutoCertificateConfig.Builder()
                 .merchantId(merchantId)
