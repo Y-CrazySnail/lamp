@@ -1,6 +1,9 @@
 package com.yeem.one.controller.wechat;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.yeem.one.config.Constant;
 import com.yeem.one.entity.OneOrder;
 import com.yeem.one.log.OperateLog;
 import com.yeem.one.security.WechatAuthInterceptor;
@@ -12,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 微信小程序端-订单
@@ -23,6 +27,57 @@ public class OneWechatOrderController {
 
     @Autowired
     private IOneOrderService service;
+
+
+    /**
+     * 列表查询
+     *
+     * @return 订单分页
+     */
+    @GetMapping("list")
+    public ResponseEntity<List<OneOrder>> list(@RequestParam(value = "storeId") Long storeId,
+                                                  @RequestParam(value = "orderName", required = false) String orderName,
+                                                  @RequestParam(value = "orderStatus", required = false) String orderStatus,
+                                                  @RequestParam(value = "refundFlag", required = false) Boolean refundFlag) {
+        Long tenantId = WechatAuthInterceptor.getTenantId();
+        Long userId = WechatAuthInterceptor.getUserId();
+        LambdaQueryWrapper<OneOrder> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OneOrder::getDeleteFlag, Constant.BOOLEAN_FALSE);
+        queryWrapper.in(OneOrder::getTenantId, tenantId);
+        queryWrapper.in(OneOrder::getStoreId, storeId);
+        queryWrapper.in(OneOrder::getUserId, userId);
+        if (!StrUtil.isEmpty(orderName)) {
+            queryWrapper.like(OneOrder::getOrderName, orderName);
+        }
+        if (!StrUtil.isEmpty(orderStatus)) {
+            queryWrapper.eq(OneOrder::getOrderStatus, orderStatus);
+        }
+        if (null != refundFlag) {
+            queryWrapper.eq(OneOrder::getRefundFlag, refundFlag);
+        }
+        try {
+            return ResponseEntity.ok(service.list(queryWrapper));
+        } catch (Exception e) {
+            log.error("get list error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 根据ID获取
+     *
+     * @param id 订单ID
+     * @return 订单信息
+     */
+    @GetMapping(value = "getById")
+    public ResponseEntity<OneOrder> getById(@RequestParam(value = "id") Long id) {
+        try {
+            return ResponseEntity.ok(service.getByIdWithOther(id));
+        } catch (Exception e) {
+            log.error("get order by id error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     /**
      * 预下单

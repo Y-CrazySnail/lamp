@@ -72,7 +72,7 @@ public class OneOrderController {
         try {
             return ResponseEntity.ok(service.page(page, queryWrapper));
         } catch (Exception e) {
-            log.error("get store page error:", e);
+            log.error("get order page error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -88,7 +88,7 @@ public class OneOrderController {
         try {
             return ResponseEntity.ok(service.getByIdWithOther(id));
         } catch (Exception e) {
-            log.error("get store by id error:", e);
+            log.error("get order by id error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -125,7 +125,7 @@ public class OneOrderController {
             String url = sysFSService.upload(Constant.APPLICATION, sysFS, file);
             return ResponseEntity.ok(url);
         } catch (Exception e) {
-            log.error("upload store file error:", e);
+            log.error("upload order file error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
