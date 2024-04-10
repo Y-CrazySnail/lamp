@@ -15,7 +15,7 @@ public class OneCart extends BaseEntity {
     private Long spuId;
     private Long skuId;
     private Long userId;
-    private int quantity;
+    private Integer quantity;
     @TableField(exist = false)
     private OneSpu spu;
     @TableField(exist = false)

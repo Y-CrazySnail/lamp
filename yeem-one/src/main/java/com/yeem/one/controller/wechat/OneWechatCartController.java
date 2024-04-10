@@ -7,9 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,15 +25,53 @@ public class OneWechatCartController {
     /**
      * 获取所有
      *
-     * @return 购物车信息
+     * @return 购物车列表信息
      */
     @GetMapping(value = "list")
-    public ResponseEntity<List<OneCart>> list() {
+    public ResponseEntity<List<OneCart>> list(@RequestParam(value = "storeId") Long storeId) {
         try {
             Long userId = WechatAuthInterceptor.getUserId();
-            return ResponseEntity.ok(service.listByUserId(userId));
+            return ResponseEntity.ok(service.listByUserIdAndStoreId(userId, storeId));
         } catch (Exception e) {
             log.error("list cart error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 添加至购物车
+     *
+     * @param cart 购物车
+     * @return 购物车列表信息
+     */
+    public ResponseEntity<List<OneCart>> save(@RequestBody OneCart cart) {
+        try {
+            Long tenantId = WechatAuthInterceptor.getTenantId();
+            Long userId = WechatAuthInterceptor.getUserId();
+            cart.setTenantId(tenantId);
+            cart.setUserId(userId);
+            return ResponseEntity.ok(service.saveForWechat(cart));
+        } catch (Exception e) {
+            log.error("save cart error:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    /**
+     * 清空购物车
+     *
+     * @param cart 购物车
+     * @return 购物车信息列表
+     */
+    public ResponseEntity<List<OneCart>> clear(@RequestBody OneCart cart) {
+        try {
+            Long tenantId = WechatAuthInterceptor.getTenantId();
+            Long userId = WechatAuthInterceptor.getUserId();
+            cart.setTenantId(tenantId);
+            cart.setUserId(userId);
+            return ResponseEntity.ok(service.clear(cart));
+        } catch (Exception e) {
+            log.error("clear cart error:", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
