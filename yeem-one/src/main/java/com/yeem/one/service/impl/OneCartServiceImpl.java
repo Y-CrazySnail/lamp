@@ -54,7 +54,7 @@ public class OneCartServiceImpl extends ServiceImpl<OneCartMapper, OneCart> impl
         queryWrapper.orderByDesc(OneCart::getId);
         List<OneCart> cartList = mapper.selectList(queryWrapper);
         for (OneCart cart : cartList) {
-            OneSpu spu = spuService.getById(cart.getSkuId());
+            OneSpu spu = spuService.getById(cart.getSpuId());
             cart.setSpu(spu);
             OneSku sku = skuService.getById(cart.getSkuId());
             cart.setSku(sku);
