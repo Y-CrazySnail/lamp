@@ -44,6 +44,7 @@ public class OneWechatCartController {
      * @param cart 购物车
      * @return 购物车列表信息
      */
+    @PostMapping(value = "save")
     public ResponseEntity<List<OneCart>> save(@RequestBody OneCart cart) {
         try {
             Long tenantId = WechatAuthInterceptor.getTenantId();
@@ -63,6 +64,7 @@ public class OneWechatCartController {
      * @param cart 购物车
      * @return 购物车信息列表
      */
+    @PostMapping(value = "clear")
     public ResponseEntity<List<OneCart>> clear(@RequestBody OneCart cart) {
         try {
             Long tenantId = WechatAuthInterceptor.getTenantId();
