@@ -65,8 +65,8 @@ oauth-client-details:
     client-secret: 123456
 
 merchant:
-  api: https://www.huanyingpay.com/mapi.php
-  id: 1126
-  key: Srg0Hf5aga5Un5aG2aXq5l6r09f0Na59
+  api: https://www.yubopay.com/mapi.php
+  id: 1067
+  key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
   notify-url: http://aladdinslamp.cc/server/web/order/finish
   return-url: https://aladdinslamp.cc/order/index
