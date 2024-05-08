@@ -13,7 +13,6 @@ import com.yeem.lamp.service.*;
 import com.yeem.lamp.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -103,6 +102,16 @@ public class SubscribeController {
         aladdinNodeVmessForSurplus.setType("none");
         aladdinNodeVmessForSurplus.setTls("none");
         nodeUrlList.add(aladdinNodeVmessForSurplus.convert());
+        AladdinNodeVmess aladdinNodeVmessForWebsite = new AladdinNodeVmess();
+        aladdinNodeVmessForWebsite.setNodePs("官网: aladdinslamp.cc");
+        aladdinNodeVmessForWebsite.setNodeAdd("google.com");
+        aladdinNodeVmessForWebsite.setNodePort("443");
+        aladdinNodeVmessForWebsite.setNodeId("00000000-0000-0000-0000-000000000000");
+        aladdinNodeVmessForWebsite.setAid("0");
+        aladdinNodeVmessForWebsite.setNet("tcp");
+        aladdinNodeVmessForWebsite.setType("none");
+        aladdinNodeVmessForWebsite.setTls("none");
+        nodeUrlList.add(aladdinNodeVmessForWebsite.convert());
         return nodeUrlList;
     }
 }
