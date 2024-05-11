@@ -19,7 +19,7 @@ public class IMSchedule {
     /**
      * 发送邮件定时任务 每10秒执行一次
      */
-    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0 0/1 * * * ?")
     public void schedule() {
         sysMailService.send();
         sysSmsService.send();

@@ -19,7 +19,7 @@
         </dependency>
         <dependency>
             <groupId>com.yeem</groupId>
-            <artifactId>yeem-im</artifactId>
+            <artifactId>yeem-message</artifactId>
             <version>1.0.0</version>
         </dependency>
         <dependency>

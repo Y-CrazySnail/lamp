@@ -8,7 +8,7 @@
         <module>aladdin-lamp</module>
         <module>yeem-auth</module>
         <module>yeem-car</module>
-        <module>yeem-im</module>
+        <module>yeem-message</module>
         <module>yeem-fss</module>
         <module>yeem-zero</module>
         <module>yeem-one</module>
