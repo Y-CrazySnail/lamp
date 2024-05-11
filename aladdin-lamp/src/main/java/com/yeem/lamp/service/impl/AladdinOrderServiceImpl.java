@@ -27,6 +27,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.core.util.StrUtil;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -42,6 +43,8 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     private IAladdinPackageService aladdinPackageService;
     @Autowired
     private IAladdinServiceService aladdinServiceService;
+    @Autowired
+    private XUIService xuiService;
     @Autowired
     private Environment environment;
 
@@ -84,6 +87,7 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     }
 
     @Override
+    @Transactional
     public String pay(AladdinOrder aladdinOrder) {
         aladdinOrder = aladdinOrderMapper.selectById(aladdinOrder.getId());
         String merchantApi = environment.getProperty("merchant.api");
@@ -132,19 +136,20 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
                 aladdinOrderMapper.updateById(aladdinOrder);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("update order info error");
         }
         return response.body();
     }
 
     @Override
+    @Transactional
     public void finish(AladdinOrder aladdinOrder) {
         QueryWrapper<AladdinOrder> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("order_no", aladdinOrder.getOrderNo());
         queryWrapper.eq("trade_no", aladdinOrder.getTradeNo());
         aladdinOrder = aladdinOrderMapper.selectOne(queryWrapper);
         if ("1".equals(aladdinOrder.getStatus())) {
-            log.info("已完成该订单：{}", aladdinOrder.getId());
+            log.info("finish order：{}", aladdinOrder.getId());
             return;
         }
         List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinOrder.getMemberId());
@@ -152,7 +157,11 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
         for (AladdinService aladdinService : aladdinServiceList) {
             if (aladdinOrder.getDataTraffic().equals(aladdinService.getDataTraffic())) {
                 serviceId = aladdinService.getId();
-                aladdinService.setEndDate(DateUtil.offsetMonth(aladdinService.getEndDate(), Integer.parseInt(aladdinOrder.getPeriod())));
+                if (aladdinService.getEndDate().before(new Date())) {
+                    aladdinService.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(aladdinOrder.getPeriod())));
+                } else {
+                    aladdinService.setEndDate(DateUtil.offsetMonth(aladdinService.getEndDate(), Integer.parseInt(aladdinOrder.getPeriod())));
+                }
                 aladdinService.setPeriod(aladdinOrder.getPeriod());
                 aladdinService.setPrice(aladdinOrder.getPrice());
                 aladdinServiceService.updateById(aladdinService);
@@ -178,5 +187,6 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
         aladdinOrder.setStatus("1");
         log.info("service id:{}", aladdinOrder.getId());
         aladdinOrderMapper.updateById(aladdinOrder);
+        xuiService.sync();
     }
 }

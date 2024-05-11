@@ -1,14 +1,11 @@
 package com.yeem.lamp.controller.web;
 
 import cn.hutool.http.HttpStatus;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.lamp.entity.AladdinOrder;
 import com.yeem.lamp.security.LocalAuthInterceptor;
 import com.yeem.lamp.service.IAladdinOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
