@@ -107,7 +107,7 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
         sysMail.setAttachment(sysMailSendDTO.getAttachment());
         sysMail.setBusinessId(sysMailSendDTO.getBusinessId());
         sysMail.setBusinessName(sysTemplate.getName());
-        sysMail.setHtmlFlag(sysTemplate.isHtmlFlag());
+        sysMail.setHtmlFlag(sysTemplate.isMailHtmlFlag());
         if (null != sysMailSendDTO.getTimingTime()) {
             sysMail.setTimingFlag(1);
             sysMail.setTimingTime(sysMailSendDTO.getTimingTime());

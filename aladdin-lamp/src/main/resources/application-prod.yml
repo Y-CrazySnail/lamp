@@ -70,3 +70,15 @@ merchant:
   key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
   notify-url: http://aladdinslamp.cc/server/web/order/finish
   return-url: https://aladdinslamp.cc/order/index
+
+telegram:
+  token: 7150598890:AAFLwdVINmnnjCfH4rlyD7F-oD7y_z3AEqs
+  chat-id: -1002052224151
+
+tencent:
+  secret-id: AKIDb9UbVAcomW1HI5edPyKT4QXQ6XkjY9Vc
+  secret-key: 00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA
+  sms:
+    end-point: sms.tencentcloudapi.com
+    region: ap-beijing
+    sdk-app-id: 1400848355

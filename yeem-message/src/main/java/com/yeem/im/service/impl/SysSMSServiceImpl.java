@@ -67,13 +67,13 @@ public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> impleme
         }
         sysSMS.setContent(FreeMakerUtils.getContent(sysTemplate.getContent(), sysSMSSendDTO.getReplaceMap()));
         sysSMS.setTemplateId(sysSMSSendDTO.getTemplateName());
-        sysSMS.setSignName(sysTemplate.getSignName());
+        sysSMS.setSignName(sysTemplate.getSmsSignName());
         sysSMS.setExtendCode(sysSMSSendDTO.getExtendCode());
         sysSMS.setSenderId(sysSMSSendDTO.getSenderId());
         sysSMS.setSessionContext(sysSMSSendDTO.getSessionContext());
         sysSMS.setBusinessId(sysSMSSendDTO.getBusinessId());
         sysSMS.setBusinessName(sysSMSSendDTO.getTemplateName());
-        sysSMS.setTemplateId(sysTemplate.getTemplateId());
+        sysSMS.setTemplateId(sysTemplate.getSmsTemplateId());
         if (sysSMS.getTimingTime() != null) {
             sysSMS.setTimingFlag(1);
             sysSMS.setTimingTime(sysSMSSendDTO.getTimingTime());

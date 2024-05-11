@@ -1,5 +1,6 @@
 package com.yeem.lamp.schedule;
 
+import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ public class XUISchedule {
 
     @Autowired
     private XUIService xuiService;
+    @Autowired
+    private ISysTelegramService sysTelegramService;
 
     @Scheduled(cron = "0 0/5 * * * ?")
     public void refresh() {

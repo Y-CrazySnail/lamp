@@ -13,8 +13,8 @@ public class SysTemplate extends BaseEntity {
     private String type;
     private String subject;
     private String content;
-    private boolean htmlFlag;
-    private String signName;
-    private String templateId;
+    private boolean mailHtmlFlag;
+    private String smsTemplateId;
+    private String smsSignName;
 }
 

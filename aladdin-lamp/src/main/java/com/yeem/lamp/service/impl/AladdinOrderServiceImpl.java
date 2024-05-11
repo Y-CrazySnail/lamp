@@ -13,11 +13,15 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.yeem.common.entity.BaseEntity;
+import com.yeem.im.dto.SysTelegramSendDTO;
+import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.config.Constant;
+import com.yeem.lamp.entity.AladdinMember;
 import com.yeem.lamp.entity.AladdinOrder;
 import com.yeem.lamp.entity.AladdinPackage;
 import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.mapper.AladdinOrderMapper;
+import com.yeem.lamp.service.IAladdinMemberService;
 import com.yeem.lamp.service.IAladdinOrderService;
 import com.yeem.lamp.service.IAladdinPackageService;
 import com.yeem.lamp.service.IAladdinServiceService;
@@ -43,6 +47,10 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
     private IAladdinPackageService aladdinPackageService;
     @Autowired
     private IAladdinServiceService aladdinServiceService;
+    @Autowired
+    private IAladdinMemberService aladdinMemberService;
+    @Autowired
+    private ISysTelegramService sysTelegramService;
     @Autowired
     private XUIService xuiService;
     @Autowired
@@ -148,6 +156,22 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
         queryWrapper.eq("order_no", aladdinOrder.getOrderNo());
         queryWrapper.eq("trade_no", aladdinOrder.getTradeNo());
         aladdinOrder = aladdinOrderMapper.selectOne(queryWrapper);
+        try {
+            AladdinMember aladdinMember = aladdinMemberService.getById(aladdinOrder.getMemberId());
+            SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+            sysTelegramSendDTO.setTemplateName("purchase");
+            sysTelegramSendDTO.setTemplateType("telegram");
+            Map<String, Object> replaceMap = new HashMap<>();
+            // 用户：#{email}购买了【时长：#{period}】-【流量：#{dataTraffic}】的【#{price}】元套餐，请注意Crisp客服消息！
+            replaceMap.put("email", aladdinMember.getEmail());
+            replaceMap.put("period", aladdinOrder.getPeriod());
+            replaceMap.put("dataTraffic", aladdinOrder.getDataTraffic());
+            replaceMap.put("price", aladdinOrder.getPrice());
+            sysTelegramSendDTO.setReplaceMap(replaceMap);
+            sysTelegramService.send(sysTelegramSendDTO);
+        } catch (Exception e) {
+            log.error("send telegram message error:", e);
+        }
         if ("1".equals(aladdinOrder.getStatus())) {
             log.info("finish order：{}", aladdinOrder.getId());
             return;
