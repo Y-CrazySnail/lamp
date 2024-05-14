@@ -6,7 +6,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tencentcloudapi.common.Credential;
 
-
 import com.tencentcloudapi.common.profile.ClientProfile;
 import com.tencentcloudapi.common.profile.HttpProfile;
 import com.tencentcloudapi.sms.v20210111.SmsClient;
@@ -31,19 +30,19 @@ import java.util.Map;
 @Slf4j
 @Service
 public class SysSMSServiceImpl extends ServiceImpl<SysSmsMapper, SysSMS> implements ISysSMSService {
-    @Value("${tencent.secret-id}")
+    @Value("${tencent.secret-id:tencent_secret_id}")
     private String TENCENT_SECRET_ID;
 
-    @Value("${tencent.secret-key}")
+    @Value("${tencent.secret-key:tencent_secret_key}")
     private String TENCENT_SECRET_KEY;
 
-    @Value("${tencent.sms.end-point}")
+    @Value("${tencent.sms.end-point:tencent_sms_end_point}")
     private String TENCENT_SMS_END_POINT;
 
-    @Value("${tencent.sms.region}")
+    @Value("${tencent.sms.region:tencent_sms_region}")
     private String TENCENT_SMS_REGION;
 
-    @Value("${tencent.sms.sdk-app-id}")
+    @Value(value = "${tencent.sms.sdk-app-id:tencent_sms_sdk_app_id}")
     private String TENCENT_SMS_SDK_APP_ID;
 
     @Autowired
