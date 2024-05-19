@@ -19,9 +19,9 @@ import java.util.Map;
 @Slf4j
 @Service
 public class SysTelegramServiceImpl extends ServiceImpl<SysTelegramMapper, SysTelegram> implements ISysTelegramService {
-    @Value("${telegram.token}")
+    @Value("${telegram.token:telegram_token}")
     private String token;
-    @Value("${telegram.chat-id}")
+    @Value("${telegram.chat-id:telegram_chat_id}")
     private String chatId;
 
     @Autowired
