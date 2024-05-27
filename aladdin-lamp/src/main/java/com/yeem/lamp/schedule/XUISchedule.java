@@ -16,7 +16,7 @@ public class XUISchedule {
     @Autowired
     private ISysTelegramService sysTelegramService;
 
-    @Scheduled(cron = "0 0/5 * * * ?")
+    @Scheduled(cron = "0 0/10 * * * ?")
     public void refresh() {
         try {
             log.info("开始-同步节点定时任务执行---------->");
