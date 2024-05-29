@@ -1,24 +1,18 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yeem.lamp.entity.AladdinService;
 
 import java.util.Date;
-import java.util.List;
 
 @TableName(value = "aladdin_member", autoResultMap = true)
 public class AladdinMemberEntity extends BaseEntity {
     private String email;
     private String wechat;
-    private String uuid;
     private String remark;
     private String password;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date lastUpdateSubscription;
-    @TableField(exist = false)
-    private List<AladdinService> serviceList;
 
     public String getEmail() {
         return email;
@@ -34,14 +28,6 @@ public class AladdinMemberEntity extends BaseEntity {
 
     public void setWechat(String wechat) {
         this.wechat = wechat;
-    }
-
-    public String getUuid() {
-        return uuid;
-    }
-
-    public void setUuid(String uuid) {
-        this.uuid = uuid;
     }
 
     public String getRemark() {
@@ -66,13 +52,5 @@ public class AladdinMemberEntity extends BaseEntity {
 
     public void setLastUpdateSubscription(Date lastUpdateSubscription) {
         this.lastUpdateSubscription = lastUpdateSubscription;
-    }
-
-    public List<AladdinService> getServiceList() {
-        return serviceList;
-    }
-
-    public void setServiceList(List<AladdinService> serviceList) {
-        this.serviceList = serviceList;
     }
 }

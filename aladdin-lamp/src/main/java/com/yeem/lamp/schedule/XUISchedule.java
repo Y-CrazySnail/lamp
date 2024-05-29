@@ -1,7 +1,7 @@
 package com.yeem.lamp.schedule;
 
 import com.yeem.im.service.ISysTelegramService;
-import com.yeem.lamp.service.impl.XUIService;
+import com.yeem.lamp.domain.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

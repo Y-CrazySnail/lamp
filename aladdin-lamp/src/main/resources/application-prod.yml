@@ -39,7 +39,7 @@ spring:
 
 mybatis-plus:
   mapper-locations: classpath*:mappers/lamp/*.xml
-  type-aliases-package: com.yeem
+  type-aliases-package: com.yeem.lamp.infrastructure.persistence.entity
 
 access-token-converter:
   signing-key: signingKey
