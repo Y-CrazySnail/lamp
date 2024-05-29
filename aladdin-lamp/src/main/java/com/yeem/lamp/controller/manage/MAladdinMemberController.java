@@ -1,12 +1,11 @@
 package com.yeem.lamp.controller.manage;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.lamp.entity.AladdinMember;
+import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
 import com.yeem.lamp.service.IAladdinMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -80,7 +79,7 @@ public class MAladdinMemberController {
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody AladdinMember aladdinMember) {
+    public ResponseEntity<Object> update(@RequestBody AladdinMemberEntity aladdinMember) {
         try {
             aladdinMemberService.updateById(aladdinMember);
             return ResponseEntity.ok(" ");
@@ -97,7 +96,7 @@ public class MAladdinMemberController {
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody AladdinMember aladdinMember) {
+    public ResponseEntity<Object> save(@RequestBody AladdinMemberEntity aladdinMember) {
         try {
             aladdinMemberService.save(aladdinMember);
             return ResponseEntity.ok(" ");
@@ -110,16 +109,16 @@ public class MAladdinMemberController {
     /**
      * 删除
      *
-     * @param aladdinMember aladdinMember
+     * @param aladdinMemberEntity aladdinMember
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody AladdinMember aladdinMember) {
+    public ResponseEntity<Object> delete(@RequestBody AladdinMemberEntity aladdinMemberEntity) {
         try {
-            if (null == aladdinMember.getId()) {
+            if (null == aladdinMemberEntity.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            aladdinMemberService.removeById(aladdinMember.getId());
+            aladdinMemberService.removeById(aladdinMemberEntity.getId());
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);

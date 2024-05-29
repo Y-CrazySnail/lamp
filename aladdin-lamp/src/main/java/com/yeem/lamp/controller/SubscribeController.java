@@ -6,7 +6,7 @@ import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.yeem.lamp.config.Constant;
-import com.yeem.lamp.entity.AladdinMember;
+import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
 import com.yeem.lamp.entity.AladdinNodeVmess;
 import com.yeem.lamp.entity.AladdinService;
 import com.yeem.lamp.service.*;
@@ -67,7 +67,7 @@ public class SubscribeController {
         if (Objects.isNull(aladdinService)) {
             return null;
         }
-        AladdinMember aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
+        AladdinMemberEntity aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
         if (Objects.isNull(aladdinMember)) {
             return null;
         }

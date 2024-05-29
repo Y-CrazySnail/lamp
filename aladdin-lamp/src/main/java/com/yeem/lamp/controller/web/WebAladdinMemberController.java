@@ -3,22 +3,16 @@ package com.yeem.lamp.controller.web;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yeem.common.utils.WebJWTUtils;
-import com.yeem.common.utils.WechatJWTUtils;
 import com.yeem.im.dto.SysTelegramSendDTO;
 import com.yeem.im.service.ISysTelegramService;
-import com.yeem.lamp.entity.AladdinMember;
+import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
 import com.yeem.lamp.security.LocalAuthInterceptor;
 import com.yeem.lamp.service.IAladdinMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import cn.hutool.core.util.StrUtil;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +52,7 @@ public class WebAladdinMemberController {
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody AladdinMember aladdinMember) {
+    public ResponseEntity<Object> update(@RequestBody AladdinMemberEntity aladdinMember) {
         try {
             Long id = LocalAuthInterceptor.getMemberId();
             aladdinMember.setId(id);
@@ -77,9 +71,9 @@ public class WebAladdinMemberController {
      * @return 登录token
      */
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody AladdinMember aladdinMember) {
+    public ResponseEntity<Object> login(@RequestBody AladdinMemberEntity aladdinMember) {
         try {
-            QueryWrapper<AladdinMember> queryWrapper = new QueryWrapper<>();
+            QueryWrapper<AladdinMemberEntity> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("email", aladdinMember.getEmail());
             queryWrapper.eq("password", aladdinMember.getPassword());
             int count = aladdinMemberService.count(queryWrapper);

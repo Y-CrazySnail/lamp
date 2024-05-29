@@ -16,7 +16,7 @@ import com.yeem.common.entity.BaseEntity;
 import com.yeem.im.dto.SysTelegramSendDTO;
 import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.config.Constant;
-import com.yeem.lamp.entity.AladdinMember;
+import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
 import com.yeem.lamp.entity.AladdinOrder;
 import com.yeem.lamp.entity.AladdinPackage;
 import com.yeem.lamp.entity.AladdinService;
@@ -157,7 +157,7 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
         queryWrapper.eq("trade_no", aladdinOrder.getTradeNo());
         aladdinOrder = aladdinOrderMapper.selectOne(queryWrapper);
         try {
-            AladdinMember aladdinMember = aladdinMemberService.getById(aladdinOrder.getMemberId());
+            AladdinMemberEntity aladdinMember = aladdinMemberService.getById(aladdinOrder.getMemberId());
             SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
             sysTelegramSendDTO.setTemplateName("purchase");
             sysTelegramSendDTO.setTemplateType("telegram");

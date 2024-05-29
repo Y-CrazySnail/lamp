@@ -7,8 +7,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.config.Constant;
-import com.yeem.lamp.entity.AladdinMember;
-import com.yeem.lamp.mapper.AladdinMemberMapper;
+import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
+import com.yeem.lamp.infrastructure.persistence.mapper.AladdinMemberMapper;
 import com.yeem.lamp.service.IAladdinMemberService;
 import com.yeem.lamp.service.IAladdinOrderService;
 import com.yeem.lamp.service.IAladdinServiceService;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Service
-public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, AladdinMember> implements IAladdinMemberService {
+public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, AladdinMemberEntity> implements IAladdinMemberService {
 
     @Autowired
     private AladdinMemberMapper aladdinMemberMapper;
@@ -30,23 +30,23 @@ public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, A
     private IAladdinOrderService aladdinOrderService;
 
     @Override
-    public List<AladdinMember> list() {
-        QueryWrapper<AladdinMember> queryWrapper = new QueryWrapper<>();
+    public List<AladdinMemberEntity> list() {
+        QueryWrapper<AladdinMemberEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         return super.list(queryWrapper);
     }
 
     @Override
-    public AladdinMember getByUUID(String uuid) {
-        QueryWrapper<AladdinMember> queryWrapper = new QueryWrapper<>();
+    public AladdinMemberEntity getByUUID(String uuid) {
+        QueryWrapper<AladdinMemberEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         queryWrapper.eq("uuid", uuid);
         return super.getOne(queryWrapper);
     }
 
     @Override
-    public IPage<AladdinMember> pages(int current, int size, String email, String wechat) {
-        QueryWrapper<AladdinMember> queryWrapper = new QueryWrapper<>();
+    public IPage<AladdinMemberEntity> pages(int current, int size, String email, String wechat) {
+        QueryWrapper<AladdinMemberEntity> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
         if (!StrUtil.isEmpty(email)) {
             queryWrapper.like("email", email);
@@ -54,14 +54,14 @@ public class AladdinMemberServiceImpl extends ServiceImpl<AladdinMemberMapper, A
         if (!StrUtil.isEmpty(wechat)) {
             queryWrapper.like("wechat", wechat);
         }
-        IPage<AladdinMember> page = new Page<>(current, size);
+        IPage<AladdinMemberEntity> page = new Page<>(current, size);
         return aladdinMemberMapper.selectPage(page, queryWrapper);
     }
 
     @Override
     public boolean removeById(Serializable id) {
         // 删除会员信息
-        UpdateWrapper<AladdinMember> memberUpdateWrapper = new UpdateWrapper<>();
+        UpdateWrapper<AladdinMemberEntity> memberUpdateWrapper = new UpdateWrapper<>();
         memberUpdateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
         memberUpdateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
         aladdinMemberMapper.update(null, memberUpdateWrapper);
