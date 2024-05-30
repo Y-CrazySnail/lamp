@@ -12,7 +12,6 @@ public class AladdinMemberAppService {
     private IAladdinMemberService aladdinMemberService;
 
     public String login(MemberLoginRequest memberLoginRequest) {
-
         return null;
     }
 }

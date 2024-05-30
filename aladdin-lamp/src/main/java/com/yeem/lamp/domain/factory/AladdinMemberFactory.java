@@ -7,6 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AladdinMemberFactory {
     public AladdinMember create(MemberLoginRequest memberLoginRequest) {
-        return null;
+        AladdinMember aladdinMember = new AladdinMember();
+        aladdinMember.setEmail(memberLoginRequest.getUsername());
+        aladdinMember.setPassword(memberLoginRequest.getPassword());
+        return aladdinMember;
     }
 }
