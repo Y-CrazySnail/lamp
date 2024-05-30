@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.yeem.lamp.infrastructure.persistence.mapper.AladdinNodeVmessMapper">
+<mapper namespace="com.yeem.lamp.infrastructure.persistence.repository.mapper.AladdinNodeVmessMapper">
     <update id="updateByValidServiceIdList">
         update aladdin_node_vmess
         set node_type = 'expired'
