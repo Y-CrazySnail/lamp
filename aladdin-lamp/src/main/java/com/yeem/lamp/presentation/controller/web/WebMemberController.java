@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yeem.common.utils.WebJWTUtils;
 import com.yeem.im.dto.SysTelegramSendDTO;
 import com.yeem.im.service.ISysTelegramService;
-import com.yeem.lamp.application.service.AladdinMemberAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
+import com.yeem.lamp.application.dto.TokenDTO;
+import com.yeem.lamp.application.service.MemberAppService;
+import com.yeem.lamp.infrastructure.persistence.entity.MemberEntity;
+import com.yeem.lamp.presentation.request.MemberVO;
 import com.yeem.lamp.security.LocalAuthInterceptor;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +22,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/web/member")
-public class WebAladdinMemberController {
+public class WebMemberController {
 
     @Autowired
     private IAladdinMemberService aladdinMemberService;
@@ -28,7 +30,7 @@ public class WebAladdinMemberController {
     private ISysTelegramService sysTelegramService;
 
     @Autowired
-    private AladdinMemberAppService aladdinMemberAppService;
+    private MemberAppService memberAppService;
 
     /**
      * 根据ID查询
@@ -56,7 +58,7 @@ public class WebAladdinMemberController {
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody AladdinMemberEntity aladdinMember) {
+    public ResponseEntity<Object> update(@RequestBody MemberEntity aladdinMember) {
         try {
             Long id = LocalAuthInterceptor.getMemberId();
             aladdinMember.setId(id);
@@ -71,34 +73,14 @@ public class WebAladdinMemberController {
     /**
      * 登录
      *
-     * @param aladdinMember aladdinMember
+     * @param memberVO memberVO
      * @return 登录token
      */
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody AladdinMemberEntity aladdinMember) {
+    public ResponseEntity<Object> login(@RequestBody MemberVO memberVO) {
         try {
-            QueryWrapper<AladdinMemberEntity> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("email", aladdinMember.getEmail());
-            queryWrapper.eq("password", aladdinMember.getPassword());
-            int count = aladdinMemberService.count(queryWrapper);
-            if (count > 0) {
-                aladdinMember = aladdinMemberService.getOne(queryWrapper);
-                String token = WebJWTUtils.generateJWT(aladdinMember.getId());
-                try {
-                    SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
-                    sysTelegramSendDTO.setTemplateName("login");
-                    sysTelegramSendDTO.setTemplateType("telegram");
-                    Map<String, Object> replaceMap = new HashMap<>();
-                    replaceMap.put("email", aladdinMember.getEmail());
-                    sysTelegramSendDTO.setReplaceMap(replaceMap);
-                    sysTelegramService.send(sysTelegramSendDTO);
-                } catch (Exception e) {
-                    log.error("send telegram message error:", e);
-                }
-                return ResponseEntity.ok(token);
-            } else {
-                return ResponseEntity.status(org.springframework.http.HttpStatus.UNAUTHORIZED).build();
-            }
+            TokenDTO tokenDTO = memberAppService.login(memberVO);
+            return ResponseEntity.ok(tokenDTO);
         } catch (Exception e) {
             log.error("login error", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("登录失败");

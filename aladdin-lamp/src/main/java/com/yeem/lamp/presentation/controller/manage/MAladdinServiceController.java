@@ -1,7 +1,7 @@
 package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.lamp.application.service.AladdinServiceAppService;
+import com.yeem.lamp.application.service.ServiceAppService;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServiceService;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class MAladdinServiceController {
     @Autowired
     private IAladdinServiceService aladdinServiceService;
     @Autowired
-    private AladdinServiceAppService aladdinServiceAppService;
+    private ServiceAppService aladdinServiceAppService;
     /**
      * 分页查询
      *

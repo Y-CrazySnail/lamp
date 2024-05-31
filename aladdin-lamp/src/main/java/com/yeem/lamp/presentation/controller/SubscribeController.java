@@ -9,7 +9,7 @@ import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinNodeVmessService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServiceService;
 import com.yeem.lamp.security.Constant;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinMemberEntity;
+import com.yeem.lamp.infrastructure.persistence.entity.MemberEntity;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinNodeVmess;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
 import com.yeem.lamp.infrastructure.persistence.service.impl.XUIService;
@@ -69,7 +69,7 @@ public class SubscribeController {
         if (Objects.isNull(aladdinService)) {
             return null;
         }
-        AladdinMemberEntity aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
+        MemberEntity aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
         if (Objects.isNull(aladdinMember)) {
             return null;
         }

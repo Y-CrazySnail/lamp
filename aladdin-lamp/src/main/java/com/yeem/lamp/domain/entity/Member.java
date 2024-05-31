@@ -1,16 +1,13 @@
-package com.yeem.lamp.infrastructure.persistence.entity;
+package com.yeem.lamp.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.util.Date;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName(value = "aladdin_member", autoResultMap = true)
-public class AladdinMemberEntity extends BaseEntity {
+public class Member {
+    private Long id;
     private String email;
     private String wechat;
     private String remark;
