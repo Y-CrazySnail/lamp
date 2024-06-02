@@ -17,10 +17,10 @@ import com.yeem.im.dto.SysTelegramSendDTO;
 import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.infrastructure.persistence.service.impl.XUIService;
 import com.yeem.lamp.security.Constant;
-import com.yeem.lamp.infrastructure.persistence.entity.MemberEntity;
+import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinOrder;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinPackage;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.AladdinOrderMapper;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinOrderService;
@@ -158,7 +158,7 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
         queryWrapper.eq("trade_no", aladdinOrder.getTradeNo());
         aladdinOrder = aladdinOrderMapper.selectOne(queryWrapper);
         try {
-            MemberEntity aladdinMember = aladdinMemberService.getById(aladdinOrder.getMemberId());
+            MemberDo aladdinMember = aladdinMemberService.getById(aladdinOrder.getMemberId());
             SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
             sysTelegramSendDTO.setTemplateName("purchase");
             sysTelegramSendDTO.setTemplateType("telegram");
@@ -177,34 +177,34 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
             log.info("finish order：{}", aladdinOrder.getId());
             return;
         }
-        List<AladdinService> aladdinServiceList = aladdinServiceService.listByMemberId(aladdinOrder.getMemberId());
+        List<ServiceDo> serviceDoList = aladdinServiceService.listByMemberId(aladdinOrder.getMemberId());
         Long serviceId = null;
-        for (AladdinService aladdinService : aladdinServiceList) {
-            if (aladdinOrder.getDataTraffic().equals(aladdinService.getDataTraffic())) {
-                serviceId = aladdinService.getId();
-                if (aladdinService.getEndDate().before(new Date())) {
-                    aladdinService.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(aladdinOrder.getPeriod())));
+        for (ServiceDo serviceDo : serviceDoList) {
+            if (aladdinOrder.getDataTraffic().equals(serviceDo.getDataTraffic())) {
+                serviceId = serviceDo.getId();
+                if (serviceDo.getEndDate().before(new Date())) {
+                    serviceDo.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(aladdinOrder.getPeriod())));
                 } else {
-                    aladdinService.setEndDate(DateUtil.offsetMonth(aladdinService.getEndDate(), Integer.parseInt(aladdinOrder.getPeriod())));
+                    serviceDo.setEndDate(DateUtil.offsetMonth(serviceDo.getEndDate(), Integer.parseInt(aladdinOrder.getPeriod())));
                 }
-                aladdinService.setPeriod(aladdinOrder.getPeriod());
-                aladdinService.setPrice(aladdinOrder.getPrice());
-                aladdinServiceService.updateById(aladdinService);
+                serviceDo.setPeriod(aladdinOrder.getPeriod());
+                serviceDo.setPrice(aladdinOrder.getPrice());
+                aladdinServiceService.updateById(serviceDo);
                 break;
             }
         }
         if (null == serviceId) {
-            AladdinService aladdinService = new AladdinService();
-            aladdinService.setMemberId(aladdinOrder.getMemberId());
-            aladdinService.setBeginDate(new Date());
-            aladdinService.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(aladdinOrder.getPeriod())).toJdkDate());
-            aladdinService.setDataTraffic(aladdinOrder.getDataTraffic());
-            aladdinService.setPeriod(aladdinOrder.getPeriod());
-            aladdinService.setPrice(aladdinOrder.getPrice());
-            aladdinService.setUuid(UUID.fastUUID().toString());
-            aladdinService.setStatus("0");
-            aladdinServiceService.save(aladdinService);
-            serviceId = aladdinService.getId();
+            ServiceDo serviceDo = new ServiceDo();
+            serviceDo.setMemberId(aladdinOrder.getMemberId());
+            serviceDo.setBeginDate(new Date());
+            serviceDo.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(aladdinOrder.getPeriod())).toJdkDate());
+            serviceDo.setDataTraffic(aladdinOrder.getDataTraffic());
+            serviceDo.setPeriod(aladdinOrder.getPeriod());
+            serviceDo.setPrice(aladdinOrder.getPrice());
+            serviceDo.setUuid(UUID.fastUUID().toString());
+            serviceDo.setStatus("0");
+            aladdinServiceService.save(serviceDo);
+            serviceId = serviceDo.getId();
         }
         // 更新状态
         aladdinOrder.setServiceId(serviceId);

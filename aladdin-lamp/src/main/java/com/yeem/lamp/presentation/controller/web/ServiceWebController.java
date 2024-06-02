@@ -4,8 +4,8 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.application.service.ServiceAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
-import com.yeem.lamp.security.LocalAuthInterceptor;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
+import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/web/service")
-public class WebAladdinServiceController {
+public class ServiceWebController {
 
     @Autowired
     private IAladdinServiceService aladdinServiceService;
@@ -41,17 +41,17 @@ public class WebAladdinServiceController {
     /**
      * 更改
      *
-     * @param aladdinService AladdinService
+     * @param serviceDo AladdinService
      * @return 更新结果
      */
     @PutMapping("/updateUUID")
-    public ResponseEntity<Object> updateUUID(@RequestBody AladdinService aladdinService) {
+    public ResponseEntity<Object> updateUUID(@RequestBody ServiceDo serviceDo) {
         try {
             Long memberId = LocalAuthInterceptor.getMemberId();
-            UpdateWrapper<AladdinService> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.set("uuid", aladdinService.getUuid());
+            UpdateWrapper<ServiceDo> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.set("uuid", serviceDo.getUuid());
             updateWrapper.set("status", "0");
-            updateWrapper.eq(BaseEntity.BaseField.ID.getName(), aladdinService.getId());
+            updateWrapper.eq(BaseEntity.BaseField.ID.getName(), serviceDo.getId());
             updateWrapper.eq("member_id", memberId);
             aladdinServiceService.update(updateWrapper);
             return ResponseEntity.ok("更换UUID成功");

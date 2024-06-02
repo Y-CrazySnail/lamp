@@ -8,7 +8,7 @@ import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.security.Constant;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinNodeVmess;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinServer;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.AladdinNodeVmessMapper;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinNodeVmessService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServerService;
@@ -108,12 +108,12 @@ public class AladdinNodeVmessServiceImpl extends ServiceImpl<AladdinNodeVmessMap
     }
 
     @Override
-    public void updateByValidServiceList(List<AladdinService> serviceList) {
-        aladdinNodeVmessMapper.updateByValidServiceIdList(serviceList.stream().map(AladdinService::getId).collect(Collectors.toList()));
+    public void updateByValidServiceList(List<ServiceDo> serviceList) {
+        aladdinNodeVmessMapper.updateByValidServiceIdList(serviceList.stream().map(ServiceDo::getId).collect(Collectors.toList()));
     }
 
     @Override
-    public void save(AladdinServer server, AladdinService service, int year, int month) {
+    public void save(AladdinServer server, ServiceDo service, int year, int month) {
         LambdaQueryWrapper<AladdinNodeVmess> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(AladdinNodeVmess::getDeleteFlag, false);
         queryWrapper.eq(AladdinNodeVmess::getServerId, server.getId());

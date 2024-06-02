@@ -1,7 +1,7 @@
 package com.yeem.lamp.presentation.controller.web;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.lamp.application.service.AladdinPackageAppService;
+import com.yeem.lamp.application.service.PackageAppService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinPackageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/web/package")
-public class WebAladdinPackageController {
+public class PackageWebController {
 
     @Autowired
     private IAladdinPackageService aladdinPackageService;
 
     @Autowired
-    private AladdinPackageAppService aladdinPackageAppService;
+    private PackageAppService packageAppService;
     /**
      * 列表查询
      *

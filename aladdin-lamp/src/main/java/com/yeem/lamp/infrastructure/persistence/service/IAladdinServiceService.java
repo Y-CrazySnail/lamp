@@ -2,24 +2,24 @@ package com.yeem.lamp.infrastructure.persistence.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 
 import java.io.Serializable;
 import java.util.List;
 
-public interface IAladdinServiceService extends IService<AladdinService> {
-    List<AladdinService> listValid();
-    List<AladdinService> listByMemberId(Long memberId);
+public interface IAladdinServiceService extends IService<ServiceDo> {
+    List<ServiceDo> listValid();
+    List<ServiceDo> listByMemberId(Long memberId);
 
     boolean removeByMemberId(Serializable id);
 
-    IPage<AladdinService> pages(int current, int size,
-                                       Long memberId,
-                                       String status,
-                                       String wechat,
-                                       String email);
+    IPage<ServiceDo> pages(int current, int size,
+                           Long memberId,
+                           String status,
+                           String wechat,
+                           String email);
 
-    AladdinService getByUUID(String uuid);
+    ServiceDo getByUUID(String uuid);
 
     void refreshStatus();
 }

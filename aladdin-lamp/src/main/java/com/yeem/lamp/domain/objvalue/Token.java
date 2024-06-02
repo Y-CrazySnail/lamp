@@ -19,7 +19,14 @@ public class Token {
 
     private static final String KEY = "aladdin-lamp";
 
-    public String setToken(Long id) {
+    public Token() {
+    }
+
+    public Token(String token) {
+        this.token = token;
+    }
+
+    public void setToken(Long id) {
         DateTime now = DateTime.now();
         DateTime newTime = now.offsetNew(DateField.HOUR, 24);
         Map<String, Object> payload = new HashMap<>();
@@ -33,11 +40,11 @@ public class Token {
         payload.put("id", id);
         String token = JWTUtil.createToken(payload, KEY.getBytes());
         log.info("generate jwt. id:{}, expires:{}, token:{}", id, newTime, token);
-        return token;
+        this.token = token;
     }
 
-    public static boolean validate(String token) {
-        JWT jwt = JWT.of(token);
+    public boolean validate() {
+        JWT jwt = JWT.of(this.token);
         jwt.setKey(KEY.getBytes(StandardCharsets.UTF_8));
         jwt.setExpiresAt(DateTime.now().offsetNew(DateField.HOUR, 24));
         if (jwt.validate(0)) {
@@ -47,11 +54,11 @@ public class Token {
         }
     }
 
-    public static Long parseJWTId(String token) {
-        if (!validate(token)) {
+    public Long parseJWTId() {
+        if (!validate()) {
             return null;
         } else {
-            JWT jwt = JWT.of(token);
+            JWT jwt = JWT.of(this.token);
             jwt.setKey(KEY.getBytes(StandardCharsets.UTF_8));
             return Long.valueOf(jwt.getPayload("id").toString());
         }

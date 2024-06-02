@@ -2,7 +2,7 @@ package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.service.MemberAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.MemberEntity;
+import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,7 +83,7 @@ public class MAladdinMemberController {
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody MemberEntity aladdinMember) {
+    public ResponseEntity<Object> update(@RequestBody MemberDo aladdinMember) {
         try {
             aladdinMemberService.updateById(aladdinMember);
             return ResponseEntity.ok(" ");
@@ -100,7 +100,7 @@ public class MAladdinMemberController {
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody MemberEntity aladdinMember) {
+    public ResponseEntity<Object> save(@RequestBody MemberDo aladdinMember) {
         try {
             aladdinMemberService.save(aladdinMember);
             return ResponseEntity.ok(" ");
@@ -113,16 +113,16 @@ public class MAladdinMemberController {
     /**
      * 删除
      *
-     * @param memberEntity aladdinMember
+     * @param memberDo aladdinMember
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody MemberEntity memberEntity) {
+    public ResponseEntity<Object> delete(@RequestBody MemberDo memberDo) {
         try {
-            if (null == memberEntity.getId()) {
+            if (null == memberDo.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            aladdinMemberService.removeById(memberEntity.getId());
+            aladdinMemberService.removeById(memberDo.getId());
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);

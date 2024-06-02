@@ -2,7 +2,7 @@ package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.service.ServiceAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServiceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,13 +63,13 @@ public class MAladdinServiceController {
     /**
      * 更改
      *
-     * @param aladdinService aladdinService
+     * @param serviceDo aladdinService
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody AladdinService aladdinService) {
+    public ResponseEntity<Object> update(@RequestBody ServiceDo serviceDo) {
         try {
-            aladdinServiceService.updateById(aladdinService);
+            aladdinServiceService.updateById(serviceDo);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -80,13 +80,13 @@ public class MAladdinServiceController {
     /**
      * 新增
      *
-     * @param aladdinService aladdinService
+     * @param serviceDo aladdinService
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody AladdinService aladdinService) {
+    public ResponseEntity<Object> save(@RequestBody ServiceDo serviceDo) {
         try {
-            aladdinServiceService.save(aladdinService);
+            aladdinServiceService.save(serviceDo);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);
@@ -97,16 +97,16 @@ public class MAladdinServiceController {
     /**
      * 删除
      *
-     * @param aladdinService aladdinService
+     * @param serviceDo aladdinService
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody AladdinService aladdinService) {
+    public ResponseEntity<Object> delete(@RequestBody ServiceDo serviceDo) {
         try {
-            if (null == aladdinService.getId()) {
+            if (null == serviceDo.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            aladdinServiceService.removeById(aladdinService.getId());
+            aladdinServiceService.removeById(serviceDo.getId());
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);

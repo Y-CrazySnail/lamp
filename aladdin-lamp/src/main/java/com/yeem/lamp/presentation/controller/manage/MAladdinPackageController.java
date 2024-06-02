@@ -3,7 +3,7 @@ package com.yeem.lamp.presentation.controller.manage;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yeem.common.entity.BaseEntity;
-import com.yeem.lamp.application.service.AladdinPackageAppService;
+import com.yeem.lamp.application.service.PackageAppService;
 import com.yeem.lamp.security.Constant;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinPackage;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinPackageService;
@@ -21,7 +21,7 @@ public class MAladdinPackageController {
     private IAladdinPackageService aladdinPackageService;
 
     @Autowired
-    private AladdinPackageAppService aladdinPackageAppService;
+    private PackageAppService packageAppService;
 
     /**
      * 列表查询

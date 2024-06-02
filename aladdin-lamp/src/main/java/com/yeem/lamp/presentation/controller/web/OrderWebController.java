@@ -1,9 +1,9 @@
 package com.yeem.lamp.presentation.controller.web;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.lamp.application.service.AladdinOrderAppService;
+import com.yeem.lamp.application.service.OrderAppService;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinOrder;
-import com.yeem.lamp.security.LocalAuthInterceptor;
+import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +13,14 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/web/order")
-public class WebAladdinOrderController {
+public class OrderWebController {
 
     @Autowired
     private IAladdinOrderService aladdinOrderService;
 
     @Autowired
-    private AladdinOrderAppService aladdinOrderAppService;
+    private OrderAppService orderAppService;
+
     /**
      * 列表查询
      *

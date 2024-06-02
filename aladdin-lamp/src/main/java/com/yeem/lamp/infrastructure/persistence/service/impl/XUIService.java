@@ -5,7 +5,7 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinNodeVmess;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinServer;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinNodeVmessService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServerService;
@@ -38,12 +38,12 @@ public class XUIService {
             if (!STATUS) {
                 STATUS = true;
                 List<AladdinServer> serverList = aladdinServerService.list();
-                List<AladdinService> aladdinServiceList = aladdinServiceService.listValid();
-                aladdinNodeVmessService.updateByValidServiceList(aladdinServiceList);
+                List<ServiceDo> serviceDoList = aladdinServiceService.listValid();
+                aladdinNodeVmessService.updateByValidServiceList(serviceDoList);
                 for (AladdinServer server : serverList) {
                     int year = DateUtil.year(new Date());
                     int month = DateUtil.month(new Date()) + 1;
-                    for (AladdinService service : aladdinServiceList) {
+                    for (ServiceDo service : serviceDoList) {
                         aladdinNodeVmessService.save(server, service, year, month);
                     }
                 }

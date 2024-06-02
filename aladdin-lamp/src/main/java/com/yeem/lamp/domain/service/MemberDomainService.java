@@ -12,6 +12,12 @@ public class MemberDomainService {
     @Autowired
     private MemberRepository memberRepository;
 
+    /**
+     * 登录
+     *
+     * @param member 会员信息
+     * @return 登录token
+     */
     public Token login(Member member) {
         Member resMember = memberRepository.get(member);
         if (!member.getPassword().equals(resMember.getPassword())) {
@@ -20,5 +26,11 @@ public class MemberDomainService {
         Token token = new Token();
         token.setToken(resMember.getId());
         return token;
+    }
+
+    public Member getById(Long id) {
+        Member member = memberRepository.getById(id);
+        member.setPassword(null);
+        return member;
     }
 }

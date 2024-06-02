@@ -1,9 +1,10 @@
-package com.yeem.lamp.security;
+package com.yeem.lamp.presentation.interceptor;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.date.DateUtil;
 import com.yeem.common.utils.WebJWTUtils;
+import com.yeem.lamp.domain.objvalue.Token;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -21,12 +22,12 @@ public class LocalAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getRequestURI().startsWith("/server/web/")) {
-            String token = request.getHeader("token");
-            if (!WebJWTUtils.validate(token)) {
+            Token token = new Token(request.getHeader("token"));
+            if (!token.validate()) {
                 log.error("token is invalid. token:{}", token);
                 return false;
             }
-            ID.set(WebJWTUtils.parseJWTId(token));
+            ID.set(token.parseJWTId());
             Date currentDate = new Date();
             BEGIN_TIME.set(currentDate);
             log.info("start time:{}, uri:{}, memberId:{}",

@@ -9,9 +9,9 @@ import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinNodeVmessService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServiceService;
 import com.yeem.lamp.security.Constant;
-import com.yeem.lamp.infrastructure.persistence.entity.MemberEntity;
+import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinNodeVmess;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.service.impl.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +65,11 @@ public class SubscribeController {
     private List<String> getNodeUrlList(String uuid) {
         int year = DateUtil.year(new Date());
         int month = DateUtil.month(new Date()) + 1;
-        AladdinService aladdinService = aladdinServiceService.getByUUID(uuid);
-        if (Objects.isNull(aladdinService)) {
+        ServiceDo serviceDo = aladdinServiceService.getByUUID(uuid);
+        if (Objects.isNull(serviceDo)) {
             return null;
         }
-        MemberEntity aladdinMember = aladdinMemberService.getById(aladdinService.getMemberId());
+        MemberDo aladdinMember = aladdinMemberService.getById(serviceDo.getMemberId());
         if (Objects.isNull(aladdinMember)) {
             return null;
         }
@@ -77,8 +77,8 @@ public class SubscribeController {
         aladdinMember.setLastUpdateSubscription(new Date());
         aladdinMemberService.updateById(aladdinMember);
         List<String> nodeUrlList = new ArrayList<>();
-        String endDate = DateUtil.format(aladdinService.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-        List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(aladdinService.getId(), year, month);
+        String endDate = DateUtil.format(serviceDo.getEndDate(), DatePattern.NORM_DATE_PATTERN);
+        List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(serviceDo.getId(), year, month);
         for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
             if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
                 nodeUrlList.add(aladdinNodeVmess.convert());
@@ -95,7 +95,7 @@ public class SubscribeController {
         aladdinNodeVmessForTime.setTls("none");
         nodeUrlList.add(aladdinNodeVmessForTime.convert());
         AladdinNodeVmess aladdinNodeVmessForSurplus = new AladdinNodeVmess();
-        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + aladdinService.getSurplus() + "GB" + (aladdinService.getSurplus().contains("-") ? "-已超额" : ""));
+        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + serviceDo.getSurplus() + "GB" + (serviceDo.getSurplus().contains("-") ? "-已超额" : ""));
         aladdinNodeVmessForSurplus.setNodeAdd("google.com");
         aladdinNodeVmessForSurplus.setNodePort("443");
         aladdinNodeVmessForSurplus.setNodeId("00000000-0000-0000-0000-000000000000");

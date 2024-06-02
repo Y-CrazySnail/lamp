@@ -40,6 +40,8 @@ public class WechatController {
     private ICarFilmMessageService carFilmMessageService;
     @Autowired
     private ICarDictionaryService carDictionaryService;
+    @Autowired
+    private ICarFilmStoreService carFilmStoreService;
 
     @Value("${tencent.cos.bucket-name}")
     private String TENCENT_COS_BUCKET_NAME;
@@ -109,6 +111,25 @@ public class WechatController {
         try {
             carFilmQualityService.save(carFilmQuality);
             return ResponseEntity.ok("录入质保成功");
+        } catch (Exception e) {
+            log.error("input quality info error", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("录入质保失败");
+        }
+    }
+
+    @PostMapping("saveStoreInfo")
+    public ResponseEntity<Object> saveStoreInfo(@RequestBody CarFilmStore carFilmStore) {
+        Long userId = WechatAuthInterceptor.getUserId();
+        if (null == userId) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        CarFilmUser carFilmUser = carFilmUserService.getById(userId);
+        if (!Constant.TRUE_STRING.equals(carFilmUser.getQualityPermission())) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        try {
+            carFilmStoreService.save(carFilmStore);
+            return ResponseEntity.ok("录入店铺成功");
         } catch (Exception e) {
             log.error("input quality info error", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("录入质保失败");

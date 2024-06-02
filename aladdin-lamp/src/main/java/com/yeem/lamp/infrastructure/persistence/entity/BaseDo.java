@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class BaseEntity implements Serializable {
+public class BaseDo implements Serializable {
 
     /**
      * 主键ID
