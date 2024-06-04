@@ -49,7 +49,7 @@ public class MAladdinPackageController {
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
                                         @RequestParam("size") int size) {
         try {
-            return ResponseEntity.ok(aladdinPackageService.pages(current, size));
+            return ResponseEntity.ok(packageAppService.pages(current, size));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -68,7 +68,7 @@ public class MAladdinPackageController {
             if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
-            return ResponseEntity.ok(aladdinPackageService.getById(id));
+            return ResponseEntity.ok(packageAppService.getById(id));
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
