@@ -1,12 +1,12 @@
 package com.yeem.lamp.presentation.controller.web;
 
-import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.application.service.MemberAppService;
 import com.yeem.lamp.presentation.request.LoginRequest;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,7 +31,7 @@ public class MemberWebController {
             return ResponseEntity.ok(tokenDTO);
         } catch (Exception e) {
             log.error("login error", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("登录失败");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("登录失败");
         }
     }
 
@@ -45,12 +45,12 @@ public class MemberWebController {
         try {
             Long id = LocalAuthInterceptor.getMemberId();
             if (null == id) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询 id为空");
             }
             return ResponseEntity.ok(memberAppService.getByIdWithService(id));
         } catch (Exception e) {
             log.error("getById方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询失败");
         }
     }
 }

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.application.service.PackageAppService;
 import com.yeem.lamp.security.Constant;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinPackage;
+import com.yeem.lamp.infrastructure.persistence.entity.PackageDo;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinPackageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class MAladdinPackageController {
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(aladdinPackageService.list());
+            return ResponseEntity.ok(packageAppService.list());
         } catch (Exception e) {
             log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询列表失败");
@@ -78,13 +78,13 @@ public class MAladdinPackageController {
     /**
      * 更改
      *
-     * @param aladdinPackage aladdinPackage
+     * @param packageDo aladdinPackage
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody AladdinPackage aladdinPackage) {
+    public ResponseEntity<Object> update(@RequestBody PackageDo packageDo) {
         try {
-            aladdinPackageService.updateById(aladdinPackage);
+            aladdinPackageService.updateById(packageDo);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -95,13 +95,13 @@ public class MAladdinPackageController {
     /**
      * 新增
      *
-     * @param aladdinPackage aladdinPackage
+     * @param packageDo aladdinPackage
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody AladdinPackage aladdinPackage) {
+    public ResponseEntity<Object> save(@RequestBody PackageDo packageDo) {
         try {
-            aladdinPackageService.save(aladdinPackage);
+            aladdinPackageService.save(packageDo);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);
@@ -112,18 +112,18 @@ public class MAladdinPackageController {
     /**
      * 删除
      *
-     * @param aladdinPackage aladdinPackage
+     * @param packageDo aladdinPackage
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody AladdinPackage aladdinPackage) {
+    public ResponseEntity<Object> delete(@RequestBody PackageDo packageDo) {
         try {
-            if (null == aladdinPackage.getId()) {
+            if (null == packageDo.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            UpdateWrapper<AladdinPackage> updateWrapper = new UpdateWrapper<>();
+            UpdateWrapper<PackageDo> updateWrapper = new UpdateWrapper<>();
             updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
-            updateWrapper.eq(BaseEntity.BaseField.ID.getName(), aladdinPackage.getId());
+            updateWrapper.eq(BaseEntity.BaseField.ID.getName(), packageDo.getId());
             aladdinPackageService.update(updateWrapper);
             return ResponseEntity.ok("删除");
         } catch (Exception e) {

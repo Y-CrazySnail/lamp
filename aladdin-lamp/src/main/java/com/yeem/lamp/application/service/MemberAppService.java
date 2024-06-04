@@ -1,5 +1,6 @@
 package com.yeem.lamp.application.service;
 
+import cn.hutool.core.thread.ThreadUtil;
 import com.yeem.lamp.application.dto.MemberDTO;
 import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.domain.entity.Member;
@@ -33,7 +34,7 @@ public class MemberAppService {
         if (token == null) {
             throw new YeemException("login error");
         }
-//        telegramMessage.sendLoginNotice(member);
+        telegramMessage.sendLoginNotice(member);
         return new TokenDTO(token);
     }
 

@@ -19,7 +19,7 @@ import com.yeem.lamp.infrastructure.persistence.service.impl.XUIService;
 import com.yeem.lamp.security.Constant;
 import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 import com.yeem.lamp.infrastructure.persistence.entity.AladdinOrder;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinPackage;
+import com.yeem.lamp.infrastructure.persistence.entity.PackageDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.AladdinOrderMapper;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
@@ -84,14 +84,14 @@ public class AladdinOrderServiceImpl extends ServiceImpl<AladdinOrderMapper, Ala
 
     @Override
     public void place(AladdinOrder aladdinOrder) {
-        AladdinPackage aladdinPackage = aladdinPackageService.getById(aladdinOrder.getPackageId());
+        PackageDo packageDo = aladdinPackageService.getById(aladdinOrder.getPackageId());
         String orderNo = "No" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + aladdinOrder.getMemberId();
         aladdinOrder.setOrderNo(orderNo);
         aladdinOrder.setOrderTime(new Date());
         aladdinOrder.setStatus("-1");
-        aladdinOrder.setDataTraffic(aladdinPackage.getDataTraffic());
-        aladdinOrder.setPeriod(aladdinPackage.getPeriod());
-        aladdinOrder.setPrice(aladdinPackage.getPrice());
+        aladdinOrder.setDataTraffic(packageDo.getDataTraffic());
+        aladdinOrder.setPeriod(packageDo.getPeriod());
+        aladdinOrder.setPrice(packageDo.getPrice());
         super.save(aladdinOrder);
     }
 
