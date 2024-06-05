@@ -1,12 +1,9 @@
 package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.yeem.common.entity.BaseEntity;
-import com.yeem.lamp.application.service.OrderAppService;
-import com.yeem.lamp.security.Constant;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinOrder;
-import com.yeem.lamp.infrastructure.persistence.service.IAladdinOrderService;
+import com.yeem.lamp.application.dto.MemberDTO;
+import com.yeem.lamp.application.service.MemberAppService;
+import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/manage/order")
-public class MAladdinOrderController {
+@RequestMapping("/manage/member")
+public class MemberMController {
 
     @Autowired
-    private IAladdinOrderService aladdinOrderService;
-
-    @Autowired
-    private OrderAppService orderAppService;
+    private MemberAppService memberAppService;
 
     /**
      * 列表查询
@@ -31,10 +25,10 @@ public class MAladdinOrderController {
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(aladdinOrderService.list());
+            return ResponseEntity.ok(memberAppService.list());
         } catch (Exception e) {
             log.error("list方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询列表失败");
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
         }
     }
 
@@ -43,13 +37,17 @@ public class MAladdinOrderController {
      *
      * @param current 页码
      * @param size    页容量
+     * @param email   邮箱
+     * @param wechat  微信
      * @return 分页信息
      */
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
-                                        @RequestParam("size") int size) {
+                                        @RequestParam("size") int size,
+                                        @RequestParam(value = "email", required = false) String email,
+                                        @RequestParam(value = "wechat", required = false) String wechat) {
         try {
-            return ResponseEntity.ok(aladdinOrderService.pages(current, size));
+            return ResponseEntity.ok(memberAppService.pages(current, size, email, wechat));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -68,7 +66,7 @@ public class MAladdinOrderController {
             if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
-            return ResponseEntity.ok(aladdinOrderService.getById(id));
+            return ResponseEntity.ok(memberAppService.getById(id));
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
@@ -78,14 +76,14 @@ public class MAladdinOrderController {
     /**
      * 更改
      *
-     * @param aladdinOrder aladdinOrder
+     * @param aladdinMember aladdinMember
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody AladdinOrder aladdinOrder) {
+    public ResponseEntity<Object> update(@RequestBody MemberDTO aladdinMember) {
         try {
-            aladdinOrderService.updateById(aladdinOrder);
-            return ResponseEntity.ok(" ");
+            memberAppService.updateById(aladdinMember);
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("update方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
@@ -95,42 +93,34 @@ public class MAladdinOrderController {
     /**
      * 新增
      *
-     * @param aladdinOrder aladdinOrder
+     * @param aladdinMember aladdinMember
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody AladdinOrder aladdinOrder) {
+    public ResponseEntity<Object> save(@RequestBody MemberDTO aladdinMember) {
         try {
-            aladdinOrderService.place(aladdinOrder);
-            return ResponseEntity.ok(" ");
+            memberAppService.save(aladdinMember);
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
         }
     }
 
-    @PostMapping("/pay")
-    public ResponseEntity<Object> pay(@RequestBody AladdinOrder aladdinOrder) {
-        return ResponseEntity.ok(aladdinOrderService.pay(aladdinOrder));
-    }
-
     /**
      * 删除
      *
-     * @param aladdinOrder aladdinOrder
+     * @param memberDo aladdinMember
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody AladdinOrder aladdinOrder) {
+    public ResponseEntity<Object> delete(@RequestBody MemberDo memberDo) {
         try {
-            if (null == aladdinOrder.getId()) {
+            if (null == memberDo.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            UpdateWrapper<AladdinOrder> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
-            updateWrapper.eq(BaseEntity.BaseField.ID.getName(), aladdinOrder.getId());
-            aladdinOrderService.update(updateWrapper);
-            return ResponseEntity.ok("删除");
+            memberAppService.removeById(memberDo.getId());
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");

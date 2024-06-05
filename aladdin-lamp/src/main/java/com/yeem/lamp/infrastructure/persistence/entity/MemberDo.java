@@ -1,5 +1,6 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Member;
@@ -18,6 +19,10 @@ public class MemberDo extends BaseDo {
     private String password;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date lastUpdateSubscription;
+
+    public MemberDo(Member member) {
+        BeanUtil.copyProperties(member, this);
+    }
 
     public Member convertMember() {
         Member member = new Member();

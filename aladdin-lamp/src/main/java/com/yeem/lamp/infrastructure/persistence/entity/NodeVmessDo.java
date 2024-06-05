@@ -1,8 +1,10 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.common.entity.BaseEntity;
+import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.entity.Package;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import cn.hutool.core.util.StrUtil;
@@ -13,7 +15,7 @@ import cn.hutool.core.util.StrUtil;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "aladdin_node_vmess", autoResultMap = true)
-public class AladdinNodeVmess extends BaseEntity {
+public class NodeVmessDo extends BaseDo {
     private Long serviceId;
     private Long serverId;
     private Integer serviceYear;
@@ -35,6 +37,16 @@ public class AladdinNodeVmess extends BaseEntity {
     private String sni;
     private int sort;
     private int multiplyingPower;
+
+    public NodeVmessDo(NodeVmess nodeVmess) {
+        BeanUtil.copyProperties(nodeVmess, this);
+    }
+
+    public NodeVmess convertPackage() {
+        NodeVmess nodeVmess = new NodeVmess();
+        BeanUtil.copyProperties(this, nodeVmess);
+        return nodeVmess;
+    }
 
     public String convert() {
         StringBuilder url = new StringBuilder();

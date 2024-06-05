@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 
 @Data
 public class Package {
+    private Long id;
     private String type;
     private Integer dataTraffic;
     private String period;

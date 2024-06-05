@@ -1,9 +1,11 @@
 package com.yeem.lamp.application.service;
 
-import cn.hutool.core.thread.ThreadUtil;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.MemberDTO;
 import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.domain.entity.Member;
+import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.factory.MemberFactory;
 import com.yeem.lamp.domain.objvalue.Token;
 import com.yeem.lamp.domain.service.MemberDomainService;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MemberAppService {
@@ -41,8 +44,43 @@ public class MemberAppService {
     public MemberDTO getByIdWithService(Long id) {
         Member member = memberDomainService.getById(id);
         MemberDTO memberDTO = new MemberDTO(member);
-        List<com.yeem.lamp.domain.entity.Service> serviceList = serviceDomainService.listByMemberId(id);
-        memberDTO.setServiceList(serviceList);
+        List<Services> servicesList = serviceDomainService.listByMemberId(id);
+        memberDTO.setServicesList(servicesList);
         return memberDTO;
+    }
+
+    public List<MemberDTO> list() {
+        List<Member> memberList = memberDomainService.list();
+        return memberList.stream().map(MemberDTO::new).collect(Collectors.toList());
+    }
+
+    public IPage<MemberDTO> pages(int current, int size, String email, String wechat) {
+        IPage<Member> page = memberDomainService.pages(current, size, email, wechat);
+        IPage<MemberDTO> pageDTO = new Page<>();
+        pageDTO.setPages(page.getPages());
+        pageDTO.setTotal(page.getTotal());
+        pageDTO.setSize(page.getSize());
+        pageDTO.setCurrent(page.getCurrent());
+        pageDTO.setRecords(page.getRecords().stream().map(MemberDTO::new).collect(Collectors.toList()));
+        return pageDTO;
+    }
+
+    public MemberDTO getById(Long id) {
+        Member member = memberDomainService.getById(id);
+        return new MemberDTO(member);
+    }
+
+    public void updateById(MemberDTO memberDTO) {
+        Member member = memberDTO.convertMember();
+        memberDomainService.updateById(member);
+    }
+
+    public void save(MemberDTO memberDTO) {
+        Member member = memberDTO.convertMember();
+        memberDomainService.save(member);
+    }
+
+    public void removeById(Long id) {
+        memberDomainService.removeById(id);
     }
 }

@@ -1,12 +1,9 @@
 package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.yeem.common.entity.BaseEntity;
-import com.yeem.lamp.application.service.PackageAppService;
-import com.yeem.lamp.security.Constant;
-import com.yeem.lamp.infrastructure.persistence.entity.PackageDo;
-import com.yeem.lamp.infrastructure.persistence.service.IAladdinPackageService;
+import com.yeem.lamp.application.dto.ServiceDTO;
+import com.yeem.lamp.application.service.ServiceAppService;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,42 +11,30 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/manage/package")
-public class MAladdinPackageController {
+@RequestMapping("/manage/service")
+public class ServiceMController {
 
     @Autowired
-    private IAladdinPackageService aladdinPackageService;
-
-    @Autowired
-    private PackageAppService packageAppService;
-
-    /**
-     * 列表查询
-     *
-     * @return 列表信息
-     */
-    @GetMapping("/list")
-    public ResponseEntity<Object> list() {
-        try {
-            return ResponseEntity.ok(packageAppService.list());
-        } catch (Exception e) {
-            log.error("list方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询列表失败");
-        }
-    }
+    private ServiceAppService serviceAppService;
 
     /**
      * 分页查询
      *
-     * @param current 页码
-     * @param size    页容量
+     * @param current  页码
+     * @param size     页容量
+     * @param memberId 会员ID
+     * @param status   状态 0异常 1正常
      * @return 分页信息
      */
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
-                                        @RequestParam("size") int size) {
+                                        @RequestParam("size") int size,
+                                        @RequestParam(value = "memberId", required = false) Long memberId,
+                                        @RequestParam(value = "status", required = false) String status,
+                                        @RequestParam(value = "wechat", required = false) String wechat,
+                                        @RequestParam(value = "email", required = false) String email) {
         try {
-            return ResponseEntity.ok(packageAppService.pages(current, size));
+            return ResponseEntity.ok(serviceAppService.pages(current, size, memberId, status, wechat, email));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -68,7 +53,7 @@ public class MAladdinPackageController {
             if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
-            return ResponseEntity.ok(packageAppService.getById(id));
+            return ResponseEntity.ok(serviceAppService.getById(id));
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
@@ -78,13 +63,13 @@ public class MAladdinPackageController {
     /**
      * 更改
      *
-     * @param packageDo aladdinPackage
+     * @param serviceDTO serviceDTO
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody PackageDo packageDo) {
+    public ResponseEntity<Object> update(@RequestBody ServiceDTO serviceDTO) {
         try {
-            aladdinPackageService.updateById(packageDo);
+            serviceAppService.updateById(serviceDTO);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -95,13 +80,13 @@ public class MAladdinPackageController {
     /**
      * 新增
      *
-     * @param packageDo aladdinPackage
+     * @param serviceDTO aladdinService
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody PackageDo packageDo) {
+    public ResponseEntity<Object> save(@RequestBody ServiceDTO serviceDTO) {
         try {
-            aladdinPackageService.save(packageDo);
+            serviceAppService.save(serviceDTO);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);
@@ -112,20 +97,17 @@ public class MAladdinPackageController {
     /**
      * 删除
      *
-     * @param packageDo aladdinPackage
+     * @param serviceDTO serviceDTO
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody PackageDo packageDo) {
+    public ResponseEntity<Object> delete(@RequestBody ServiceDTO serviceDTO) {
         try {
-            if (null == packageDo.getId()) {
+            if (null == serviceDTO.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            UpdateWrapper<PackageDo> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
-            updateWrapper.eq(BaseEntity.BaseField.ID.getName(), packageDo.getId());
-            aladdinPackageService.update(updateWrapper);
-            return ResponseEntity.ok("删除");
+            serviceAppService.removeById(serviceDTO.getId());
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");

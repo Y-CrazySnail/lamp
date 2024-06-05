@@ -1,19 +1,16 @@
-package com.yeem.lamp.infrastructure.persistence.entity;
+package com.yeem.lamp.application.dto;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Services;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
-@TableName(value = "aladdin_service", autoResultMap = true)
-public class ServiceDo extends BaseDo {
+public class ServiceDTO {
+    private Long id;
     private Long memberId;
     /**
      * 类型 0周期服务 1数据加量包
@@ -31,22 +28,13 @@ public class ServiceDo extends BaseDo {
      * 0未生效 1已生效 9已过期
      */
     private String status;
+    private String wechat;
+    private String email;
+    private Double serviceUp;
+    private Double serviceDown;
+    private String surplus;
 
-    public enum TYPE {
-        SERVICE("0"),
-        DATA("1");
-        private final String value;
-
-        TYPE(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
-    public ServiceDo(Services services) {
+    public ServiceDTO(Services services) {
         BeanUtil.copyProperties(services, this);
     }
 
@@ -55,5 +43,4 @@ public class ServiceDo extends BaseDo {
         BeanUtil.copyProperties(this, services);
         return services;
     }
-
 }

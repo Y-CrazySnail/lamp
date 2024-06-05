@@ -1,10 +1,10 @@
 package com.yeem.lamp.presentation.controller.web;
 
 import cn.hutool.http.HttpStatus;
+import com.yeem.lamp.application.dto.OrderDTO;
 import com.yeem.lamp.application.service.OrderAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinOrder;
+import com.yeem.lamp.infrastructure.persistence.entity.OrderDo;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
-import com.yeem.lamp.infrastructure.persistence.service.IAladdinOrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/web/order")
 public class OrderWebController {
-
-    @Autowired
-    private IAladdinOrderService aladdinOrderService;
 
     @Autowired
     private OrderAppService orderAppService;
@@ -30,7 +27,7 @@ public class OrderWebController {
     public ResponseEntity<Object> list() {
         try {
             Long memberId = LocalAuthInterceptor.getMemberId();
-            return ResponseEntity.ok(aladdinOrderService.listByMemberId(memberId));
+            return ResponseEntity.ok(orderAppService.listByMemberId(memberId));
         } catch (Exception e) {
             log.error("list查询失败", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("list查询失败");
@@ -43,11 +40,11 @@ public class OrderWebController {
      * @return 下单结果
      */
     @PostMapping("/place")
-    public ResponseEntity<Object> place(@RequestBody AladdinOrder aladdinOrder) {
+    public ResponseEntity<Object> place(@RequestBody OrderDo orderDo) {
         try {
             Long memberId = LocalAuthInterceptor.getMemberId();
-            aladdinOrder.setMemberId(memberId);
-            aladdinOrderService.place(aladdinOrder);
+            orderDo.setMemberId(memberId);
+            aladdinOrderService.place(orderDo);
             return ResponseEntity.ok("下单成功");
         } catch (Exception e) {
             log.error("下单", e);
@@ -56,8 +53,8 @@ public class OrderWebController {
     }
 
     @PostMapping("/pay")
-    public ResponseEntity<Object> pay(@RequestBody AladdinOrder aladdinOrder) {
-        return ResponseEntity.ok(aladdinOrderService.pay(aladdinOrder));
+    public ResponseEntity<Object> pay(@RequestBody OrderDTO orderDTO) {
+        return ResponseEntity.ok(orderAppService.pay(orderDTO));
     }
 
     /**
@@ -82,10 +79,10 @@ public class OrderWebController {
             log.info("money:{}", money);
             log.info("trade_status:{}", trade_status);
             if ("TRADE_SUCCESS".equals(trade_status)) {
-                AladdinOrder aladdinOrder = new AladdinOrder();
-                aladdinOrder.setOrderNo(out_trade_no);
-                aladdinOrder.setTradeNo(trade_no);
-                aladdinOrderService.finish(aladdinOrder);
+                OrderDo orderDo = new OrderDo();
+                orderDo.setOrderNo(out_trade_no);
+                orderDo.setTradeNo(trade_no);
+                aladdinOrderService.finish(orderDo);
             }
             return ResponseEntity.ok("ok");
         } catch (Exception e) {

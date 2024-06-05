@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class Service {
+public class Services {
     private Long id;
     private Long memberId;
     /**

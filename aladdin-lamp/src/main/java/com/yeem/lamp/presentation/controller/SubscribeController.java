@@ -10,9 +10,9 @@ import com.yeem.lamp.infrastructure.persistence.service.IAladdinNodeVmessService
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinServiceService;
 import com.yeem.lamp.security.Constant;
 import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinNodeVmess;
+import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
-import com.yeem.lamp.infrastructure.persistence.service.impl.XUIService;
+import com.yeem.lamp.infrastructure.persistence.repository.XUIService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -78,42 +78,42 @@ public class SubscribeController {
         aladdinMemberService.updateById(aladdinMember);
         List<String> nodeUrlList = new ArrayList<>();
         String endDate = DateUtil.format(serviceDo.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-        List<AladdinNodeVmess> aladdinNodeVmessList = aladdinNodeVmessService.listByServiceId(serviceDo.getId(), year, month);
-        for (AladdinNodeVmess aladdinNodeVmess : aladdinNodeVmessList) {
-            if (aladdinNodeVmess.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
-                nodeUrlList.add(aladdinNodeVmess.convert());
+        List<NodeVmessDo> nodeVmessDoList = aladdinNodeVmessService.listByServiceId(serviceDo.getId(), year, month);
+        for (NodeVmessDo nodeVmessDo : nodeVmessDoList) {
+            if (nodeVmessDo.getNodeType().equals(Constant.NODE_TYPE_PRIVATE)) {
+                nodeUrlList.add(nodeVmessDo.convert());
             }
         }
-        AladdinNodeVmess aladdinNodeVmessForTime = new AladdinNodeVmess();
-        aladdinNodeVmessForTime.setNodePs("到期:" + endDate);
-        aladdinNodeVmessForTime.setNodeAdd("google.com");
-        aladdinNodeVmessForTime.setNodePort("443");
-        aladdinNodeVmessForTime.setNodeId("00000000-0000-0000-0000-000000000000");
-        aladdinNodeVmessForTime.setAid("0");
-        aladdinNodeVmessForTime.setNet("tcp");
-        aladdinNodeVmessForTime.setType("none");
-        aladdinNodeVmessForTime.setTls("none");
-        nodeUrlList.add(aladdinNodeVmessForTime.convert());
-        AladdinNodeVmess aladdinNodeVmessForSurplus = new AladdinNodeVmess();
-        aladdinNodeVmessForSurplus.setNodePs("本月剩余:" + serviceDo.getSurplus() + "GB" + (serviceDo.getSurplus().contains("-") ? "-已超额" : ""));
-        aladdinNodeVmessForSurplus.setNodeAdd("google.com");
-        aladdinNodeVmessForSurplus.setNodePort("443");
-        aladdinNodeVmessForSurplus.setNodeId("00000000-0000-0000-0000-000000000000");
-        aladdinNodeVmessForSurplus.setAid("0");
-        aladdinNodeVmessForSurplus.setNet("tcp");
-        aladdinNodeVmessForSurplus.setType("none");
-        aladdinNodeVmessForSurplus.setTls("none");
-        nodeUrlList.add(aladdinNodeVmessForSurplus.convert());
-        AladdinNodeVmess aladdinNodeVmessForWebsite = new AladdinNodeVmess();
-        aladdinNodeVmessForWebsite.setNodePs("官网: aladdinslamp.cc");
-        aladdinNodeVmessForWebsite.setNodeAdd("google.com");
-        aladdinNodeVmessForWebsite.setNodePort("443");
-        aladdinNodeVmessForWebsite.setNodeId("00000000-0000-0000-0000-000000000000");
-        aladdinNodeVmessForWebsite.setAid("0");
-        aladdinNodeVmessForWebsite.setNet("tcp");
-        aladdinNodeVmessForWebsite.setType("none");
-        aladdinNodeVmessForWebsite.setTls("none");
-        nodeUrlList.add(aladdinNodeVmessForWebsite.convert());
+        NodeVmessDo nodeVmessDoForTime = new NodeVmessDo();
+        nodeVmessDoForTime.setNodePs("到期:" + endDate);
+        nodeVmessDoForTime.setNodeAdd("google.com");
+        nodeVmessDoForTime.setNodePort("443");
+        nodeVmessDoForTime.setNodeId("00000000-0000-0000-0000-000000000000");
+        nodeVmessDoForTime.setAid("0");
+        nodeVmessDoForTime.setNet("tcp");
+        nodeVmessDoForTime.setType("none");
+        nodeVmessDoForTime.setTls("none");
+        nodeUrlList.add(nodeVmessDoForTime.convert());
+        NodeVmessDo nodeVmessDoForSurplus = new NodeVmessDo();
+        nodeVmessDoForSurplus.setNodePs("本月剩余:" + serviceDo.getSurplus() + "GB" + (serviceDo.getSurplus().contains("-") ? "-已超额" : ""));
+        nodeVmessDoForSurplus.setNodeAdd("google.com");
+        nodeVmessDoForSurplus.setNodePort("443");
+        nodeVmessDoForSurplus.setNodeId("00000000-0000-0000-0000-000000000000");
+        nodeVmessDoForSurplus.setAid("0");
+        nodeVmessDoForSurplus.setNet("tcp");
+        nodeVmessDoForSurplus.setType("none");
+        nodeVmessDoForSurplus.setTls("none");
+        nodeUrlList.add(nodeVmessDoForSurplus.convert());
+        NodeVmessDo nodeVmessDoForWebsite = new NodeVmessDo();
+        nodeVmessDoForWebsite.setNodePs("官网: aladdinslamp.cc");
+        nodeVmessDoForWebsite.setNodeAdd("google.com");
+        nodeVmessDoForWebsite.setNodePort("443");
+        nodeVmessDoForWebsite.setNodeId("00000000-0000-0000-0000-000000000000");
+        nodeVmessDoForWebsite.setAid("0");
+        nodeVmessDoForWebsite.setNet("tcp");
+        nodeVmessDoForWebsite.setType("none");
+        nodeVmessDoForWebsite.setTls("none");
+        nodeUrlList.add(nodeVmessDoForWebsite.convert());
         return nodeUrlList;
     }
 }

@@ -1,10 +1,12 @@
 package com.yeem.lamp.application.service;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.PackageDTO;
 import com.yeem.lamp.domain.entity.Package;
 import com.yeem.lamp.domain.service.PackageDomainService;
+import com.yeem.lamp.infrastructure.persistence.entity.PackageDo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +38,17 @@ public class PackageAppService {
     public PackageDTO getById(Long id) {
         Package packages = packageDomainService.getById(id);
         return new PackageDTO(packages);
+    }
+
+    public void updateById(PackageDTO packageDTO) {
+        packageDomainService.updateById(packageDTO.convertPackage());
+    }
+
+    public void insert(PackageDTO packageDTO) {
+        packageDomainService.insert(packageDTO.convertPackage());
+    }
+
+    public void deleteById(Long id) {
+        packageDomainService.deleteById(id);
     }
 }

@@ -1,10 +1,10 @@
-package com.yeem.lamp.infrastructure.persistence.service.impl;
+package com.yeem.lamp.infrastructure.persistence.repository;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinNodeVmess;
-import com.yeem.lamp.infrastructure.persistence.entity.AladdinServer;
+import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
+import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
 import com.yeem.lamp.infrastructure.persistence.service.IAladdinNodeVmessService;
@@ -37,23 +37,23 @@ public class XUIService {
         try {
             if (!STATUS) {
                 STATUS = true;
-                List<AladdinServer> serverList = aladdinServerService.list();
+                List<ServerDo> serverList = aladdinServerService.list();
                 List<ServiceDo> serviceDoList = aladdinServiceService.listValid();
                 aladdinNodeVmessService.updateByValidServiceList(serviceDoList);
-                for (AladdinServer server : serverList) {
+                for (ServerDo server : serverList) {
                     int year = DateUtil.year(new Date());
                     int month = DateUtil.month(new Date()) + 1;
                     for (ServiceDo service : serviceDoList) {
                         aladdinNodeVmessService.save(server, service, year, month);
                     }
                 }
-                for (AladdinServer server : serverList) {
+                for (ServerDo server : serverList) {
                     Long serverId = server.getId();
                     int year = DateUtil.year(new Date());
                     int month = DateUtil.month(new Date()) + 1;
-                    List<AladdinNodeVmess> nodeVmessList = aladdinNodeVmessService.listByServerId(serverId, year, month);
+                    List<NodeVmessDo> nodeVmessList = aladdinNodeVmessService.listByServerId(serverId, year, month);
                     List<XUIVmessClient> vmessClientList = new ArrayList<>();
-                    for (AladdinNodeVmess nodeVmess : nodeVmessList) {
+                    for (NodeVmessDo nodeVmess : nodeVmessList) {
                         XUIVmessClient xuiVmessClient = new XUIVmessClient(
                                 nodeVmess.getNodeId(),
                                 Base64.encode(String.valueOf(nodeVmess.getId())).replace("=", ""),
@@ -80,10 +80,10 @@ public class XUIService {
                     log.info("开始同步{}服务器本地节点流量信息----------", server.getPostscript());
                     for (XUIInboundData.ClientStats clientStat : xuiInboundData.getClientStats()) {
                         Long nodeVmessId = Long.valueOf(Base64.decodeStr(clientStat.getEmail()));
-                        LambdaUpdateWrapper<AladdinNodeVmess> updateWrapper = new LambdaUpdateWrapper<>();
-                        updateWrapper.eq(AladdinNodeVmess::getId, nodeVmessId);
-                        updateWrapper.set(AladdinNodeVmess::getServiceUp, clientStat.getUp());
-                        updateWrapper.set(AladdinNodeVmess::getServiceDown, clientStat.getDown());
+                        LambdaUpdateWrapper<NodeVmessDo> updateWrapper = new LambdaUpdateWrapper<>();
+                        updateWrapper.eq(NodeVmessDo::getId, nodeVmessId);
+                        updateWrapper.set(NodeVmessDo::getServiceUp, clientStat.getUp());
+                        updateWrapper.set(NodeVmessDo::getServiceDown, clientStat.getDown());
                         aladdinNodeVmessService.update(updateWrapper);
                     }
                     aladdinNodeVmessService.updateByServerId(serverId, null, server.getSubscribeNamePrefix(), server.getSort());

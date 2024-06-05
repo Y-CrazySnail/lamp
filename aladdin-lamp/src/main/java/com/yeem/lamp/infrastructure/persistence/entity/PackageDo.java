@@ -1,16 +1,16 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.domain.entity.Package;
-import com.yeem.lamp.domain.entity.Service;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.math.BigDecimal;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName(value = "aladdin_package", autoResultMap = true)
-public class PackageDo extends BaseEntity {
+public class PackageDo extends BaseDo {
     private String type;
     private Integer dataTraffic;
     private String period;
@@ -18,8 +18,19 @@ public class PackageDo extends BaseEntity {
     private String title;
     private String introduce;
 
+    public PackageDo(Package packages) {
+        this.setId(packages.getId());
+        this.type = packages.getType();
+        this.dataTraffic = packages.getDataTraffic();
+        this.period = packages.getPeriod();
+        this.price = packages.getPrice();
+        this.title = packages.getTitle();
+        this.introduce = packages.getIntroduce();
+    }
+
     public Package convertPackage() {
         Package packages = new Package();
+        packages.setId(this.getId());
         packages.setType(this.type);
         packages.setDataTraffic(this.dataTraffic);
         packages.setPeriod(this.period);

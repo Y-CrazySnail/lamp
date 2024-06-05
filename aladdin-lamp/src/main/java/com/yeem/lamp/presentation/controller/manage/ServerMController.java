@@ -1,9 +1,8 @@
 package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.lamp.application.service.MemberAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
-import com.yeem.lamp.infrastructure.persistence.service.IAladdinMemberService;
+import com.yeem.lamp.application.dto.ServerDTO;
+import com.yeem.lamp.application.service.ServerAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,14 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/manage/member")
-public class MAladdinMemberController {
+@RequestMapping("/manage/server")
+public class ServerMController {
 
     @Autowired
-    private IAladdinMemberService aladdinMemberService;
-
-    @Autowired
-    private MemberAppService memberAppService;
+    private ServerAppService serverAppService;
 
     /**
      * 列表查询
@@ -28,10 +24,10 @@ public class MAladdinMemberController {
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(aladdinMemberService.list());
+            return ResponseEntity.ok(serverAppService.list());
         } catch (Exception e) {
-            log.error("page方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
+            log.error("list方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询列表失败");
         }
     }
 
@@ -40,17 +36,13 @@ public class MAladdinMemberController {
      *
      * @param current 页码
      * @param size    页容量
-     * @param email   邮箱
-     * @param wechat  微信
      * @return 分页信息
      */
     @GetMapping("/pages")
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
-                                        @RequestParam("size") int size,
-                                        @RequestParam(value = "email", required = false) String email,
-                                        @RequestParam(value = "wechat", required = false) String wechat) {
+                                        @RequestParam("size") int size) {
         try {
-            return ResponseEntity.ok(aladdinMemberService.pages(current, size, email, wechat));
+            return ResponseEntity.ok(serverAppService.pages(current, size));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -69,7 +61,7 @@ public class MAladdinMemberController {
             if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
-            return ResponseEntity.ok(aladdinMemberService.getById(id));
+            return ResponseEntity.ok(serverAppService.getById(id));
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
@@ -77,32 +69,15 @@ public class MAladdinMemberController {
     }
 
     /**
-     * 更改
-     *
-     * @param aladdinMember aladdinMember
-     * @return 更新结果
-     */
-    @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody MemberDo aladdinMember) {
-        try {
-            aladdinMemberService.updateById(aladdinMember);
-            return ResponseEntity.ok(" ");
-        } catch (Exception e) {
-            log.error("update方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
-        }
-    }
-
-    /**
      * 新增
      *
-     * @param aladdinMember aladdinMember
+     * @param serverDTO serverDTO
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody MemberDo aladdinMember) {
+    public ResponseEntity<Object> save(@RequestBody ServerDTO serverDTO) {
         try {
-            aladdinMemberService.save(aladdinMember);
+            serverAppService.save(serverDTO);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);
@@ -111,19 +86,36 @@ public class MAladdinMemberController {
     }
 
     /**
+     * 更改
+     *
+     * @param serverDTO serverDTO
+     * @return 更新结果
+     */
+    @PutMapping("/update")
+    public ResponseEntity<Object> update(@RequestBody ServerDTO serverDTO) {
+        try {
+            serverAppService.updateById(serverDTO);
+            return ResponseEntity.ok(" ");
+        } catch (Exception e) {
+            log.error("update方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
+        }
+    }
+
+    /**
      * 删除
      *
-     * @param memberDo aladdinMember
+     * @param serverDTO serverDTO
      * @return 删除结果
      */
     @DeleteMapping("/delete")
-    public ResponseEntity<Object> delete(@RequestBody MemberDo memberDo) {
+    public ResponseEntity<Object> delete(@RequestBody ServerDTO serverDTO) {
         try {
-            if (null == memberDo.getId()) {
+            if (null == serverDTO.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            aladdinMemberService.removeById(memberDo.getId());
-            return ResponseEntity.ok("");
+            serverAppService.removeById(serverDTO.getId());
+            return ResponseEntity.ok("删除");
         } catch (Exception e) {
             log.error("delete方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
