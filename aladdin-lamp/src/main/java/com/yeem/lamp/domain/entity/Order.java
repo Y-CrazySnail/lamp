@@ -31,17 +31,12 @@ public class Order {
     private String remark;
     private String tradeNo;
 
-    public void createOrder() {
+    public void createOrder(Integer dataTraffic, String period, BigDecimal price) {
         this.orderNo = "No" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + this.getMemberId();
         this.orderTime = new Date();
         this.setStatus("-1");
-
-
-        orderDTO.setOrderNo(orderNo);
-        orderDTO.setOrderTime(new Date());
-        orderDTO.setStatus("-1");
-        orderDTO.setDataTraffic(packageDo.getDataTraffic());
-        orderDTO.setPeriod(packageDo.getPeriod());
-        orderDTO.setPrice(packageDo.getPrice());
+        this.dataTraffic = dataTraffic;
+        this.period = period;
+        this.price = price;
     }
 }

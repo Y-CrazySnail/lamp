@@ -39,7 +39,7 @@ public class OrderDo extends BaseDo {
         BeanUtil.copyProperties(order, this);
     }
 
-    public Order convertPackage() {
+    public Order convertOrder() {
         Order order = new Order();
         BeanUtil.copyProperties(this, order);
         return order;

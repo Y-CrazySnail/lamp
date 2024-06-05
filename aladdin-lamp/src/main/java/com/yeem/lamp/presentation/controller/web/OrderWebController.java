@@ -3,7 +3,6 @@ package com.yeem.lamp.presentation.controller.web;
 import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.dto.OrderDTO;
 import com.yeem.lamp.application.service.OrderAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.OrderDo;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +39,11 @@ public class OrderWebController {
      * @return 下单结果
      */
     @PostMapping("/place")
-    public ResponseEntity<Object> place(@RequestBody OrderDo orderDo) {
+    public ResponseEntity<Object> place(@RequestBody OrderDTO orderDTO) {
         try {
             Long memberId = LocalAuthInterceptor.getMemberId();
-            orderDo.setMemberId(memberId);
-            aladdinOrderService.place(orderDo);
+            orderDTO.setMemberId(memberId);
+            orderAppService.place(orderDTO);
             return ResponseEntity.ok("下单成功");
         } catch (Exception e) {
             log.error("下单", e);
@@ -54,7 +53,8 @@ public class OrderWebController {
 
     @PostMapping("/pay")
     public ResponseEntity<Object> pay(@RequestBody OrderDTO orderDTO) {
-        return ResponseEntity.ok(orderAppService.pay(orderDTO));
+        orderAppService.pay(orderDTO);
+        return ResponseEntity.ok("");
     }
 
     /**
@@ -79,10 +79,10 @@ public class OrderWebController {
             log.info("money:{}", money);
             log.info("trade_status:{}", trade_status);
             if ("TRADE_SUCCESS".equals(trade_status)) {
-                OrderDo orderDo = new OrderDo();
-                orderDo.setOrderNo(out_trade_no);
-                orderDo.setTradeNo(trade_no);
-                aladdinOrderService.finish(orderDo);
+                OrderDTO orderDTO = new OrderDTO();
+                orderDTO.setOrderNo(out_trade_no);
+                orderDTO.setTradeNo(trade_no);
+                orderAppService.finish(orderDTO);
             }
             return ResponseEntity.ok("ok");
         } catch (Exception e) {

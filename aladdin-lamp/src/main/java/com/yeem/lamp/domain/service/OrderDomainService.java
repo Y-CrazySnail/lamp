@@ -16,8 +16,16 @@ public class OrderDomainService {
     @Autowired
     private OrderRepository orderRepository;
 
+    public void generateOrder(Order order) {
+        orderRepository.insert(order);
+    }
+
     public List<Order> list() {
         return orderRepository.list();
+    }
+
+    public List<Order> listByMemberId(Long memberId) {
+        return orderRepository.listByMemberId(memberId);
     }
 
     public IPage<Order> pages(int current, int size) {
@@ -34,9 +42,5 @@ public class OrderDomainService {
 
     public void insert(Order packages) {
         orderRepository.insert(packages);
-    }
-
-    public void deleteById(Long id) {
-        orderRepository.deleteById(id);
     }
 }

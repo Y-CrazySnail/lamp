@@ -22,15 +22,19 @@ public class OrderDTO {
      */
     private String status;
     private Long serviceId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date orderTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completeTime;
     private Integer dataTraffic;
     private String period;
     private BigDecimal price;
     private String remark;
     private String tradeNo;
+
+    public OrderDTO() {
+
+    }
 
     public OrderDTO(Order order) {
         BeanUtil.copyProperties(order, this);

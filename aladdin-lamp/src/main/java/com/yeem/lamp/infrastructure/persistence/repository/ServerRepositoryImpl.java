@@ -11,12 +11,17 @@ import com.yeem.lamp.domain.repository.ServerRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServerMapper;
 import com.yeem.lamp.security.Constant;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
+@Repository
 public class ServerRepositoryImpl implements ServerRepository {
 
     @Autowired

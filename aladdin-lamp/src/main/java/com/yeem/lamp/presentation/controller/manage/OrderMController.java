@@ -99,7 +99,7 @@ public class OrderMController {
     public ResponseEntity<Object> save(@RequestBody OrderDTO orderDo) {
         try {
             orderAppService.place(orderDo);
-            return ResponseEntity.ok(" ");
+            return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("save方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
