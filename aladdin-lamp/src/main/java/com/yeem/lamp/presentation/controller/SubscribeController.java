@@ -4,6 +4,7 @@ import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.yeem.lamp.infrastructure.persistence.repository.XUIService;
+import com.yeem.lamp.infrastructure.x.XUIClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
