@@ -70,18 +70,22 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public List<ServiceDo> listValid() {
-        QueryWrapper<ServiceDo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        queryWrapper.ge("end_date", new Date());
-        queryWrapper.eq("type", ServiceDo.TYPE.SERVICE.getValue());
-//        List<ServiceDo> serviceDoList = super.list(queryWrapper);
-//        for (ServiceDo serviceDo : serviceDoList) {
-//            dealDataTraffic(serviceDo);
-//        }
-//        serviceDoList.removeIf(aladdinService -> aladdinService.getSurplus().contains("-"));
-//        return serviceDoList;
-        return null;
+    public List<Services> listValid() {
+        LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServiceDo::getDeleteFlag, false);
+        queryWrapper.ge(ServiceDo::getEndDate, new Date());
+        queryWrapper.eq(ServiceDo::getType, ServiceDo.TYPE.SERVICE.getValue());
+        queryWrapper.eq(ServiceDo::getStatus, ServiceDo.STATUS.VALID.getValue());
+        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
+        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Services> list() {
+        LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServiceDo::getDeleteFlag, false);
+        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
+        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
     }
 
     @Override

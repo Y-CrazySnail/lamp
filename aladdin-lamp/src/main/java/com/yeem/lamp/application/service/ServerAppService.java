@@ -3,11 +3,17 @@ package com.yeem.lamp.application.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServerDTO;
+import com.yeem.lamp.domain.entity.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.entity.Services;
+import com.yeem.lamp.domain.service.NodeVmessDomainService;
 import com.yeem.lamp.domain.service.ServerDomainService;
+import com.yeem.lamp.domain.service.ServiceDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,6 +22,10 @@ public class ServerAppService {
 
     @Autowired
     private ServerDomainService serverDomainService;
+    @Autowired
+    private ServiceDomainService serviceDomainService;
+    @Autowired
+    private NodeVmessDomainService nodeVmessDomainService;
 
     public ServerDTO getById(Long id) {
         Server server = serverDomainService.getById(id);
@@ -50,5 +60,21 @@ public class ServerAppService {
 
     public void removeById(Long id) {
         serverDomainService.removeById(id);
+    }
+
+    public void syncNode() {
+        nodeVmessDomainService.expired();
+        List<Server> serverList = serverDomainService.list();
+        List<Services> serviceList = serviceDomainService.list();
+        for (Services services : serviceList) {
+            if (services.getStatus().equals(Services.STATUS.VALID.getValue())) {
+                for (Server server : serverList) {
+                    int count = nodeVmessDomainService.count(server.getId(), services.getId(), new Date());
+                    if (count == 0) {
+                        // todo 新增节点
+                    }
+                }
+            }
+        }
     }
 }

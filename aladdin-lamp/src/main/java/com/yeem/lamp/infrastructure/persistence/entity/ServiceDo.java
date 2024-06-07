@@ -31,6 +31,8 @@ public class ServiceDo extends BaseDo {
      * 0未生效 1已生效 9已过期
      */
     private String status;
+    private BigDecimal serviceUp;
+    private BigDecimal serviceDown;
 
     public enum TYPE {
         SERVICE("0"),
@@ -38,6 +40,22 @@ public class ServiceDo extends BaseDo {
         private final String value;
 
         TYPE(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public enum STATUS {
+        INVALID("0"),
+        VALID("1"),
+        LACK("8"),
+        EXPIRED("9");
+        private final String value;
+
+        STATUS(String value) {
             this.value = value;
         }
 

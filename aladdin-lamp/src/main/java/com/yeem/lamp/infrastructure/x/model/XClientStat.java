@@ -3,7 +3,7 @@ package com.yeem.lamp.infrastructure.x.model;
 import lombok.Data;
 
 @Data
-public class XClient {
+public class XClientStat {
     private int id;
     private int inboundId;
     private boolean enable;

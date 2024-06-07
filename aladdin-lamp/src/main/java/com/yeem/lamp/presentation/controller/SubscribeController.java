@@ -3,8 +3,7 @@ package com.yeem.lamp.presentation.controller;
 import cn.hutool.core.net.URLEncodeUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
-import com.yeem.lamp.infrastructure.persistence.repository.XUIService;
-import com.yeem.lamp.infrastructure.x.XUIClient;
+import com.yeem.lamp.application.service.XUIAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ import java.util.List;
 public class SubscribeController {
 
     @Autowired
-    private XUIService xuiService;
+    private XUIAppService xuiAppService;
 
     @GetMapping("/clash/{uuid}")
     public String clash(@PathVariable("uuid") String uuid) {

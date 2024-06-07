@@ -18,7 +18,9 @@ public interface ServiceRepository {
 
     List<Services> listByMemberId(Long memberId);
 
-    List<ServiceDo> listValid();
+    List<Services> listValid();
+
+    List<Services> list();
 
     boolean removeByMemberId(Serializable id);
 

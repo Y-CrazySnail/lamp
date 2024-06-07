@@ -28,7 +28,46 @@ public class Services {
     private String status;
     private String wechat;
     private String email;
-    private Double serviceUp;
-    private Double serviceDown;
+    private BigDecimal serviceUp;
+    private BigDecimal serviceDown;
     private String surplus;
+
+    public enum TYPE {
+        SERVICE("0"),
+        DATA("1");
+        private final String value;
+
+        TYPE(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public enum STATUS {
+        INVALID("0"),
+        VALID("1"),
+        LACK("8"),
+        EXPIRED("9");
+        private final String value;
+
+        STATUS(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public void calculateStatus() {
+        if (this.serviceUp.add(this.serviceDown).compareTo(BigDecimal.valueOf(this.dataTraffic)) > 0) {
+            this.setStatus(STATUS.LACK.value);
+        }
+        if (this.endDate.before(new Date())) {
+            this.setStatus(STATUS.EXPIRED.value);
+        }
+    }
 }

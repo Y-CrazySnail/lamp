@@ -4,6 +4,8 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * vmess节点
  */
@@ -31,6 +33,7 @@ public class NodeVmess {
     private String sni;
     private int sort;
     private int multiplyingPower;
+    private Date serviceDate;
 
     public String convert() {
         StringBuilder url = new StringBuilder();

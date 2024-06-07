@@ -18,6 +18,14 @@ public class ServiceDomainService {
         return serviceRepository.listByMemberId(memberId);
     }
 
+    public List<Services> listValid() {
+        return serviceRepository.listValid();
+    }
+
+    public List<Services> list() {
+        return serviceRepository.list();
+    }
+
     public Services getById(Long id) {
         return serviceRepository.getById(id);
     }
@@ -27,6 +35,7 @@ public class ServiceDomainService {
     }
 
     public void updateById(Services services) {
+        services.calculateStatus();
         serviceRepository.updateById(services);
     }
 

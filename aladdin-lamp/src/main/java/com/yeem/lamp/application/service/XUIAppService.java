@@ -1,8 +1,12 @@
-package com.yeem.lamp.infrastructure.persistence.repository;
+package com.yeem.lamp.application.service;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.entity.Services;
+import com.yeem.lamp.domain.service.ServerDomainService;
+import com.yeem.lamp.domain.service.ServiceDomainService;
 import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
@@ -17,14 +21,22 @@ import java.util.*;
 
 @Slf4j
 @Service
-public class XUIService {
+public class XUIAppService {
 
     private static boolean STATUS = false;
+
+    @Autowired
+    private ServerDomainService serverDomainService;
+    @Autowired
+    private ServiceDomainService serviceDomainService;
+
     public void sync() {
-//        try {
-//            if (!STATUS) {
-//                STATUS = true;
-//                List<ServerDo> serverList = aladdinServerService.list();
+        try {
+            if (!STATUS) {
+                STATUS = true;
+                List<Server> serverList = serverDomainService.list();
+                List<Services> servicesList = serviceDomainService.listValid();
+
 //                List<ServiceDo> serviceDoList = aladdinServiceService.listValid();
 //                aladdinNodeVmessService.updateByValidServiceList(serviceDoList);
 //                for (ServerDo server : serverList) {
@@ -77,11 +89,11 @@ public class XUIService {
 //                    log.info("结束同步{}服务器本地节点流量信息----------", server.getPostscript());
 //                }
 //                aladdinServiceService.refreshStatus();
-//            }
-//        } catch (Exception e) {
-//            log.error("执行同步操作失败", e);
-//        } finally {
-//            STATUS = false;
-//        }
+            }
+        } catch (Exception e) {
+            log.error("执行同步操作失败", e);
+        } finally {
+            STATUS = false;
+        }
     }
 }

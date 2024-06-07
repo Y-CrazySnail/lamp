@@ -1,22 +1,22 @@
 package com.yeem.lamp.infrastructure.x;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.yeem.lamp.infrastructure.x.model.XInbound;
-import com.yeem.lamp.infrastructure.x.model.XLogin;
-import com.yeem.lamp.infrastructure.x.model.XResponse;
+import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.infrastructure.x.model.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.HttpCookie;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Data
 @Slf4j
@@ -58,17 +58,17 @@ public class XUIClient {
 
     public static Map<String, XUIClient> XUI_CLIENT_MAP = new ConcurrentHashMap<>();
 
-    public static XUIClient init(String host, int port, String username, String password) {
-        if (XUI_CLIENT_MAP.containsKey(host)) {
-            XUIClient xuiClient = XUI_CLIENT_MAP.get(host);
+    public static XUIClient init(Server server) {
+        if (XUI_CLIENT_MAP.containsKey(server.getApiIp())) {
+            XUIClient xuiClient = XUI_CLIENT_MAP.get(server.getApiIp());
             if (!xuiClient.expired()) {
                 return xuiClient;
             } else {
-                XUI_CLIENT_MAP.remove(host);
+                XUI_CLIENT_MAP.remove(server.getApiIp());
             }
         }
-        XUIClient xuiClient = login(host, port, username, password);
-        XUI_CLIENT_MAP.put(host, xuiClient);
+        XUIClient xuiClient = login(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
+        XUI_CLIENT_MAP.put(server.getApiIp(), xuiClient);
         return xuiClient;
     }
 
@@ -105,7 +105,7 @@ public class XUIClient {
         }
     }
 
-    public Object getInboundList() {
+    public List<XInbound> getInboundList() {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.INBOUND_LIST)
                 .cookie(this.cookie)
@@ -114,26 +114,75 @@ public class XUIClient {
         try {
             XResponse<List<XInbound>> xResponse = objectMapper.readValue(body, new TypeReference<XResponse<List<XInbound>>>() {
             });
-            List<XInbound> xInboundList = xResponse.getObj();
+            if (xResponse.isSuccess()) {
+                return xResponse.getObj();
+            } else {
+                throw new RuntimeException();
+            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException();
         }
-        return null;
     }
 
-    public boolean delInbound() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.INBOUND_DEL + "id")// todo 替换
-                .cookie(this.cookie)
-                .execute();
-        String body = response.body();
-        try {
-            XResponse<Object> xResponse = objectMapper.readValue(body, new TypeReference<Object>() {
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+    public void delInbound() {
+        List<XInbound> xInboundList = getInboundList();
+        for (XInbound xInbound : xInboundList) {
+            String path = String.format(XUIApi.INBOUND_DEL, xInbound.getId());
+            HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + path)
+                    .cookie(this.cookie)
+                    .execute();
         }
-        return true;
+    }
+
+    public void addVmessInbound(Server server, List<NodeVmess> nodeVmessList) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        XInbound xInbound = new XInbound();
+        xInbound.setUp(0);
+        xInbound.setDown(0);
+        xInbound.setTotal(0);
+        xInbound.setRemark(server.getNodeRemark());
+        xInbound.setEnable(true);
+        xInbound.setExpiryTime(0);
+        xInbound.setListen(null);
+        xInbound.setPort(server.getNodePort());
+        xInbound.setProtocol("vmess");
+        xInbound.initSteamSettings();
+        xInbound.initSniffing();
+        List<XVmessClient> xVmessClientList = nodeVmessList.stream().map(XVmessClient::new).collect(Collectors.toList());
+        xInbound.initVmessSetting(xVmessClientList);
+        Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
+        HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.INBOUND_ADD)
+                .cookie(this.cookie)
+                .form(formData)
+                .execute();
+    }
+
+    public void addVmessClient(NodeVmess nodeVmess) {
+        List<XInbound> xInboundList = getInboundList();
+        for (XInbound inbound : xInboundList) {
+            XInbound xInbound = new XInbound();
+            xInbound.setId(inbound.getId());
+            XVmessClient xVmessClient = new XVmessClient(nodeVmess);
+            List<XVmessClient> xVmessClientList = Collections.singletonList(xVmessClient);
+            xInbound.initVmessSetting(xVmessClientList);
+            Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
+            HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.CLIENT_ADD)
+                    .cookie(this.cookie)
+                    .form(formData)
+                    .execute();
+        }
+    }
+
+    public void delVmessClient(NodeVmess nodeVmess) {
+        XVmessClient xVmessClient = new XVmessClient(nodeVmess);
+        List<XInbound> xInboundList = getInboundList();
+        for (XInbound xInbound : xInboundList) {
+            String path = String.format(XUIApi.CLIENT_DEL, xInbound.getId(), xVmessClient.getId());
+            HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + path)
+                    .cookie(this.cookie)
+                    .execute();
+            log.info("{}", response);
+        }
     }
 
     public Object getInboundOnline() {
@@ -153,10 +202,46 @@ public class XUIClient {
         return null;
     }
 
+    public XSystemStat getServerStatus() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.SERVER_STATUS)
+                .cookie(this.cookie)
+                .execute();
+        try {
+            XResponse<XSystemStat> xResponse = objectMapper.readValue(response.body(), new TypeReference<XResponse<XSystemStat>>() {
+            });
+            if (xResponse.isSuccess()) {
+                return xResponse.getObj();
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) {
-        XUIClient xuiClient = XUIClient.init("107.6.243.224", 9999, "aladdin", "aladdin");
-        xuiClient.getInboundList();
-        xuiClient.getInboundOnline();
-        System.out.println("123");
+        Server server = new Server();
+        server.setApiIp("107.6.243.224");
+        server.setApiPort(9999);
+        server.setApiUsername("aladdin");
+        server.setApiPassword("aladdin");
+        server.setNodePort(20000);
+        server.setNodeRemark("ALADDIN");
+        XUIClient xuiClient = XUIClient.init(server);
+//        xuiClient.delInbound("5");
+//        xuiClient.getInboundList();
+//        xuiClient.getInboundOnline();
+        NodeVmess nodeVmess = new NodeVmess();
+        nodeVmess.setNodeId("1ba763c5-8e76-4e2d-974f-f6b6292cc5f4");
+//        nodeVmess.setNodeId(UUID.fastUUID().toString());
+        nodeVmess.setServiceDate(new Date());
+        nodeVmess.setServerId(1L);
+        nodeVmess.setServiceId(3L);
+//        List<NodeVmess> nodeVmessList = new ArrayList<>();
+//        nodeVmessList.add(nodeVmess);
+//        xuiClient.addVmessInbound(server, nodeVmessList);
+//        xuiClient.addVmessClient(nodeVmess);
+        xuiClient.getServerStatus();
     }
 }
