@@ -38,7 +38,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void updateById(Order order) {
-        OrderDo orderDo = new OrderDo(order);
+        OrderDo orderDo = OrderDo.init(order);
         orderMapper.updateById(orderDo);
     }
 
@@ -54,6 +54,14 @@ public class OrderRepositoryImpl implements OrderRepository {
         queryWrapper.eq(OrderDo::getDeleteFlag, false);
         List<OrderDo> orderDoList = orderMapper.selectList(queryWrapper);
         return orderDoList.stream().map(OrderDo::convertOrder).collect(Collectors.toList());
+    }
+
+    @Override
+    public Order getByOrderNo(String orderNo) {
+        LambdaQueryWrapper<OrderDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDo::getOrderNo, orderNo);
+        OrderDo orderDo = orderMapper.selectOne(queryWrapper);
+        return orderDo.convertOrder();
     }
 
     @Override
@@ -80,6 +88,8 @@ public class OrderRepositoryImpl implements OrderRepository {
         List<OrderDo> orderDoList = orderMapper.selectList(queryWrapper);
         return orderDoList.stream().map(OrderDo::convertOrder).collect(Collectors.toList());
     }
+
+
 
     @Override
     public void place(OrderDo orderDo) {
@@ -158,7 +168,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public void insert(Order order) {
-        OrderDo orderDo = new OrderDo(order);
+        OrderDo orderDo = OrderDo.init(order);
         orderMapper.insert(orderDo);
     }
 }

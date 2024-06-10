@@ -61,12 +61,12 @@ public class PackageRepositoryImpl implements PackageRepository {
     }
 
     public void updateById(Package packages) {
-        PackageDo packageDo = new PackageDo(packages);
+        PackageDo packageDo = PackageDo.init(packages);
         packageMapper.updateById(packageDo);
     }
 
     public void insert(Package packages) {
-        PackageDo packageDo = new PackageDo(packages);
+        PackageDo packageDo = PackageDo.init(packages);
         packageMapper.insert(packageDo);
     }
 

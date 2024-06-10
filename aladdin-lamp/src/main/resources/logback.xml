@@ -42,7 +42,7 @@
         </encoder>
     </appender>
     <!--  打印SQL日志  -->
-    <logger name="com.yeem.lamp.mapper" level="DEBUG"/>
+    <logger name="com.yeem.lamp.infrastructure.persistence.repository.mapper" level="DEBUG"/>
     <!-- 默认日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />

@@ -64,8 +64,10 @@ public class ServiceDo extends BaseDo {
         }
     }
 
-    public ServiceDo(Services services) {
-        BeanUtil.copyProperties(services, this);
+    public static ServiceDo init(Services services) {
+        ServiceDo serviceDo = new ServiceDo();
+        BeanUtil.copyProperties(services, serviceDo);
+        return serviceDo;
     }
 
     public Services convertService() {

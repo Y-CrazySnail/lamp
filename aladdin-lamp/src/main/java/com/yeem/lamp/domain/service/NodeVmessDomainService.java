@@ -18,11 +18,31 @@ public class NodeVmessDomainService {
         return nodeVmessRepository.listByServiceId(serviceId);
     }
 
+    public List<NodeVmess> listValidByServerId(Long serverId, Date currentDate) {
+        return nodeVmessRepository.list("private", serverId, currentDate);
+    }
+
     public void expired() {
         nodeVmessRepository.expired();
     }
 
-    public int count(Long serverId, Long serviceId, Date currentDate) {
-        return nodeVmessRepository.count(serverId, serviceId, currentDate);
+    public int count(Long serverId, Long serviceId, String uuid, Date currentDate) {
+        return nodeVmessRepository.count(serverId, serviceId, uuid, currentDate);
+    }
+
+    public List<NodeVmess> list(Long serverId, Long serviceId, Date currentDate) {
+        return nodeVmessRepository.list(serverId, serviceId, currentDate);
+    }
+
+    public List<NodeVmess> list(Long serviceId, Date currentDate) {
+        return nodeVmessRepository.list(serviceId, currentDate);
+    }
+
+    public void save(NodeVmess nodeVmess) {
+        nodeVmessRepository.insert(nodeVmess);
+    }
+
+    public void updateById(NodeVmess nodeVmess) {
+        nodeVmessRepository.updateById(nodeVmess);
     }
 }

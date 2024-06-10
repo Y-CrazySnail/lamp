@@ -25,9 +25,9 @@ public class OrderDo extends BaseDo {
      */
     private String status;
     private Long serviceId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date orderTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completeTime;
     private Integer dataTraffic;
     private String period;
@@ -35,8 +35,10 @@ public class OrderDo extends BaseDo {
     private String remark;
     private String tradeNo;
 
-    public OrderDo(Order order) {
-        BeanUtil.copyProperties(order, this);
+    public static OrderDo init(Order order) {
+        OrderDo orderDo = new OrderDo();
+        BeanUtil.copyProperties(order, orderDo);
+        return orderDo;
     }
 
     public Order convertOrder() {

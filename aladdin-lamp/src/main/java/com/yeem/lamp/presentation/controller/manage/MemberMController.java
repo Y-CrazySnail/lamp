@@ -76,13 +76,13 @@ public class MemberMController {
     /**
      * 更改
      *
-     * @param aladdinMember aladdinMember
+     * @param memberDTO aladdinMember
      * @return 更新结果
      */
     @PutMapping("/update")
-    public ResponseEntity<Object> update(@RequestBody MemberDTO aladdinMember) {
+    public ResponseEntity<Object> update(@RequestBody MemberDTO memberDTO) {
         try {
-            memberAppService.updateById(aladdinMember);
+            memberAppService.updateById(memberDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -93,13 +93,13 @@ public class MemberMController {
     /**
      * 新增
      *
-     * @param aladdinMember aladdinMember
+     * @param memberDTO aladdinMember
      * @return 新增结果
      */
     @PostMapping("/save")
-    public ResponseEntity<Object> save(@RequestBody MemberDTO aladdinMember) {
+    public ResponseEntity<Object> save(@RequestBody MemberDTO memberDTO) {
         try {
-            memberAppService.save(aladdinMember);
+            memberAppService.save(memberDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("save方法", e);

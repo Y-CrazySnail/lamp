@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 @Data
@@ -33,7 +34,13 @@ public class Services {
     private String surplus;
 
     public enum TYPE {
+        /**
+         * 服务
+         */
         SERVICE("0"),
+        /**
+         * 数据包
+         */
         DATA("1");
         private final String value;
 
@@ -47,9 +54,21 @@ public class Services {
     }
 
     public enum STATUS {
+        /**
+         * 未生效
+         */
         INVALID("0"),
+        /**
+         * 生效
+         */
         VALID("1"),
+        /**
+         * 流量超额
+         */
         LACK("8"),
+        /**
+         * 已过期
+         */
         EXPIRED("9");
         private final String value;
 
@@ -63,11 +82,27 @@ public class Services {
     }
 
     public void calculateStatus() {
-        if (this.serviceUp.add(this.serviceDown).compareTo(BigDecimal.valueOf(this.dataTraffic)) > 0) {
-            this.setStatus(STATUS.LACK.value);
-        }
         if (this.endDate.before(new Date())) {
             this.setStatus(STATUS.EXPIRED.value);
+        } else {
+            this.setStatus(STATUS.VALID.getValue());
+            if (this.serviceUp.add(this.serviceDown).compareTo(BigDecimal.valueOf(this.dataTraffic)) > 0) {
+                this.setStatus(STATUS.LACK.value);
+            }
         }
+    }
+
+    public void dealSurplus() {
+        if (null == serviceUp) {
+            serviceUp = new BigDecimal(0);
+        }
+        if (null == serviceDown) {
+            serviceDown = new BigDecimal(0);
+        }
+        this.surplus = BigDecimal.valueOf(dataTraffic)
+                .subtract(serviceUp)
+                .subtract(serviceDown)
+                .setScale(2, RoundingMode.HALF_UP)
+                .toString();
     }
 }

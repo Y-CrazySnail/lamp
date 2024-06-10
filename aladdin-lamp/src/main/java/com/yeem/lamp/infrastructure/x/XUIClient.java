@@ -157,20 +157,17 @@ public class XUIClient {
                 .execute();
     }
 
-    public void addVmessClient(NodeVmess nodeVmess) {
-        List<XInbound> xInboundList = getInboundList();
-        for (XInbound inbound : xInboundList) {
-            XInbound xInbound = new XInbound();
-            xInbound.setId(inbound.getId());
-            XVmessClient xVmessClient = new XVmessClient(nodeVmess);
-            List<XVmessClient> xVmessClientList = Collections.singletonList(xVmessClient);
-            xInbound.initVmessSetting(xVmessClientList);
-            Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
-            HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.CLIENT_ADD)
-                    .cookie(this.cookie)
-                    .form(formData)
-                    .execute();
-        }
+    public void addVmessClient(XInbound inbound, NodeVmess nodeVmess) {
+        XInbound xInbound = new XInbound();
+        xInbound.setId(inbound.getId());
+        XVmessClient xVmessClient = new XVmessClient(nodeVmess);
+        List<XVmessClient> xVmessClientList = Collections.singletonList(xVmessClient);
+        xInbound.initVmessSetting(xVmessClientList);
+        Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
+        HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.CLIENT_ADD)
+                .cookie(this.cookie)
+                .form(formData)
+                .execute();
     }
 
     public void delVmessClient(NodeVmess nodeVmess) {
@@ -183,6 +180,13 @@ public class XUIClient {
                     .execute();
             log.info("{}", response);
         }
+    }
+
+    public void delVmessClient(int xInboundId, int xVmessClientId) {
+        String path = String.format(XUIApi.CLIENT_DEL, xInboundId, xVmessClientId);
+        HttpRequest.post("http://" + this.host + ":" + this.port + path)
+                .cookie(this.cookie)
+                .execute();
     }
 
     public Object getInboundOnline() {
@@ -230,7 +234,7 @@ public class XUIClient {
         server.setNodeRemark("ALADDIN");
         XUIClient xuiClient = XUIClient.init(server);
 //        xuiClient.delInbound("5");
-//        xuiClient.getInboundList();
+        xuiClient.getInboundList();
 //        xuiClient.getInboundOnline();
         NodeVmess nodeVmess = new NodeVmess();
         nodeVmess.setNodeId("1ba763c5-8e76-4e2d-974f-f6b6292cc5f4");

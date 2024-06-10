@@ -43,7 +43,7 @@ public class MemberAppService {
 
     public MemberDTO getByIdWithService(Long id) {
         Member member = memberDomainService.getById(id);
-        MemberDTO memberDTO = new MemberDTO(member);
+        MemberDTO memberDTO = MemberDTO.init(member);
         List<Services> servicesList = serviceDomainService.listByMemberId(id);
         memberDTO.setServicesList(servicesList);
         return memberDTO;
@@ -51,7 +51,7 @@ public class MemberAppService {
 
     public List<MemberDTO> list() {
         List<Member> memberList = memberDomainService.list();
-        return memberList.stream().map(MemberDTO::new).collect(Collectors.toList());
+        return memberList.stream().map(MemberDTO::init).collect(Collectors.toList());
     }
 
     public IPage<MemberDTO> pages(int current, int size, String email, String wechat) {
@@ -61,13 +61,13 @@ public class MemberAppService {
         pageDTO.setTotal(page.getTotal());
         pageDTO.setSize(page.getSize());
         pageDTO.setCurrent(page.getCurrent());
-        pageDTO.setRecords(page.getRecords().stream().map(MemberDTO::new).collect(Collectors.toList()));
+        pageDTO.setRecords(page.getRecords().stream().map(MemberDTO::init).collect(Collectors.toList()));
         return pageDTO;
     }
 
     public MemberDTO getById(Long id) {
         Member member = memberDomainService.getById(id);
-        return new MemberDTO(member);
+        return MemberDTO.init(member);
     }
 
     public void updateById(MemberDTO memberDTO) {

@@ -13,5 +13,4 @@ public interface ServiceMapper extends BaseMapper<ServiceDo> {
                                  @Param("status") String status,
                                  @Param("wechat") String wechat,
                                  @Param("email") String email);
-    void refreshStatus();
 }

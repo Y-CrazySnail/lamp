@@ -43,4 +43,8 @@ public class OrderDomainService {
     public void insert(Order packages) {
         orderRepository.insert(packages);
     }
+
+    public Order getByOrderNo(String orderNo) {
+        return orderRepository.getByOrderNo(orderNo);
+    }
 }

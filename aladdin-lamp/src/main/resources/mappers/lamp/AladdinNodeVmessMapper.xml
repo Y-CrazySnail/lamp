@@ -1,13 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yeem.lamp.infrastructure.persistence.repository.mapper.NodeVmessMapper">
-    <update id="updateByValidServiceIdList">
-        update aladdin_node_vmess
-        set node_type = 'expired'
-        where service_id not in
-        <foreach item="serviceId" collection="serviceIdList" open="(" separator="," close=")">
-            #{serviceId}
-        </foreach>
-        or server_id not in (select id from aladdin_server where delete_flag != 1)
-    </update>
+
 </mapper>

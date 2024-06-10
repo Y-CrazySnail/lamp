@@ -68,6 +68,7 @@ public class MemberRepositoryImpl implements MemberRepository {
             queryWrapper.like("wechat", wechat);
         }
         IPage<MemberDo> page = new Page<>(current, size);
+        page = memberMapper.selectPage(page, queryWrapper);
         IPage<Member> res = new Page<>();
         res.setPages(page.getPages());
         res.setCurrent(page.getCurrent());
@@ -79,13 +80,13 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void save(Member member) {
-        MemberDo memberDo = new MemberDo(member);
+        MemberDo memberDo = MemberDo.init(member);
         memberMapper.insert(memberDo);
     }
 
     @Override
     public void updateById(Member member) {
-        MemberDo memberDo = new MemberDo(member);
+        MemberDo memberDo = MemberDo.init(member);
         memberMapper.updateById(memberDo);
     }
 

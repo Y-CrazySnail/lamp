@@ -30,13 +30,19 @@ public class XVmessClient {
 
     public XVmessClient(NodeVmess nodeVmess) {
         this.id = nodeVmess.getNodeId();
-        this.email = DateUtil.format(nodeVmess.getServiceDate(), "yyyyMMdd") + "_" + nodeVmess.getServerId() + "_" + nodeVmess.getServiceId();
+        this.email = DateUtil.format(nodeVmess.getServiceDate(), "yyyyMMdd")
+                + "_" + nodeVmess.getServerId()
+                + "_" + nodeVmess.getServiceId()
+                + "_" + nodeVmess.getId();
         this.limitIp = 0;
         this.totalGB = 0;
         this.expiryTime = 0;
         this.enable = true;
         this.tgId = "";
-        this.subId = DateUtil.format(nodeVmess.getServiceDate(), "yyyyMMdd") + "_" + nodeVmess.getServerId() + "_" + nodeVmess.getServiceId();
+        this.subId = DateUtil.format(nodeVmess.getServiceDate(), "yyyyMMdd")
+                + "_" + nodeVmess.getServerId()
+                + "_" + nodeVmess.getServiceId()
+                + "_" + nodeVmess.getId();
         this.reset = 0;
     }
 }

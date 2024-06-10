@@ -40,8 +40,10 @@ public class NodeVmessDo extends BaseDo {
     private int sort;
     private int multiplyingPower;
 
-    public NodeVmessDo(NodeVmess nodeVmess) {
-        BeanUtil.copyProperties(nodeVmess, this);
+    public static NodeVmessDo init(NodeVmess nodeVmess) {
+        NodeVmessDo nodeVmessDo = new NodeVmessDo();
+        BeanUtil.copyProperties(nodeVmess, nodeVmessDo);
+        return nodeVmessDo;
     }
 
     public NodeVmess convertNodeVmess() {

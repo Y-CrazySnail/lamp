@@ -15,11 +15,9 @@ public class ServiceDomainService {
     private ServiceRepository serviceRepository;
 
     public List<Services> listByMemberId(Long memberId) {
-        return serviceRepository.listByMemberId(memberId);
-    }
-
-    public List<Services> listValid() {
-        return serviceRepository.listValid();
+        List<Services> servicesList = serviceRepository.listByMemberId(memberId);
+        servicesList.forEach(Services::dealSurplus);
+        return servicesList;
     }
 
     public List<Services> list() {
@@ -28,6 +26,12 @@ public class ServiceDomainService {
 
     public Services getById(Long id) {
         return serviceRepository.getById(id);
+    }
+
+    public Services getByUUID(String uuid) {
+        Services services = serviceRepository.getByUUID(uuid);
+        services.dealSurplus();
+        return services;
     }
 
     public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {

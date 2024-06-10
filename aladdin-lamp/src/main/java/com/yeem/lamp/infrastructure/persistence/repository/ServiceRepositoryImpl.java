@@ -36,13 +36,13 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Override
     public void save(Services services) {
-        ServiceDo serviceDo = new ServiceDo(services);
+        ServiceDo serviceDo = ServiceDo.init(services);
         serviceMapper.insert(serviceDo);
     }
 
     @Override
     public void updateById(Services services) {
-        ServiceDo serviceDo = new ServiceDo(services);
+        ServiceDo serviceDo = ServiceDo.init(services);
         serviceMapper.updateById(serviceDo);
     }
 
@@ -70,31 +70,11 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public List<Services> listValid() {
-        LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServiceDo::getDeleteFlag, false);
-        queryWrapper.ge(ServiceDo::getEndDate, new Date());
-        queryWrapper.eq(ServiceDo::getType, ServiceDo.TYPE.SERVICE.getValue());
-        queryWrapper.eq(ServiceDo::getStatus, ServiceDo.STATUS.VALID.getValue());
-        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
-        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
-    }
-
-    @Override
     public List<Services> list() {
         LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceDo::getDeleteFlag, false);
         List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean removeByMemberId(Serializable id) {
-//        UpdateWrapper<ServiceDo> updateWrapper = new UpdateWrapper<>();
-//        updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
-//        updateWrapper.eq("member_id", id);
-//        return super.update(updateWrapper);
-        return true;
     }
 
     @Override
@@ -111,19 +91,13 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public ServiceDo getByUUID(String uuid) {
-//        QueryWrapper<ServiceDo> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-//        queryWrapper.eq("uuid", uuid);
-//        queryWrapper.eq("type", ServiceDo.TYPE.SERVICE.getValue());
-//        ServiceDo serviceDo = super.getOne(queryWrapper);
-//        dealDataTraffic(serviceDo);
-        return null;
-    }
-
-    @Override
-    public void refreshStatus() {
-        serviceMapper.refreshStatus();
+    public Services getByUUID(String uuid) {
+        QueryWrapper<ServiceDo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        queryWrapper.eq("uuid", uuid);
+        queryWrapper.eq("type", ServiceDo.TYPE.SERVICE.getValue());
+        ServiceDo serviceDo = serviceMapper.selectOne(queryWrapper);
+        return serviceDo.convertService();
     }
 
     @Override
@@ -133,33 +107,5 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         updateWrapper.eq(ServiceDo::getMemberId, memberId);
         updateWrapper.eq(ServiceDo::getId, serviceId);
         serviceMapper.update(null, updateWrapper);
-    }
-
-    private void dealDataTraffic(ServiceDo serviceDo) {
-//        if (ServiceDo.TYPE.DATA.getValue().equals(serviceDo.getType())) {
-//            return;
-//        }
-//        // 查询数据加量包
-//        QueryWrapper<ServiceDo> queryWrapper = new QueryWrapper<>();
-//        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-//        queryWrapper.eq("member_id", serviceDo.getMemberId());
-//        queryWrapper.ge("end_date", new Date());
-//        queryWrapper.eq("type", ServiceDo.TYPE.DATA.getValue());
-//        List<ServiceDo> serviceDoList = super.list(queryWrapper);
-//        for (ServiceDo service : serviceDoList) {
-//            serviceDo.setDataTraffic(serviceDo.getDataTraffic() + service.getDataTraffic());
-//        }
-//        int year = DateUtil.year(new Date());
-//        int month = DateUtil.month(new Date()) + 1;
-//        List<NodeVmessDo> nodeVmessDoList = aladdinNodeVmessService.listByServiceId(serviceDo.getId(), year, month);
-//        long up = 0L;
-//        long down = 0L;
-//        for (NodeVmessDo nodeVmessDo : nodeVmessDoList) {
-//            up += nodeVmessDo.getServiceUp() * nodeVmessDo.getMultiplyingPower();
-//            down += nodeVmessDo.getServiceDown() * nodeVmessDo.getMultiplyingPower();
-//        }
-//        Double total = ((double) (up + down) / 1024 / 1024 / 1024);
-//        String surplus = String.format("%.2f", serviceDo.getDataTraffic() - total);
-//        serviceDo.setSurplus(surplus);
     }
 }

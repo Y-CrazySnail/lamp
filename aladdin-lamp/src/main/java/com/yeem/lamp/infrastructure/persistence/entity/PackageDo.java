@@ -1,5 +1,6 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.lamp.domain.entity.Package;
 import lombok.Data;
@@ -18,14 +19,10 @@ public class PackageDo extends BaseDo {
     private String title;
     private String introduce;
 
-    public PackageDo(Package packages) {
-        this.setId(packages.getId());
-        this.type = packages.getType();
-        this.dataTraffic = packages.getDataTraffic();
-        this.period = packages.getPeriod();
-        this.price = packages.getPrice();
-        this.title = packages.getTitle();
-        this.introduce = packages.getIntroduce();
+    public static PackageDo init(Package packages) {
+        PackageDo packageDo = new PackageDo();
+        BeanUtil.copyProperties(packages, packageDo);
+        return packageDo;
     }
 
     public Package convertPackage() {

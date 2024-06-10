@@ -26,4 +26,5 @@ public interface OrderRepository {
     void updateById(Order order);
     Order getById(Long id);
     List<Order> list();
+    Order getByOrderNo(String orderNo);
 }

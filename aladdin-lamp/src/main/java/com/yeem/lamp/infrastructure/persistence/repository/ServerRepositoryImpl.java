@@ -1,5 +1,6 @@
 package com.yeem.lamp.infrastructure.persistence.repository;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -29,8 +30,8 @@ public class ServerRepositoryImpl implements ServerRepository {
 
     @Override
     public List<Server> list() {
-        QueryWrapper<ServerDo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        LambdaQueryWrapper<ServerDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServerDo::getDeleteFlag, false);
         List<ServerDo> serverDoList = serverMapper.selectList(queryWrapper);
         return serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
     }
@@ -43,13 +44,13 @@ public class ServerRepositoryImpl implements ServerRepository {
 
     @Override
     public void save(Server server) {
-        ServerDo serverDo = new ServerDo(server);
+        ServerDo serverDo = ServerDo.init(server);
         serverMapper.insert(serverDo);
     }
 
     @Override
     public void updateById(Server server) {
-        ServerDo serverDo = new ServerDo(server);
+        ServerDo serverDo = ServerDo.init(server);
         serverMapper.updateById(serverDo);
     }
 

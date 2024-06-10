@@ -9,7 +9,5 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 @Mapper
-@DS("proxy")
 public interface NodeVmessMapper extends BaseMapper<NodeVmessDo> {
-    boolean updateByValidServiceIdList(@Param(value = "serviceIdList") List<Long> serviceIdList);
 }

@@ -1,6 +1,7 @@
 package com.yeem.lamp.presentation.controller.web;
 
 import cn.hutool.http.HttpStatus;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.yeem.lamp.application.dto.OrderDTO;
 import com.yeem.lamp.application.service.OrderAppService;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
@@ -46,15 +47,15 @@ public class OrderWebController {
             orderAppService.place(orderDTO);
             return ResponseEntity.ok("下单成功");
         } catch (Exception e) {
-            log.error("下单", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("下单");
+            log.error("下单失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("下单失败");
         }
     }
 
     @PostMapping("/pay")
     public ResponseEntity<Object> pay(@RequestBody OrderDTO orderDTO) {
-        orderAppService.pay(orderDTO);
-        return ResponseEntity.ok("");
+        JsonNode res = orderAppService.pay(orderDTO);
+        return ResponseEntity.ok(res);
     }
 
     /**

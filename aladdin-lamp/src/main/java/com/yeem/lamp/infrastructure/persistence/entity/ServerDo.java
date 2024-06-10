@@ -23,9 +23,12 @@ public class ServerDo extends BaseDo {
     private int sort;
     private int multiplyingPower;
 
-    public ServerDo(Server server) {
-        BeanUtil.copyProperties(server, this);
+    public static ServerDo init(Server server) {
+        ServerDo serverDo = new ServerDo();
+        BeanUtil.copyProperties(server, serverDo);
+        return serverDo;
     }
+
 
     public Server convertServer() {
         Server server = new Server();

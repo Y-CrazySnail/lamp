@@ -20,13 +20,14 @@ public class MemberDTO {
     private Date lastUpdateSubscription;
     private List<Services> servicesList;
 
-    public MemberDTO(Member member) {
-        this.id = member.getId();
-        this.email = member.getEmail();
-        this.wechat = member.getWechat();
-        this.remark = member.getRemark();
-        this.password = member.getPassword();
-        this.lastUpdateSubscription = member.getLastUpdateSubscription();
+    public MemberDTO() {
+
+    }
+
+    public static MemberDTO init(Member member) {
+        MemberDTO memberDTO = new MemberDTO();
+        BeanUtil.copyProperties(member, memberDTO);
+        return memberDTO;
     }
 
     public Member convertMember() {

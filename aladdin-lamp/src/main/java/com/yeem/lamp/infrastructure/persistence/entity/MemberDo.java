@@ -20,8 +20,10 @@ public class MemberDo extends BaseDo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date lastUpdateSubscription;
 
-    public MemberDo(Member member) {
-        BeanUtil.copyProperties(member, this);
+    public static MemberDo init(Member member) {
+        MemberDo memberDo = new MemberDo();
+        BeanUtil.copyProperties(member, memberDo);
+        return memberDo;
     }
 
     public Member convertMember() {

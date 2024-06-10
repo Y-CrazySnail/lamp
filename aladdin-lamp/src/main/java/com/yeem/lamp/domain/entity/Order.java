@@ -39,4 +39,36 @@ public class Order {
         this.period = period;
         this.price = price;
     }
+
+    /**
+     * 订单状态
+     */
+    public enum STATUS {
+        /**
+         * 0已关闭
+         */
+        CLOSE("0"),
+        /**
+         * -1已生成
+         */
+        TODO("-1"),
+        /**
+         * 1已支付
+         */
+        ED("1");
+        private final String value;
+
+        STATUS(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
+    }
+
+    public void finish() {
+        this.completeTime = new Date();
+        this.status = STATUS.ED.value;
+    }
 }
