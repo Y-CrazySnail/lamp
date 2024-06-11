@@ -4,6 +4,7 @@ import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yeem.lamp.domain.objvalue.Plan;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -30,14 +31,13 @@ public class Order {
     private BigDecimal price;
     private String remark;
     private String tradeNo;
+    private Plan plan;
 
-    public void createOrder(Integer dataTraffic, String period, BigDecimal price) {
+    public void createOrder(Plan plan) {
         this.orderNo = "No" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + this.getMemberId();
         this.orderTime = new Date();
         this.setStatus("-1");
-        this.dataTraffic = dataTraffic;
-        this.period = period;
-        this.price = price;
+        this.plan = plan;
     }
 
     /**

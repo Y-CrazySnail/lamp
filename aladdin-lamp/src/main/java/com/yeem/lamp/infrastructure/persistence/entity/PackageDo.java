@@ -1,8 +1,9 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.lamp.domain.entity.Package;
+import com.yeem.lamp.domain.entity.Product;
+import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.PlanType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,27 +14,36 @@ import java.math.BigDecimal;
 @TableName(value = "aladdin_package", autoResultMap = true)
 public class PackageDo extends BaseDo {
     private String type;
-    private Integer dataTraffic;
-    private String period;
+    private BigDecimal dataTraffic;
+    private Integer period;
     private BigDecimal price;
     private String title;
     private String introduce;
 
-    public static PackageDo init(Package packages) {
+    public static PackageDo init(Product product) {
         PackageDo packageDo = new PackageDo();
-        BeanUtil.copyProperties(packages, packageDo);
+        packageDo.setId(product.getId());
+        packageDo.setType(product.getPlan().getPlanType().getType());
+        packageDo.setDataTraffic(product.getPlan().getDataTraffic());
+        packageDo.setPeriod(product.getPlan().getPeriod());
+        packageDo.setPrice(product.getPlan().getPrice());
+        packageDo.setTitle(product.getPlan().getTitle());
+        packageDo.setIntroduce(product.getPlan().getIntroduce());
         return packageDo;
     }
 
-    public Package convertPackage() {
-        Package packages = new Package();
-        packages.setId(this.getId());
-        packages.setType(this.type);
-        packages.setDataTraffic(this.dataTraffic);
-        packages.setPeriod(this.period);
-        packages.setPrice(this.price);
-        packages.setTitle(this.title);
-        packages.setIntroduce(this.introduce);
-        return packages;
+    public Product convertPackage() {
+        Product product = new Product();
+        product.setId(this.getId());
+        Plan plan = new Plan();
+        plan.setDataTraffic(this.dataTraffic);
+        plan.setPeriod(this.period);
+        plan.setPrice(this.price);
+        plan.setTitle(this.title);
+        plan.setIntroduce(this.introduce);
+        PlanType planType = PlanType.init(this.type);
+        plan.setPlanType(planType);
+        product.setPlan(plan);
+        return product;
     }
 }

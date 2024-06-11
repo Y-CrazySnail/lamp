@@ -8,9 +8,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.yeem.im.dto.SysTelegramSendDTO;
 import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.application.dto.OrderDTO;
-import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.entity.Order;
-import com.yeem.lamp.domain.entity.Package;
+import com.yeem.lamp.domain.entity.Product;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.service.OrderDomainService;
 import com.yeem.lamp.domain.service.PackageDomainService;
@@ -73,14 +72,14 @@ public class OrderAppService {
     }
 
     public void place(OrderDTO orderDTO) {
-        Package packageDo = packageDomainService.getById(orderDTO.getPackageId());
+        Product product = packageDomainService.getById(orderDTO.getPackageId());
         List<Services> services = serviceDomainService.listByMemberId(orderDTO.getMemberId());
         if (services.stream().anyMatch(s -> Services.TYPE.SERVICE.getValue().equals(s.getType())
                 && (s.getStatus().equals(Services.STATUS.VALID.getValue()) || s.getStatus().equals(Services.STATUS.LACK.getValue())))) {
             throw new RuntimeException("已经购买过服务");
         }
         Order order = orderDTO.convertOrder();
-        order.createOrder(packageDo.getDataTraffic(), packageDo.getPeriod(), packageDo.getPrice());
+        order.createOrder(product.getPlan());
         orderDomainService.generateOrder(order);
     }
 

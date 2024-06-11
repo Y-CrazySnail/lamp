@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Order;
-import com.yeem.lamp.domain.entity.Package;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

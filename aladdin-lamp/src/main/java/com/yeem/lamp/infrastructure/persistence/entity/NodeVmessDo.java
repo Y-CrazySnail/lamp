@@ -1,12 +1,10 @@
 package com.yeem.lamp.infrastructure.persistence.entity;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.codec.Base64;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.lamp.domain.entity.NodeVmess;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import cn.hutool.core.util.StrUtil;
 
 import java.util.Date;
 

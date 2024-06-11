@@ -1,6 +1,8 @@
 package com.yeem.lamp.application.dto;
 
-import com.yeem.lamp.domain.entity.Package;
+import com.yeem.lamp.domain.entity.Product;
+import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.PlanType;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,31 +11,34 @@ import java.math.BigDecimal;
 public class PackageDTO {
     private Long id;
     private String type;
-    private Integer dataTraffic;
-    private String period;
+    private BigDecimal dataTraffic;
+    private Integer period;
     private BigDecimal price;
     private String title;
     private String introduce;
 
-    public PackageDTO(Package packages) {
-        this.id = packages.getId();
-        this.type = packages.getType();
-        this.dataTraffic = packages.getDataTraffic();
-        this.period = packages.getPeriod();
-        this.price = packages.getPrice();
-        this.title = packages.getTitle();
-        this.introduce = packages.getIntroduce();
+    public PackageDTO(Product product) {
+        this.id = product.getId();
+        this.type = product.getPlan().getPlanType().getType();
+        this.dataTraffic = product.getPlan().getDataTraffic();
+        this.period = product.getPlan().getPeriod();
+        this.price = product.getPlan().getPrice();
+        this.title = product.getPlan().getTitle();
+        this.introduce = product.getPlan().getIntroduce();
     }
 
-    public Package convertPackage() {
-        Package packages = new Package();
-        packages.setId(this.id);
-        packages.setType(this.type);
-        packages.setDataTraffic(this.dataTraffic);
-        packages.setPeriod(this.period);
-        packages.setPrice(this.price);
-        packages.setTitle(this.title);
-        packages.setIntroduce(this.introduce);
-        return packages;
+    public Product convertPackage() {
+        Product product = new Product();
+        product.setId(this.id);
+        Plan plan = new Plan();
+        plan.setDataTraffic(this.dataTraffic);
+        plan.setPeriod(this.period);
+        plan.setPrice(this.price);
+        plan.setTitle(this.title);
+        plan.setIntroduce(this.introduce);
+        PlanType planType = PlanType.init(this.type);
+        plan.setPlanType(planType);
+        product.setPlan(plan);
+        return product;
     }
 }
