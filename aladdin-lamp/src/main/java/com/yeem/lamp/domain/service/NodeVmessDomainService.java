@@ -1,6 +1,6 @@
 package com.yeem.lamp.domain.service;
 
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.repository.NodeVmessRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

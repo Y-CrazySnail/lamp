@@ -1,7 +1,7 @@
 package com.yeem.lamp.domain.repository;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.objvalue.Server;
 
 import java.util.List;
 

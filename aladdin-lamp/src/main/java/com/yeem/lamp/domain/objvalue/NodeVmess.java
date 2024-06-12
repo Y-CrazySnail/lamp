@@ -1,4 +1,4 @@
-package com.yeem.lamp.domain.entity;
+package com.yeem.lamp.domain.objvalue;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
@@ -78,5 +78,19 @@ public class NodeVmess {
         url.append("}");
         String base64Url = Base64.encode(url.toString()).replace("=", "");
         return "vmess://" + base64Url;
+    }
+
+    public String key() {
+        return this.serviceId + "_" + this.serverId;
+    }
+
+    public static NodeVmess init(Long serviceId, Long serverId, Date serviceDate) {
+        NodeVmess nodeVmess = new NodeVmess();
+        nodeVmess.setServiceId(serviceId);
+        nodeVmess.setServerId(serverId);
+        nodeVmess.setServiceDate(serviceDate);
+        nodeVmess.setServiceUp(0L);
+        nodeVmess.setServiceDown(0L);
+        return nodeVmess;
     }
 }

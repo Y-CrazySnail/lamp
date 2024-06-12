@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @TableName(value = "aladdin_package", autoResultMap = true)
 public class PackageDo extends BaseDo {
     private String type;
-    private BigDecimal dataTraffic;
+    private Integer dataTraffic;
     private Integer period;
     private BigDecimal price;
     private String title;

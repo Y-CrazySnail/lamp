@@ -85,7 +85,7 @@ public class OrderAppService {
 
     public JsonNode pay(OrderDTO orderDTO) {
         Order order = orderDomainService.getById(orderDTO.getId());
-        JsonNode payRes = ePaymentProcessor.prepay(order.getPrice(), order.getOrderNo());
+        JsonNode payRes = ePaymentProcessor.prepay(order.getPlan().getPrice(), order.getOrderNo());
         if ("1".equals(payRes.get("code").toString())) {
             order.setTradeNo(payRes.get("trade_no").toString().replace("\"", ""));
             orderDomainService.updateById(order);
@@ -102,17 +102,17 @@ public class OrderAppService {
         List<Services> serviceList = serviceDomainService.listByMemberId(order.getMemberId());
         Long serviceId = null;
         for (Services services : serviceList) {
-            if (order.getDataTraffic().equals(services.getDataTraffic()) || services.getStatus().equals(Services.STATUS.EXPIRED.getValue())) {
+            if (order.getPlan().getDataTraffic().equals(services.getDataTraffic()) || services.getStatus().equals(Services.STATUS.EXPIRED.getValue())) {
                 serviceId = services.getId();
                 if (services.getEndDate().before(new Date())) {
-                    services.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(order.getPeriod())));
+                    services.setEndDate(DateUtil.offsetMonth(new Date(), order.getPlan().getPeriod()));
                 } else {
-                    services.setEndDate(DateUtil.offsetMonth(services.getEndDate(), Integer.parseInt(order.getPeriod())));
+                    services.setEndDate(DateUtil.offsetMonth(services.getEndDate(), order.getPlan().getPeriod()));
                 }
-                services.setDataTraffic(order.getDataTraffic());
+                services.setDataTraffic(order.getPlan().getDataTraffic());
                 services.setStatus(Services.STATUS.VALID.getValue());
-                services.setPeriod(order.getPeriod());
-                services.setPrice(order.getPrice());
+                services.setPeriod(order.getPlan().getPeriod());
+                services.setPrice(order.getPlan().getPrice());
                 serviceDomainService.updateById(services);
                 break;
             }
@@ -123,9 +123,9 @@ public class OrderAppService {
             sysTelegramSendDTO.setTemplateType("telegram");
             Map<String, Object> replaceMap = new HashMap<>();
             // 用户购买了【时长：#{period}】-【流量：#{dataTraffic}】的【#{price}】元套餐，请注意Crisp客服消息！
-            replaceMap.put("period", order.getPeriod());
-            replaceMap.put("dataTraffic", order.getDataTraffic());
-            replaceMap.put("price", order.getPrice());
+            replaceMap.put("period", order.getPlan().getPeriod());
+            replaceMap.put("dataTraffic", order.getPlan().getDataTraffic());
+            replaceMap.put("price", order.getPlan().getPrice());
             sysTelegramSendDTO.setReplaceMap(replaceMap);
             sysTelegramService.send(sysTelegramSendDTO);
         } catch (Exception e) {
@@ -135,10 +135,10 @@ public class OrderAppService {
             Services service = new Services();
             service.setMemberId(order.getMemberId());
             service.setBeginDate(new Date());
-            service.setEndDate(DateUtil.offsetMonth(new Date(), Integer.parseInt(order.getPeriod())).toJdkDate());
-            service.setDataTraffic(order.getDataTraffic());
-            service.setPeriod(order.getPeriod());
-            service.setPrice(order.getPrice());
+            service.setEndDate(DateUtil.offsetMonth(new Date(), order.getPlan().getPeriod()).toJdkDate());
+            service.setDataTraffic(order.getPlan().getDataTraffic());
+            service.setPeriod(order.getPlan().getPeriod());
+            service.setPrice(order.getPlan().getPrice());
             service.setUuid(UUID.fastUUID().toString());
             service.setStatus("0");
             serviceDomainService.save(service);

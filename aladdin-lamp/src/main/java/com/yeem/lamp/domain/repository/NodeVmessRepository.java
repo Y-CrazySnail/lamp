@@ -1,6 +1,6 @@
 package com.yeem.lamp.domain.repository;
 
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 
 import java.util.Date;
 import java.util.List;

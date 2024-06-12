@@ -1,6 +1,7 @@
 package com.yeem.lamp.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yeem.lamp.domain.objvalue.Plan;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -20,7 +21,7 @@ public class Services {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date endDate;
     private Integer dataTraffic;
-    private String period;
+    private Integer period;
     private BigDecimal price;
     private String uuid;
     /**
@@ -29,9 +30,17 @@ public class Services {
     private String status;
     private String wechat;
     private String email;
-    private BigDecimal serviceUp;
-    private BigDecimal serviceDown;
+    /**
+     * 当月归档流量
+     */
+    private Long serviceArchiveUp;
+    private Long serviceArchiveDown;
+    private Long serviceTodayUp;
+    private Long serviceTodayDown;
+    private Long serviceUp;
+    private Long serviceDown;
     private String surplus;
+    private Plan plan;
 
     public enum TYPE {
         /**
@@ -86,23 +95,39 @@ public class Services {
             this.setStatus(STATUS.EXPIRED.value);
         } else {
             this.setStatus(STATUS.VALID.getValue());
-            if (this.serviceUp.add(this.serviceDown).compareTo(BigDecimal.valueOf(this.dataTraffic)) > 0) {
-                this.setStatus(STATUS.LACK.value);
-            }
+//            if (this.serviceUp.add(this.serviceDown).compareTo(this.dataTraffic) > 0) {
+//                this.setStatus(STATUS.LACK.value);
+//            }
         }
     }
 
     public void dealSurplus() {
-        if (null == serviceUp) {
-            serviceUp = new BigDecimal(0);
+//        if (null == serviceUp) {
+//            serviceUp = new BigDecimal(0);
+//        }
+//        if (null == serviceDown) {
+//            serviceDown = new BigDecimal(0);
+//        }
+//        this.surplus = this.dataTraffic
+//                .subtract(serviceUp)
+//                .subtract(serviceDown)
+//                .setScale(2, RoundingMode.HALF_UP)
+//                .toString();
+    }
+
+    public boolean isValid() {
+        if (this.endDate.before(new Date())) {
+            return false;
         }
-        if (null == serviceDown) {
-            serviceDown = new BigDecimal(0);
+        if (null == this.serviceUp) {
+            this.serviceUp = 0L;
         }
-        this.surplus = BigDecimal.valueOf(dataTraffic)
-                .subtract(serviceUp)
-                .subtract(serviceDown)
-                .setScale(2, RoundingMode.HALF_UP)
-                .toString();
+        if (null == this.serviceDown) {
+            this.serviceDown = 0L;
+        }
+        if (this.dataTraffic * 1024 * 1024 * 1024 - this.serviceUp - this.serviceDown < 0) {
+            return false;
+        }
+        return true;
     }
 }

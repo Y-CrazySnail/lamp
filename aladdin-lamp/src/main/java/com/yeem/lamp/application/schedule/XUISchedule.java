@@ -22,7 +22,7 @@ public class XUISchedule {
     @Autowired
     private ServiceAppService serviceAppService;
 
-    @Scheduled(cron = "0 3 0 * * ?")
+//    @Scheduled(cron = "0 3 0 * * ?")
     public void reset() {
         try {
             log.info("begin-reset node schedule---------->");
@@ -35,7 +35,7 @@ public class XUISchedule {
         }
     }
 
-    @Scheduled(cron = "0 59 * * * ?")
+//    @Scheduled(cron = "0 59 * * * ?")
     public void sync() {
         try {
             log.info("begin-sync remote data traffic---------->");

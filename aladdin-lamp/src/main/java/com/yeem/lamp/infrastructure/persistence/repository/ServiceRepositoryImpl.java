@@ -4,20 +4,24 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.domain.entity.Services;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
+import com.yeem.lamp.domain.objvalue.Server;
 import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
+import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
+import com.yeem.lamp.infrastructure.persistence.repository.mapper.NodeVmessMapper;
+import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServerMapper;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServiceMapper;
 import com.yeem.lamp.security.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,6 +31,10 @@ public class ServiceRepositoryImpl implements ServiceRepository {
 
     @Autowired
     private ServiceMapper serviceMapper;
+    @Autowired
+    private ServerMapper serverMapper;
+    @Autowired
+    private NodeVmessMapper nodeVmessMapper;
 
     @Override
     public Services getById(Long id) {
@@ -70,7 +78,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public List<Services> list() {
+    public List<Services> listService() {
         LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceDo::getDeleteFlag, false);
         List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
@@ -107,5 +115,23 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         updateWrapper.eq(ServiceDo::getMemberId, memberId);
         updateWrapper.eq(ServiceDo::getId, serviceId);
         serviceMapper.update(null, updateWrapper);
+    }
+
+    @Override
+    public List<Server> listServer() {
+        LambdaQueryWrapper<ServerDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServerDo::getDeleteFlag, false);
+        List<ServerDo> serverDoList = serverMapper.selectList(queryWrapper);
+        return serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<NodeVmess> listNodeVmess(Date currentDate) {
+        LambdaQueryWrapper<NodeVmessDo> queryWrapper = new LambdaQueryWrapper<>();
+        if (null != currentDate) {
+            queryWrapper.eq(NodeVmessDo::getServiceDate, DateUtil.beginOfDay(currentDate).toJdkDate());
+        }
+        List<NodeVmessDo> nodeVmessDoList = nodeVmessMapper.selectList(queryWrapper);
+        return nodeVmessDoList.stream().map(NodeVmessDo::convertNodeVmess).collect(Collectors.toList());
     }
 }

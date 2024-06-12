@@ -1,7 +1,7 @@
 package com.yeem.lamp.infrastructure.x.model;
 
 import cn.hutool.core.date.DateUtil;
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 import lombok.Data;
 
 @Data

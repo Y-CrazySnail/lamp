@@ -3,7 +3,6 @@ package com.yeem.lamp.application.dto;
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yeem.lamp.domain.entity.NodeVmess;
 import com.yeem.lamp.domain.entity.Order;
 import lombok.Data;
 

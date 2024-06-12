@@ -31,6 +31,10 @@ public class ServiceDo extends BaseDo {
      * 0未生效 1已生效 9已过期
      */
     private String status;
+    private BigDecimal serviceArchiveUp;
+    private BigDecimal serviceArchiveDown;
+    private BigDecimal serviceTodayUp;
+    private BigDecimal serviceTodayDown;
     private BigDecimal serviceUp;
     private BigDecimal serviceDown;
 

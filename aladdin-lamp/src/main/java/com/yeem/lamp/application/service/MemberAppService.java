@@ -6,7 +6,6 @@ import com.yeem.lamp.application.dto.MemberDTO;
 import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.factory.MemberFactory;
 import com.yeem.lamp.domain.objvalue.Token;
 import com.yeem.lamp.domain.service.MemberDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
@@ -27,12 +26,10 @@ public class MemberAppService {
     @Autowired
     private ServiceDomainService serviceDomainService;
     @Autowired
-    private MemberFactory memberFactory;
-    @Autowired
     private TelegramMessage telegramMessage;
 
     public TokenDTO login(LoginRequest loginRequest) {
-        Member member = memberFactory.create(loginRequest);
+        Member member = loginRequest.convertMember();
         Token token = memberDomainService.login(member);
         if (token == null) {
             throw new YeemException("login error");

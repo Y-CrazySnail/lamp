@@ -7,11 +7,11 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.objvalue.Plan;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
 public class Order {
+
     private Long id;
     private String orderNo;
     private Long memberId;
@@ -26,9 +26,6 @@ public class Order {
     private Date orderTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date completeTime;
-    private Integer dataTraffic;
-    private String period;
-    private BigDecimal price;
     private String remark;
     private String tradeNo;
     private Plan plan;

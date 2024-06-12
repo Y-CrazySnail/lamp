@@ -1,7 +1,7 @@
 package com.yeem.lamp.application.dto;
 
 import cn.hutool.core.bean.BeanUtil;
-import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.objvalue.Server;
 import lombok.Data;
 
 @Data

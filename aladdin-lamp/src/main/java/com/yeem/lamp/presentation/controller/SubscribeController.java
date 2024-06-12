@@ -11,7 +11,7 @@ import com.yeem.lamp.application.service.MemberAppService;
 import com.yeem.lamp.application.service.ServerAppService;
 import com.yeem.lamp.application.service.ServiceAppService;
 import com.yeem.lamp.application.service.XUIAppService;
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

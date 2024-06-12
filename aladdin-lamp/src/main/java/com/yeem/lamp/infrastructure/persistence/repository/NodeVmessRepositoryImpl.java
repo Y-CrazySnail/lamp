@@ -4,7 +4,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.repository.NodeVmessRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.NodeVmessMapper;

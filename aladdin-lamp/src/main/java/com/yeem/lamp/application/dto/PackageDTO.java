@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public class PackageDTO {
     private Long id;
     private String type;
-    private BigDecimal dataTraffic;
+    private Integer dataTraffic;
     private Integer period;
     private BigDecimal price;
     private String title;

@@ -3,8 +3,7 @@ package com.yeem.lamp.application.dto;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.util.StrUtil;
-import com.yeem.lamp.domain.entity.Member;
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 import lombok.Data;
 
 /**

@@ -3,7 +3,7 @@ package com.yeem.lamp.application.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServiceDTO;
-import com.yeem.lamp.domain.entity.NodeVmess;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.service.NodeVmessDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
@@ -87,8 +87,8 @@ public class ServiceAppService {
                     .mapToDouble(nodeVmess -> nodeVmess.getServiceUp() * nodeVmess.getMultiplyingPower()).sum() / 1024 / 1024 / 1024);
             BigDecimal serviceDown = BigDecimal.valueOf(nodeVmessList.stream()
                     .mapToDouble(nodeVmess -> nodeVmess.getServiceDown() * nodeVmess.getMultiplyingPower()).sum() / 1024 / 1024 / 1024);
-            services.setServiceUp(serviceUp);
-            services.setServiceDown(serviceDown);
+//            services.setServiceUp(serviceUp);
+//            services.setServiceDown(serviceDown);
             serviceDomainService.updateById(services);
         }
     }
