@@ -16,7 +16,7 @@ if [ -n "$PIDS" ]; then
     exit 1
 fi
 
-JAVA_OPTS=" -Djava.awt.headless=true -Dfastjson.parser.autoTypeSupport=true -Djava.net.preferIPv4Stack=true "
+JAVA_OPTS=" -Djava.awt.headless=true -Dfastjson.parser.autoTypeSupport=true -Djava.net.preferIPv4Stack=true -Dfile.encoding=utf-8 "
 JAVA_DEBUG_OPTS=""
 if [ "$1" = "debug" ]; then
     JAVA_DEBUG_OPTS=" -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,address=8000,server=y,suspend=n "

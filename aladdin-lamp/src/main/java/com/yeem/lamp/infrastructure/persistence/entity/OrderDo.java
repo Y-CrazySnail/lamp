@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Order;
+import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.PlanType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,7 +31,7 @@ public class OrderDo extends BaseDo {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completeTime;
     private Integer dataTraffic;
-    private String period;
+    private Integer period;
     private BigDecimal price;
     private String remark;
     private String tradeNo;
@@ -43,6 +45,11 @@ public class OrderDo extends BaseDo {
     public Order convertOrder() {
         Order order = new Order();
         BeanUtil.copyProperties(this, order);
+        Plan plan = new Plan();
+        plan.setDataTraffic(this.dataTraffic);
+        plan.setPeriod(this.period);
+        plan.setPrice(this.price);
+        order.setPlan(plan);
         return order;
     }
 }

@@ -1,0 +1,1 @@
+{"v":"2","ps":"${nodePs}","add":"${nodeAdd}","port":"${nodePort}","type":"none","id":"${nodeId}","aid":"0","net":"tcp","path":"/","host":"${nodeAdd}","tls":""}

@@ -26,7 +26,7 @@ public class OrderDTO {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date completeTime;
     private Integer dataTraffic;
-    private String period;
+    private Integer period;
     private BigDecimal price;
     private String remark;
     private String tradeNo;
@@ -37,6 +37,9 @@ public class OrderDTO {
 
     public OrderDTO(Order order) {
         BeanUtil.copyProperties(order, this);
+        this.dataTraffic = order.getPlan().getDataTraffic();
+        this.period = order.getPlan().getPeriod();
+        this.price = order.getPlan().getPrice();
     }
 
     public Order convertOrder() {

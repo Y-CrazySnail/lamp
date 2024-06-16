@@ -10,6 +10,8 @@ import java.util.Date;
 
 @Data
 public class Services {
+    public static final Long GB = 1024L * 1024L * 1024L;
+
     private Long id;
     private Long memberId;
     /**
@@ -24,10 +26,6 @@ public class Services {
     private Integer period;
     private BigDecimal price;
     private String uuid;
-    /**
-     * 0未生效 1已生效 9已过期
-     */
-    private String status;
     private String wechat;
     private String email;
     /**
@@ -62,57 +60,10 @@ public class Services {
         }
     }
 
-    public enum STATUS {
-        /**
-         * 未生效
-         */
-        INVALID("0"),
-        /**
-         * 生效
-         */
-        VALID("1"),
-        /**
-         * 流量超额
-         */
-        LACK("8"),
-        /**
-         * 已过期
-         */
-        EXPIRED("9");
-        private final String value;
-
-        STATUS(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return value;
-        }
-    }
-
-    public void calculateStatus() {
-        if (this.endDate.before(new Date())) {
-            this.setStatus(STATUS.EXPIRED.value);
-        } else {
-            this.setStatus(STATUS.VALID.getValue());
-//            if (this.serviceUp.add(this.serviceDown).compareTo(this.dataTraffic) > 0) {
-//                this.setStatus(STATUS.LACK.value);
-//            }
-        }
-    }
-
     public void dealSurplus() {
-//        if (null == serviceUp) {
-//            serviceUp = new BigDecimal(0);
-//        }
-//        if (null == serviceDown) {
-//            serviceDown = new BigDecimal(0);
-//        }
-//        this.surplus = this.dataTraffic
-//                .subtract(serviceUp)
-//                .subtract(serviceDown)
-//                .setScale(2, RoundingMode.HALF_UP)
-//                .toString();
+        long surplusByte = this.dataTraffic * GB - this.serviceUp - this.serviceDown;
+        this.surplus = BigDecimal.valueOf(surplusByte).divide(BigDecimal.valueOf(GB), RoundingMode.HALF_UP)
+                .setScale(2, RoundingMode.HALF_UP).toString();
     }
 
     public boolean isValid() {
@@ -125,9 +76,10 @@ public class Services {
         if (null == this.serviceDown) {
             this.serviceDown = 0L;
         }
-        if (this.dataTraffic * 1024 * 1024 * 1024 - this.serviceUp - this.serviceDown < 0) {
-            return false;
-        }
-        return true;
+        return Long.valueOf(this.dataTraffic) * 1024L * 1024L * 1024L - this.serviceUp - this.serviceDown >= 0;
+    }
+
+    public boolean isDateValid() {
+        return this.endDate.after(new Date());
     }
 }

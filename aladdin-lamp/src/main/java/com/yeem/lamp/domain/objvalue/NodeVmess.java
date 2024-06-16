@@ -1,7 +1,5 @@
 package com.yeem.lamp.domain.objvalue;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.StrUtil;
 import lombok.Data;
 
 import java.util.Date;
@@ -35,51 +33,6 @@ public class NodeVmess {
     private int multiplyingPower;
     private Date serviceDate;
 
-    public String convert() {
-        StringBuilder url = new StringBuilder();
-        url.append("{");
-        if (!StrUtil.isEmpty(this.nodePs)) {
-            url.append("\"ps\":\"").append(this.nodePs).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.nodeAdd)) {
-            url.append("\"add\":\"").append(this.nodeAdd).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.nodePort)) {
-            url.append("\"port\":\"").append(this.nodePort).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.nodeId)) {
-            url.append("\"id\":\"").append(this.nodeId).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.aid)) {
-            url.append("\"aid\":\"").append(this.aid).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.scy)) {
-            url.append("\"scy\":\"").append(this.scy).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.net)) {
-            url.append("\"net\":\"").append(this.net).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.type)) {
-            url.append("\"type\":\"").append(this.type).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.host)) {
-            url.append("\"host\":\"").append(this.host).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.path)) {
-            url.append("\"path\":\"").append(this.path).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.tls)) {
-            url.append("\"tls\":\"").append(this.tls).append("\",");
-        }
-        if (!StrUtil.isEmpty(this.sni)) {
-            url.append("\"sni\":\"").append(this.sni).append("\",");
-        }
-        url.deleteCharAt(url.length() - 1);
-        url.append("}");
-        String base64Url = Base64.encode(url.toString()).replace("=", "");
-        return "vmess://" + base64Url;
-    }
-
     public String key() {
         return this.serviceId + "_" + this.serverId;
     }
@@ -91,6 +44,32 @@ public class NodeVmess {
         nodeVmess.setServiceDate(serviceDate);
         nodeVmess.setServiceUp(0L);
         nodeVmess.setServiceDown(0L);
+        return nodeVmess;
+    }
+
+    public static NodeVmess init(String uuid, String remark, String ip, int port) {
+        NodeVmess nodeVmess = new NodeVmess();
+        nodeVmess.setNodePs(remark);
+        nodeVmess.setNodeAdd(ip);
+        nodeVmess.setNodePort(String.valueOf(port));
+        nodeVmess.setNodeId(uuid);
+        nodeVmess.setAid("0");
+        nodeVmess.setNet("tcp");
+        nodeVmess.setType("none");
+        nodeVmess.setTls("none");
+        return nodeVmess;
+    }
+
+    public static NodeVmess initInformation(String remark) {
+        NodeVmess nodeVmess = new NodeVmess();
+        nodeVmess.setNodePs(remark);
+        nodeVmess.setNodeAdd("127.0.0.1");
+        nodeVmess.setNodePort(String.valueOf(33333));
+        nodeVmess.setNodeId("00000000-0000-0000-0000-000000000000");
+        nodeVmess.setAid("0");
+        nodeVmess.setNet("tcp");
+        nodeVmess.setType("none");
+        nodeVmess.setTls("none");
         return nodeVmess;
     }
 }

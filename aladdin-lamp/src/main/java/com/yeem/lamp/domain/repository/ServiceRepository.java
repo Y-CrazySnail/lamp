@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 public interface ServiceRepository {
-    Services getById(Long id);
+
 
     Services getByUUID(String uuid);
 
@@ -33,4 +33,12 @@ public interface ServiceRepository {
     List<Server> listServer();
 
     List<NodeVmess> listNodeVmess(Date currentDate);
+
+    Services getServiceById(Long serviceId);
+
+    Server getServerById(Long serverId);
+
+    void saveNodeVmess(NodeVmess nodeVmess);
+
+    void updateService(Services services);
 }

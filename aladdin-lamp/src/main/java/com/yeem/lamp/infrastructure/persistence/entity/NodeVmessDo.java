@@ -17,26 +17,9 @@ import java.util.Date;
 public class NodeVmessDo extends BaseDo {
     private Long serviceId;
     private Long serverId;
-    private Integer serviceYear;
-    private Integer serviceMonth;
+    private Date serviceDate;
     private Long serviceDown;
     private Long serviceUp;
-    private Date serviceDate;
-    private String nodeType;
-    private String nodePs;
-    private String nodeAdd;
-    private String nodePort;
-    private String nodeId;
-    private String aid;
-    private String scy;
-    private String net;
-    private String type;
-    private String host;
-    private String path;
-    private String tls;
-    private String sni;
-    private int sort;
-    private int multiplyingPower;
 
     public static NodeVmessDo init(NodeVmess nodeVmess) {
         NodeVmessDo nodeVmessDo = new NodeVmessDo();

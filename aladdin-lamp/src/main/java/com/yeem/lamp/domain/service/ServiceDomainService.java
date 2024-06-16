@@ -1,5 +1,6 @@
 package com.yeem.lamp.domain.service;
 
+import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Services;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -30,12 +32,12 @@ public class ServiceDomainService {
         return servicesList;
     }
 
-    public List<Services> list() {
-        return serviceRepository.listService();
+    public List<Server> listServer() {
+        return serviceRepository.listServer();
     }
 
     public Services getById(Long id) {
-        return serviceRepository.getById(id);
+        return serviceRepository.getServiceById(id);
     }
 
     public Services getByUUID(String uuid) {
@@ -49,7 +51,6 @@ public class ServiceDomainService {
     }
 
     public void updateById(Services services) {
-        services.calculateStatus();
         serviceRepository.updateById(services);
     }
 
@@ -65,6 +66,9 @@ public class ServiceDomainService {
         serviceRepository.updateUUID(memberId, serviceId, uuid);
     }
 
+    /**
+     * 同步远程流量至本地
+     */
     public void syncDataTraffic() {
         Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Server> serverList = serviceRepository.listServer();
@@ -114,18 +118,19 @@ public class ServiceDomainService {
             }
         }
         Set<Long> invalidServiceIdSet = new HashSet<>();
-        nodeVmessMap.forEach((nodeKey, nodeValue) -> {
-            Long serviceId = nodeValue.getServiceId();
+        nodeVmessMap.forEach((nodeKey, nodeVmess) -> {
+            Long serviceId = nodeVmess.getServiceId();
             if (servicesMap.containsKey(serviceId)) {
                 Services services = servicesMap.get(serviceId);
-                services.setServiceTodayUp(services.getServiceTodayUp() + nodeValue.getServiceUp());
-                services.setServiceTodayDown(services.getServiceTodayDown() + nodeValue.getServiceDown());
+                services.setServiceTodayUp(services.getServiceTodayUp() + nodeVmess.getServiceUp());
+                services.setServiceTodayDown(services.getServiceTodayDown() + nodeVmess.getServiceDown());
                 services.setServiceUp(services.getServiceArchiveUp() + services.getServiceTodayUp());
                 services.setServiceDown(services.getServiceArchiveDown() + services.getServiceTodayDown());
                 if (!services.isValid()) {
                     invalidServiceIdSet.add(services.getId());
                 }
             }
+            serviceRepository.saveNodeVmess(nodeVmess);
         });
         for (Server server : serverList) {
             XUIClient xuiClient = XUIClient.init(server);
@@ -144,6 +149,66 @@ public class ServiceDomainService {
                 }
             }
         }
-        // todo 落库
+        servicesMap.forEach((serviceKey, services) -> serviceRepository.updateService(services));
+    }
+
+    /**
+     * 重重所有客户端流量
+     */
+    public void resetClientTraffic() {
+        List<Server> serverList = serviceRepository.listServer();
+        for (Server server : serverList) {
+            XUIClient xuiClient = XUIClient.init(server);
+            List<XInbound> xInboundList = xuiClient.getInboundList();
+            for (XInbound xInbound : xInboundList) {
+                xuiClient.resetClientTraffic(xInbound.getId());
+            }
+        }
+    }
+
+    public void syncRemoteServer(Long serverId) {
+        List<Services> servicesList = serviceRepository.listService();
+        Map<Long, String> servicesMap = servicesList.stream()
+                .filter(Services::isValid)
+                .collect(Collectors.toMap(Services::getId, Services::getUuid));
+        Server server = serviceRepository.getServerById(serverId);
+        XUIClient xuiClient = XUIClient.init(server);
+        xuiClient.delInbound();
+        xuiClient.addVmessInbound(serverId, server.getNodePort(), servicesMap);
+    }
+
+    public void syncRemoteService(Long serviceId) {
+        Services services = serviceRepository.getServiceById(serviceId);
+        List<Server> serverList = serviceRepository.listServer();
+        for (Server server : serverList) {
+            XUIClient xuiClient = XUIClient.init(server);
+            List<XInbound> xInboundList = xuiClient.getInboundList();
+            for (XInbound xInbound : xInboundList) {
+                boolean exist = false;
+                for (XClientStat clientStat : xInbound.getClientStats()) {
+                    if (serviceId.equals(Long.valueOf(clientStat.getEmail().split("_")[0]))) {
+                        exist = true;
+                    }
+                }
+                if (!exist) {
+                    log.info("add vmess client service id:{}, server id:{}", serviceId, server.getId());
+                    xuiClient.addVmessClient(xInbound, services.getUuid(), serviceId, server.getId());
+                }
+            }
+        }
+    }
+
+    public List<NodeVmess> listNodeVmess(String uuid) {
+        List<NodeVmess> nodeVmessList = new ArrayList<>();
+        List<Server> serverList = serviceRepository.listServer();
+        for (Server server : serverList) {
+            NodeVmess nodeVmess = NodeVmess.init(uuid,
+                    server.getSubscribeNamePrefix(),
+                    server.getSubscribeIp(),
+                    server.getSubscribePort()
+            );
+            nodeVmessList.add(nodeVmess);
+        }
+        return nodeVmessList;
     }
 }

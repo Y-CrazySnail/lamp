@@ -28,21 +28,15 @@ public class XVmessClient {
                 "\"reset\":" + this.reset + "}";
     }
 
-    public XVmessClient(NodeVmess nodeVmess) {
-        this.id = nodeVmess.getNodeId();
-        this.email = DateUtil.format(nodeVmess.getServiceDate(), "yyyyMMdd")
-                + "_" + nodeVmess.getServerId()
-                + "_" + nodeVmess.getServiceId()
-                + "_" + nodeVmess.getId();
+    public XVmessClient(String uuid, Long serviceId, Long serverId) {
+        this.id = uuid;
+        this.email = serviceId + "_" + serverId;
         this.limitIp = 0;
         this.totalGB = 0;
         this.expiryTime = 0;
         this.enable = true;
         this.tgId = "";
-        this.subId = DateUtil.format(nodeVmess.getServiceDate(), "yyyyMMdd")
-                + "_" + nodeVmess.getServerId()
-                + "_" + nodeVmess.getServiceId()
-                + "_" + nodeVmess.getId();
+        this.subId = serviceId + "_" + serverId;
         this.reset = 0;
     }
 }

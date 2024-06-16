@@ -74,8 +74,7 @@ public class OrderAppService {
     public void place(OrderDTO orderDTO) {
         Product product = packageDomainService.getById(orderDTO.getPackageId());
         List<Services> services = serviceDomainService.listByMemberId(orderDTO.getMemberId());
-        if (services.stream().anyMatch(s -> Services.TYPE.SERVICE.getValue().equals(s.getType())
-                && (s.getStatus().equals(Services.STATUS.VALID.getValue()) || s.getStatus().equals(Services.STATUS.LACK.getValue())))) {
+        if (services.stream().anyMatch(s -> Services.TYPE.SERVICE.getValue().equals(s.getType()) && s.isDateValid())) {
             throw new RuntimeException("已经购买过服务");
         }
         Order order = orderDTO.convertOrder();
@@ -102,7 +101,7 @@ public class OrderAppService {
         List<Services> serviceList = serviceDomainService.listByMemberId(order.getMemberId());
         Long serviceId = null;
         for (Services services : serviceList) {
-            if (order.getPlan().getDataTraffic().equals(services.getDataTraffic()) || services.getStatus().equals(Services.STATUS.EXPIRED.getValue())) {
+            if (order.getPlan().getDataTraffic().equals(services.getDataTraffic())) {
                 serviceId = services.getId();
                 if (services.getEndDate().before(new Date())) {
                     services.setEndDate(DateUtil.offsetMonth(new Date(), order.getPlan().getPeriod()));
@@ -110,13 +109,13 @@ public class OrderAppService {
                     services.setEndDate(DateUtil.offsetMonth(services.getEndDate(), order.getPlan().getPeriod()));
                 }
                 services.setDataTraffic(order.getPlan().getDataTraffic());
-                services.setStatus(Services.STATUS.VALID.getValue());
                 services.setPeriod(order.getPlan().getPeriod());
                 services.setPrice(order.getPlan().getPrice());
                 serviceDomainService.updateById(services);
                 break;
             }
         }
+        // TG消息通知
         try {
             SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
             sysTelegramSendDTO.setTemplateName("purchase");
@@ -140,11 +139,11 @@ public class OrderAppService {
             service.setPeriod(order.getPlan().getPeriod());
             service.setPrice(order.getPlan().getPrice());
             service.setUuid(UUID.fastUUID().toString());
-            service.setStatus("0");
             serviceDomainService.save(service);
-            order.setServiceId(serviceId);
+            order.setServiceId(service.getId());
         }
         order.finish();
         orderDomainService.updateById(order);
+        serviceDomainService.syncRemoteService(order.getServiceId());
     }
 }

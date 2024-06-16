@@ -6,6 +6,7 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.objvalue.Server;
 import com.yeem.lamp.infrastructure.x.model.*;
@@ -134,33 +135,37 @@ public class XUIClient {
         }
     }
 
-    public void addVmessInbound(Server server, List<NodeVmess> nodeVmessList) {
+    public void addVmessInbound(Long serverId, int serverPort, Map<Long, String> serviceMap) {
         ObjectMapper objectMapper = new ObjectMapper();
         XInbound xInbound = new XInbound();
         xInbound.setUp(0);
         xInbound.setDown(0);
         xInbound.setTotal(0);
-        xInbound.setRemark(server.getNodeRemark());
+        xInbound.setRemark(String.valueOf(serverId));
         xInbound.setEnable(true);
         xInbound.setExpiryTime(0);
         xInbound.setListen(null);
-        xInbound.setPort(server.getNodePort());
+        xInbound.setPort(serverPort);
         xInbound.setProtocol("vmess");
         xInbound.initSteamSettings();
         xInbound.initSniffing();
-        List<XVmessClient> xVmessClientList = nodeVmessList.stream().map(XVmessClient::new).collect(Collectors.toList());
+        List<XVmessClient> xVmessClientList = new ArrayList<>();
+        serviceMap.forEach((serviceId, uuid) -> {
+            XVmessClient xVmessClient = new XVmessClient(uuid, serviceId, serverId);
+            xVmessClientList.add(xVmessClient);
+        });
         xInbound.initVmessSetting(xVmessClientList);
         Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
-        HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.INBOUND_ADD)
+        HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.INBOUND_ADD)
                 .cookie(this.cookie)
                 .form(formData)
                 .execute();
     }
 
-    public void addVmessClient(XInbound inbound, NodeVmess nodeVmess) {
+    public void addVmessClient(XInbound inbound, String uuid, Long serviceId, Long serverId) {
         XInbound xInbound = new XInbound();
         xInbound.setId(inbound.getId());
-        XVmessClient xVmessClient = new XVmessClient(nodeVmess);
+        XVmessClient xVmessClient = new XVmessClient(uuid, serviceId, serverId);
         List<XVmessClient> xVmessClientList = Collections.singletonList(xVmessClient);
         xInbound.initVmessSetting(xVmessClientList);
         Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
@@ -170,20 +175,15 @@ public class XUIClient {
                 .execute();
     }
 
-    public void delVmessClient(NodeVmess nodeVmess) {
-        XVmessClient xVmessClient = new XVmessClient(nodeVmess);
-        List<XInbound> xInboundList = getInboundList();
-        for (XInbound xInbound : xInboundList) {
-            String path = String.format(XUIApi.CLIENT_DEL, xInbound.getId(), xVmessClient.getId());
-            HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + path)
-                    .cookie(this.cookie)
-                    .execute();
-            log.info("{}", response);
-        }
-    }
-
     public void delVmessClient(int xInboundId, int xVmessClientId) {
         String path = String.format(XUIApi.CLIENT_DEL, xInboundId, xVmessClientId);
+        HttpRequest.post("http://" + this.host + ":" + this.port + path)
+                .cookie(this.cookie)
+                .execute();
+    }
+
+    public void resetClientTraffic(int xInboundId) {
+        String path = String.format(XUIApi.CLIENT_RESET_TRAFFIC, xInboundId);
         HttpRequest.post("http://" + this.host + ":" + this.port + path)
                 .cookie(this.cookie)
                 .execute();

@@ -37,9 +37,15 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private NodeVmessMapper nodeVmessMapper;
 
     @Override
-    public Services getById(Long id) {
-        ServiceDo serviceDo = serviceMapper.selectById(id);
+    public Services getServiceById(Long serviceId) {
+        ServiceDo serviceDo = serviceMapper.selectById(serviceId);
         return serviceDo.convertService();
+    }
+
+    @Override
+    public Server getServerById(Long serverId) {
+        ServerDo serverDo = serverMapper.selectById(serverId);
+        return serverDo.convertServer();
     }
 
     @Override
@@ -133,5 +139,21 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         }
         List<NodeVmessDo> nodeVmessDoList = nodeVmessMapper.selectList(queryWrapper);
         return nodeVmessDoList.stream().map(NodeVmessDo::convertNodeVmess).collect(Collectors.toList());
+    }
+
+    @Override
+    public void saveNodeVmess(NodeVmess nodeVmess) {
+        NodeVmessDo nodeVmessDo = NodeVmessDo.init(nodeVmess);
+        if (null == nodeVmessDo.getId()) {
+            nodeVmessMapper.insert(nodeVmessDo);
+        } else {
+            nodeVmessMapper.updateById(nodeVmessDo);
+        }
+    }
+
+    @Override
+    public void updateService(Services services) {
+        ServiceDo serviceDo = ServiceDo.init(services);
+        serviceMapper.updateById(serviceDo);
     }
 }
