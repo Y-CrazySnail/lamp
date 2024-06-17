@@ -28,16 +28,6 @@ public class MemberAppService {
     @Autowired
     private TelegramMessage telegramMessage;
 
-    public TokenDTO login(LoginRequest loginRequest) {
-        Member member = loginRequest.convertMember();
-        Token token = memberDomainService.login(member);
-        if (token == null) {
-            throw new YeemException("login error");
-        }
-        telegramMessage.sendLoginNotice(member);
-        return new TokenDTO(token);
-    }
-
     public MemberDTO getByIdWithService(Long id) {
         Member member = memberDomainService.getById(id);
         MemberDTO memberDTO = MemberDTO.init(member);
@@ -46,8 +36,9 @@ public class MemberAppService {
         return memberDTO;
     }
 
-    public List<MemberDTO> list() {
-        List<Member> memberList = memberDomainService.list();
+    public List<MemberDTO> list(MemberDTO memberDTO) {
+        Member member = memberDTO.convertMember();
+        List<Member> memberList = memberDomainService.list(member);
         return memberList.stream().map(MemberDTO::init).collect(Collectors.toList());
     }
 
@@ -80,4 +71,15 @@ public class MemberAppService {
     public void removeById(Long id) {
         memberDomainService.removeById(id);
     }
+
+    public TokenDTO login(LoginRequest loginRequest) {
+        Member member = loginRequest.convertMember();
+        Token token = memberDomainService.login(member);
+        if (token == null) {
+            throw new YeemException("login error");
+        }
+        telegramMessage.sendLoginNotice(member);
+        return new TokenDTO(token);
+    }
+
 }

@@ -11,7 +11,6 @@ import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.objvalue.Server;
 import com.yeem.lamp.domain.service.MemberDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
 import freemarker.template.TemplateException;
@@ -40,19 +39,17 @@ public class ServiceAppService {
     @Autowired
     private ResourceLoader resourceLoader;
 
-
-    public ServiceDTO getById(Long id) {
+    public ServiceDTO getServiceById(Long id) {
         Services services = serviceDomainService.getById(id);
         return new ServiceDTO(services);
     }
 
-    public ServiceDTO getByUUID(String uuid) {
-        Services services = serviceDomainService.getByUUID(uuid);
-        return new ServiceDTO(services);
+    public List<ServiceDTO> listServiceByMemberId(Long memberId) {
+        List<Services> servicesList = serviceDomainService.listByMemberId(memberId);
+        return servicesList.stream().peek(Services::dealSurplus).map(ServiceDTO::new).collect(Collectors.toList());
     }
 
-    public IPage<ServiceDTO> pages(int current, int size,
-                                   Long memberId, String status, String wechat, String email) {
+    public IPage<ServiceDTO> pageService(int current, int size, Long memberId, String status, String wechat, String email) {
         IPage<Services> page = serviceDomainService.pages(current, size, memberId, status, wechat, email);
         IPage<ServiceDTO> pageDTO = new Page<>();
         pageDTO.setPages(page.getPages());
@@ -63,118 +60,25 @@ public class ServiceAppService {
         return pageDTO;
     }
 
-    public List<ServiceDTO> listByMemberId(Long memberId) {
-        List<Services> servicesList = serviceDomainService.listByMemberId(memberId);
-        return servicesList.stream().peek(Services::dealSurplus).map(ServiceDTO::new).collect(Collectors.toList());
-    }
-
-    public void save(ServiceDTO serviceDTO) {
+    public void saveService(ServiceDTO serviceDTO) {
         Services services = serviceDTO.convertService();
         serviceDomainService.save(services);
     }
 
-    public void updateById(ServiceDTO serviceDTO) {
+    public void updateServiceById(ServiceDTO serviceDTO) {
         Services services = serviceDTO.convertService();
         serviceDomainService.updateById(services);
     }
 
-    public void updateUUID(Long memberId, ServiceDTO serviceDTO) {
-        serviceDomainService.updateUUID(memberId, serviceDTO.getId(), serviceDTO.getUuid());
-    }
-
-    public void removeById(Long id) {
+    public void removeServiceById(Long id) {
         serviceDomainService.removeById(id);
     }
 
     public String clash(String uuid) {
-        Services services = serviceDomainService.getByUUID(uuid);
-        if (Objects.isNull(services)) {
-            return null;
-        }
-        Member member = memberDomainService.getById(services.getMemberId());
-        if (Objects.isNull(member)) {
-            return null;
-        }
-        log.info("会员更新订阅：微信{}，邮箱：{}", member.getWechat(), member.getEmail());
-        member.setLastUpdateSubscription(new Date());
-        memberDomainService.updateById(member);
-        List<NodeVmess> nodeVmessList = serviceDomainService.listNodeVmess(uuid);
-
-        String endDateStr = "到期:" + DateUtil.format(services.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-        NodeVmess nodeVmessDoForTime = NodeVmess.initInformation(endDateStr);
-        nodeVmessList.add(nodeVmessDoForTime);
-
-        services.dealSurplus();
-        String surplusStr = "本月剩余:" + services.getSurplus() + "GB";
-        NodeVmess nodeVmessDoForSurplus = NodeVmess.initInformation(surplusStr);
-        nodeVmessList.add(nodeVmessDoForSurplus);
-
-        String websiteStr = "官网:aladdinslamp.cc";
-        NodeVmess nodeVmessDoForWebsite = NodeVmess.initInformation(websiteStr);
-        nodeVmessList.add(nodeVmessDoForWebsite);
-
-        SpringTemplateLoader templateLoader = new SpringTemplateLoader(resourceLoader, "classpath:template");
-        Configuration configuration = new Configuration(new Version("2.3.28"));
-        configuration.setTemplateLoader(templateLoader);
-        Template template;
-        String sub = null;
-        try {
-            template = configuration.getTemplate("clash.ftl");
-            Map<String, Object> map = new HashMap<>();
-            map.put("nodeList", nodeVmessList);
-            sub = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
-        } catch (IOException | TemplateException e) {
-            e.printStackTrace();
-        }
-        return sub;
+        return serviceDomainService.clash(uuid);
     }
 
     public String v2ray(String uuid) {
-        Services services = serviceDomainService.getByUUID(uuid);
-        if (Objects.isNull(services)) {
-            return null;
-        }
-        Member member = memberDomainService.getById(services.getMemberId());
-        if (Objects.isNull(member)) {
-            return null;
-        }
-        log.info("会员更新订阅：微信{}，邮箱：{}", member.getWechat(), member.getEmail());
-        member.setLastUpdateSubscription(new Date());
-        memberDomainService.updateById(member);
-        List<NodeVmess> nodeVmessList = serviceDomainService.listNodeVmess(uuid);
-
-        String endDateStr = "到期:" + DateUtil.format(services.getEndDate(), DatePattern.NORM_DATE_PATTERN);
-        NodeVmess nodeVmessDoForTime = NodeVmess.initInformation(endDateStr);
-        nodeVmessList.add(nodeVmessDoForTime);
-
-        BigDecimal gb = new BigDecimal(Services.GB);
-        BigDecimal surplus = BigDecimal.valueOf(services.getDataTraffic())
-                .subtract(BigDecimal.valueOf(services.getServiceUp()).divide(gb, RoundingMode.HALF_UP))
-                .subtract(BigDecimal.valueOf(services.getServiceDown()).divide(gb, RoundingMode.HALF_UP))
-                .setScale(2, RoundingMode.HALF_UP);
-        String surplusStr = "本月剩余:" + surplus + "GB";
-        NodeVmess nodeVmessDoForSurplus = NodeVmess.initInformation(surplusStr);
-        nodeVmessList.add(nodeVmessDoForSurplus);
-
-        String websiteStr = "官网:aladdinslamp.cc";
-        NodeVmess nodeVmessDoForWebsite = NodeVmess.initInformation(websiteStr);
-        nodeVmessList.add(nodeVmessDoForWebsite);
-
-        SpringTemplateLoader templateLoader = new SpringTemplateLoader(resourceLoader, "classpath:template");
-        Configuration configuration = new Configuration(new Version("2.3.28"));
-        configuration.setTemplateLoader(templateLoader);
-        Template template;
-        StringBuilder stringBuilder = new StringBuilder();
-        try {
-            template = configuration.getTemplate("v2ray.ftl");
-            for (NodeVmess nodeVmess : nodeVmessList) {
-                stringBuilder.append("vmess://")
-                        .append(Base64.encode(FreeMarkerTemplateUtils.processTemplateIntoString(template, nodeVmess)))
-                        .append("\n");
-            }
-        } catch (IOException | TemplateException e) {
-            e.printStackTrace();
-        }
-        return Base64.encode(stringBuilder.toString());
+        return serviceDomainService.v2ray(uuid);
     }
 }

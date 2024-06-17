@@ -22,7 +22,11 @@ public class MemberDomainService {
      * @return 登录token
      */
     public Token login(Member member) {
-        Member resMember = memberRepository.get(member);
+        List<Member> memberList = memberRepository.list(member);
+        if (memberList.isEmpty()) {
+            return null;
+        }
+        Member resMember = memberList.get(0);
         if (!member.getPassword().equals(resMember.getPassword())) {
             return null;
         }
@@ -37,8 +41,8 @@ public class MemberDomainService {
         return member;
     }
 
-    public List<Member> list() {
-        return memberRepository.list();
+    public List<Member> list(Member member) {
+        return memberRepository.list(member);
     }
 
     public IPage<Member> pages(int current, int size, String email, String wechat) {

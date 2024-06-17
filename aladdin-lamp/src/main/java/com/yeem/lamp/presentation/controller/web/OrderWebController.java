@@ -27,7 +27,9 @@ public class OrderWebController {
     public ResponseEntity<Object> list() {
         try {
             Long memberId = LocalAuthInterceptor.getMemberId();
-            return ResponseEntity.ok(orderAppService.listByMemberId(memberId));
+            OrderDTO orderDTO = new OrderDTO();
+            orderDTO.setMemberId(memberId);
+            return ResponseEntity.ok(orderAppService.listOrder(orderDTO));
         } catch (Exception e) {
             log.error("list查询失败", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("list查询失败");

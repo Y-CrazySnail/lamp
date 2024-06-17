@@ -15,7 +15,6 @@ import com.yeem.lamp.security.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,35 +25,20 @@ public class MemberRepositoryImpl implements MemberRepository {
     private MemberMapper memberMapper;
 
     @Override
-    public Member get(Member member) {
-        LambdaQueryWrapper<MemberDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(MemberDo::getEmail, member.getEmail());
-        queryWrapper.eq(MemberDo::getDeleteFlag, false);
-        MemberDo memberDo = memberMapper.selectOne(queryWrapper);
-        return memberDo.convertMember();
-    }
-
-    @Override
     public Member getById(Long id) {
         MemberDo memberDo = memberMapper.selectById(id);
         return memberDo.convertMember();
     }
 
     @Override
-    public List<Member> list() {
+    public List<Member> list(Member member) {
         LambdaQueryWrapper<MemberDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(MemberDo::getDeleteFlag, false);
+        if (StrUtil.isNotEmpty(member.getEmail())) {
+            queryWrapper.eq(MemberDo::getEmail, member.getEmail());
+        }
         List<MemberDo> memberDoList = memberMapper.selectList(queryWrapper);
         return memberDoList.stream().map(MemberDo::convertMember).collect(Collectors.toList());
-    }
-
-    @Override
-    public Member getByUUID(String uuid) {
-        QueryWrapper<MemberDo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        queryWrapper.eq("uuid", uuid);
-        MemberDo memberDo = memberMapper.selectOne(queryWrapper);
-        return memberDo.convertMember();
     }
 
     @Override
@@ -92,7 +76,6 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public void removeById(Long id) {
-        // 删除会员信息
         UpdateWrapper<MemberDo> updateWrapper = new UpdateWrapper<>();
         updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
         updateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);

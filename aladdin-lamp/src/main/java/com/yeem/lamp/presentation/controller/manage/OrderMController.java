@@ -28,7 +28,7 @@ public class OrderMController {
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(orderAppService.list());
+            return ResponseEntity.ok(orderAppService.listOrder(new OrderDTO()));
         } catch (Exception e) {
             log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询列表失败");
@@ -46,7 +46,7 @@ public class OrderMController {
     public ResponseEntity<Object> pages(@RequestParam("current") int current,
                                         @RequestParam("size") int size) {
         try {
-            return ResponseEntity.ok(orderAppService.pages(current, size));
+            return ResponseEntity.ok(orderAppService.pageOrder(current, size));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -65,7 +65,7 @@ public class OrderMController {
             if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
-            return ResponseEntity.ok(orderAppService.getById(id));
+            return ResponseEntity.ok(orderAppService.getOrderById(id));
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
@@ -81,7 +81,7 @@ public class OrderMController {
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody OrderDTO orderDTO) {
         try {
-            orderAppService.updateById(orderDTO);
+            orderAppService.updateOrderById(orderDTO);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);

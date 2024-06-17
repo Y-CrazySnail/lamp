@@ -26,29 +26,10 @@ public class ServiceWebController {
     public ResponseEntity<Object> list() {
         try {
             Long memberId = LocalAuthInterceptor.getMemberId();
-            return ResponseEntity.ok(serviceAppService.listByMemberId(memberId));
+            return ResponseEntity.ok(serviceAppService.listServiceByMemberId(memberId));
         } catch (Exception e) {
             log.error("list查询失败", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("list查询失败");
-        }
-    }
-
-    /**
-     * 更改
-     *
-     * @param serviceDTO serviceDTO
-     * @return 更新结果
-     */
-    @PutMapping("/updateUUID")
-    public ResponseEntity<Object> updateUUID(@RequestBody ServiceDTO serviceDTO) {
-        try {
-            Long memberId = LocalAuthInterceptor.getMemberId();
-            serviceDTO.setMemberId(memberId);
-            serviceAppService.updateUUID(memberId, serviceDTO);
-            return ResponseEntity.ok("更换UUID成功");
-        } catch (Exception e) {
-            log.error("update方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
         }
     }
 }

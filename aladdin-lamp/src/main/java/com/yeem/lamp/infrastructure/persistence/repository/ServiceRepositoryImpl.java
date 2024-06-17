@@ -1,15 +1,14 @@
 package com.yeem.lamp.infrastructure.persistence.repository;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
-import com.yeem.lamp.domain.objvalue.Server;
+import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
@@ -17,11 +16,9 @@ import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.NodeVmessMapper;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServerMapper;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServiceMapper;
-import com.yeem.lamp.security.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,6 +32,34 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private ServerMapper serverMapper;
     @Autowired
     private NodeVmessMapper nodeVmessMapper;
+
+    @Override
+    public Services getByUUID(String uuid) {
+        LambdaQueryWrapper<ServiceDo> serviceDoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        serviceDoLambdaQueryWrapper.eq(ServiceDo::getDeleteFlag, false);
+        serviceDoLambdaQueryWrapper.eq(ServiceDo::getUuid, uuid);
+        ServiceDo serviceDo = serviceMapper.selectOne(serviceDoLambdaQueryWrapper);
+        Services services = serviceDo.convertService();
+
+        LambdaQueryWrapper<ServerDo> serverDoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        serverDoLambdaQueryWrapper.eq(ServerDo::getDeleteFlag, false);
+        List<ServerDo> serverDoList = serverMapper.selectList(serverDoLambdaQueryWrapper);
+        List<Server> serverList = serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
+        services.setServerList(serverList);
+
+        return services;
+    }
+
+    @Override
+    public List<Services> list(Services services) {
+        LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServiceDo::getDeleteFlag, false);
+        if (StrUtil.isNotEmpty(services.getUuid())) {
+            queryWrapper.eq(ServiceDo::getUuid, services.getUuid());
+        }
+        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
+        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
+    }
 
     @Override
     public Services getServiceById(Long serviceId) {
@@ -83,13 +108,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
     }
 
-    @Override
-    public List<Services> listService() {
-        LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServiceDo::getDeleteFlag, false);
-        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
-        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
-    }
 
     @Override
     public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {
@@ -102,25 +120,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         res.setSize(page.getSize());
         res.setTotal(page.getTotal());
         return res;
-    }
-
-    @Override
-    public Services getByUUID(String uuid) {
-        QueryWrapper<ServiceDo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        queryWrapper.eq("uuid", uuid);
-        queryWrapper.eq("type", ServiceDo.TYPE.SERVICE.getValue());
-        ServiceDo serviceDo = serviceMapper.selectOne(queryWrapper);
-        return serviceDo.convertService();
-    }
-
-    @Override
-    public void updateUUID(Long memberId, Long serviceId, String uuid) {
-        LambdaUpdateWrapper<ServiceDo> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(ServiceDo::getUuid, uuid);
-        updateWrapper.eq(ServiceDo::getMemberId, memberId);
-        updateWrapper.eq(ServiceDo::getId, serviceId);
-        serviceMapper.update(null, updateWrapper);
     }
 
     @Override

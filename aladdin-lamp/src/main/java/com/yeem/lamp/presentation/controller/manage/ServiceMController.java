@@ -3,7 +3,6 @@ package com.yeem.lamp.presentation.controller.manage;
 import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.application.service.ServiceAppService;
-import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +33,7 @@ public class ServiceMController {
                                         @RequestParam(value = "wechat", required = false) String wechat,
                                         @RequestParam(value = "email", required = false) String email) {
         try {
-            return ResponseEntity.ok(serviceAppService.pages(current, size, memberId, status, wechat, email));
+            return ResponseEntity.ok(serviceAppService.pageService(current, size, memberId, status, wechat, email));
         } catch (Exception e) {
             log.error("page方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
@@ -53,7 +52,7 @@ public class ServiceMController {
             if (null == id) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
             }
-            return ResponseEntity.ok(serviceAppService.getById(id));
+            return ResponseEntity.ok(serviceAppService.getServiceById(id));
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
@@ -69,7 +68,7 @@ public class ServiceMController {
     @PutMapping("/update")
     public ResponseEntity<Object> update(@RequestBody ServiceDTO serviceDTO) {
         try {
-            serviceAppService.updateById(serviceDTO);
+            serviceAppService.updateServiceById(serviceDTO);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("update方法", e);
@@ -86,7 +85,7 @@ public class ServiceMController {
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody ServiceDTO serviceDTO) {
         try {
-            serviceAppService.save(serviceDTO);
+            serviceAppService.saveService(serviceDTO);
             return ResponseEntity.ok(" ");
         } catch (Exception e) {
             log.error("save方法", e);
@@ -106,7 +105,7 @@ public class ServiceMController {
             if (null == serviceDTO.getId()) {
                 return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
             }
-            serviceAppService.removeById(serviceDTO.getId());
+            serviceAppService.removeServiceById(serviceDTO.getId());
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("delete方法", e);

@@ -1,4 +1,4 @@
-package com.yeem.lamp.domain.objvalue;
+package com.yeem.lamp.domain.entity;
 
 import lombok.Data;
 

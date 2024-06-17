@@ -40,17 +40,18 @@ public class OrderAppService {
     @Autowired
     private ISysTelegramService sysTelegramService;
 
-    public void updateById(OrderDTO orderDTO) {
-        Order order = orderDTO.convertOrder();
-        orderDomainService.updateById(order);
-    }
-
-    public OrderDTO getById(Long id) {
+    public OrderDTO getOrderById(Long id) {
         Order order = orderDomainService.getById(id);
         return new OrderDTO(order);
     }
 
-    public IPage<OrderDTO> pages(int current, int size) {
+    public List<OrderDTO> listOrder(OrderDTO orderDTO) {
+        Order order = orderDTO.convertOrder();
+        List<Order> orderList = orderDomainService.list(order);
+        return orderList.stream().map(OrderDTO::new).collect(Collectors.toList());
+    }
+
+    public IPage<OrderDTO> pageOrder(int current, int size) {
         IPage<Order> page = orderDomainService.pages(current, size);
         IPage<OrderDTO> res = new Page<>();
         res.setPages(page.getPages());
@@ -61,14 +62,9 @@ public class OrderAppService {
         return res;
     }
 
-    public List<OrderDTO> list() {
-        List<Order> orderList = orderDomainService.list();
-        return orderList.stream().map(OrderDTO::new).collect(Collectors.toList());
-    }
-
-    public List<OrderDTO> listByMemberId(Long memberId) {
-        List<Order> orderList = orderDomainService.listByMemberId(memberId);
-        return orderList.stream().map(OrderDTO::new).collect(Collectors.toList());
+    public void updateOrderById(OrderDTO orderDTO) {
+        Order order = orderDTO.convertOrder();
+        orderDomainService.updateById(order);
     }
 
     public void place(OrderDTO orderDTO) {

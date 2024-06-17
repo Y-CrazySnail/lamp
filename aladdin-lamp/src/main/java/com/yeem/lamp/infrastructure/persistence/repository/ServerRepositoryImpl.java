@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.common.entity.BaseEntity;
-import com.yeem.lamp.domain.objvalue.Server;
+import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.repository.ServerRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServerMapper;

@@ -18,16 +18,12 @@ public class OrderDomainService {
         orderRepository.insert(order);
     }
 
-    public List<Order> list() {
-        return orderRepository.list();
-    }
-
-    public List<Order> listByMemberId(Long memberId) {
-        return orderRepository.listByMemberId(memberId);
+    public List<Order> list(Order order) {
+        return orderRepository.list(order);
     }
 
     public IPage<Order> pages(int current, int size) {
-        return orderRepository.pages(current, size);
+        return orderRepository.page(current, size);
     }
 
     public Order getById(Long id) {

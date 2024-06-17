@@ -3,7 +3,7 @@ package com.yeem.lamp.application.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServerDTO;
-import com.yeem.lamp.domain.objvalue.Server;
+import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.service.ServerDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -2,7 +2,7 @@ package com.yeem.lamp.infrastructure.persistence.entity;
 
 import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.lamp.domain.objvalue.Server;
+import com.yeem.lamp.domain.entity.Server;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

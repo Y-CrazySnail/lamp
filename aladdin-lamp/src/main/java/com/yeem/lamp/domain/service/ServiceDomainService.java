@@ -1,19 +1,29 @@
 package com.yeem.lamp.domain.service;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
-import com.yeem.lamp.domain.objvalue.Server;
+import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XClientStat;
 import com.yeem.lamp.infrastructure.x.model.XInbound;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
+import freemarker.template.Version;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
+import org.springframework.ui.freemarker.SpringTemplateLoader;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
@@ -25,6 +35,8 @@ public class ServiceDomainService {
 
     @Autowired
     private ServiceRepository serviceRepository;
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     public List<Services> listByMemberId(Long memberId) {
         List<Services> servicesList = serviceRepository.listByMemberId(memberId);
@@ -41,9 +53,16 @@ public class ServiceDomainService {
     }
 
     public Services getByUUID(String uuid) {
-        Services services = serviceRepository.getByUUID(uuid);
-        services.dealSurplus();
-        return services;
+        Services services = new Services();
+        services.setUuid(uuid);
+        List<Services> serviceList = serviceRepository.list(services);
+        if (serviceList.isEmpty()) {
+            return null;
+        } else {
+            services = serviceList.get(0);
+            services.dealSurplus();
+            return services;
+        }
     }
 
     public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {
@@ -62,17 +81,13 @@ public class ServiceDomainService {
         serviceRepository.removeById(id);
     }
 
-    public void updateUUID(Long memberId, Long serviceId, String uuid) {
-        serviceRepository.updateUUID(memberId, serviceId, uuid);
-    }
-
     /**
      * 同步远程流量至本地
      */
     public void syncDataTraffic() {
         Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Server> serverList = serviceRepository.listServer();
-        List<Services> servicesList = serviceRepository.listService();
+        List<Services> servicesList = serviceRepository.list(new Services());
         Map<Long, Services> servicesMap = servicesList.stream()
                 .peek(services -> {
                     services.setServiceTodayUp(0L);
@@ -167,7 +182,7 @@ public class ServiceDomainService {
     }
 
     public void syncRemoteServer(Long serverId) {
-        List<Services> servicesList = serviceRepository.listService();
+        List<Services> servicesList = serviceRepository.list(new Services());
         Map<Long, String> servicesMap = servicesList.stream()
                 .filter(Services::isValid)
                 .collect(Collectors.toMap(Services::getId, Services::getUuid));
@@ -198,17 +213,47 @@ public class ServiceDomainService {
         }
     }
 
-    public List<NodeVmess> listNodeVmess(String uuid) {
-        List<NodeVmess> nodeVmessList = new ArrayList<>();
-        List<Server> serverList = serviceRepository.listServer();
-        for (Server server : serverList) {
-            NodeVmess nodeVmess = NodeVmess.init(uuid,
-                    server.getSubscribeNamePrefix(),
-                    server.getSubscribeIp(),
-                    server.getSubscribePort()
-            );
-            nodeVmessList.add(nodeVmess);
+    public String clash(String uuid) {
+        Services services = serviceRepository.getByUUID(uuid);
+        services.generateVmessNode();
+        services.generateSubscriptionVmessNode();
+
+        SpringTemplateLoader templateLoader = new SpringTemplateLoader(resourceLoader, "classpath:template");
+        Configuration configuration = new Configuration(new Version("2.3.28"));
+        configuration.setTemplateLoader(templateLoader);
+        Template template;
+        String sub = null;
+        try {
+            template = configuration.getTemplate("clash.ftl");
+            Map<String, Object> map = new HashMap<>();
+            map.put("nodeList", services.getNodeVmessList());
+            sub = FreeMarkerTemplateUtils.processTemplateIntoString(template, map);
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
         }
-        return nodeVmessList;
+        return sub;
+    }
+
+    public String v2ray(String uuid) {
+        Services services = serviceRepository.getByUUID(uuid);
+        services.generateVmessNode();
+        services.generateSubscriptionVmessNode();
+
+        SpringTemplateLoader templateLoader = new SpringTemplateLoader(resourceLoader, "classpath:template");
+        Configuration configuration = new Configuration(new Version("2.3.28"));
+        configuration.setTemplateLoader(templateLoader);
+        Template template;
+        StringBuilder stringBuilder = new StringBuilder();
+        try {
+            template = configuration.getTemplate("v2ray.ftl");
+            for (NodeVmess nodeVmess : services.getNodeVmessList()) {
+                stringBuilder.append("vmess://")
+                        .append(cn.hutool.core.codec.Base64.encode(FreeMarkerTemplateUtils.processTemplateIntoString(template, nodeVmess)))
+                        .append("\n");
+            }
+        } catch (IOException | TemplateException e) {
+            e.printStackTrace();
+        }
+        return Base64.encode(stringBuilder.toString());
     }
 }
