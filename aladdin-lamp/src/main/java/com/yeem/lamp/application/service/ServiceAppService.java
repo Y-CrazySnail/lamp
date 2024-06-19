@@ -1,30 +1,19 @@
 package com.yeem.lamp.application.service;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServiceDTO;
-import com.yeem.lamp.domain.entity.Member;
-import com.yeem.lamp.domain.objvalue.NodeVmess;
+import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.service.MemberDomainService;
+import com.yeem.lamp.domain.service.ServerDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
-import freemarker.template.TemplateException;
-import freemarker.template.Version;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
-import org.springframework.ui.freemarker.SpringTemplateLoader;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -36,6 +25,8 @@ public class ServiceAppService {
     private MemberDomainService memberDomainService;
     @Autowired
     private ServiceDomainService serviceDomainService;
+    @Autowired
+    private ServerDomainService serverDomainService;
     @Autowired
     private ResourceLoader resourceLoader;
 
@@ -80,5 +71,10 @@ public class ServiceAppService {
 
     public String v2ray(String uuid) {
         return serviceDomainService.v2ray(uuid);
+    }
+
+    public void syncServiceRecord() {
+        Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
+        List<Server> serverList = serverDomainService.list();
     }
 }

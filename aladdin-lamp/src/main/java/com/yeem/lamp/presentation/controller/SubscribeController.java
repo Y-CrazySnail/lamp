@@ -34,7 +34,7 @@ public class SubscribeController {
 
     @GetMapping("/test")
     public String test() {
-        serviceAppService.clash("c9e78bb8-e1a5-49b8-8ca8-8fe9b3b78d96");
+        serviceDomainService.generateServiceMonth();
         return "ok";
     }
 
