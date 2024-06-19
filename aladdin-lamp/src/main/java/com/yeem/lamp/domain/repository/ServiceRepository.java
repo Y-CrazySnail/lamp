@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.objvalue.ServiceMonth;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +13,7 @@ public interface ServiceRepository {
 
     Services getByUUID(String uuid);
 
-    List<Services> list(Services services);
+    List<Services> listService(Services services);
 
     IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email);
 
@@ -35,4 +36,8 @@ public interface ServiceRepository {
     void saveNodeVmess(NodeVmess nodeVmess);
 
     void updateService(Services services);
+
+
+    List<ServiceMonth> listServiceMonth(Integer year, Integer month);
+    void batchSaveServiceMonth(List<ServiceMonth> serviceMonthList);
 }

@@ -9,13 +9,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
-import com.yeem.lamp.infrastructure.persistence.repository.mapper.NodeVmessMapper;
-import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServerMapper;
-import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServiceMapper;
+import com.yeem.lamp.infrastructure.persistence.entity.ServiceMonthDo;
+import com.yeem.lamp.infrastructure.persistence.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -32,6 +32,12 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private ServerMapper serverMapper;
     @Autowired
     private NodeVmessMapper nodeVmessMapper;
+    @Autowired
+    private ServiceMonthMapper serviceMonthMapper;
+    @Autowired
+    private ServiceRecordMapper serviceRecordMapper;
+    @Autowired
+    private SubscriptionMapper subscriptionMapper;
 
     @Override
     public Services getByUUID(String uuid) {
@@ -51,7 +57,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public List<Services> list(Services services) {
+    public List<Services> listService(Services services) {
         LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceDo::getDeleteFlag, false);
         if (StrUtil.isNotEmpty(services.getUuid())) {
@@ -154,5 +160,23 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public void updateService(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
         serviceMapper.updateById(serviceDo);
+    }
+
+    @Override
+    public List<ServiceMonth> listServiceMonth(Integer year, Integer month) {
+        LambdaQueryWrapper<ServiceMonthDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServiceMonthDo::getDeleteFlag, false);
+        queryWrapper.eq(ServiceMonthDo::getServiceYear, year);
+        queryWrapper.eq(ServiceMonthDo::getServiceMonth, month);
+        List<ServiceMonthDo> serviceMonthDoList = serviceMonthMapper.selectList(queryWrapper);
+        return serviceMonthDoList.stream().map(ServiceMonthDo::convertServiceMonth).collect(Collectors.toList());
+    }
+
+    @Override
+    public void batchSaveServiceMonth(List<ServiceMonth> serviceMonthList) {
+        List<ServiceMonthDo> serviceMonthDoList = serviceMonthList.stream().map(ServiceMonthDo::init).collect(Collectors.toList());
+        for (ServiceMonthDo serviceMonthDo : serviceMonthDoList) {
+            serviceMonthMapper.insert(serviceMonthDo);
+        }
     }
 }

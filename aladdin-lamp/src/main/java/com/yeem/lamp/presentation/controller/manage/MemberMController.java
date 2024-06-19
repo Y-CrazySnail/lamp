@@ -25,7 +25,7 @@ public class MemberMController {
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
         try {
-            return ResponseEntity.ok(memberAppService.list());
+            return ResponseEntity.ok(memberAppService.list(new MemberDTO()));
         } catch (Exception e) {
             log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");

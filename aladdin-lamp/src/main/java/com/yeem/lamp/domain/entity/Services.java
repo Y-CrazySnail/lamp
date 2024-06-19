@@ -3,8 +3,7 @@ package com.yeem.lamp.domain.entity;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.yeem.lamp.domain.objvalue.NodeVmess;
-import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,18 +18,22 @@ public class Services {
 
     private Long id;
     private Long memberId;
-    /**
-     * 类型 0周期服务 1数据加量包
-     */
-    private String type;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date beginDate;
-    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date endDate;
     private Integer dataTraffic;
     private Integer period;
     private BigDecimal price;
     private String uuid;
+    private Date beginDate;
+    private Date endDate;
+    private List<ServiceMonth> serviceMonthList;
+    private List<ServiceRecord> serviceRecordList;
+    private List<Subscription> subscriptionList;
+
+    /**
+     * 类型 0周期服务 1数据加量包
+     */
+    private String type;
+
+
     private String wechat;
     private String email;
     /**
@@ -74,16 +77,8 @@ public class Services {
     }
 
     public boolean isValid() {
-        if (this.endDate.before(new Date())) {
-            return false;
-        }
-        if (null == this.serviceUp) {
-            this.serviceUp = 0L;
-        }
-        if (null == this.serviceDown) {
-            this.serviceDown = 0L;
-        }
-        return Long.valueOf(this.dataTraffic) * 1024L * 1024L * 1024L - this.serviceUp - this.serviceDown >= 0;
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        return this.endDate.after(current);
     }
 
     public boolean isDateValid() {
@@ -116,5 +111,21 @@ public class Services {
         String websiteStr = "官网:aladdinslamp.cc";
         NodeVmess nodeVmessDoForWebsite = NodeVmess.initInformation(websiteStr);
         this.nodeVmessList.add(nodeVmessDoForWebsite);
+    }
+
+    public ServiceMonth generateServiceMonth(Integer year, Integer month) {
+        Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(new Date())).toJdkDate();
+        ServiceMonth serviceMonth = new ServiceMonth();
+        serviceMonth.setServiceId(this.id);
+        serviceMonth.setServiceYear(year);
+        serviceMonth.setServiceMonth(month);
+        if (year == DateUtil.year(endDate) && month == DateUtil.month(endDate) + 1) {
+            Long validDays = DateUtil.betweenDay(begin, endDate, true);
+            Integer totalDays = DateUtil.dayOfMonth(begin);
+        }
+        serviceMonth.setBandwidth(Long.valueOf(bandwidth) * 1024 * 1024 * 1024);
+        serviceMonth.setBandwidthUp(0L);
+        serviceMonth.setBandwidthDown(0L);
+        return serviceMonth;
     }
 }

@@ -1,6 +1,9 @@
 package com.yeem.lamp.domain.entity;
 
+import com.yeem.lamp.domain.objvalue.Subscription;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class Server {
@@ -17,4 +20,5 @@ public class Server {
     private String postscript;
     private int sort;
     private int multiplyingPower;
+    private List<Subscription> subscriptionList;
 }

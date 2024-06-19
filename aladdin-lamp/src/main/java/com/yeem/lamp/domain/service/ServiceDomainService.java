@@ -1,13 +1,12 @@
 package com.yeem.lamp.domain.service;
 
 import cn.hutool.core.codec.Base64;
-import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
+import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XClientStat;
@@ -24,8 +23,6 @@ import org.springframework.ui.freemarker.FreeMarkerTemplateUtils;
 import org.springframework.ui.freemarker.SpringTemplateLoader;
 
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,7 +52,7 @@ public class ServiceDomainService {
     public Services getByUUID(String uuid) {
         Services services = new Services();
         services.setUuid(uuid);
-        List<Services> serviceList = serviceRepository.list(services);
+        List<Services> serviceList = serviceRepository.listService(services);
         if (serviceList.isEmpty()) {
             return null;
         } else {
@@ -81,13 +78,38 @@ public class ServiceDomainService {
         serviceRepository.removeById(id);
     }
 
+    public void generateServiceMonth() {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        Integer year = DateUtil.year(current);
+        Integer month = DateUtil.month(current) + 1;
+        log.info("generate service month, year:{} month:{}", year, month);
+        List<Services> servicesList = serviceRepository.listService(new Services());
+        List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(year, month);
+        Set<Long> serviceIdSet = serviceMonthList.stream().map(ServiceMonth::getServiceId).collect(Collectors.toSet());
+        List<ServiceMonth> serviceMonthListTodo = new ArrayList<>();
+        for (Services services : servicesList) {
+            if (!services.isValid()) {
+                log.info("service has expired:{}", services.getEndDate());
+                continue;
+            }
+            if (serviceIdSet.contains(services.getId())) {
+                log.info("service month has exist, serviceId:{}", services.getId());
+                continue;
+            }
+            ServiceMonth serviceMonth = ServiceMonth.generate(services.getId(), year, month, services.getDataTraffic());
+            serviceMonthListTodo.add(serviceMonth);
+            log.info("generate service month, service id:{}", services.getId());
+        }
+        serviceRepository.batchSaveServiceMonth(serviceMonthListTodo);
+    }
+
     /**
      * 同步远程流量至本地
      */
     public void syncDataTraffic() {
         Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Server> serverList = serviceRepository.listServer();
-        List<Services> servicesList = serviceRepository.list(new Services());
+        List<Services> servicesList = serviceRepository.listService(new Services());
         Map<Long, Services> servicesMap = servicesList.stream()
                 .peek(services -> {
                     services.setServiceTodayUp(0L);
@@ -182,7 +204,7 @@ public class ServiceDomainService {
     }
 
     public void syncRemoteServer(Long serverId) {
-        List<Services> servicesList = serviceRepository.list(new Services());
+        List<Services> servicesList = serviceRepository.listService(new Services());
         Map<Long, String> servicesMap = servicesList.stream()
                 .filter(Services::isValid)
                 .collect(Collectors.toMap(Services::getId, Services::getUuid));
