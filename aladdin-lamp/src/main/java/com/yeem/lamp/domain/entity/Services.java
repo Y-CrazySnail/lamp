@@ -115,15 +115,27 @@ public class Services {
 
     public ServiceMonth generateServiceMonth(Integer year, Integer month) {
         Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(new Date())).toJdkDate();
+        Date end = DateUtil.beginOfDay(DateUtil.endOfMonth(new Date())).toJdkDate();
+        int totalDays = DateUtil.dayOfMonth(begin);
         ServiceMonth serviceMonth = new ServiceMonth();
         serviceMonth.setServiceId(this.id);
         serviceMonth.setServiceYear(year);
         serviceMonth.setServiceMonth(month);
         if (year == DateUtil.year(endDate) && month == DateUtil.month(endDate) + 1) {
-            Long validDays = DateUtil.betweenDay(begin, endDate, true);
-            Integer totalDays = DateUtil.dayOfMonth(begin);
+            long validDays = DateUtil.betweenDay(begin, endDate, true);
+            BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
+                    .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(1024L * 1024L * 1024L));
+            serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
+        } else if (year == DateUtil.year(beginDate) && month == DateUtil.month(beginDate) + 1) {
+            long validDays = DateUtil.betweenDay(beginDate, end, true);
+            BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
+                    .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
+                    .multiply(BigDecimal.valueOf(1024L * 1024L * 1024L));
+            serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
+        } else {
+            serviceMonth.setBandwidth(1024L * 1024L * 1024L * dataTraffic);
         }
-        serviceMonth.setBandwidth(Long.valueOf(bandwidth) * 1024 * 1024 * 1024);
         serviceMonth.setBandwidthUp(0L);
         serviceMonth.setBandwidthDown(0L);
         return serviceMonth;

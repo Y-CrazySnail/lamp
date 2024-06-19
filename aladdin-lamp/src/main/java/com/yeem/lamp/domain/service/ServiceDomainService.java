@@ -96,7 +96,7 @@ public class ServiceDomainService {
                 log.info("service month has exist, serviceId:{}", services.getId());
                 continue;
             }
-            ServiceMonth serviceMonth = ServiceMonth.generate(services.getId(), year, month, services.getDataTraffic());
+            ServiceMonth serviceMonth = services.generateServiceMonth(year, month);
             serviceMonthListTodo.add(serviceMonth);
             log.info("generate service month, service id:{}", services.getId());
         }
