@@ -34,7 +34,7 @@ public class SubscribeController {
 
     @GetMapping("/test")
     public String test() {
-        serviceDomainService.generateServiceMonth();
+        serviceAppService.syncServiceRecord();
         return "ok";
     }
 
