@@ -3,6 +3,7 @@ package com.yeem.lamp.application.dto;
 import cn.hutool.core.bean.BeanUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Services;
+import com.yeem.lamp.domain.objvalue.Plan;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,7 +22,7 @@ public class ServiceDTO {
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date endDate;
     private Integer dataTraffic;
-    private String period;
+    private Integer period;
     private BigDecimal price;
     private String uuid;
     /**
@@ -36,11 +37,19 @@ public class ServiceDTO {
 
     public ServiceDTO(Services services) {
         BeanUtil.copyProperties(services, this);
+        this.dataTraffic = services.getPlan().getBandwidth();
+        this.period = services.getPlan().getPeriod();
+        this.price = services.getPlan().getPrice();
     }
 
     public Services convertService() {
         Services services = new Services();
         BeanUtil.copyProperties(this, services);
+        Plan plan = new Plan();
+        plan.setPeriod(this.period);
+        plan.setBandwidth(this.dataTraffic);
+        plan.setPrice(this.price);
+        services.setPlan(plan);
         return services;
     }
 }

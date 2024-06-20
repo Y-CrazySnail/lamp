@@ -38,6 +38,9 @@ public class OrderDo extends BaseDo {
     public static OrderDo init(Order order) {
         OrderDo orderDo = new OrderDo();
         BeanUtil.copyProperties(order, orderDo);
+        orderDo.setDataTraffic(order.getPlan().getBandwidth());
+        orderDo.setPeriod(order.getPlan().getPeriod());
+        orderDo.setPrice(order.getPlan().getPrice());
         return orderDo;
     }
 

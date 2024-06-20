@@ -116,6 +116,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         ServiceDo serviceDo = ServiceDo.init(services);
         if (null == services.getId()) {
             serviceMapper.insert(serviceDo);
+            services.setId(serviceDo.getId());
         } else {
             serviceMapper.updateById(serviceDo);
         }

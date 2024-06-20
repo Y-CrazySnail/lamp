@@ -105,7 +105,7 @@ public class ServiceAppService {
                         List<ServiceRecord> serviceRecordList = serviceMonth.getServiceRecordList();
                         ServiceRecord serviceRecord = null;
                         for (ServiceRecord record : serviceRecordList) {
-                            if (region.equals(record.getRegion())) {
+                            if (region.equals(record.getRegion()) && currentDate.equals(record.getServiceDate())) {
                                 serviceRecord = record;
                             }
                         }
@@ -121,8 +121,8 @@ public class ServiceAppService {
                     }
                 }
             }
-            serviceDomainService.syncService(servicesList);
         }
+        serviceDomainService.syncService(servicesList);
     }
 
 }

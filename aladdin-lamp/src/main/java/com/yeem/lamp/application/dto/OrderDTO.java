@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Order;
+import com.yeem.lamp.domain.objvalue.Plan;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -45,6 +46,11 @@ public class OrderDTO {
     public Order convertOrder() {
         Order order = new Order();
         BeanUtil.copyProperties(this, order);
+        Plan plan = new Plan();
+        plan.setBandwidth(this.dataTraffic);
+        plan.setPeriod(this.period);
+        plan.setPrice(this.price);
+        order.setPlan(plan);
         return order;
     }
 
