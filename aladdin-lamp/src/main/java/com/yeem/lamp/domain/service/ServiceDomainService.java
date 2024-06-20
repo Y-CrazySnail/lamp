@@ -133,6 +133,9 @@ public class ServiceDomainService {
     public void syncService(List<Services> servicesList) {
         for (Services services : servicesList) {
             ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+            if (null == serviceMonth) {
+                continue;
+            }
             serviceMonth.syncBandwidth();
             serviceRepository.save(services);
         }
