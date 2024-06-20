@@ -37,7 +37,7 @@ public class OrderDTO {
 
     public OrderDTO(Order order) {
         BeanUtil.copyProperties(order, this);
-        this.dataTraffic = order.getPlan().getDataTraffic();
+        this.dataTraffic = order.getPlan().getBandwidth();
         this.period = order.getPlan().getPeriod();
         this.price = order.getPlan().getPrice();
     }

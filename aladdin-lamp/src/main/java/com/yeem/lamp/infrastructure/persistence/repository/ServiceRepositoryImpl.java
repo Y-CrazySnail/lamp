@@ -10,11 +10,10 @@ import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
+import com.yeem.lamp.domain.objvalue.ServiceRecord;
+import com.yeem.lamp.domain.objvalue.Subscription;
 import com.yeem.lamp.domain.repository.ServiceRepository;
-import com.yeem.lamp.infrastructure.persistence.entity.NodeVmessDo;
-import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
-import com.yeem.lamp.infrastructure.persistence.entity.ServiceDo;
-import com.yeem.lamp.infrastructure.persistence.entity.ServiceMonthDo;
+import com.yeem.lamp.infrastructure.persistence.entity.*;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -45,15 +44,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         serviceDoLambdaQueryWrapper.eq(ServiceDo::getDeleteFlag, false);
         serviceDoLambdaQueryWrapper.eq(ServiceDo::getUuid, uuid);
         ServiceDo serviceDo = serviceMapper.selectOne(serviceDoLambdaQueryWrapper);
-        Services services = serviceDo.convertService();
-
-        LambdaQueryWrapper<ServerDo> serverDoLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        serverDoLambdaQueryWrapper.eq(ServerDo::getDeleteFlag, false);
-        List<ServerDo> serverDoList = serverMapper.selectList(serverDoLambdaQueryWrapper);
-        List<Server> serverList = serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
-        services.setServerList(serverList);
-
-        return services;
+        return serviceDo.convertService();
     }
 
     @Override
@@ -65,6 +56,47 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         }
         List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ServiceMonth> listServiceMonth(ServiceMonth serviceMonth) {
+        LambdaQueryWrapper<ServiceMonthDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServiceMonthDo::getDeleteFlag, false);
+        if (null != serviceMonth.getServiceId()) {
+            queryWrapper.eq(ServiceMonthDo::getServiceId, serviceMonth.getServiceId());
+        }
+        if (null != serviceMonth.getServiceYear()) {
+            queryWrapper.eq(ServiceMonthDo::getServiceYear, serviceMonth.getServiceYear());
+        }
+        if (null != serviceMonth.getServiceMonth()) {
+            queryWrapper.eq(ServiceMonthDo::getServiceMonth, serviceMonth.getServiceMonth());
+        }
+        List<ServiceMonthDo> serviceMonthDoList = serviceMonthMapper.selectList(queryWrapper);
+        return serviceMonthDoList.stream().map(ServiceMonthDo::convertServiceMonth).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ServiceRecord> listServiceRecord(ServiceRecord serviceRecord, Date current) {
+        LambdaQueryWrapper<ServiceRecordDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ServiceRecordDo::getDeleteFlag, false);
+        queryWrapper.eq(ServiceRecordDo::getServiceId, serviceRecord.getServiceId());
+        queryWrapper.eq(ServiceRecordDo::getServiceMonthId, serviceRecord.getServiceMonthId());
+        if (null != current) {
+            Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(current)).toJdkDate();
+            Date end = DateUtil.beginOfDay(DateUtil.endOfMonth(current)).toJdkDate();
+            queryWrapper.ge(ServiceRecordDo::getServiceDate, begin);
+            queryWrapper.le(ServiceRecordDo::getServiceDate, end);
+        }
+        List<ServiceRecordDo> serviceRecordDoList = serviceRecordMapper.selectList(queryWrapper);
+        return serviceRecordDoList.stream().map(ServiceRecordDo::convertServiceRecord).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Subscription> listSubscription() {
+        LambdaQueryWrapper<SubscriptionDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(SubscriptionDo::getDeleteFlag, false);
+        List<SubscriptionDo> subscriptionDoList = subscriptionMapper.selectList(queryWrapper);
+        return subscriptionDoList.stream().map(SubscriptionDo::convertSubscription).collect(Collectors.toList());
     }
 
     @Override
@@ -82,7 +114,37 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     @Override
     public void save(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
-        serviceMapper.insert(serviceDo);
+        if (null == services.getId()) {
+            serviceMapper.insert(serviceDo);
+        } else {
+            serviceMapper.updateById(serviceDo);
+        }
+        if (services.getCurrentServiceMonth() == null) {
+            return;
+        }
+        ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+        ServiceMonthDo serviceMonthDo = ServiceMonthDo.init(serviceMonth);
+        if (null == serviceMonth.getId()) {
+            serviceMonthMapper.insert(serviceMonthDo);
+        } else {
+            serviceMonthMapper.updateById(serviceMonthDo);
+        }
+        List<ServiceRecord> serviceRecordList = serviceMonth.getServiceRecordList();
+        if (null == serviceRecordList) {
+            return;
+        }
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        for (ServiceRecord record : serviceRecordList) {
+            if (!current.equals(record.getServiceDate())) {
+                continue;
+            }
+            ServiceRecordDo serviceRecordDo = ServiceRecordDo.init(record);
+            if (null == record.getId()) {
+                serviceRecordMapper.insert(serviceRecordDo);
+            } else {
+                serviceRecordMapper.updateById(serviceRecordDo);
+            }
+        }
     }
 
     @Override
@@ -160,16 +222,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public void updateService(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
         serviceMapper.updateById(serviceDo);
-    }
-
-    @Override
-    public List<ServiceMonth> listServiceMonth(Integer year, Integer month) {
-        LambdaQueryWrapper<ServiceMonthDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServiceMonthDo::getDeleteFlag, false);
-        queryWrapper.eq(ServiceMonthDo::getServiceYear, year);
-        queryWrapper.eq(ServiceMonthDo::getServiceMonth, month);
-        List<ServiceMonthDo> serviceMonthDoList = serviceMonthMapper.selectList(queryWrapper);
-        return serviceMonthDoList.stream().map(ServiceMonthDo::convertServiceMonth).collect(Collectors.toList());
     }
 
     @Override

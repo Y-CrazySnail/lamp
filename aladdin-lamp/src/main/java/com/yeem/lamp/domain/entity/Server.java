@@ -12,13 +12,8 @@ public class Server {
     private int apiPort;
     private String apiUsername;
     private String apiPassword;
-    private String nodeRemark;
-    private int nodePort;
-    private String subscribeIp;
-    private int subscribePort;
-    private String subscribeNamePrefix;
-    private String postscript;
-    private int sort;
+    private int inboundPort;
+    private String region;
     private int multiplyingPower;
     private List<Subscription> subscriptionList;
 }

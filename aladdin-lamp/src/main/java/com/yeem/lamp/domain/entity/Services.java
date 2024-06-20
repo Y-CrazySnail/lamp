@@ -2,7 +2,6 @@ package com.yeem.lamp.domain.entity;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.objvalue.*;
 import lombok.Data;
 
@@ -18,36 +17,18 @@ public class Services {
 
     private Long id;
     private Long memberId;
-    private Integer dataTraffic;
-    private Integer period;
-    private BigDecimal price;
-    private String uuid;
-    private Date beginDate;
-    private Date endDate;
-    private List<ServiceMonth> serviceMonthList;
-    private List<ServiceRecord> serviceRecordList;
-    private List<Subscription> subscriptionList;
-
     /**
      * 类型 0周期服务 1数据加量包
      */
     private String type;
-
-
-    private String wechat;
-    private String email;
-    /**
-     * 当月归档流量
-     */
-    private Long serviceArchiveUp;
-    private Long serviceArchiveDown;
-    private Long serviceTodayUp;
-    private Long serviceTodayDown;
-    private Long serviceUp;
-    private Long serviceDown;
-    private String surplus;
     private Plan plan;
-    private List<Server> serverList;
+    private String uuid;
+    private Date beginDate;
+    private Date endDate;
+    private ServiceMonth currentServiceMonth;
+    private List<ServiceMonth> serviceMonthList;
+    private List<ServiceRecord> serviceRecordList;
+    private List<Subscription> subscriptionList;
     private List<NodeVmess> nodeVmessList;
 
     public enum TYPE {
@@ -70,28 +51,18 @@ public class Services {
         }
     }
 
-    public void dealSurplus() {
-        long surplusByte = this.dataTraffic * GB - this.serviceUp - this.serviceDown;
-        this.surplus = BigDecimal.valueOf(surplusByte).divide(BigDecimal.valueOf(GB), RoundingMode.HALF_UP)
-                .setScale(2, RoundingMode.HALF_UP).toString();
-    }
-
     public boolean isValid() {
         Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         return this.endDate.after(current);
     }
 
-    public boolean isDateValid() {
-        return this.endDate.after(new Date());
-    }
-
     public void generateVmessNode() {
         List<NodeVmess> nodeVmessList = new ArrayList<>();
-        for (Server server : this.serverList) {
+        for (Subscription subscription : subscriptionList) {
             NodeVmess nodeVmess = NodeVmess.init(this.uuid,
-                    server.getSubscribeNamePrefix(),
-                    server.getSubscribeIp(),
-                    server.getSubscribePort()
+                    subscription.getName(),
+                    subscription.getHost(),
+                    subscription.getPort()
             );
             nodeVmessList.add(nodeVmess);
         }
@@ -103,8 +74,10 @@ public class Services {
         NodeVmess nodeVmessDoForTime = NodeVmess.initInformation(endDateStr);
         this.nodeVmessList.add(nodeVmessDoForTime);
 
-        this.dealSurplus();
-        String surplusStr = "本月剩余:" + this.surplus + "GB";
+        BigDecimal surplus = BigDecimal.valueOf(this.currentServiceMonth.getBandwidth() - this.currentServiceMonth.getBandwidthUp() - this.currentServiceMonth.getBandwidthDown())
+                .divide(BigDecimal.valueOf(1024L * 1024L * 1024L), RoundingMode.HALF_UP)
+                .setScale(2, RoundingMode.HALF_UP);
+        String surplusStr = "本月剩余:" + surplus + "GB";
         NodeVmess nodeVmessDoForSurplus = NodeVmess.initInformation(surplusStr);
         this.nodeVmessList.add(nodeVmessDoForSurplus);
 
@@ -134,7 +107,7 @@ public class Services {
                     .multiply(BigDecimal.valueOf(1024L * 1024L * 1024L));
             serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
         } else {
-            serviceMonth.setBandwidth(1024L * 1024L * 1024L * dataTraffic);
+            serviceMonth.setBandwidth(1024L * 1024L * 1024L * this.plan.getBandwidth());
         }
         serviceMonth.setBandwidthUp(0L);
         serviceMonth.setBandwidthDown(0L);

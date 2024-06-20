@@ -6,9 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.entity.Services;
+import com.yeem.lamp.domain.objvalue.NodeVmess;
+import com.yeem.lamp.domain.objvalue.ServiceMonth;
+import com.yeem.lamp.domain.objvalue.ServiceRecord;
 import com.yeem.lamp.domain.service.MemberDomainService;
 import com.yeem.lamp.domain.service.ServerDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.infrastructure.x.XUIClient;
+import com.yeem.lamp.infrastructure.x.model.XClientStat;
+import com.yeem.lamp.infrastructure.x.model.XInbound;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
@@ -37,7 +43,7 @@ public class ServiceAppService {
 
     public List<ServiceDTO> listServiceByMemberId(Long memberId) {
         List<Services> servicesList = serviceDomainService.listByMemberId(memberId);
-        return servicesList.stream().peek(Services::dealSurplus).map(ServiceDTO::new).collect(Collectors.toList());
+        return servicesList.stream().map(ServiceDTO::new).collect(Collectors.toList());
     }
 
     public IPage<ServiceDTO> pageService(int current, int size, Long memberId, String status, String wechat, String email) {
@@ -73,8 +79,50 @@ public class ServiceAppService {
         return serviceDomainService.v2ray(uuid);
     }
 
+    /**
+     * 同步远程流量至本地
+     */
     public void syncServiceRecord() {
         Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Server> serverList = serverDomainService.list();
+        List<Services> servicesList = serviceDomainService.listService();
+        servicesList.forEach(services -> {
+            serviceDomainService.setServiceMonth(services, currentDate);
+            if (null != services.getCurrentServiceMonth()) {
+                serviceDomainService.setServiceRecord(services.getCurrentServiceMonth(), currentDate);
+            }
+        });
+        for (Server server : serverList) {
+            String region = server.getRegion();
+            XUIClient xuiClient = XUIClient.init(server);
+            XInbound xInbound = xuiClient.getInbound();
+            List<XClientStat> xClientStatList = xInbound.getClientStats();
+            for (XClientStat xClientStat : xClientStatList) {
+                Long serviceId = Long.valueOf(xClientStat.getEmail());
+                for (Services services : servicesList) {
+                    if (services.getId().equals(serviceId)) {
+                        ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+                        List<ServiceRecord> serviceRecordList = serviceMonth.getServiceRecordList();
+                        ServiceRecord serviceRecord = null;
+                        for (ServiceRecord record : serviceRecordList) {
+                            if (region.equals(record.getRegion())) {
+                                serviceRecord = record;
+                            }
+                        }
+                        if (null == serviceRecord) {
+                            serviceRecord = serviceMonth.generateServiceRecord(currentDate, region);
+                            serviceRecord.addBandwidthUp(xClientStat.getUp());
+                            serviceRecord.addBandwidthDown(xClientStat.getDown());
+                            serviceMonth.getServiceRecordList().add(serviceRecord);
+                        } else {
+                            serviceRecord.addBandwidthUp(xClientStat.getUp());
+                            serviceRecord.addBandwidthDown(xClientStat.getDown());
+                        }
+                    }
+                }
+            }
+            serviceDomainService.syncService(servicesList);
+        }
     }
+
 }

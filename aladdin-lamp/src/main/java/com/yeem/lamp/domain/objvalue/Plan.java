@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class Plan {
     private PlanType planType;
     private BigDecimal price;
-    private Integer dataTraffic;
+    private Integer bandwidth;
     private Integer period;
     private String title;
     private String introduce;

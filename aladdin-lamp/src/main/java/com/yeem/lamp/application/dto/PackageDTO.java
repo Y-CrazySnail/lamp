@@ -20,7 +20,7 @@ public class PackageDTO {
     public PackageDTO(Product product) {
         this.id = product.getId();
         this.type = product.getPlan().getPlanType().getType();
-        this.dataTraffic = product.getPlan().getDataTraffic();
+        this.dataTraffic = product.getPlan().getBandwidth();
         this.period = product.getPlan().getPeriod();
         this.price = product.getPlan().getPrice();
         this.title = product.getPlan().getTitle();
@@ -31,7 +31,7 @@ public class PackageDTO {
         Product product = new Product();
         product.setId(this.id);
         Plan plan = new Plan();
-        plan.setDataTraffic(this.dataTraffic);
+        plan.setBandwidth(this.dataTraffic);
         plan.setPeriod(this.period);
         plan.setPrice(this.price);
         plan.setTitle(this.title);

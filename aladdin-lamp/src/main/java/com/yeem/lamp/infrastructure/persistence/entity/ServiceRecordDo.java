@@ -17,6 +17,7 @@ public class ServiceRecordDo extends BaseDo {
     private Date serviceDate;
     private Long bandwidthUp;
     private Long bandwidthDown;
+    private String region;
 
     public static ServiceRecordDo init(ServiceRecord serviceRecord) {
         ServiceRecordDo serviceRecordDo = new ServiceRecordDo();

@@ -28,15 +28,15 @@ public class XVmessClient {
                 "\"reset\":" + this.reset + "}";
     }
 
-    public XVmessClient(String uuid, Long serviceId, Long serverId) {
+    public XVmessClient(String uuid, Long serviceId) {
         this.id = uuid;
-        this.email = serviceId + "_" + serverId;
+        this.email = String.valueOf(serviceId);
         this.limitIp = 0;
         this.totalGB = 0;
         this.expiryTime = 0;
         this.enable = true;
         this.tgId = "";
-        this.subId = serviceId + "_" + serverId;
+        this.subId = String.valueOf(serviceId);
         this.reset = 0;
     }
 }

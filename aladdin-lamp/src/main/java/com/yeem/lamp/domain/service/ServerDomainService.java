@@ -3,6 +3,8 @@ package com.yeem.lamp.domain.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.repository.ServerRepository;
+import com.yeem.lamp.infrastructure.x.XUIClient;
+import com.yeem.lamp.infrastructure.x.model.XInbound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,4 +39,17 @@ public class ServerDomainService {
     public void removeById(Long id) {
         serverRepository.removeById(id);
     }
+
+    /**
+     * 重重所有客户端流量
+     */
+    public void resetClientTraffic() {
+        List<Server> serverList = serverRepository.list();
+        for (Server server : serverList) {
+            XUIClient xuiClient = XUIClient.init(server);
+            XInbound xInbound = xuiClient.getInbound();
+            xuiClient.resetClientTraffic(xInbound.getId());
+        }
+    }
+
 }

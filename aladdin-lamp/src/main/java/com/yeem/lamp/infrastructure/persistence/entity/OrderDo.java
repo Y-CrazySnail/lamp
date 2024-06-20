@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Order;
 import com.yeem.lamp.domain.objvalue.Plan;
-import com.yeem.lamp.domain.objvalue.PlanType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -46,7 +45,7 @@ public class OrderDo extends BaseDo {
         Order order = new Order();
         BeanUtil.copyProperties(this, order);
         Plan plan = new Plan();
-        plan.setDataTraffic(this.dataTraffic);
+        plan.setBandwidth(this.dataTraffic);
         plan.setPeriod(this.period);
         plan.setPrice(this.price);
         order.setPlan(plan);

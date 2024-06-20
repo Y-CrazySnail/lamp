@@ -15,4 +15,13 @@ public class ServiceRecord {
     private Date serviceDate;
     private Long bandwidthUp;
     private Long bandwidthDown;
+    private String region;
+
+    public void addBandwidthUp(Long bandwidthUp) {
+        this.bandwidthUp = this.bandwidthUp + bandwidthUp;
+    }
+
+    public void addBandwidthDown(Long bandwidthDown) {
+        this.bandwidthDown = this.bandwidthDown + bandwidthDown;
+    }
 }

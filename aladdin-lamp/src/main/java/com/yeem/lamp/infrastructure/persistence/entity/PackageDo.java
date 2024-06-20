@@ -24,7 +24,7 @@ public class PackageDo extends BaseDo {
         PackageDo packageDo = new PackageDo();
         packageDo.setId(product.getId());
         packageDo.setType(product.getPlan().getPlanType().getType());
-        packageDo.setDataTraffic(product.getPlan().getDataTraffic());
+        packageDo.setDataTraffic(product.getPlan().getBandwidth());
         packageDo.setPeriod(product.getPlan().getPeriod());
         packageDo.setPrice(product.getPlan().getPrice());
         packageDo.setTitle(product.getPlan().getTitle());
@@ -36,7 +36,7 @@ public class PackageDo extends BaseDo {
         Product product = new Product();
         product.setId(this.getId());
         Plan plan = new Plan();
-        plan.setDataTraffic(this.dataTraffic);
+        plan.setBandwidth(this.dataTraffic);
         plan.setPeriod(this.period);
         plan.setPrice(this.price);
         plan.setTitle(this.title);

@@ -9,14 +9,6 @@ import java.util.Date;
  */
 @Data
 public class NodeVmess {
-    private Long id;
-    private Long serviceId;
-    private Long serverId;
-    private Integer serviceYear;
-    private Integer serviceMonth;
-    private Long serviceDown;
-    private Long serviceUp;
-    private String nodeType;
     private String nodePs;
     private String nodeAdd;
     private String nodePort;
@@ -29,23 +21,6 @@ public class NodeVmess {
     private String path;
     private String tls;
     private String sni;
-    private int sort;
-    private int multiplyingPower;
-    private Date serviceDate;
-
-    public String key() {
-        return this.serviceId + "_" + this.serverId;
-    }
-
-    public static NodeVmess init(Long serviceId, Long serverId, Date serviceDate) {
-        NodeVmess nodeVmess = new NodeVmess();
-        nodeVmess.setServiceId(serviceId);
-        nodeVmess.setServerId(serverId);
-        nodeVmess.setServiceDate(serviceDate);
-        nodeVmess.setServiceUp(0L);
-        nodeVmess.setServiceDown(0L);
-        return nodeVmess;
-    }
 
     public static NodeVmess init(String uuid, String remark, String ip, int port) {
         NodeVmess nodeVmess = new NodeVmess();

@@ -38,6 +38,10 @@ public class XUIClient {
      */
     private String password;
     /**
+     * 备注
+     */
+    private String remark;
+    /**
      * 登录缓存
      */
     private HttpCookie cookie;
@@ -55,23 +59,23 @@ public class XUIClient {
         return this.expireDate.before(new Date());
     }
 
-    public static Map<String, XUIClient> XUI_CLIENT_MAP = new ConcurrentHashMap<>();
+    public static Map<Long, XUIClient> XUI_CLIENT_MAP = new ConcurrentHashMap<>();
 
     public static XUIClient init(Server server) {
-        if (XUI_CLIENT_MAP.containsKey(server.getApiIp())) {
-            XUIClient xuiClient = XUI_CLIENT_MAP.get(server.getApiIp());
+        if (XUI_CLIENT_MAP.containsKey(server.getId())) {
+            XUIClient xuiClient = XUI_CLIENT_MAP.get(server.getId());
             if (!xuiClient.expired()) {
                 return xuiClient;
             } else {
-                XUI_CLIENT_MAP.remove(server.getApiIp());
+                XUI_CLIENT_MAP.remove(server.getId());
             }
         }
-        XUIClient xuiClient = login(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
-        XUI_CLIENT_MAP.put(server.getApiIp(), xuiClient);
+        XUIClient xuiClient = login(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword(), server.getId());
+        XUI_CLIENT_MAP.put(server.getId(), xuiClient);
         return xuiClient;
     }
 
-    private static XUIClient login(String host, int port, String username, String password) {
+    private static XUIClient login(String host, int port, String username, String password, Long serverId) {
         ObjectMapper objectMapper = new ObjectMapper();
         XLogin xLogin = new XLogin();
         xLogin.setUsername(username);
@@ -93,6 +97,7 @@ public class XUIClient {
                 xuiClient.setPort(port);
                 xuiClient.setUsername(username);
                 xuiClient.setPassword(password);
+                xuiClient.setRemark(String.valueOf(serverId));
                 xuiClient.setCookie(response.getCookie("session"));
                 xuiClient.setExpireDate(DateUtil.offsetDay(new Date(), 30));
                 return xuiClient;
@@ -104,7 +109,7 @@ public class XUIClient {
         }
     }
 
-    public List<XInbound> getInboundList() {
+    public XInbound getInbound() {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + XUIApi.INBOUND_LIST)
                 .cookie(this.cookie)
@@ -114,26 +119,31 @@ public class XUIClient {
             XResponse<List<XInbound>> xResponse = objectMapper.readValue(body, new TypeReference<XResponse<List<XInbound>>>() {
             });
             if (xResponse.isSuccess()) {
-                return xResponse.getObj();
+                for (XInbound xInbound : xResponse.getObj()) {
+                    if (xInbound.getRemark().equals(String.valueOf(this.remark))) {
+                        return xInbound;
+                    } else {
+                        return null;
+                    }
+                }
             } else {
                 throw new RuntimeException();
             }
         } catch (IOException e) {
             throw new RuntimeException();
         }
+        return null;
     }
 
     public void delInbound() {
-        List<XInbound> xInboundList = getInboundList();
-        for (XInbound xInbound : xInboundList) {
-            String path = String.format(XUIApi.INBOUND_DEL, xInbound.getId());
-            HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + path)
-                    .cookie(this.cookie)
-                    .execute();
-        }
+        XInbound xInbound = getInbound();
+        String path = String.format(XUIApi.INBOUND_DEL, xInbound.getId());
+        HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + path)
+                .cookie(this.cookie)
+                .execute();
     }
 
-    public void addVmessInbound(Long serverId, int serverPort, Map<Long, String> serviceMap) {
+    public void addVmessInbound(Long serverId, int inboundPort, Map<Long, String> serviceMap) {
         ObjectMapper objectMapper = new ObjectMapper();
         XInbound xInbound = new XInbound();
         xInbound.setUp(0);
@@ -143,13 +153,13 @@ public class XUIClient {
         xInbound.setEnable(true);
         xInbound.setExpiryTime(0);
         xInbound.setListen(null);
-        xInbound.setPort(serverPort);
+        xInbound.setPort(inboundPort);
         xInbound.setProtocol("vmess");
         xInbound.initSteamSettings();
         xInbound.initSniffing();
         List<XVmessClient> xVmessClientList = new ArrayList<>();
         serviceMap.forEach((serviceId, uuid) -> {
-            XVmessClient xVmessClient = new XVmessClient(uuid, serviceId, serverId);
+            XVmessClient xVmessClient = new XVmessClient(uuid, serviceId);
             xVmessClientList.add(xVmessClient);
         });
         xInbound.initVmessSetting(xVmessClientList);
@@ -163,7 +173,7 @@ public class XUIClient {
     public void addVmessClient(XInbound inbound, String uuid, Long serviceId, Long serverId) {
         XInbound xInbound = new XInbound();
         xInbound.setId(inbound.getId());
-        XVmessClient xVmessClient = new XVmessClient(uuid, serviceId, serverId);
+        XVmessClient xVmessClient = new XVmessClient(uuid, serviceId);
         List<XVmessClient> xVmessClientList = Collections.singletonList(xVmessClient);
         xInbound.initVmessSetting(xVmessClientList);
         Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
@@ -173,8 +183,8 @@ public class XUIClient {
                 .execute();
     }
 
-    public void delVmessClient(int xInboundId, int xVmessClientId) {
-        String path = String.format(XUIApi.CLIENT_DEL, xInboundId, xVmessClientId);
+    public void delVmessClient(int xInboundId, String uuid) {
+        String path = String.format(XUIApi.CLIENT_DEL, xInboundId, uuid);
         HttpRequest.post("http://" + this.host + ":" + this.port + path)
                 .cookie(this.cookie)
                 .execute();
@@ -228,18 +238,16 @@ public class XUIClient {
         server.setApiPort(9999);
         server.setApiUsername("aladdin");
         server.setApiPassword("aladdin");
-        server.setNodePort(20000);
-        server.setNodeRemark("ALADDIN");
+//        server.setNodePort(20000);
+//        server.setNodeRemark("ALADDIN");
         XUIClient xuiClient = XUIClient.init(server);
 //        xuiClient.delInbound("5");
-        xuiClient.getInboundList();
+//        xuiClient.getInboundList();
 //        xuiClient.getInboundOnline();
         NodeVmess nodeVmess = new NodeVmess();
         nodeVmess.setNodeId("1ba763c5-8e76-4e2d-974f-f6b6292cc5f4");
 //        nodeVmess.setNodeId(UUID.fastUUID().toString());
-        nodeVmess.setServiceDate(new Date());
-        nodeVmess.setServerId(1L);
-        nodeVmess.setServiceId(3L);
+
 //        List<NodeVmess> nodeVmessList = new ArrayList<>();
 //        nodeVmessList.add(nodeVmess);
 //        xuiClient.addVmessInbound(server, nodeVmessList);

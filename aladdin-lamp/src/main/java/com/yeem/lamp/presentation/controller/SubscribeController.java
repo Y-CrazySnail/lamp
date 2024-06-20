@@ -28,7 +28,7 @@ public class SubscribeController {
 
     @GetMapping("/syncServer/{id}")
     public String syncRemoteServer(@PathVariable("id") Long id) {
-        serviceDomainService.syncRemoteServer(id);
+        serverAppService.syncRemoteServer(id);
         return "ok";
     }
 
@@ -40,7 +40,7 @@ public class SubscribeController {
 
     @GetMapping("/syncService/{id}")
     public String syncRemoteService(@PathVariable("id") Long id) {
-        serviceDomainService.syncRemoteService(id);
+        serverAppService.syncRemoteService(id);
         return "ok";
     }
 

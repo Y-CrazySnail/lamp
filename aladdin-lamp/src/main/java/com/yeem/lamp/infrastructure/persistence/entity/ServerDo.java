@@ -26,13 +26,16 @@ public class ServerDo extends BaseDo {
     public static ServerDo init(Server server) {
         ServerDo serverDo = new ServerDo();
         BeanUtil.copyProperties(server, serverDo);
+        serverDo.setPostscript(server.getRegion());
+        serverDo.setNodePort(server.getInboundPort());
         return serverDo;
     }
-
 
     public Server convertServer() {
         Server server = new Server();
         BeanUtil.copyProperties(this, server);
+        server.setRegion(this.postscript);
+        server.setInboundPort(this.nodePort);
         return server;
     }
 }

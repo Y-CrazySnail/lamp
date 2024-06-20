@@ -7,6 +7,8 @@ import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
+import com.yeem.lamp.domain.objvalue.ServiceRecord;
+import com.yeem.lamp.domain.objvalue.Subscription;
 import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XClientStat;
@@ -37,7 +39,6 @@ public class ServiceDomainService {
 
     public List<Services> listByMemberId(Long memberId) {
         List<Services> servicesList = serviceRepository.listByMemberId(memberId);
-        servicesList.forEach(Services::dealSurplus);
         return servicesList;
     }
 
@@ -45,21 +46,42 @@ public class ServiceDomainService {
         return serviceRepository.listServer();
     }
 
-    public Services getById(Long id) {
-        return serviceRepository.getServiceById(id);
+    public List<Services> listService() {
+        return serviceRepository.listService(new Services());
     }
 
-    public Services getByUUID(String uuid) {
-        Services services = new Services();
-        services.setUuid(uuid);
-        List<Services> serviceList = serviceRepository.listService(services);
-        if (serviceList.isEmpty()) {
-            return null;
-        } else {
-            services = serviceList.get(0);
-            services.dealSurplus();
-            return services;
+    public void setServiceMonth(Services services, Date current) {
+        ServiceMonth serviceMonthParam = new ServiceMonth();
+        serviceMonthParam.setServiceId(services.getId());
+        if (null != current) {
+            serviceMonthParam.setServiceYear(DateUtil.year(current));
+            serviceMonthParam.setServiceMonth(DateUtil.month(current) + 1);
         }
+        List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(serviceMonthParam);
+        if (null != current) {
+            if (!serviceMonthList.isEmpty()) {
+                services.setCurrentServiceMonth(serviceMonthList.get(0));
+            }
+        } else {
+            services.setServiceMonthList(serviceMonthList);
+        }
+    }
+
+    public void setServiceRecord(ServiceMonth serviceMonth, Date current) {
+        ServiceRecord serviceRecordParam = new ServiceRecord();
+        serviceRecordParam.setServiceId(serviceMonth.getServiceId());
+        serviceRecordParam.setServiceMonthId(serviceMonth.getId());
+        List<ServiceRecord> serviceRecordList = serviceRepository.listServiceRecord(serviceRecordParam, current);
+        serviceMonth.setServiceRecordList(serviceRecordList);
+    }
+
+    public void setSubscription(Services services) {
+        List<Subscription> subscriptionList = serviceRepository.listSubscription();
+        services.setSubscriptionList(subscriptionList);
+    }
+
+    public Services getById(Long id) {
+        return serviceRepository.getServiceById(id);
     }
 
     public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {
@@ -78,15 +100,20 @@ public class ServiceDomainService {
         serviceRepository.removeById(id);
     }
 
+    /**
+     * 生成当月服务
+     */
     public void generateServiceMonth() {
         Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         Integer year = DateUtil.year(current);
         Integer month = DateUtil.month(current) + 1;
         log.info("generate service month, year:{} month:{}", year, month);
         List<Services> servicesList = serviceRepository.listService(new Services());
-        List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(year, month);
+        ServiceMonth serviceMonthParam = new ServiceMonth();
+        serviceMonthParam.setServiceYear(year);
+        serviceMonthParam.setServiceMonth(month);
+        List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(serviceMonthParam);
         Set<Long> serviceIdSet = serviceMonthList.stream().map(ServiceMonth::getServiceId).collect(Collectors.toSet());
-        List<ServiceMonth> serviceMonthListTodo = new ArrayList<>();
         for (Services services : servicesList) {
             if (!services.isValid()) {
                 log.info("service has expired:{}", services.getEndDate());
@@ -97,146 +124,25 @@ public class ServiceDomainService {
                 continue;
             }
             ServiceMonth serviceMonth = services.generateServiceMonth(year, month);
-            serviceMonthListTodo.add(serviceMonth);
+            services.setCurrentServiceMonth(serviceMonth);
             log.info("generate service month, service id:{}", services.getId());
-        }
-        serviceRepository.batchSaveServiceMonth(serviceMonthListTodo);
-    }
-
-    /**
-     * 同步远程流量至本地
-     */
-    public void syncDataTraffic() {
-        Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
-        List<Server> serverList = serviceRepository.listServer();
-        List<Services> servicesList = serviceRepository.listService(new Services());
-        Map<Long, Services> servicesMap = servicesList.stream()
-                .peek(services -> {
-                    services.setServiceTodayUp(0L);
-                    services.setServiceTodayDown(0L);
-                })
-                .collect(Collectors.toMap(Services::getId, services -> services));
-        List<NodeVmess> nodeVmessList = serviceRepository.listNodeVmess(currentDate);
-        Map<String, NodeVmess> nodeVmessMap = nodeVmessList.stream()
-                .collect(Collectors.toMap(NodeVmess::key, nodeVmess -> nodeVmess));
-        for (Server server : serverList) {
-            try {
-                for (Services services : servicesList) {
-                    String nodeVmessKey = services.getId() + "_" + server.getId();
-                    if (!services.isValid()) {
-                        nodeVmessMap.remove(nodeVmessKey);
-                    } else {
-                        if (!nodeVmessMap.containsKey(nodeVmessKey)) {
-                            NodeVmess nodeVmess = NodeVmess.init(services.getId(), server.getId(), currentDate);
-                            nodeVmessMap.put(nodeVmess.key(), nodeVmess);
-                        }
-                    }
-                }
-                XUIClient xuiClient = XUIClient.init(server);
-                List<XInbound> xInboundList = xuiClient.getInboundList();
-                if (xInboundList.isEmpty()) {
-                    continue;
-                }
-                for (XInbound xInbound : xInboundList) {
-                    List<XClientStat> xClientStatList = xInbound.getClientStats();
-                    for (XClientStat xClientStat : xClientStatList) {
-                        String key = xClientStat.getEmail();
-                        if (nodeVmessMap.containsKey(key)) {
-                            nodeVmessMap.get(key).setServiceUp(xClientStat.getUp());
-                            nodeVmessMap.get(key).setServiceDown(xClientStat.getDown());
-                        } else {
-                            log.info("delete vmess client email:{}", xClientStat.getEmail());
-                            xuiClient.delVmessClient(xClientStat.getInboundId(), xClientStat.getId());
-                        }
-                    }
-                }
-            } catch (Exception e) {
-                log.error("deal server:{} error", server.getId(), e);
-            }
-        }
-        Set<Long> invalidServiceIdSet = new HashSet<>();
-        nodeVmessMap.forEach((nodeKey, nodeVmess) -> {
-            Long serviceId = nodeVmess.getServiceId();
-            if (servicesMap.containsKey(serviceId)) {
-                Services services = servicesMap.get(serviceId);
-                services.setServiceTodayUp(services.getServiceTodayUp() + nodeVmess.getServiceUp());
-                services.setServiceTodayDown(services.getServiceTodayDown() + nodeVmess.getServiceDown());
-                services.setServiceUp(services.getServiceArchiveUp() + services.getServiceTodayUp());
-                services.setServiceDown(services.getServiceArchiveDown() + services.getServiceTodayDown());
-                if (!services.isValid()) {
-                    invalidServiceIdSet.add(services.getId());
-                }
-            }
-            serviceRepository.saveNodeVmess(nodeVmess);
-        });
-        for (Server server : serverList) {
-            XUIClient xuiClient = XUIClient.init(server);
-            List<XInbound> xInboundList = xuiClient.getInboundList();
-            if (xInboundList.isEmpty()) {
-                continue;
-            }
-            for (XInbound xInbound : xInboundList) {
-                List<XClientStat> xClientStatList = xInbound.getClientStats();
-                for (XClientStat xClientStat : xClientStatList) {
-                    Long serviceId = Long.valueOf(xClientStat.getEmail().split("_")[0]);
-                    if (invalidServiceIdSet.contains(serviceId)) {
-                        log.info("delete vmess client email:{}", xClientStat.getEmail());
-                        xuiClient.delVmessClient(xClientStat.getInboundId(), xClientStat.getId());
-                    }
-                }
-            }
-        }
-        servicesMap.forEach((serviceKey, services) -> serviceRepository.updateService(services));
-    }
-
-    /**
-     * 重重所有客户端流量
-     */
-    public void resetClientTraffic() {
-        List<Server> serverList = serviceRepository.listServer();
-        for (Server server : serverList) {
-            XUIClient xuiClient = XUIClient.init(server);
-            List<XInbound> xInboundList = xuiClient.getInboundList();
-            for (XInbound xInbound : xInboundList) {
-                xuiClient.resetClientTraffic(xInbound.getId());
-            }
+            serviceRepository.save(services);
         }
     }
 
-    public void syncRemoteServer(Long serverId) {
-        List<Services> servicesList = serviceRepository.listService(new Services());
-        Map<Long, String> servicesMap = servicesList.stream()
-                .filter(Services::isValid)
-                .collect(Collectors.toMap(Services::getId, Services::getUuid));
-        Server server = serviceRepository.getServerById(serverId);
-        XUIClient xuiClient = XUIClient.init(server);
-        xuiClient.delInbound();
-        xuiClient.addVmessInbound(serverId, server.getNodePort(), servicesMap);
-    }
-
-    public void syncRemoteService(Long serviceId) {
-        Services services = serviceRepository.getServiceById(serviceId);
-        List<Server> serverList = serviceRepository.listServer();
-        for (Server server : serverList) {
-            XUIClient xuiClient = XUIClient.init(server);
-            List<XInbound> xInboundList = xuiClient.getInboundList();
-            for (XInbound xInbound : xInboundList) {
-                boolean exist = false;
-                for (XClientStat clientStat : xInbound.getClientStats()) {
-                    if (serviceId.equals(Long.valueOf(clientStat.getEmail().split("_")[0]))) {
-                        exist = true;
-                    }
-                }
-                if (!exist) {
-                    log.info("add vmess client service id:{}, server id:{}", serviceId, server.getId());
-                    xuiClient.addVmessClient(xInbound, services.getUuid(), serviceId, server.getId());
-                }
-            }
+    public void syncService(List<Services> servicesList) {
+        for (Services services : servicesList) {
+            ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+            serviceMonth.syncBandwidth();
+            serviceRepository.save(services);
         }
     }
 
     public String clash(String uuid) {
+        Date current = DateUtil.beginOfDay(new Date());
         Services services = serviceRepository.getByUUID(uuid);
+        this.setServiceMonth(services, current);
+        this.setSubscription(services);
         services.generateVmessNode();
         services.generateSubscriptionVmessNode();
 
@@ -257,7 +163,10 @@ public class ServiceDomainService {
     }
 
     public String v2ray(String uuid) {
+        Date current = DateUtil.beginOfDay(new Date());
         Services services = serviceRepository.getByUUID(uuid);
+        this.setServiceMonth(services, current);
+        this.setSubscription(services);
         services.generateVmessNode();
         services.generateSubscriptionVmessNode();
 
