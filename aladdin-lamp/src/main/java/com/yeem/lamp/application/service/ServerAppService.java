@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -84,33 +85,39 @@ public class ServerAppService {
     public void syncRemoteService(Long serviceId) {
         serviceDomainService.generateServiceMonth();
         Date current = DateUtil.beginOfDay(new Date());
-        Services services = serviceDomainService.getById(serviceId);
-        serviceDomainService.setServiceMonth(services, current);
-        if (services.isValid() && services.getCurrentServiceMonth() != null && services.getCurrentServiceMonth().isValid()) {
-            List<Server> serverList = serverDomainService.list();
-            for (Server server : serverList) {
-                XUIClient xuiClient = XUIClient.init(server);
-                XInbound xInbound = xuiClient.getInbound();
-                boolean exist = false;
-                for (XClientStat clientStat : xInbound.getClientStats()) {
-                    if (serviceId.equals(Long.valueOf(clientStat.getEmail()))) {
-                        exist = true;
-                    }
-                }
-                if (!exist) {
-                    log.info("add vmess client service id:{}, server id:{}", serviceId, server.getId());
-                    xuiClient.addVmessClient(xInbound, services.getUuid(), serviceId, server.getId());
-                }
-            }
+        List<Services> servicesList = new ArrayList<>();
+        if (serviceId != null) {
+            Services services = serviceDomainService.getById(serviceId);
+            serviceDomainService.setServiceMonth(services, current);
+            servicesList.add(services);
         } else {
-            List<Server> serverList = serverDomainService.list();
-            for (Server server : serverList) {
-                XUIClient xuiClient = XUIClient.init(server);
-                XInbound xInbound = xuiClient.getInbound();
-                for (XClientStat clientStat : xInbound.getClientStats()) {
-                    if (serviceId.equals(Long.valueOf(clientStat.getEmail()))) {
-                        log.info("delete vmess client service id:{}, server id:{}", serviceId, server.getId());
-                        xuiClient.delVmessClient(xInbound.getId(), services.getUuid());
+            servicesList = serviceDomainService.listService();
+            servicesList.forEach(services -> serviceDomainService.setServiceMonth(services, current));
+        }
+        List<Server> serverList = serverDomainService.list();
+        for (Server server : serverList) {
+            XUIClient xuiClient = XUIClient.init(server);
+            XInbound xInbound = xuiClient.getInbound();
+            for (Services services : servicesList) {
+                if (services.isValid() && null != services.getCurrentServiceMonth() && services.getCurrentServiceMonth().isValid()) {
+                    boolean exist = false;
+                    for (XClientStat clientStat : xInbound.getClientStats()) {
+                        if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
+                            exist = true;
+                            break;
+                        }
+                    }
+                    if (!exist) {
+                        log.info("add vmess client service id:{}, server id:{}", services.getId(), server.getId());
+                        xuiClient.addVmessClient(xInbound, services.getUuid(), services.getId());
+                    }
+                } else {
+                    for (XClientStat clientStat : xInbound.getClientStats()) {
+                        if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
+                            log.info("delete vmess client service id:{}, uuid:{}", services.getId(), services.getUuid());
+                            xuiClient.delVmessClient(xInbound.getId(), services.getUuid());
+                            break;
+                        }
                     }
                 }
             }

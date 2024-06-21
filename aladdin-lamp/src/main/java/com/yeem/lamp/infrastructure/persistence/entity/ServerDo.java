@@ -14,28 +14,20 @@ public class ServerDo extends BaseDo {
     private int apiPort;
     private String apiUsername;
     private String apiPassword;
-    private String nodeRemark;
-    private int nodePort;
-    private String subscribeIp;
-    private int subscribePort;
-    private String subscribeNamePrefix;
-    private String postscript;
-    private int sort;
     private int multiplyingPower;
+    private int inboundPort;
+    private String region;
+
 
     public static ServerDo init(Server server) {
         ServerDo serverDo = new ServerDo();
         BeanUtil.copyProperties(server, serverDo);
-        serverDo.setPostscript(server.getRegion());
-        serverDo.setNodePort(server.getInboundPort());
         return serverDo;
     }
 
     public Server convertServer() {
         Server server = new Server();
         BeanUtil.copyProperties(this, server);
-        server.setRegion(this.postscript);
-        server.setInboundPort(this.nodePort);
         return server;
     }
 }

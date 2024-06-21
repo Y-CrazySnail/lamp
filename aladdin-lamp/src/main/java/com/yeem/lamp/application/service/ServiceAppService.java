@@ -90,6 +90,7 @@ public class ServiceAppService {
             serviceDomainService.setServiceMonth(services, currentDate);
             if (null != services.getCurrentServiceMonth()) {
                 serviceDomainService.setServiceRecord(services.getCurrentServiceMonth(), currentDate);
+                services.getCurrentServiceMonth().getServiceRecordList().forEach(ServiceRecord::resetTodayBandwidth);
             }
         });
         for (Server server : serverList) {
@@ -111,12 +112,12 @@ public class ServiceAppService {
                         }
                         if (null == serviceRecord) {
                             serviceRecord = serviceMonth.generateServiceRecord(currentDate, region);
-                            serviceRecord.addBandwidthUp(xClientStat.getUp());
-                            serviceRecord.addBandwidthDown(xClientStat.getDown());
+                            serviceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
+                            serviceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
                             serviceMonth.getServiceRecordList().add(serviceRecord);
                         } else {
-                            serviceRecord.addBandwidthUp(xClientStat.getUp());
-                            serviceRecord.addBandwidthDown(xClientStat.getDown());
+                            serviceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
+                            serviceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
                         }
                     }
                 }
@@ -124,5 +125,4 @@ public class ServiceAppService {
         }
         serviceDomainService.syncService(servicesList);
     }
-
 }

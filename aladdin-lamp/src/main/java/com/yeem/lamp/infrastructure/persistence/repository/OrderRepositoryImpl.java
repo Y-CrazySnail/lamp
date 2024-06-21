@@ -43,6 +43,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     public List<Order> list(Order order) {
         LambdaQueryWrapper<OrderDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(OrderDo::getDeleteFlag, false);
+        queryWrapper.orderByDesc(OrderDo::getOrderTime);
         if (null != order.getMemberId()) {
             queryWrapper.eq(OrderDo::getMemberId, order.getMemberId());
         }
@@ -52,8 +53,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public IPage<Order> page(int current, int size) {
-        QueryWrapper<OrderDo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
+        LambdaQueryWrapper<OrderDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(OrderDo::getDeleteFlag, false);
+        queryWrapper.orderByDesc(OrderDo::getOrderTime);
         IPage<OrderDo> page = new Page<>(current, size);
         page = orderMapper.selectPage(page, queryWrapper);
         IPage<Order> res = new Page<>();

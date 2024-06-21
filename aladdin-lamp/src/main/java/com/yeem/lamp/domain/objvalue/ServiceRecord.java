@@ -17,6 +17,11 @@ public class ServiceRecord {
     private Long bandwidthDown;
     private String region;
 
+    public void resetTodayBandwidth() {
+        this.bandwidthUp = 0L;
+        this.bandwidthDown = 0L;
+    }
+
     public void addBandwidthUp(Long bandwidthUp) {
         this.bandwidthUp = this.bandwidthUp + bandwidthUp;
     }

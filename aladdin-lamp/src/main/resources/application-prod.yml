@@ -68,7 +68,7 @@ merchant:
   api: https://www.yubopay.com/mapi.php
   id: 1067
   key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
-  notify-url: http://aladdinslamp.cc/server/web/order/finish
+  notify-url: https://aladdinslamp.cc/aladdin-api/web/order/finish
   return-url: https://aladdinslamp.cc/order/index
 
 telegram:

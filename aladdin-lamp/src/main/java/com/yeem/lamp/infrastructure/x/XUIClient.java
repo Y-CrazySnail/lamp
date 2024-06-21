@@ -170,7 +170,7 @@ public class XUIClient {
                 .execute();
     }
 
-    public void addVmessClient(XInbound inbound, String uuid, Long serviceId, Long serverId) {
+    public void addVmessClient(XInbound inbound, String uuid, Long serviceId) {
         XInbound xInbound = new XInbound();
         xInbound.setId(inbound.getId());
         XVmessClient xVmessClient = new XVmessClient(uuid, serviceId);

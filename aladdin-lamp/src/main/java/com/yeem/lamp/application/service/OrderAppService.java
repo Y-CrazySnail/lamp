@@ -81,6 +81,11 @@ public class OrderAppService {
         orderDomainService.generateOrder(order);
     }
 
+    /**
+     * 调起支付
+     * @param orderDTO 订单信息
+     * @return 支付信息
+     */
     public JsonNode pay(OrderDTO orderDTO) {
         Order order = orderDomainService.getById(orderDTO.getId());
         JsonNode payRes = ePaymentProcessor.prepay(order.getPlan().getPrice(), order.getOrderNo());

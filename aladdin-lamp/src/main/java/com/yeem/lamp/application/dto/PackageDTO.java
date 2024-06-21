@@ -1,8 +1,9 @@
 package com.yeem.lamp.application.dto;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.yeem.lamp.domain.entity.Product;
 import com.yeem.lamp.domain.objvalue.Plan;
-import com.yeem.lamp.domain.objvalue.PlanType;
+import com.yeem.lamp.domain.objvalue.ProductType;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -19,26 +20,23 @@ public class PackageDTO {
 
     public PackageDTO(Product product) {
         this.id = product.getId();
-        this.type = product.getPlan().getPlanType().getType();
+        this.type = product.getProductType().getType();
         this.dataTraffic = product.getPlan().getBandwidth();
         this.period = product.getPlan().getPeriod();
         this.price = product.getPlan().getPrice();
-        this.title = product.getPlan().getTitle();
-        this.introduce = product.getPlan().getIntroduce();
+        this.title = product.getTitle();
+        this.introduce = product.getIntroduce();
     }
 
     public Product convertPackage() {
         Product product = new Product();
-        product.setId(this.id);
+        BeanUtil.copyProperties(this, product);
         Plan plan = new Plan();
         plan.setBandwidth(this.dataTraffic);
         plan.setPeriod(this.period);
         plan.setPrice(this.price);
-        plan.setTitle(this.title);
-        plan.setIntroduce(this.introduce);
-        PlanType planType = PlanType.init(this.type);
-        plan.setPlanType(planType);
         product.setPlan(plan);
+        product.setProductType(ProductType.init(this.type));
         return product;
     }
 }
