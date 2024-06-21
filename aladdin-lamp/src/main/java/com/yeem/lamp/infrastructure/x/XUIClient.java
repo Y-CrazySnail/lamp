@@ -144,7 +144,6 @@ public class XUIClient {
     }
 
     public void addVmessInbound(Long serverId, int inboundPort, Map<Long, String> serviceMap) {
-        ObjectMapper objectMapper = new ObjectMapper();
         XInbound xInbound = new XInbound();
         xInbound.setUp(0);
         xInbound.setDown(0);

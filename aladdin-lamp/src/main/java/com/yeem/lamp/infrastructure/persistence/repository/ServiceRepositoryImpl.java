@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.objvalue.ServiceRecord;
@@ -29,8 +28,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     private ServiceMapper serviceMapper;
     @Autowired
     private ServerMapper serverMapper;
-    @Autowired
-    private NodeVmessMapper nodeVmessMapper;
     @Autowired
     private ServiceMonthMapper serviceMonthMapper;
     @Autowired
@@ -197,26 +194,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         queryWrapper.eq(ServerDo::getDeleteFlag, false);
         List<ServerDo> serverDoList = serverMapper.selectList(queryWrapper);
         return serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<NodeVmess> listNodeVmess(Date currentDate) {
-        LambdaQueryWrapper<NodeVmessDo> queryWrapper = new LambdaQueryWrapper<>();
-        if (null != currentDate) {
-            queryWrapper.eq(NodeVmessDo::getServiceDate, DateUtil.beginOfDay(currentDate).toJdkDate());
-        }
-        List<NodeVmessDo> nodeVmessDoList = nodeVmessMapper.selectList(queryWrapper);
-        return nodeVmessDoList.stream().map(NodeVmessDo::convertNodeVmess).collect(Collectors.toList());
-    }
-
-    @Override
-    public void saveNodeVmess(NodeVmess nodeVmess) {
-        NodeVmessDo nodeVmessDo = NodeVmessDo.init(nodeVmess);
-        if (null == nodeVmessDo.getId()) {
-            nodeVmessMapper.insert(nodeVmessDo);
-        } else {
-            nodeVmessMapper.updateById(nodeVmessDo);
-        }
     }
 
     @Override

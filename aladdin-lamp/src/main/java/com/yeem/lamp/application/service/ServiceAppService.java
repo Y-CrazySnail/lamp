@@ -99,7 +99,14 @@ public class ServiceAppService {
             XInbound xInbound = xuiClient.getInbound();
             List<XClientStat> xClientStatList = xInbound.getClientStats();
             for (XClientStat xClientStat : xClientStatList) {
-                Long serviceId = Long.valueOf(xClientStat.getEmail());
+                log.info("region:{}, client email:{}", region, xClientStat.getEmail());
+                Long serviceId;
+                try {
+                    serviceId = Long.valueOf(xClientStat.getEmail());
+                } catch (Exception e) {
+                    log.error("parse service id error:{}", xClientStat.getEmail());
+                    continue;
+                }
                 for (Services services : servicesList) {
                     if (services.getId().equals(serviceId)) {
                         ServiceMonth serviceMonth = services.getCurrentServiceMonth();

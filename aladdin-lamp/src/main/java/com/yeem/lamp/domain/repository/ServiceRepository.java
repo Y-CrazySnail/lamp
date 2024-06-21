@@ -37,13 +37,9 @@ public interface ServiceRepository {
 
     List<Server> listServer();
 
-    List<NodeVmess> listNodeVmess(Date currentDate);
-
     Services getServiceById(Long serviceId);
 
     Server getServerById(Long serverId);
-
-    void saveNodeVmess(NodeVmess nodeVmess);
 
     void updateService(Services services);
 

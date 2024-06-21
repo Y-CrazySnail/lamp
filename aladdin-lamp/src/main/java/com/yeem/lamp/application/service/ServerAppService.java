@@ -76,10 +76,18 @@ public class ServerAppService {
                         && null != services.getCurrentServiceMonth()
                         && services.getCurrentServiceMonth().isValid())
                 .collect(Collectors.toMap(Services::getId, Services::getUuid));
-        Server server = serverDomainService.getById(serverId);
-        XUIClient xuiClient = XUIClient.init(server);
-        xuiClient.delInbound();
-        xuiClient.addVmessInbound(serverId, server.getInboundPort(), servicesMap);
+        List<Server> serverList = new ArrayList<>();
+        if (null == serverId) {
+            serverList = serverDomainService.list();
+        } else {
+            Server server = serverDomainService.getById(serverId);
+            serverList.add(server);
+        }
+        for (Server server : serverList) {
+            XUIClient xuiClient = XUIClient.init(server);
+            xuiClient.delInbound();
+            xuiClient.addVmessInbound(serverId, server.getInboundPort(), servicesMap);
+        }
     }
 
     public void syncRemoteService(Long serviceId) {
