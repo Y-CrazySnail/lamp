@@ -35,7 +35,12 @@ public class ServiceDomainService {
     private ResourceLoader resourceLoader;
 
     public List<Services> listByMemberId(Long memberId) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Services> servicesList = serviceRepository.listByMemberId(memberId);
+        servicesList.forEach(services -> {
+            this.setServiceMonth(services, current);
+            this.setServiceRecord(services.getCurrentServiceMonth(), current);
+        });
         return servicesList;
     }
 
@@ -58,6 +63,7 @@ public class ServiceDomainService {
         if (null != current) {
             if (!serviceMonthList.isEmpty()) {
                 services.setCurrentServiceMonth(serviceMonthList.get(0));
+                services.setServiceMonthList(serviceMonthList);
             }
         } else {
             services.setServiceMonthList(serviceMonthList);

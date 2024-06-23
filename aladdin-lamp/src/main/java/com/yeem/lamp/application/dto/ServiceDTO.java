@@ -3,11 +3,12 @@ package com.yeem.lamp.application.dto;
 import cn.hutool.core.bean.BeanUtil;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class ServiceDTO {
@@ -25,6 +26,13 @@ public class ServiceDTO {
     private Integer period;
     private BigDecimal price;
     private String uuid;
+
+    private ServiceMonth currentServiceMonth;
+    private List<ServiceMonth> serviceMonthList;
+    private List<ServiceRecord> serviceRecordList;
+    private List<Subscription> subscriptionList;
+    private List<NodeVmess> nodeVmessList;
+
     /**
      * 0未生效 1已生效 9已过期
      */
@@ -40,6 +48,9 @@ public class ServiceDTO {
         this.dataTraffic = services.getPlan().getBandwidth();
         this.period = services.getPlan().getPeriod();
         this.price = services.getPlan().getPrice();
+        this.currentServiceMonth = services.getCurrentServiceMonth();
+        this.serviceMonthList = services.getServiceMonthList();
+        this.serviceRecordList = services.getServiceRecordList();
     }
 
     public Services convertService() {
