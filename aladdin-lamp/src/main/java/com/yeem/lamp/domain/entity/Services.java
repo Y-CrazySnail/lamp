@@ -2,8 +2,10 @@ package com.yeem.lamp.domain.entity;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.UUID;
 import com.yeem.lamp.domain.objvalue.*;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -12,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
+@Slf4j
 public class Services {
     public static final Long GB = 1024L * 1024L * 1024L;
 
@@ -51,9 +54,57 @@ public class Services {
         }
     }
 
+    public static Services init(Long memberId, Plan plan) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        Services services = new Services();
+        services.setMemberId(memberId);
+        services.setPlan(plan);
+        services.setUuid(UUID.fastUUID().toString());
+        services.setBeginDate(current);
+        services.setEndDate(current);
+        return services;
+    }
+
     public boolean isValid() {
         Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         return this.endDate.after(current);
+    }
+
+    public void addMonth(Integer month) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        if (this.isValid()) {
+            this.endDate = DateUtil.offsetMonth(this.endDate, month).toJdkDate();
+        } else {
+            this.endDate = DateUtil.offsetMonth(current, month).toJdkDate();
+        }
+    }
+
+    public void addTransferDays(Integer days) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        this.endDate = DateUtil.offsetDay(current, days).toJdkDate();
+    }
+
+    public void transferPlan(Plan plan) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        if (this.isValid()) {
+            log.info("service:{} is valid", this.id);
+            // 未过期、服务结余
+            int totalDays = this.plan.getPeriod() * 30;
+            long validDays = DateUtil.betweenDay(current, this.endDate, true);
+            // 计算剩余价值
+            BigDecimal balance = this.plan.getPrice()
+                    .multiply(BigDecimal.valueOf(validDays))
+                    .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP);
+            log.info("service id:{}, balance:{} CNY", this.id, balance);
+            int transferDays = plan.getPeriod() * 30 * (balance.divide(plan.getPrice(), RoundingMode.HALF_UP)).setScale(0, RoundingMode.FLOOR).intValue();
+            log.info("service id:{}, transfer days:{}", this.id, transferDays);
+            this.addTransferDays(transferDays);
+            this.addMonth(plan.getPeriod());
+        } else {
+            // 已过期、无需结余
+            log.info("service:{} has expired", this.id);
+            this.addMonth(plan.getPeriod());
+        }
     }
 
     public void generateVmessNode() {
@@ -75,7 +126,7 @@ public class Services {
         this.nodeVmessList.add(nodeVmessDoForTime);
 
         BigDecimal surplus = BigDecimal.valueOf(this.currentServiceMonth.getBandwidth() - this.currentServiceMonth.getBandwidthUp() - this.currentServiceMonth.getBandwidthDown())
-                .divide(BigDecimal.valueOf(1024L * 1024L * 1024L), RoundingMode.HALF_UP)
+                .divide(BigDecimal.valueOf(GB), RoundingMode.HALF_UP)
                 .setScale(2, RoundingMode.HALF_UP);
         String surplusStr = "本月剩余:" + surplus + "GB";
         NodeVmess nodeVmessDoForSurplus = NodeVmess.initInformation(surplusStr);
@@ -98,16 +149,16 @@ public class Services {
             long validDays = DateUtil.betweenDay(begin, endDate, true);
             BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.valueOf(1024L * 1024L * 1024L));
+                    .multiply(BigDecimal.valueOf(GB));
             serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
         } else if (year == DateUtil.year(beginDate) && month == DateUtil.month(beginDate) + 1) {
             long validDays = DateUtil.betweenDay(beginDate, end, true);
             BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.valueOf(1024L * 1024L * 1024L));
+                    .multiply(BigDecimal.valueOf(GB));
             serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
         } else {
-            serviceMonth.setBandwidth(1024L * 1024L * 1024L * this.plan.getBandwidth());
+            serviceMonth.setBandwidth(GB * this.plan.getBandwidth());
         }
         serviceMonth.setBandwidthUp(0L);
         serviceMonth.setBandwidthDown(0L);

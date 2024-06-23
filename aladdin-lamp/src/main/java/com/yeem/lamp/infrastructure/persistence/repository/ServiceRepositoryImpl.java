@@ -92,6 +92,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     public List<Subscription> listSubscription() {
         LambdaQueryWrapper<SubscriptionDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SubscriptionDo::getDeleteFlag, false);
+        queryWrapper.orderByAsc(SubscriptionDo::getSort);
         List<SubscriptionDo> subscriptionDoList = subscriptionMapper.selectList(queryWrapper);
         return subscriptionDoList.stream().map(SubscriptionDo::convertSubscription).collect(Collectors.toList());
     }

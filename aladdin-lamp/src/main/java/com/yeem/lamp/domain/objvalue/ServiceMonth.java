@@ -24,6 +24,10 @@ public class ServiceMonth {
         return this.bandwidth - this.bandwidthUp - this.bandwidthDown > 0;
     }
 
+    public void addBandwidth(Integer addBandwidthGB) {
+        this.bandwidth = this.bandwidth + (1024L * 1024L * 1024L * addBandwidthGB);
+    }
+
     public ServiceRecord generateServiceRecord(Date current, String region) {
         ServiceRecord serviceRecord = new ServiceRecord();
         serviceRecord.setServiceId(this.serviceId);

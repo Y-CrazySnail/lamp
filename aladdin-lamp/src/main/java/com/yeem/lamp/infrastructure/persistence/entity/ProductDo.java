@@ -12,8 +12,8 @@ import java.math.BigDecimal;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "aladdin_package", autoResultMap = true)
-public class PackageDo extends BaseDo {
+@TableName(value = "aladdin_product", autoResultMap = true)
+public class ProductDo extends BaseDo {
     private String type;
     private Integer bandwidth;
     private Integer period;
@@ -21,17 +21,17 @@ public class PackageDo extends BaseDo {
     private String title;
     private String introduce;
 
-    public static PackageDo init(Product product) {
-        PackageDo packageDo = new PackageDo();
-        BeanUtil.copyProperties(product, packageDo);
-        packageDo.setType(product.getProductType().getType());
-        packageDo.setBandwidth(product.getPlan().getBandwidth());
-        packageDo.setPeriod(product.getPlan().getPeriod());
-        packageDo.setPrice(product.getPlan().getPrice());
-        return packageDo;
+    public static ProductDo init(Product product) {
+        ProductDo productDo = new ProductDo();
+        BeanUtil.copyProperties(product, productDo);
+        productDo.setType(product.getProductType().getType());
+        productDo.setBandwidth(product.getPlan().getBandwidth());
+        productDo.setPeriod(product.getPlan().getPeriod());
+        productDo.setPrice(product.getPlan().getPrice());
+        return productDo;
     }
 
-    public Product convertPackage() {
+    public Product convertProduct() {
         Product product = new Product();
         BeanUtil.copyProperties(this, product);
         Plan plan = new Plan();

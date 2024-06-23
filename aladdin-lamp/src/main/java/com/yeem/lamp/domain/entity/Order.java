@@ -2,9 +2,8 @@ package com.yeem.lamp.domain.entity;
 
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.ProductType;
 import lombok.Data;
 
 import java.util.Date;
@@ -13,27 +12,26 @@ import java.util.Date;
 public class Order {
 
     private Long id;
-    private String orderNo;
     private Long memberId;
-    @TableField(exist = false)
-    private Long packageId;
+    private Long serviceId;
+    private ProductType productType;
+    private String orderNo;
+    private String tradeNo;
     /**
      * 订单状态 订单状态 0已关闭 -1已生成 1已支付
      */
     private String status;
-    private Long serviceId;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    private Plan plan;
     private Date orderTime;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
     private Date completeTime;
     private String remark;
-    private String tradeNo;
-    private Plan plan;
 
-    public void createOrder(Plan plan) {
+    public void createOrder(Plan plan, ProductType productType, Long serviceId) {
+        this.serviceId = serviceId;
         this.orderNo = "No" + DateUtil.format(new Date(), DatePattern.PURE_DATETIME_MS_PATTERN) + this.getMemberId();
         this.orderTime = new Date();
         this.setStatus("-1");
+        this.productType = productType;
         this.plan = plan;
     }
 

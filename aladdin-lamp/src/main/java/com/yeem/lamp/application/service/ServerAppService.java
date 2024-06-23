@@ -67,7 +67,7 @@ public class ServerAppService {
 
     public void syncRemoteServer(Long serverId) {
         serviceDomainService.generateServiceMonth();
-        Date current = DateUtil.beginOfDay(new Date());
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Services> servicesList = serviceDomainService.listService();
         servicesList.forEach(services -> serviceDomainService.setServiceMonth(services, current));
         Map<Long, String> servicesMap = servicesList.stream()
@@ -92,7 +92,7 @@ public class ServerAppService {
 
     public void syncRemoteService(Long serviceId) {
         serviceDomainService.generateServiceMonth();
-        Date current = DateUtil.beginOfDay(new Date());
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         List<Services> servicesList = new ArrayList<>();
         if (serviceId != null) {
             Services services = serviceDomainService.getById(serviceId);

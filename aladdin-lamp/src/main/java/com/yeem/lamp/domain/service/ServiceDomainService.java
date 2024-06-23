@@ -132,14 +132,15 @@ public class ServiceDomainService {
             ServiceMonth serviceMonth = services.getCurrentServiceMonth();
             if (null == serviceMonth) {
                 continue;
+            } else {
+                serviceMonth.syncBandwidth();
             }
-            serviceMonth.syncBandwidth();
             serviceRepository.save(services);
         }
     }
 
     public String clash(String uuid) {
-        Date current = DateUtil.beginOfDay(new Date());
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         Services services = serviceRepository.getByUUID(uuid);
         this.setServiceMonth(services, current);
         this.setSubscription(services);
@@ -163,7 +164,7 @@ public class ServiceDomainService {
     }
 
     public String v2ray(String uuid) {
-        Date current = DateUtil.beginOfDay(new Date());
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         Services services = serviceRepository.getByUUID(uuid);
         this.setServiceMonth(services, current);
         this.setSubscription(services);

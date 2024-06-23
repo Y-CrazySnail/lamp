@@ -17,8 +17,6 @@ public class MemberDo extends BaseDo {
     private String wechat;
     private String remark;
     private String password;
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    private Date lastUpdateSubscription;
 
     public static MemberDo init(Member member) {
         MemberDo memberDo = new MemberDo();
@@ -28,12 +26,7 @@ public class MemberDo extends BaseDo {
 
     public Member convertMember() {
         Member member = new Member();
-        member.setId(this.getId());
-        member.setEmail(this.getEmail());
-        member.setWechat(this.getWechat());
-        member.setRemark(this.getRemark());
-        member.setPassword(this.getPassword());
-        member.setLastUpdateSubscription(this.getLastUpdateSubscription());
+        BeanUtil.copyProperties(this, member);
         return member;
     }
 }

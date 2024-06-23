@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.lamp.domain.entity.Order;
 import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.ProductType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 @TableName(value = "aladdin_order", autoResultMap = true)
 public class OrderDo extends BaseDo {
     private String orderNo;
+    private String type;
     private Long memberId;
     @TableField(exist = false)
     private Long packageId;
@@ -41,6 +43,7 @@ public class OrderDo extends BaseDo {
         orderDo.setDataTraffic(order.getPlan().getBandwidth());
         orderDo.setPeriod(order.getPlan().getPeriod());
         orderDo.setPrice(order.getPlan().getPrice());
+        orderDo.setType(order.getProductType().getType());
         return orderDo;
     }
 
@@ -52,6 +55,7 @@ public class OrderDo extends BaseDo {
         plan.setPeriod(this.period);
         plan.setPrice(this.price);
         order.setPlan(plan);
+        order.setProductType(ProductType.init(this.type));
         return order;
     }
 }

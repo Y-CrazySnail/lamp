@@ -90,7 +90,9 @@ public class ServiceAppService {
             serviceDomainService.setServiceMonth(services, currentDate);
             if (null != services.getCurrentServiceMonth()) {
                 serviceDomainService.setServiceRecord(services.getCurrentServiceMonth(), currentDate);
-                services.getCurrentServiceMonth().getServiceRecordList().forEach(ServiceRecord::resetTodayBandwidth);
+                services.getCurrentServiceMonth().getServiceRecordList().stream()
+                        .filter(serviceRecord -> serviceRecord.getServiceDate().equals(currentDate))
+                        .forEach(ServiceRecord::resetTodayBandwidth);
             }
         });
         for (Server server : serverList) {

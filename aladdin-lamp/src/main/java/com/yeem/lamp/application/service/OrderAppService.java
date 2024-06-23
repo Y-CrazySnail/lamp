@@ -11,7 +11,7 @@ import com.yeem.lamp.application.dto.OrderDTO;
 import com.yeem.lamp.domain.entity.Order;
 import com.yeem.lamp.domain.entity.Product;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.objvalue.Plan;
+import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.service.OrderDomainService;
 import com.yeem.lamp.domain.service.PackageDomainService;
 import com.yeem.lamp.domain.service.ServiceDomainService;
@@ -19,6 +19,7 @@ import com.yeem.lamp.infrastructure.payment.EPaymentProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -71,18 +72,27 @@ public class OrderAppService {
     }
 
     public void place(OrderDTO orderDTO) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         Product product = packageDomainService.getById(orderDTO.getPackageId());
-        List<Services> services = serviceDomainService.listByMemberId(orderDTO.getMemberId());
-        if (services.stream().anyMatch(s -> Services.TYPE.SERVICE.getValue().equals(s.getType()) && s.isValid())) {
-            throw new RuntimeException("已经购买过服务");
+        List<Services> servicesList = serviceDomainService.listByMemberId(orderDTO.getMemberId());
+        if (servicesList.isEmpty()) {
+            Services services = Services.init(orderDTO.getMemberId(), product.getPlan());
+            serviceDomainService.save(services);
+            servicesList = serviceDomainService.listByMemberId(orderDTO.getMemberId());
+        }
+        Services services = servicesList.get(0);
+        serviceDomainService.setServiceMonth(services, current);
+        if (product.getProductType().isData() && null == services.getCurrentServiceMonth()) {
+            throw new RuntimeException("can not place data type product");
         }
         Order order = orderDTO.convertOrder();
-        order.createOrder(product.getPlan());
+        order.createOrder(product.getPlan(), product.getProductType(), services.getId());
         orderDomainService.generateOrder(order);
     }
 
     /**
      * 调起支付
+     *
      * @param orderDTO 订单信息
      * @return 支付信息
      */
@@ -96,29 +106,39 @@ public class OrderAppService {
         return payRes;
     }
 
+    @Transactional
     public void finish(OrderDTO orderDTO) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
         Order order = orderDomainService.getByOrderNo(orderDTO.getOrderNo());
         if (Order.STATUS.ED.getValue().equals(order.getStatus())) {
             // 已支付
             return;
         }
-        List<Services> serviceList = serviceDomainService.listByMemberId(order.getMemberId());
-        Long serviceId = null;
-        for (Services services : serviceList) {
-            if (order.getPlan().getBandwidth().equals(services.getPlan().getBandwidth())) {
-                serviceId = services.getId();
-                if (services.getEndDate().before(new Date())) {
-                    services.setEndDate(DateUtil.offsetMonth(new Date(), order.getPlan().getPeriod()));
-                } else {
-                    services.setEndDate(DateUtil.offsetMonth(services.getEndDate(), order.getPlan().getPeriod()));
-                }
-                services.getPlan().setBandwidth(order.getPlan().getBandwidth());
-                services.getPlan().setPeriod(order.getPlan().getPeriod());
-                services.getPlan().setPrice(order.getPlan().getPrice());
-                serviceDomainService.updateById(services);
-                break;
+        Services services = serviceDomainService.getById(order.getServiceId());
+        if (order.getProductType().isData()) {
+            // 增值服务-数据包
+            serviceDomainService.setServiceMonth(services, current);
+            if (null == services.getCurrentServiceMonth()) {
+                services.generateServiceMonth(DateUtil.year(current), DateUtil.month(current) + 1);
+            }
+            ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+            serviceMonth.addBandwidth(order.getPlan().getBandwidth());
+            serviceDomainService.save(services);
+        } else {
+            // 基础服务
+            if (services.getPlan().getBandwidth().equals(order.getPlan().getBandwidth())) {
+                log.info("plan:{} is same, add month", order.getPlan().getBandwidth());
+                // 计划相同
+                services.addMonth(order.getPlan().getPeriod());
+            } else {
+                // 计划不同
+                log.info("plan is not same, need transfer from:{}GB plan to:{}GB", services.getPlan().getBandwidth(), order.getPlan().getBandwidth());
+                services.transferPlan(order.getPlan());
             }
         }
+        services.setPlan(order.getPlan());
+        services.setBeginDate(current);
+        serviceDomainService.save(services);
         // TG消息通知
         try {
             SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
@@ -133,17 +153,6 @@ public class OrderAppService {
             sysTelegramService.send(sysTelegramSendDTO);
         } catch (Exception e) {
             log.error("send telegram message error:", e);
-        }
-        if (null == serviceId) {
-            Services service = new Services();
-            service.setMemberId(order.getMemberId());
-            service.setBeginDate(new Date());
-            service.setEndDate(DateUtil.offsetMonth(new Date(), order.getPlan().getPeriod()).toJdkDate());
-            Plan plan = new Plan();
-            service.setPlan(order.getPlan());
-            service.setUuid(UUID.fastUUID().toString());
-            serviceDomainService.save(service);
-            order.setServiceId(service.getId());
         }
         order.finish();
         orderDomainService.updateById(order);
