@@ -33,6 +33,7 @@ public class Services {
     private List<ServiceRecord> serviceRecordList;
     private List<Subscription> subscriptionList;
     private List<NodeVmess> nodeVmessList;
+    private List<ServiceTransform> serviceTransformList;
 
     public enum TYPE {
         /**
@@ -100,6 +101,9 @@ public class Services {
             log.info("service id:{}, transfer days:{}", this.id, transferDays);
             this.addTransferDays(transferDays);
             this.addMonth(plan.getPeriod());
+            ServiceTransform serviceTransform = new ServiceTransform();
+            serviceTransform.setOriginPlan(this.plan);
+            serviceTransform.setTargetPlan(plan);
         } else {
             // 已过期、无需结余
             log.info("service:{} has expired", this.id);

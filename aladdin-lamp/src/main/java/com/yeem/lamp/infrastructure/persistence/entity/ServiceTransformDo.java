@@ -38,7 +38,7 @@ public class ServiceTransformDo extends BaseDo {
         return serviceTransformDo;
     }
 
-    public ServiceRecord convertServiceTransform() {
+    public ServiceTransform convertServiceTransform() {
         ServiceTransform serviceTransform = new ServiceTransform();
         BeanUtil.copyProperties(this, serviceTransform);
         Plan originPlan = new Plan();
@@ -46,6 +46,11 @@ public class ServiceTransformDo extends BaseDo {
         originPlan.setPeriod(this.originPeriod);
         originPlan.setPrice(this.originPrice);
         Plan targetPlan = new Plan();
-        return null;
+        targetPlan.setBandwidth(this.targetBandwidth);
+        targetPlan.setPeriod(this.targetPeriod);
+        targetPlan.setPrice(this.targetPrice);
+        serviceTransform.setOriginPlan(originPlan);
+        serviceTransform.setTargetPlan(targetPlan);
+        return serviceTransform;
     }
 }
