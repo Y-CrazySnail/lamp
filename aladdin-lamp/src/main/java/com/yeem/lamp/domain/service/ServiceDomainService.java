@@ -71,6 +71,9 @@ public class ServiceDomainService {
     }
 
     public void setServiceRecord(ServiceMonth serviceMonth, Date current) {
+        if (null == serviceMonth) {
+            return;
+        }
         ServiceRecord serviceRecordParam = new ServiceRecord();
         serviceRecordParam.setServiceId(serviceMonth.getServiceId());
         serviceRecordParam.setServiceMonthId(serviceMonth.getId());

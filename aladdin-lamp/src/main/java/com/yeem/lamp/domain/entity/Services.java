@@ -140,7 +140,7 @@ public class Services {
     public ServiceMonth generateServiceMonth(Integer year, Integer month) {
         Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(new Date())).toJdkDate();
         Date end = DateUtil.beginOfDay(DateUtil.endOfMonth(new Date())).toJdkDate();
-        int totalDays = DateUtil.dayOfMonth(begin);
+        int totalDays = DateUtil.lengthOfMonth(month, false);
         ServiceMonth serviceMonth = new ServiceMonth();
         serviceMonth.setServiceId(this.id);
         serviceMonth.setServiceYear(year);
@@ -149,13 +149,15 @@ public class Services {
             long validDays = DateUtil.betweenDay(begin, endDate, true);
             BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.valueOf(GB));
+                    .multiply(BigDecimal.valueOf(GB))
+                    .multiply(BigDecimal.valueOf(this.plan.getBandwidth()));
             serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
         } else if (year == DateUtil.year(beginDate) && month == DateUtil.month(beginDate) + 1) {
             long validDays = DateUtil.betweenDay(beginDate, end, true);
             BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
-                    .multiply(BigDecimal.valueOf(GB));
+                    .multiply(BigDecimal.valueOf(GB))
+                    .multiply(BigDecimal.valueOf(this.plan.getBandwidth()));
             serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
         } else {
             serviceMonth.setBandwidth(GB * this.plan.getBandwidth());
