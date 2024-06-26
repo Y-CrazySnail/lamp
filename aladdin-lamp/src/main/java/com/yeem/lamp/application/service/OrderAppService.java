@@ -135,9 +135,9 @@ public class OrderAppService {
                 log.info("plan is not same, need transfer from:{}GB plan to:{}GB", services.getPlan().getBandwidth(), order.getPlan().getBandwidth());
                 services.transferPlan(order.getPlan());
             }
+            services.setPlan(order.getPlan());
+            services.setBeginDate(current);
         }
-        services.setPlan(order.getPlan());
-        services.setBeginDate(current);
         serviceDomainService.save(services);
         // TG消息通知
         try {

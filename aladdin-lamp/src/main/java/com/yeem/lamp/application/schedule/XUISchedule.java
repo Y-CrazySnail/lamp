@@ -1,6 +1,7 @@
 package com.yeem.lamp.application.schedule;
 
 import com.yeem.im.service.ISysTelegramService;
+import com.yeem.lamp.application.service.ServerAppService;
 import com.yeem.lamp.application.service.ServiceAppService;
 import com.yeem.lamp.domain.service.ServerDomainService;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,8 @@ public class XUISchedule {
     @Autowired
     private ServiceAppService serviceAppService;
     @Autowired
+    private ServerAppService serverAppService;
+    @Autowired
     private ServerDomainService serverDomainService;
 
     @Scheduled(cron = "0 0 0 * * ?")
@@ -27,6 +30,17 @@ public class XUISchedule {
             log.info("end-reset client data traffic schedule<----------");
         } catch (Exception e) {
             log.error("reset client data traffic schedule error", e);
+        }
+    }
+
+    @Scheduled(cron = "0 0 18 * * ?")
+    public void syncRemoteService() {
+        try {
+            log.info("begin-sync remote service schedule---------->");
+            serverAppService.syncRemoteService(null);
+            log.info("end-sync remote service schedule<----------");
+        } catch (Exception e) {
+            log.error("sync remote service schedule error", e);
         }
     }
 
