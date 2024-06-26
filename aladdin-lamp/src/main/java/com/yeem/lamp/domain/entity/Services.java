@@ -99,15 +99,15 @@ public class Services {
             log.info("service id:{}, balance:{} CNY", this.id, balance);
             int transferDays = plan.getPeriod() * 30 * (balance.divide(plan.getPrice(), RoundingMode.HALF_UP)).setScale(0, RoundingMode.FLOOR).intValue();
             log.info("service id:{}, transfer days:{}", this.id, transferDays);
-            this.addTransferDays(transferDays);
-            this.addMonth(plan.getPeriod());
             ServiceTransform serviceTransform = new ServiceTransform();
+            serviceTransform.setServiceId(this.id);
             serviceTransform.setOriginPlan(this.plan);
+            serviceTransform.setOriginEndDate(this.endDate);
+            // 增加转换天数
+            this.addTransferDays(transferDays);
             serviceTransform.setTargetPlan(plan);
-        } else {
-            // 已过期、无需结余
-            log.info("service:{} has expired", this.id);
-            this.addMonth(plan.getPeriod());
+            serviceTransform.setTargetEndDate(this.endDate);
+            serviceTransform.setTransformDate(current);
         }
     }
 

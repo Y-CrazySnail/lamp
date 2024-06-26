@@ -134,6 +134,7 @@ public class OrderAppService {
                 // 计划不同
                 log.info("plan is not same, need transfer from:{}GB plan to:{}GB", services.getPlan().getBandwidth(), order.getPlan().getBandwidth());
                 services.transferPlan(order.getPlan());
+                services.addMonth(order.getPlan().getPeriod());
             }
             services.setPlan(order.getPlan());
             services.setBeginDate(current);
