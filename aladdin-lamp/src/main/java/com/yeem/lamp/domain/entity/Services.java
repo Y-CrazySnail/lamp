@@ -93,7 +93,7 @@ public class Services {
             int totalDays = this.plan.getPeriod() * 30;
             long validDays = DateUtil.betweenDay(current, this.endDate, true);
             // 计算剩余价值
-            BigDecimal balance = this.plan.getPrice()
+            BigDecimal balance = this.plan.getPrice().setScale(2, RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(validDays))
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP);
             log.info("service id:{}, balance:{} CNY", this.id, balance);
@@ -151,14 +151,14 @@ public class Services {
         serviceMonth.setServiceMonth(month);
         if (year == DateUtil.year(endDate) && month == DateUtil.month(endDate) + 1) {
             long validDays = DateUtil.betweenDay(begin, endDate, true);
-            BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
+            BigDecimal trueBandwidth = BigDecimal.valueOf(validDays).setScale(2, RoundingMode.HALF_UP)
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(GB))
                     .multiply(BigDecimal.valueOf(this.plan.getBandwidth()));
             serviceMonth.setBandwidth(trueBandwidth.setScale(0, RoundingMode.HALF_UP).longValue());
         } else if (year == DateUtil.year(beginDate) && month == DateUtil.month(beginDate) + 1) {
             long validDays = DateUtil.betweenDay(beginDate, end, true);
-            BigDecimal trueBandwidth = BigDecimal.valueOf(validDays)
+            BigDecimal trueBandwidth = BigDecimal.valueOf(validDays).setScale(2, RoundingMode.HALF_UP)
                     .divide(BigDecimal.valueOf(totalDays), RoundingMode.HALF_UP)
                     .multiply(BigDecimal.valueOf(GB))
                     .multiply(BigDecimal.valueOf(this.plan.getBandwidth()));
