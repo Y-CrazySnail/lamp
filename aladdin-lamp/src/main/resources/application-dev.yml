@@ -14,7 +14,7 @@ spring:
       datasource:
         proxy:
           driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://141.11.125.250:3306/aladdin?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
+          url: jdbc:mysql://149.28.155.125:3306/aladdin?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
           username: aladdin
           password: aladdin202401
       druid:
