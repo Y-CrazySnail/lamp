@@ -14,6 +14,8 @@ public class MemberDTO {
     private String wechat;
     private String remark;
     private String password;
+    private String referralCode;
+    private String referrerCode;
     private List<Services> servicesList;
 
     public MemberDTO() {

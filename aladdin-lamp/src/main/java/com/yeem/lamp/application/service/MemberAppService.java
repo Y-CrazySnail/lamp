@@ -82,4 +82,12 @@ public class MemberAppService {
         return new TokenDTO(token);
     }
 
+    public void updatePassword(Long id, String password) {
+
+    }
+
+    public void updateReferralCode(Long id, String referralCode) {
+
+    }
+
 }
