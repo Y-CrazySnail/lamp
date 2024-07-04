@@ -4,6 +4,7 @@ import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.application.service.ServerAppService;
 import com.yeem.lamp.application.service.ServiceAppService;
 import com.yeem.lamp.domain.service.ServerDomainService;
+import com.yeem.lamp.domain.service.ServiceDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -21,7 +22,12 @@ public class XUISchedule {
     private ServerAppService serverAppService;
     @Autowired
     private ServerDomainService serverDomainService;
+    @Autowired
+    private ServiceDomainService serviceDomainService;
 
+    /**
+     * 每天0点重置当日流量
+     */
     @Scheduled(cron = "0 0 0 * * ?")
     public void reset() {
         try {
@@ -30,6 +36,20 @@ public class XUISchedule {
             log.info("end-reset client data traffic schedule<----------");
         } catch (Exception e) {
             log.error("reset client data traffic schedule error", e);
+        }
+    }
+
+    /**
+     * 每月初0点生成当月服务
+     */
+    @Scheduled(cron = "0 0 0 1 * ?")
+    public void generateServiceMonth() {
+        try {
+            log.info("begin-generate service month schedule---------->");
+            serviceDomainService.generateServiceMonth();
+            log.info("end-generate service month schedule<----------");
+        } catch (Exception e) {
+            log.error("generate service month schedule error", e);
         }
     }
 

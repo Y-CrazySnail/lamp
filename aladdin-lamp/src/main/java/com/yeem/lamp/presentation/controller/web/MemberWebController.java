@@ -1,5 +1,6 @@
 package com.yeem.lamp.presentation.controller.web;
 
+import com.yeem.lamp.application.dto.MemberDTO;
 import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.application.service.MemberAppService;
 import com.yeem.lamp.presentation.request.LoginRequest;
@@ -48,6 +49,36 @@ public class MemberWebController {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询 id为空");
             }
             return ResponseEntity.ok(memberAppService.getByIdWithService(id));
+        } catch (Exception e) {
+            log.error("getById方法", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询失败");
+        }
+    }
+
+    @PutMapping("/updatePassword")
+    public ResponseEntity<Object> updatePassword(@RequestBody MemberDTO memberDTO) {
+        try {
+            Long id = LocalAuthInterceptor.getMemberId();
+            if (null == id) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询 id为空");
+            }
+            memberAppService.updatePassword(id, memberDTO.getPassword());
+            return ResponseEntity.ok("ok");
+        } catch (Exception e) {
+            log.error("getById方法", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询失败");
+        }
+    }
+
+    @PutMapping("/updateReferrerCode")
+    public ResponseEntity<Object> updateReferralCode(@RequestBody MemberDTO memberDTO) {
+        try {
+            Long id = LocalAuthInterceptor.getMemberId();
+            if (null == id) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询 id为空");
+            }
+            memberAppService.updateReferralCode(id, memberDTO.getReferrerCode());
+            return ResponseEntity.ok("ok");
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("按id查询失败");
