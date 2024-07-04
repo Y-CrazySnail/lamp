@@ -60,6 +60,25 @@ public class ServiceMController {
     }
 
     /**
+     * 根据会员ID查询
+     *
+     * @param memberId 会员ID
+     * @return 服务信息
+     */
+    @GetMapping("/getByMemberId")
+    public ResponseEntity<Object> getByMemberId(@RequestParam("memberId") Long memberId) {
+        try {
+            if (null == memberId) {
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按会员id查询 id为空");
+            }
+            return ResponseEntity.ok(serviceAppService.listServiceByMemberId(memberId));
+        } catch (Exception e) {
+            log.error("getById方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
+        }
+    }
+
+    /**
      * 更改
      *
      * @param serviceDTO serviceDTO

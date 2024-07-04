@@ -10,14 +10,16 @@ import java.util.List;
 @Data
 public class MemberDTO {
     private Long id;
-    private String email;
     private String wechat;
-    private String remark;
+    private String email;
     private String password;
+    private String referralCode;
+    private String referrerCode;
+    private Integer level;
+    private String remark;
     private List<Services> servicesList;
 
     public MemberDTO() {
-
     }
 
     public static MemberDTO init(Member member) {
