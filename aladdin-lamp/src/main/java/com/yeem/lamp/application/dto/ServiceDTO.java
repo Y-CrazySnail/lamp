@@ -22,7 +22,7 @@ public class ServiceDTO {
     private Date beginDate;
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date endDate;
-    private Integer dataTraffic;
+    private Integer bandwidth;
     private Integer period;
     private BigDecimal price;
     private String uuid;
@@ -43,14 +43,16 @@ public class ServiceDTO {
     private Double serviceDown;
     private String surplus;
 
-    public ServiceDTO(Services services) {
-        BeanUtil.copyProperties(services, this);
-        this.dataTraffic = services.getPlan().getBandwidth();
-        this.period = services.getPlan().getPeriod();
-        this.price = services.getPlan().getPrice();
-        this.currentServiceMonth = services.getCurrentServiceMonth();
-        this.serviceMonthList = services.getServiceMonthList();
-        this.serviceRecordList = services.getServiceRecordList();
+    public static ServiceDTO init(Services services) {
+        ServiceDTO serviceDTO = new ServiceDTO();
+        BeanUtil.copyProperties(services, serviceDTO);
+        serviceDTO.setBandwidth(services.getPlan().getBandwidth());
+        serviceDTO.setPeriod(services.getPlan().getPeriod());
+        serviceDTO.setPrice(services.getPlan().getPrice());
+        serviceDTO.setCurrentServiceMonth(services.getCurrentServiceMonth());
+        serviceDTO.setServiceMonthList(services.getServiceMonthList());
+        serviceDTO.setServiceRecordList(services.getServiceRecordList());
+        return serviceDTO;
     }
 
     public Services convertService() {
@@ -58,7 +60,7 @@ public class ServiceDTO {
         BeanUtil.copyProperties(this, services);
         Plan plan = new Plan();
         plan.setPeriod(this.period);
-        plan.setBandwidth(this.dataTraffic);
+        plan.setBandwidth(this.bandwidth);
         plan.setPrice(this.price);
         services.setPlan(plan);
         return services;

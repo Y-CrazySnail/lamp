@@ -70,6 +70,7 @@ public class MemberAppService {
 
     public void removeById(Long id) {
         memberDomainService.removeById(id);
+        serviceDomainService.removeByMemberId(id);
     }
 
     public TokenDTO login(LoginRequest loginRequest) {

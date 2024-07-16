@@ -33,6 +33,8 @@ public interface ServiceRepository {
 
     void removeById(Long id);
 
+    void removeByMemberId(Long memberId);
+
     List<Services> listByMemberId(Long memberId);
 
     List<Server> listServer();

@@ -44,10 +44,6 @@ public class ServiceDomainService {
         return servicesList;
     }
 
-    public List<Server> listServer() {
-        return serviceRepository.listServer();
-    }
-
     public List<Services> listService() {
         return serviceRepository.listService(new Services());
     }
@@ -104,6 +100,10 @@ public class ServiceDomainService {
 
     public void removeById(Long id) {
         serviceRepository.removeById(id);
+    }
+
+    public void removeByMemberId(Long memberId) {
+        serviceRepository.removeByMemberId(memberId);
     }
 
     /**

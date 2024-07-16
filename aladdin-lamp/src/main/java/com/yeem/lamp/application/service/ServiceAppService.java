@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.objvalue.ServiceRecord;
 import com.yeem.lamp.domain.service.MemberDomainService;
@@ -38,12 +37,12 @@ public class ServiceAppService {
 
     public ServiceDTO getServiceById(Long id) {
         Services services = serviceDomainService.getById(id);
-        return new ServiceDTO(services);
+        return ServiceDTO.init(services);
     }
 
     public List<ServiceDTO> listServiceByMemberId(Long memberId) {
         List<Services> servicesList = serviceDomainService.listByMemberId(memberId);
-        return servicesList.stream().map(ServiceDTO::new).collect(Collectors.toList());
+        return servicesList.stream().map(ServiceDTO::init).collect(Collectors.toList());
     }
 
     public IPage<ServiceDTO> pageService(int current, int size, Long memberId, String status, String wechat, String email) {
@@ -53,7 +52,7 @@ public class ServiceAppService {
         pageDTO.setTotal(page.getTotal());
         pageDTO.setSize(page.getSize());
         pageDTO.setCurrent(page.getCurrent());
-        pageDTO.setRecords(page.getRecords().stream().map(ServiceDTO::new).collect(Collectors.toList()));
+        pageDTO.setRecords(page.getRecords().stream().map(ServiceDTO::init).collect(Collectors.toList()));
         return pageDTO;
     }
 

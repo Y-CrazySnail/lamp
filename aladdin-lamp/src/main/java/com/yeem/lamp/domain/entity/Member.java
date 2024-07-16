@@ -15,4 +15,5 @@ public class Member {
     private Integer level;
     private String remark;
     private LocalDateTime createTime;
+    private Services services;
 }

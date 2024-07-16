@@ -43,16 +43,8 @@ public class MemberRepositoryImpl implements MemberRepository {
 
     @Override
     public IPage<Member> pages(int current, int size, String email, String wechat) {
-        QueryWrapper<MemberDo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
-        if (!StrUtil.isEmpty(email)) {
-            queryWrapper.like("email", email);
-        }
-        if (!StrUtil.isEmpty(wechat)) {
-            queryWrapper.like("wechat", wechat);
-        }
         IPage<MemberDo> page = new Page<>(current, size);
-        page = memberMapper.selectPage(page, queryWrapper);
+        page = memberMapper.pages(page, wechat, email);
         IPage<Member> res = new Page<>();
         res.setPages(page.getPages());
         res.setCurrent(page.getCurrent());

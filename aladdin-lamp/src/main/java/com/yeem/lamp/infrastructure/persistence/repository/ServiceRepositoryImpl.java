@@ -160,6 +160,14 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         serviceMapper.update(null, updateWrapper);
     }
 
+    @Override
+    public void removeByMemberId(Long memberId) {
+        LambdaUpdateWrapper<ServiceDo> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(ServiceDo::getDeleteFlag, true);
+        updateWrapper.eq(ServiceDo::getMemberId, memberId);
+        serviceMapper.update(null, updateWrapper);
+    }
+
     /**
      * 根据会员ID查询服务列表
      *
