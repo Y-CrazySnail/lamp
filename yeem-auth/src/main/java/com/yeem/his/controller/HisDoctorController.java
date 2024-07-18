@@ -1,5 +1,6 @@
 package com.yeem.his.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -30,10 +31,17 @@ public class HisDoctorController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Object> page() {
+    public ResponseEntity<Object> page(@RequestParam(value = "doctorName", required = false) String doctorName,
+                                       @RequestParam(value = "doctorPhone", required = false) String doctorPhone) {
         try {
             IPage<HisDoctor> page = new Page<>();
             LambdaQueryWrapper<HisDoctor> queryWrapper = new LambdaQueryWrapper<>();
+            if (StrUtil.isNotEmpty(doctorName)) {
+                queryWrapper.like(HisDoctor::getDoctorName, doctorName);
+            }
+            if (StrUtil.isNotEmpty(doctorPhone)) {
+                queryWrapper.like(HisDoctor::getDoctorPhone, doctorPhone);
+            }
             return ResponseEntity.ok(doctorService.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("page方法", e);

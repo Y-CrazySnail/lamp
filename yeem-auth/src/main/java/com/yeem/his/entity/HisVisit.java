@@ -14,11 +14,12 @@ import java.util.Date;
 public class HisVisit extends BaseEntity {
     private Long patientId;
     private String patientName;
-    private Long appointmentId;
     private Long serviceId;
     private String serviceName;
     private Long doctorId;
     private String doctorName;
+    private String status;
+    private Date appointmentTime;
     private Date visitTime;
     private BigDecimal visitCharge;
 }
