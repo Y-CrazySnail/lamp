@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @TableName(value = "his_patient")
 public class HisPatient extends BaseEntity {
-    private String doctorName;
-    private String doctorPhone;
-    private String doctorLevel;
+    private String patientName;
+    private String patientPhone;
+    private String patientDescription;
 }
