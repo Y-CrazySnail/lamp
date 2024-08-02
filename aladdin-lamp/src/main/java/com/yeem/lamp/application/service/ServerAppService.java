@@ -84,9 +84,13 @@ public class ServerAppService {
             serverList.add(server);
         }
         for (Server server : serverList) {
-            XUIClient xuiClient = XUIClient.init(server);
-            xuiClient.delInbound();
-            xuiClient.addVmessInbound(serverId, server.getInboundPort(), servicesMap);
+            try {
+                XUIClient xuiClient = XUIClient.init(server);
+                xuiClient.delInbound();
+                xuiClient.addVmessInbound(serverId, server.getInboundPort(), servicesMap);
+            } catch (Exception e) {
+                log.error("服务器：{}-{}异常：", server.getApiIp(), server.getRegion(), e);
+            }
         }
     }
 
@@ -104,30 +108,34 @@ public class ServerAppService {
         }
         List<Server> serverList = serverDomainService.list();
         for (Server server : serverList) {
-            XUIClient xuiClient = XUIClient.init(server);
-            XInbound xInbound = xuiClient.getInbound();
-            for (Services services : servicesList) {
-                if (services.isValid() && null != services.getCurrentServiceMonth() && services.getCurrentServiceMonth().isValid()) {
-                    boolean exist = false;
-                    for (XClientStat clientStat : xInbound.getClientStats()) {
-                        if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
-                            exist = true;
-                            break;
+            try {
+                XUIClient xuiClient = XUIClient.init(server);
+                XInbound xInbound = xuiClient.getInbound();
+                for (Services services : servicesList) {
+                    if (services.isValid() && null != services.getCurrentServiceMonth() && services.getCurrentServiceMonth().isValid()) {
+                        boolean exist = false;
+                        for (XClientStat clientStat : xInbound.getClientStats()) {
+                            if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
+                                exist = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!exist) {
-                        log.info("add vmess client service id:{}, server id:{}", services.getId(), server.getId());
-                        xuiClient.addVmessClient(xInbound, services.getUuid(), services.getId());
-                    }
-                } else {
-                    for (XClientStat clientStat : xInbound.getClientStats()) {
-                        if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
-                            log.info("delete vmess client service id:{}, uuid:{}", services.getId(), services.getUuid());
-                            xuiClient.delVmessClient(xInbound.getId(), services.getUuid());
-                            break;
+                        if (!exist) {
+                            log.info("add vmess client service id:{}, server id:{}", services.getId(), server.getId());
+                            xuiClient.addVmessClient(xInbound, services.getUuid(), services.getId());
+                        }
+                    } else {
+                        for (XClientStat clientStat : xInbound.getClientStats()) {
+                            if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
+                                log.info("delete vmess client service id:{}, uuid:{}", services.getId(), services.getUuid());
+                                xuiClient.delVmessClient(xInbound.getId(), services.getUuid());
+                                break;
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                log.error("服务器：{}-{}异常：", server.getApiIp(), server.getRegion(), e);
             }
         }
     }
