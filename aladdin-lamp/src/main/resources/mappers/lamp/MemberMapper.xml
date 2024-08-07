@@ -27,7 +27,7 @@
         LEFT JOIN aladdin_service s ON m.id = s.member_id
         <where>
             m.delete_flag != 1
-            and (s.delete_flag != 1 or  or s.delete_flag is null)
+            and (s.delete_flag != 1 or or s.delete_flag is null)
             <if test="wechat != null and wechat != ''">
                 and m.wechat like concat('%', #{wechat}, '%')
             </if>
