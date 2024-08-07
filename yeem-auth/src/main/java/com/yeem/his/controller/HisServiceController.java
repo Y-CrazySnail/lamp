@@ -1,5 +1,6 @@
 package com.yeem.his.controller;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/his-service")
+@RequestMapping("/his/service")
 public class HisServiceController {
 
     @Autowired
@@ -30,10 +31,13 @@ public class HisServiceController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Object> page() {
+    public ResponseEntity<Object> page(@RequestParam(value = "serviceName", required = false) String serviceName) {
         try {
             IPage<HisService> page = new Page<>();
             LambdaQueryWrapper<HisService> queryWrapper = new LambdaQueryWrapper<>();
+            if (StrUtil.isNotEmpty(serviceName)) {
+                queryWrapper.like(HisService::getServiceName, serviceName);
+            }
             return ResponseEntity.ok(serviceService.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("page方法", e);

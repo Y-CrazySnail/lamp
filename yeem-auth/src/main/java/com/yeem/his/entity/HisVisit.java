@@ -1,6 +1,7 @@
 package com.yeem.his.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,7 +20,9 @@ public class HisVisit extends BaseEntity {
     private Long doctorId;
     private String doctorName;
     private String status;
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone="GMT+8")
     private Date appointmentTime;
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone="GMT+8")
     private Date visitTime;
     private BigDecimal visitCharge;
 }
