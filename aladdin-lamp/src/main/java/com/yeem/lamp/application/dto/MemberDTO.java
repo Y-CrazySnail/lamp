@@ -16,7 +16,6 @@ public class MemberDTO {
     private String wechat;
     private String email;
     private String password;
-    private String referralCode;
     private String referrerCode;
     private Integer level;
     private String remark;

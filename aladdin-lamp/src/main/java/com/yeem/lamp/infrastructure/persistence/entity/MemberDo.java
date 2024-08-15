@@ -19,7 +19,6 @@ public class MemberDo extends BaseDo {
     private String wechat;
     private String email;
     private String password;
-    private String referralCode;
     private String referrerCode;
     private Integer level;
     private String remark;

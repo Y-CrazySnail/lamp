@@ -49,12 +49,12 @@ public class MemberDomainService {
         return memberRepository.pages(current, size, email, wechat);
     }
 
-    public void updateById(Member member) {
-        memberRepository.updateById(member);
-    }
-
     public void save(Member member) {
         memberRepository.save(member);
+    }
+
+    public void updateById(Member member) {
+        memberRepository.updateById(member);
     }
 
     public void removeById(Long id) {
