@@ -1,5 +1,6 @@
 package com.yeem.his.controller;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Objects;
 
 @Slf4j
@@ -36,10 +38,32 @@ public class HisVisitController {
     }
 
     @GetMapping("/page")
-    public ResponseEntity<Object> page() {
+    public ResponseEntity<Object> page(@RequestParam(value = "patientId", required = false) Long patientId,
+                                       @RequestParam(value = "doctorId", required = false) Long doctorId,
+                                       @RequestParam(value = "beginVisitTime", required = false) String beginVisitTime,
+                                       @RequestParam(value = "endVisitTime", required = false) String endVisitTime,
+                                       @RequestParam(value = "status", required = false) String status) {
         try {
             IPage<HisVisit> page = new Page<>();
             LambdaQueryWrapper<HisVisit> queryWrapper = new LambdaQueryWrapper<>();
+            if (!Objects.isNull(patientId)) {
+                queryWrapper.eq(HisVisit::getPatientId, patientId);
+            }
+            if (!Objects.isNull(doctorId)) {
+                queryWrapper.eq(HisVisit::getDoctorId, doctorId);
+            }
+            if (!Objects.isNull(beginVisitTime)) {
+                Date date = DateUtil.parse(beginVisitTime).toJdkDate();
+                queryWrapper.ge(HisVisit::getVisitTime, date);
+            }
+            if (!Objects.isNull(endVisitTime)) {
+                Date date = DateUtil.endOfDay(DateUtil.parse(endVisitTime)).toJdkDate();
+                queryWrapper.le(HisVisit::getVisitTime, date);
+            }
+            if (!Objects.isNull(status)) {
+                queryWrapper.eq(HisVisit::getStatus, status);
+            }
+            queryWrapper.orderByDesc(HisVisit::getVisitTime);
             return ResponseEntity.ok(visitService.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("page方法", e);
