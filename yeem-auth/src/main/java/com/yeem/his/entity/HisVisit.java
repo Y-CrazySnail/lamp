@@ -27,5 +27,5 @@ public class HisVisit extends BaseEntity {
     private Date visitTime;
     private BigDecimal visitCharge;
     @TableField(exist = false)
-    private HisPatient hisPatient;
+    private HisPatient patient;
 }

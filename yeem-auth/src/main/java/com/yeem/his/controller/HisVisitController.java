@@ -4,12 +4,16 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yeem.his.entity.HisPatient;
 import com.yeem.his.entity.HisVisit;
+import com.yeem.his.service.IHisPatientService;
 import com.yeem.his.service.IHisVisitService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -18,6 +22,8 @@ public class HisVisitController {
 
     @Autowired
     private IHisVisitService visitService;
+    @Autowired
+    private IHisPatientService patientService;
 
     @GetMapping("/list")
     public ResponseEntity<Object> list() {
@@ -54,6 +60,23 @@ public class HisVisitController {
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody HisVisit visit) {
         try {
+            if (!Objects.isNull(visit.getPatient())) {
+                HisPatient patient = visit.getPatient();
+                if (!Objects.isNull(patient.getPatientIdNo())) {
+                    LambdaQueryWrapper<HisPatient> patientWrapper = new LambdaQueryWrapper<>();
+                    patientWrapper.eq(HisPatient::getPatientIdNo, patient.getPatientIdNo());
+                    int count = patientService.count(patientWrapper);
+                    if (count == 0) {
+                        patientService.save(patient);
+                    } else {
+                        patient = patientService.getOne(patientWrapper);
+                    }
+                } else {
+                    patientService.save(patient);
+                }
+                visit.setPatientId(patient.getId());
+                visit.setPatientName(patient.getPatientName());
+            }
             visitService.save(visit);
             return ResponseEntity.ok("");
         } catch (Exception e) {

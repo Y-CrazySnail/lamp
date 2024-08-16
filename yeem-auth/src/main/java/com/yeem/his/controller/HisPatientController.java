@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @Slf4j
 @RestController
 @RequestMapping("/his/patient")
@@ -62,7 +64,20 @@ public class HisPatientController {
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody HisPatient patient) {
         try {
-            patientService.save(patient);
+            if (!Objects.isNull(patient.getPatientIdNo())) {
+                LambdaQueryWrapper<HisPatient> patientWrapper = new LambdaQueryWrapper<>();
+                patientWrapper.eq(HisPatient::getPatientIdNo, patient.getPatientIdNo());
+                int count = patientService.count(patientWrapper);
+                if (count == 0) {
+                    patientService.save(patient);
+                } else {
+                    HisPatient oldPatient = patientService.getOne(patientWrapper);
+                    patient.setId(oldPatient.getId());
+                    patientService.updateById(patient);
+                }
+            } else {
+                patientService.save(patient);
+            }
             return ResponseEntity.ok("");
         } catch (Exception e) {
             log.error("save方法", e);
