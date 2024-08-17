@@ -27,5 +27,6 @@ public class HisVisit extends BaseEntity {
     private Date visitTime;
     private BigDecimal visitCharge;
     @TableField(exist = false)
-    private HisPatient hisPatient;
+    private HisPatient patient;
 }
+密码优酷5-7天 账号密码登录，只能固定一台设备使用 禁止多登！否则会冻结封号！请遵守使用！（登陆账号点击邮箱验证， 然后打开接码地址查询验证码！）接码地址http://129.211.15.21:5663/?username=wq98872@163ya.cn
