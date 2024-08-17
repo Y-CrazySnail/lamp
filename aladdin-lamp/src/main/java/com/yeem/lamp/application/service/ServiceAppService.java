@@ -95,40 +95,44 @@ public class ServiceAppService {
             }
         });
         for (Server server : serverList) {
-            String region = server.getRegion();
-            XUIClient xuiClient = XUIClient.init(server);
-            XInbound xInbound = xuiClient.getInbound();
-            List<XClientStat> xClientStatList = xInbound.getClientStats();
-            for (XClientStat xClientStat : xClientStatList) {
-                log.info("region:{}, client email:{}", region, xClientStat.getEmail());
-                Long serviceId;
-                try {
-                    serviceId = Long.valueOf(xClientStat.getEmail());
-                } catch (Exception e) {
-                    log.error("parse service id error:{}", xClientStat.getEmail());
-                    continue;
-                }
-                for (Services services : servicesList) {
-                    if (services.getId().equals(serviceId)) {
-                        ServiceMonth serviceMonth = services.getCurrentServiceMonth();
-                        List<ServiceRecord> serviceRecordList = serviceMonth.getServiceRecordList();
-                        ServiceRecord serviceRecord = null;
-                        for (ServiceRecord record : serviceRecordList) {
-                            if (region.equals(record.getRegion()) && currentDate.equals(record.getServiceDate())) {
-                                serviceRecord = record;
+            try {
+                String region = server.getRegion();
+                XUIClient xuiClient = XUIClient.init(server);
+                XInbound xInbound = xuiClient.getInbound();
+                List<XClientStat> xClientStatList = xInbound.getClientStats();
+                for (XClientStat xClientStat : xClientStatList) {
+                    log.info("region:{}, client email:{}", region, xClientStat.getEmail());
+                    Long serviceId;
+                    try {
+                        serviceId = Long.valueOf(xClientStat.getEmail());
+                    } catch (Exception e) {
+                        log.error("parse service id error:{}", xClientStat.getEmail());
+                        continue;
+                    }
+                    for (Services services : servicesList) {
+                        if (services.getId().equals(serviceId)) {
+                            ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+                            List<ServiceRecord> serviceRecordList = serviceMonth.getServiceRecordList();
+                            ServiceRecord serviceRecord = null;
+                            for (ServiceRecord record : serviceRecordList) {
+                                if (region.equals(record.getRegion()) && currentDate.equals(record.getServiceDate())) {
+                                    serviceRecord = record;
+                                }
                             }
-                        }
-                        if (null == serviceRecord) {
-                            serviceRecord = serviceMonth.generateServiceRecord(currentDate, region);
-                            serviceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
-                            serviceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
-                            serviceMonth.getServiceRecordList().add(serviceRecord);
-                        } else {
-                            serviceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
-                            serviceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
+                            if (null == serviceRecord) {
+                                serviceRecord = serviceMonth.generateServiceRecord(currentDate, region);
+                                serviceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
+                                serviceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
+                                serviceMonth.getServiceRecordList().add(serviceRecord);
+                            } else {
+                                serviceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
+                                serviceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
+                            }
                         }
                     }
                 }
+            } catch (Exception e) {
+                log.error("server:{}-{}, sync Service Record error:", server.getApiIp(), server.getRegion(), e);
             }
         }
         serviceDomainService.syncService(servicesList);

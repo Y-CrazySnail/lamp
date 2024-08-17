@@ -136,7 +136,7 @@ public class Services {
         NodeVmess nodeVmessDoForSurplus = NodeVmess.initInformation(surplusStr);
         this.nodeVmessList.add(nodeVmessDoForSurplus);
 
-        String websiteStr = "官网:aladdinslamp.cc";
+        String websiteStr = "官网:alamp.cc";
         NodeVmess nodeVmessDoForWebsite = NodeVmess.initInformation(websiteStr);
         this.nodeVmessList.add(nodeVmessDoForWebsite);
     }
