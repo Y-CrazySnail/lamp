@@ -28,4 +28,12 @@ public class HisVisit extends BaseEntity {
     private BigDecimal visitCharge;
     @TableField(exist = false)
     private HisPatient patient;
+    @TableField(exist = false)
+    private BigDecimal yearTotalCharge;
+    @TableField(exist = false)
+    private BigDecimal lastYearTotalCharge;
+    @TableField(exist = false)
+    private BigDecimal lastMonthTotalCharge;
+    @TableField(exist = false)
+    private BigDecimal monthTotalCharge;
 }

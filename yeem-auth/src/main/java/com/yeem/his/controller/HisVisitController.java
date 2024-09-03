@@ -1,5 +1,6 @@
 package com.yeem.his.controller;
 
+import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -14,7 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -78,6 +81,57 @@ public class HisVisitController {
         } catch (Exception e) {
             log.error("getById方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
+        }
+    }
+
+    @GetMapping("statistic")
+    public ResponseEntity<Object> statistic() {
+        try {
+            Date beginLastYear = DateUtil.beginOfYear(DateUtil.offset(new Date(), DateField.YEAR, -1)).toJdkDate();
+            log.info("begin last year:{}", beginLastYear);
+            Date beginYear = DateUtil.beginOfYear(new Date()).toJdkDate();
+            log.info("begin year:{}", beginYear);
+            Date beginLastMonth = DateUtil.beginOfMonth(DateUtil.lastMonth()).toJdkDate();
+            log.info("begin last month:{}", beginLastMonth);
+            Date beginMonth = DateUtil.beginOfMonth(new Date()).toJdkDate();
+            log.info("begin month:{}", beginMonth);
+            BigDecimal lastYearChargeSum = new BigDecimal(0);
+            BigDecimal yearChargeSum = new BigDecimal(0);
+            BigDecimal lastMonthChargeSum = new BigDecimal(0);
+            BigDecimal monthChargeSum = new BigDecimal(0);
+            LambdaQueryWrapper<HisVisit> yearQueryWrapper = new LambdaQueryWrapper<>();
+            yearQueryWrapper.ge(HisVisit::getVisitTime, beginYear);
+            List<HisVisit> yearVisit = visitService.list(yearQueryWrapper);
+
+            if (!yearVisit.isEmpty()) {
+                for (HisVisit hisVisit : yearVisit) {
+                    yearChargeSum = yearChargeSum.add(hisVisit.getVisitCharge());
+                    if (DateUtil.isSameMonth(beginLastMonth, hisVisit.getVisitTime())) {
+                        lastMonthChargeSum = lastMonthChargeSum.add(hisVisit.getVisitCharge());
+                    }
+                    if (DateUtil.isSameMonth(beginMonth, hisVisit.getVisitTime())) {
+                        monthChargeSum = monthChargeSum.add(hisVisit.getVisitCharge());
+                    }
+                }
+            }
+            LambdaQueryWrapper<HisVisit> lastYearQueryWrapper = new LambdaQueryWrapper<>();
+            lastYearQueryWrapper.ge(HisVisit::getVisitTime, beginLastYear);
+            lastYearQueryWrapper.le(HisVisit::getVisitTime, beginYear);
+            List<HisVisit> lastYearVisit = visitService.list(lastYearQueryWrapper);
+            if (!lastYearVisit.isEmpty()) {
+                for (HisVisit hisVisit : lastYearVisit) {
+                    lastYearChargeSum = lastYearChargeSum.add(hisVisit.getVisitCharge());
+                }
+            }
+            HisVisit visit = new HisVisit();
+            visit.setLastYearTotalCharge(lastYearChargeSum);
+            visit.setYearTotalCharge(yearChargeSum);
+            visit.setLastMonthTotalCharge(lastMonthChargeSum);
+            visit.setMonthTotalCharge(monthChargeSum);
+            return ResponseEntity.ok(visit);
+        } catch (Exception e) {
+            log.error("statistic方法", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("statistic查询失败");
         }
     }
 
