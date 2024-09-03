@@ -13,10 +13,12 @@ spring:
       primary: auth
       datasource:
         auth:
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          url: jdbc:mysql://122.51.17.234:3306/auth?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
-          username: yeem
-          password: yeem20230711
+          # driver-class-name: com.mysql.cj.jdbc.Driver
+          # url: jdbc:mysql://122.51.17.234:3306/auth?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
+          # username: yeem
+          # password: yeem20230711
+          driver-class-name: org.sqlite.JDBC
+          url: jdbc:sqlite:C:\\sqlite\\his.db
       druid:
         initialSize: 5
         minIdle: 5
