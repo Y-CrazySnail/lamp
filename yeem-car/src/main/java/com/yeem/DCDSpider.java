@@ -63,6 +63,17 @@ public class DCDSpider {
                                                 System.out.println(model.get("info"));
                                             }
                                             Document detailDoc = Jsoup.connect("https://m.dongchedi.com/auto/series/" + model.get("info").get("series_id")).get();
+                                            Elements detailElements = detailDoc.getElementsByTag("script");
+                                            for (Element detailElement : detailElements) {
+                                                if (Objects.equals(detailElement.attr("id"), "__NEXT_DATA__")) {
+                                                    String detailData = detailElement.html();
+                                                    JsonNode detailNodes = mapper.readTree(detailData).get("props").get("pageProps").get("seriesHomeHead");
+                                                    System.out.println(detailNodes.get("car_type"));
+                                                    System.out.println(detailNodes.get("series_type"));
+                                                    System.out.println(detailNodes.get("series_name"));//                "brand_name": "奥迪",
+                                                    System.out.println("下一条");
+                                                }
+                                            }
                                         }
                                     }
                                 }
