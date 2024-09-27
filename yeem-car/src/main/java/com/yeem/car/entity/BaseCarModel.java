@@ -18,17 +18,6 @@ public class BaseCarModel extends BaseEntity {
     @TableField(exist = false)
     private String levelName;
 
-    public BaseCarModel() {
-    }
-
-    public BaseCarModel(String name, String nameEn, Long brandId, String levelNo, String levelName) {
-        this.name = name;
-        this.nameEn = nameEn;
-        this.brandId = brandId;
-        this.levelNo = levelNo;
-        this.levelName = levelName;
-    }
-
     public String getName() {
         return name;
     }

@@ -37,6 +37,7 @@ public class DCDSpider {
                         if (Objects.equals(String.valueOf(brand.get("type")), "1000")) {
                             log.info("1000类型:{}", brand.get("info"));
                         } else {
+                            Thread.sleep(1020);
                             Document modelDoc = Jsoup.connect("https://m.dongchedi.com/auto/library-brand/" + brand.get("info").get("brand_id"))
                                     .referrer("https://m.dongchedi.com/auto/library/x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x-x")
                                     .userAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 16_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.6 Mobile/15E148 Safari/604.1 Edg/127.0.0.0")
@@ -60,18 +61,19 @@ public class DCDSpider {
                                                 continue;
                                             }
                                             if (valid) {
-                                                System.out.println(model.get("info"));
+//                                                System.out.println(model.get("info"));
                                             }
+                                            Thread.sleep(1020);
                                             Document detailDoc = Jsoup.connect("https://m.dongchedi.com/auto/series/" + model.get("info").get("series_id")).get();
                                             Elements detailElements = detailDoc.getElementsByTag("script");
                                             for (Element detailElement : detailElements) {
                                                 if (Objects.equals(detailElement.attr("id"), "__NEXT_DATA__")) {
                                                     String detailData = detailElement.html();
                                                     JsonNode detailNodes = mapper.readTree(detailData).get("props").get("pageProps").get("seriesHomeHead");
-                                                    System.out.println(detailNodes.get("car_type"));
-                                                    System.out.println(detailNodes.get("series_type"));
-                                                    System.out.println(detailNodes.get("series_name"));//                "brand_name": "奥迪",
-                                                    System.out.println("下一条");
+                                                    System.out.println(brand.get("info").get("brand_name").toString().replace("\"", ""));
+                                                    System.out.println(detailNodes.get("car_type").toString().replace("\"", ""));
+                                                    System.out.println(detailNodes.get("series_type").toString().replace("\"", ""));
+                                                    System.out.println(detailNodes.get("series_name").toString().replace("\"", ""));
                                                 }
                                             }
                                         }
