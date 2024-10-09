@@ -123,7 +123,6 @@ public class OrderAppService {
             }
             ServiceMonth serviceMonth = services.getCurrentServiceMonth();
             serviceMonth.addBandwidth(order.getPlan().getBandwidth());
-            serviceDomainService.save(services);
         } else {
             // 基础服务
             if (services.getPlan().getBandwidth().equals(order.getPlan().getBandwidth())) {
@@ -138,6 +137,9 @@ public class OrderAppService {
             }
             services.setPlan(order.getPlan());
             services.setBeginDate(current);
+            serviceDomainService.setServiceMonth(services, current);
+            ServiceMonth serviceMonth = services.getCurrentServiceMonth();
+            serviceMonth.initBandwidth(order.getPlan().getBandwidth());
         }
         serviceDomainService.save(services);
         // TG消息通知
