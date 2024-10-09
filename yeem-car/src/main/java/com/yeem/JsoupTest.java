@@ -35,26 +35,41 @@ public class JsoupTest {
                 FileUtil.writeUtf8String("-- 汽车品牌名称：" + brandElement.text().substring(0, brandElement.text().indexOf("(")), file);
                 Thread.sleep(3500);
                 // 在售
-                Document modelZ = Jsoup.connect("https://car.autohome.com.cn" + brandUrl).get();
-                String brandLogo = "https:" + modelZ.getElementsByClass("carbradn-pic").first().getElementsByTag("img").first().attr("src");
-                Elements elementsZ = modelZ.getElementsByClass("list-cont");
                 Set<String> modelSet = new HashSet<>();
-                for (Element element : elementsZ) {
-                    String modelName = element.getElementsByClass("list-cont-main").first().getElementsByTag("a").first().text();
-                    String modelLevelName = element.getElementsByTag("li").first().getElementsByTag("span").first().text();
-                    String modelLevelNo = getLevelNo(modelLevelName);
-                    modelSet.add(modelName + "," + modelLevelNo);
+                String brandLogo = "";
+                for (int j=1; j<100; j++){
+                    Document modelZ;
+                    if (j==1){
+                        modelZ = Jsoup.connect("https://car.autohome.com.cn" + brandUrl).get();
+                    } else {
+                        modelZ = Jsoup.connect("https://car.autohome.com.cn" + brandUrl.substring(0, brandUrl.indexOf(".")) + "-0-0-" + j +".html").get();
+                    }
+                    Elements elementsZ = modelZ.getElementsByClass("list-cont");
+                    brandLogo = "https:" + modelZ.getElementsByClass("carbradn-pic").first().getElementsByTag("img").first().attr("src");
+                    if (elementsZ.size() == 0) {
+                        break;
+                    }
+                    for (Element element : elementsZ) {
+                        String modelName = element.getElementsByClass("list-cont-main").first().getElementsByTag("a").first().text();
+                        String modelLevelName = element.getElementsByTag("li").first().getElementsByTag("span").first().text();
+                        String modelLevelNo = getLevelNo(modelLevelName);
+                        modelSet.add(modelName + "," + modelLevelNo);
+                    }
+                    Thread.sleep(3500);
                 }
-                Thread.sleep(3500);
                 // 停售
-                Document modelT = Jsoup.connect("https://car.autohome.com.cn" + brandUrl.substring(0, brandUrl.indexOf(".")) + "-0-3-1.html").get();
-                brandLogo = "https:" + modelT.getElementsByClass("carbradn-pic").first().getElementsByTag("img").first().attr("src");
-                Elements elementsT = modelT.getElementsByClass("list-cont");
-                for (Element element : elementsT) {
-                    String modelName = element.getElementsByClass("list-cont-main").first().getElementsByTag("a").first().text();
-                    String modelLevelName = element.getElementsByTag("li").first().getElementsByTag("span").first().text();
-                    String modelLevelNo = getLevelNo(modelLevelName);
-                    modelSet.add(modelName + "," + modelLevelNo);
+                for (int j=1; j<100; j++) {
+                    Document modelT = Jsoup.connect("https://car.autohome.com.cn" + brandUrl.substring(0, brandUrl.indexOf(".")) + "-0-3-" + j + ".html").get();
+                    Elements elementsT = modelT.getElementsByClass("list-cont");
+                    if (elementsT.size() == 0) {
+                        break;
+                    }
+                    for (Element element : elementsT) {
+                        String modelName = element.getElementsByClass("list-cont-main").first().getElementsByTag("a").first().text();
+                        String modelLevelName = element.getElementsByTag("li").first().getElementsByTag("span").first().text();
+                        String modelLevelNo = getLevelNo(modelLevelName);
+                        modelSet.add(modelName + "," + modelLevelNo);
+                    }
                 }
                 String brandSQL = INSERT_BRAND_SQL.replace("${id}", brandId)
                         .replace("${name}", brandName)
