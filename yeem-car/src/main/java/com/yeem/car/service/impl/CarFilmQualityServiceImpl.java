@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
 import com.yeem.car.entity.CarFilmProduct;
 import com.yeem.car.entity.CarFilmQuality;
 import com.yeem.car.entity.CarFilmTenant;
@@ -12,19 +11,13 @@ import com.yeem.car.mapper.CarFilmQualityMapper;
 import com.yeem.car.service.ICarFilmProductService;
 import com.yeem.car.service.ICarFilmTenantService;
 import com.yeem.car.service.ICarFilmQualityService;
-import com.yeem.im.dto.SysMailSendDTO;
-import com.yeem.im.dto.SysSMSSendDTO;
-import com.yeem.im.entity.SysMail;
 import com.yeem.im.service.ISysIMService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import cn.hutool.core.util.StrUtil;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
