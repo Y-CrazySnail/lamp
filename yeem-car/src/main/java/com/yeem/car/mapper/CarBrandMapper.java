@@ -6,6 +6,5 @@ import com.yeem.car.entity.BaseCarBrand;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
-@DS("car-film-saas")
 public interface CarBrandMapper extends BaseMapper<BaseCarBrand> {
 }

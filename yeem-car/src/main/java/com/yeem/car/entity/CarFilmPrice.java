@@ -1,5 +1,6 @@
 package com.yeem.car.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
@@ -16,10 +17,6 @@ public class CarFilmPrice extends BaseEntity {
      * 汽车级别代码
      */
     private String carLevelNo;
-    /**
-     * window窗膜 body车衣
-     */
-    private String filmType;
     private BigDecimal price0;  // 整车
     private String priceKey1;
     private BigDecimal priceValue1;
@@ -51,5 +48,6 @@ public class CarFilmPrice extends BaseEntity {
     private BigDecimal priceValue14;
     private String priceKey15;
     private BigDecimal priceValue15;
+    @TableField(exist = false)
     private List<CarFilmPriceConfig> carFilmPriceConfigList;
 }

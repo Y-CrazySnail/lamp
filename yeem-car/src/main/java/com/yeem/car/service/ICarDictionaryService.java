@@ -6,5 +6,5 @@ import com.yeem.car.entity.BaseCarDictionary;
 import java.util.List;
 
 public interface ICarDictionaryService extends IService<BaseCarDictionary> {
-    List<BaseCarDictionary> list(String productNo);
+    List<BaseCarDictionary> list(String dictType, String productNo);
 }

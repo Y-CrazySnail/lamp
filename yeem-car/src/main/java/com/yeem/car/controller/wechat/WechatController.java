@@ -67,7 +67,7 @@ public class WechatController {
             result.put("brandList", baseCarBrandList);
             List<CarFilmProduct> carFilmProductList = carFilmProductService.listWithPrice(productNo);
             result.put("productList", carFilmProductList);
-            List<BaseCarDictionary> carDictionaryList = carDictionaryService.list(productNo);
+            List<BaseCarDictionary> carDictionaryList = carDictionaryService.list(null, productNo);
             result.put("dictionaryList", carDictionaryList);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
