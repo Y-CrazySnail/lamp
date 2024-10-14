@@ -3,6 +3,7 @@ package com.yeem.car.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.car.config.Constant;
 import com.yeem.car.entity.BaseCF;
@@ -33,7 +34,7 @@ public class CFTenantServiceImpl extends ServiceImpl<CFTenantMapper, CFTenant> i
 
     @Override
     public <E extends IPage<CFTenant>> E page(E page) {
-        LambdaQueryWrapper<CFTenant> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<CFTenant> queryWrapper = Wrappers.lambdaQuery(CFTenant.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         auth(queryWrapper);
         page = this.page(page, queryWrapper);
@@ -57,7 +58,7 @@ public class CFTenantServiceImpl extends ServiceImpl<CFTenantMapper, CFTenant> i
 
     @Override
     public boolean removeById(Serializable id) {
-        LambdaUpdateWrapper<CFTenant> updateWrapper = new LambdaUpdateWrapper<>();
+        LambdaUpdateWrapper<CFTenant> updateWrapper = Wrappers.lambdaUpdate(CFTenant.class);
         updateWrapper.set(CFTenant::getDeleteFlag, Constant.TRUE_NUMBER);
         updateWrapper.eq(CFTenant::getId, id);
         auth(updateWrapper);

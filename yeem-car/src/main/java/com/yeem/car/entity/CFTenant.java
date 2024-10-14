@@ -1,5 +1,6 @@
 package com.yeem.car.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
@@ -82,5 +83,6 @@ public class CFTenant extends BaseCF {
     /**
      * 产品列表
      */
+    @TableField(exist = false)
     private List<CFProduct> productList;
 }

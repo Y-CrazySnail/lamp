@@ -28,7 +28,7 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
 
     @Override
     public <E extends IPage<CFProduct>> E page(E page) {
-        LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>(CFProduct.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         tenantService.auth(queryWrapper);
         page = this.page(page, queryWrapper);
@@ -58,10 +58,11 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
 
     @Override
     public void setProductList(CFTenant tenant) {
-        LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>(CFProduct.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         queryWrapper.eq(CFProduct::getTenantNo, tenant.getTenantNo());
         List<CFProduct> productList = productMapper.selectList(queryWrapper);
         tenant.setProductList(productList);
     }
+
 }
