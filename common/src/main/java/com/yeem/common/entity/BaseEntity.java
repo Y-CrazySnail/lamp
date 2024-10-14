@@ -4,12 +4,15 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.yeem.common.utils.OauthUtils;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class BaseEntity implements Serializable {
@@ -22,6 +25,7 @@ public class BaseEntity implements Serializable {
 
     /**
      * 创建人
+     *
      * @ignore
      */
     @TableField(fill = FieldFill.INSERT)
@@ -29,14 +33,16 @@ public class BaseEntity implements Serializable {
 
     /**
      * 创建时间
+     *
      * @ignore
      */
     @TableField(fill = FieldFill.INSERT)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     /**
      * 更新人
+     *
      * @ignore
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
@@ -44,14 +50,16 @@ public class BaseEntity implements Serializable {
 
     /**
      * 更新时间
+     *
      * @ignore
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone="GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date updateTime;
 
     /**
      * 删除标识
+     *
      * @ignore
      */
     private Boolean deleteFlag;
@@ -78,5 +86,9 @@ public class BaseEntity implements Serializable {
         public String getName() {
             return name;
         }
+    }
+
+    public static <T extends BaseEntity> void setDeleteFlagCondition(LambdaQueryWrapper<T> queryWrapper) {
+        queryWrapper.eq(BaseEntity::getDeleteFlag, 0);
     }
 }

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * 租户信息实体类
@@ -13,12 +14,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "cf_tenant")
-public class CFTenant extends BaseEntity {
-    /**
-     * 租户代码
-     */
-    private String tenantNo;
-
+public class CFTenant extends BaseCF {
     /**
      * 租户名称
      */
@@ -83,4 +79,8 @@ public class CFTenant extends BaseEntity {
      * 官方网站域名
      */
     private String officialWebsiteDomain;
+    /**
+     * 产品列表
+     */
+    private List<CFProduct> productList;
 }
