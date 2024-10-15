@@ -1,8 +1,11 @@
 package com.yeem.car.service.impl;
 
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yeem.car.config.Constant;
 import com.yeem.car.entity.CFProduct;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct> implements ICFProductService {
@@ -26,11 +30,15 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
     @Autowired
     private CFProductMapper productMapper;
 
+
     @Override
-    public <E extends IPage<CFProduct>> E page(E page) {
+    public IPage<CFProduct> page(IPage<CFProduct> page, String tenantNo) {
         LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>(CFProduct.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         tenantService.auth(queryWrapper);
+        if (StrUtil.isNotEmpty(tenantNo)) {
+            queryWrapper.eq(CFProduct::getTenantNo, tenantNo);
+        }
         page = this.page(page, queryWrapper);
         return page;
     }

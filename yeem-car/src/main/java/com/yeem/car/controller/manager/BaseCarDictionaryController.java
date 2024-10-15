@@ -13,14 +13,16 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/base-car-dictionary")
 public class BaseCarDictionaryController extends BaseController<BaseCarDictionary> {
+
     @Autowired
     private ICarDictionaryService carDictionaryService;
 
     @GetMapping("/list")
     public ResponseEntity<Object> list(@RequestParam(required = false, value = "dictType") String dictType,
-                                       @RequestParam(required = false, value = "productNo") String productNo) {
+                                       @RequestParam(required = false, value = "productNo") String productNo,
+                                       @RequestParam(required = false, value = "tenantNo") String tenantNo) {
         try {
-            return ResponseEntity.ok(carDictionaryService.list(dictType, productNo));
+            return ResponseEntity.ok(carDictionaryService.list(dictType, productNo, tenantNo));
         } catch (Exception e) {
             log.error("list方法", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询所有失败");

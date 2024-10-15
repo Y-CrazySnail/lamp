@@ -45,6 +45,14 @@ public class CFTenantServiceImpl extends ServiceImpl<CFTenantMapper, CFTenant> i
     }
 
     @Override
+    public List<CFTenant> list() {
+        LambdaQueryWrapper<CFTenant> queryWrapper = Wrappers.lambdaQuery(CFTenant.class);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        auth(queryWrapper);
+        return super.list(queryWrapper);
+    }
+
+    @Override
     public boolean save(CFTenant tenant) {
         auth(tenant);
         return super.save(tenant);
