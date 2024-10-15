@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct> implements ICFProductService {
