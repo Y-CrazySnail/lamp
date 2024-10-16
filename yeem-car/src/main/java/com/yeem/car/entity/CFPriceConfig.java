@@ -2,7 +2,6 @@ package com.yeem.car.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,8 +12,8 @@ import java.math.BigDecimal;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName(value = "cf_price_item")
-public class CFPriceItem extends BaseCF {
+@TableName(value = "cf_price_config")
+public class CFPriceConfig extends BaseCF {
     /**
      * 产品类型
      */

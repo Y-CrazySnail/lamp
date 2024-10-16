@@ -1,9 +1,11 @@
 package com.yeem.car.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 /**
  * 产品信息实体类
@@ -36,4 +38,8 @@ public class CFProduct extends BaseCF {
      * 排序
      */
     private Integer sort;
+    @TableField(exist = false)
+    private List<CFPrice> priceList;
+    @TableField(exist = false)
+    private List<CFPriceConfig> priceItemList;
 }

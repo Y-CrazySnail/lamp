@@ -27,7 +27,6 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
     @Autowired
     private CFProductMapper productMapper;
 
-
     @Override
     public IPage<CFProduct> page(IPage<CFProduct> page, String tenantNo) {
         LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>(CFProduct.class);
@@ -38,6 +37,14 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
         }
         page = this.page(page, queryWrapper);
         return page;
+    }
+
+    @Override
+    public CFProduct getById(Serializable id) {
+        CFProduct product = super.getById(id);
+        // todo 设置price
+        // todo 设置price item
+        return product;
     }
 
     @Override

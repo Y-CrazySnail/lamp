@@ -2,7 +2,6 @@ package com.yeem.car.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.yeem.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -31,5 +30,5 @@ public class CFPrice extends BaseCF {
      */
     private BigDecimal price;
     @TableField(exist = false)
-    private List<CFPriceItem> cfPriceItemList;
+    private List<CFPriceConfig> cfPriceConfigList;
 }
