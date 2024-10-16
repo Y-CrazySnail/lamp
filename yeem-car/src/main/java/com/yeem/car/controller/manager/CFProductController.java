@@ -33,6 +33,18 @@ public class CFProductController {
         }
     }
 
+    @OperateLog(operateModule = "产品模块", operateType = "查询", operateDesc = "根据ID查询产品信息")
+    @GetMapping("/getById")
+    public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
+        try {
+            CFProduct product = productService.getById(id);
+            return ResponseEntity.ok(product);
+        } catch (Exception e) {
+            log.error("产品-查询", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("产品-根据ID查询失败");
+        }
+    }
+
     @OperateLog(operateModule = "产品模块", operateType = "新增", operateDesc = "新增产品信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CFProduct product) {

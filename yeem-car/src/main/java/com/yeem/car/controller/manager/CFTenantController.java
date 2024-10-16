@@ -33,6 +33,18 @@ public class CFTenantController {
         }
     }
 
+    @OperateLog(operateModule = "租户模块", operateType = "查询", operateDesc = "根据ID查询租户信息")
+    @GetMapping("/getById")
+    public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
+        try {
+            CFTenant tenant = tenantService.getById(id);
+            return ResponseEntity.ok(tenant);
+        } catch (Exception e) {
+            log.error("租户-查询", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("租户-根据ID查询失败");
+        }
+    }
+
     @OperateLog(operateModule = "租户模块", operateType = "新增", operateDesc = "新增租户信息")
     @PostMapping("/save")
     public ResponseEntity<Object> save(@RequestBody CFTenant tenant) {
