@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/cf-tenant")
@@ -30,6 +32,18 @@ public class CFTenantController {
         } catch (Exception e) {
             log.error("租户-查询", e);
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("租户-分页查询失败");
+        }
+    }
+
+    @OperateLog(operateModule = "租户模块", operateType = "查询", operateDesc = "查询租户信息列表")
+    @GetMapping("/list")
+    public ResponseEntity<Object> list() {
+        try {
+            List<CFTenant> tenantList = tenantService.list();
+            return ResponseEntity.ok(tenantList);
+        } catch (Exception e) {
+            log.error("租户-查询列表", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("租户-查询列表失败");
         }
     }
 

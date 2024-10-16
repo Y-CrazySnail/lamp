@@ -22,10 +22,11 @@ public class CFProductController {
     @OperateLog(operateModule = "产品模块", operateType = "查询", operateDesc = "分页查询产品信息")
     @GetMapping("/page")
     public ResponseEntity<Object> page(@RequestParam("current") int current,
-                                       @RequestParam("size") int size) {
+                                       @RequestParam("size") int size,
+                                       @RequestParam(value = "tenantNo", required = false) String tenantNo) {
         try {
             IPage<CFProduct> page = new Page<>(current, size);
-            page = productService.page(page);
+            page = productService.page(page, tenantNo);
             return ResponseEntity.ok(page);
         } catch (Exception e) {
             log.error("产品-查询", e);

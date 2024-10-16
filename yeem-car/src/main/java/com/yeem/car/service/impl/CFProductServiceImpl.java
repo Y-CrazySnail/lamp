@@ -1,5 +1,6 @@
 package com.yeem.car.service.impl;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -26,11 +27,15 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
     @Autowired
     private CFProductMapper productMapper;
 
+
     @Override
-    public <E extends IPage<CFProduct>> E page(E page) {
+    public IPage<CFProduct> page(IPage<CFProduct> page, String tenantNo) {
         LambdaQueryWrapper<CFProduct> queryWrapper = new LambdaQueryWrapper<>(CFProduct.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         tenantService.auth(queryWrapper);
+        if (StrUtil.isNotEmpty(tenantNo)) {
+            queryWrapper.eq(CFProduct::getTenantNo, tenantNo);
+        }
         page = this.page(page, queryWrapper);
         return page;
     }
