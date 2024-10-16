@@ -26,6 +26,12 @@ public class CFPrice extends BaseCF {
     private String levelNo;
 
     /**
+     * 级别代码
+     */
+    @TableField(exist = false)
+    private String levelName;
+
+    /**
      * 总价
      */
     private BigDecimal price;

@@ -9,6 +9,8 @@ import com.yeem.car.config.Constant;
 import com.yeem.car.entity.CFProduct;
 import com.yeem.car.entity.CFTenant;
 import com.yeem.car.mapper.CFProductMapper;
+import com.yeem.car.service.ICFPriceConfigService;
+import com.yeem.car.service.ICFPriceService;
 import com.yeem.car.service.ICFProductService;
 import com.yeem.car.service.ICFTenantService;
 import com.yeem.common.entity.BaseEntity;
@@ -23,6 +25,12 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
 
     @Autowired
     private ICFTenantService tenantService;
+
+    @Autowired
+    private ICFPriceService priceService;
+
+    @Autowired
+    private ICFPriceConfigService priceConfigService;
 
     @Autowired
     private CFProductMapper productMapper;
@@ -42,8 +50,8 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
     @Override
     public CFProduct getById(Serializable id) {
         CFProduct product = super.getById(id);
-        // todo 设置price
-        // todo 设置price item
+        priceService.setPriceList(product);
+        priceConfigService.setPriceConfigList(product);
         return product;
     }
 
@@ -56,6 +64,8 @@ public class CFProductServiceImpl extends ServiceImpl<CFProductMapper, CFProduct
     @Override
     public boolean updateById(CFProduct product) {
         tenantService.auth(product);
+        priceService.savePriceList(product);
+        priceConfigService.savePriceConfigList(product);
         return super.updateById(product);
     }
 

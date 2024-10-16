@@ -6,4 +6,5 @@ import com.yeem.car.entity.CFProduct;
 
 public interface ICFPriceService extends IService<CFPrice> {
     void setPriceList(CFProduct product);
+    void savePriceList(CFProduct product);
 }

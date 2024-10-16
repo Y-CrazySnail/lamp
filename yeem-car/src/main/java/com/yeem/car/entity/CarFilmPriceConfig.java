@@ -8,7 +8,7 @@ import lombok.Data;
 import java.math.BigDecimal;
 
 @Data
-@TableName(value = "car_film_price_config")
+@TableName(value = "car_film_price_item")
 public class CarFilmPriceConfig extends BaseEntity {
     private String productNo;
     private String filmType;

@@ -41,5 +41,5 @@ public class CFProduct extends BaseCF {
     @TableField(exist = false)
     private List<CFPrice> priceList;
     @TableField(exist = false)
-    private List<CFPriceConfig> priceItemList;
+    private List<CFPriceConfig> priceConfigList;
 }
