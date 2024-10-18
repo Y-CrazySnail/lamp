@@ -43,10 +43,8 @@ public class WechatController {
     @Autowired
     private ICarFilmStoreService carFilmStoreService;
 
-    @Autowired
-    private IBCBrandService brandService;
-    @Autowired
-    private IBCModelService modelService;
+
+
 
     @Value("${tencent.cos.bucket-name}")
     private String TENCENT_COS_BUCKET_NAME;
@@ -57,25 +55,9 @@ public class WechatController {
     @Value("${tencent.cos.region}")
     private String TENCENT_COS_REGION;
 
-    @GetMapping("/listCarBrand")
-    public ResponseEntity<Object> listCarBrand() {
-        try {
-            return ResponseEntity.ok(brandService.listForWechat());
-        } catch (Exception e) {
-            log.error("查询汽车品牌失败：", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询汽车品牌失败");
-        }
-    }
 
-    @GetMapping("/listCarModel")
-    public ResponseEntity<Object> listCarModel(@RequestParam(value = "brandId") Long brandId) {
-        try {
-            return ResponseEntity.ok(modelService.listForWechat(brandId));
-        } catch (Exception e) {
-            log.error("查询汽车品牌失败：", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询汽车品牌失败");
-        }
-    }
+
+    
 
     /**
      * 查询小程序基础信息
