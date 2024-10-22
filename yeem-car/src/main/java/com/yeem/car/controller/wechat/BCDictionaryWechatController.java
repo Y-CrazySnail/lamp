@@ -1,6 +1,7 @@
 package com.yeem.car.controller.wechat;
 
 import cn.hutool.http.HttpStatus;
+import com.yeem.car.service.IBCDictionaryService;
 import com.yeem.car.service.IBCModelService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,19 +13,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/wechat/model")
-public class BCModelWechatController {
+@RequestMapping("/wechat/dictionary")
+public class BCDictionaryWechatController {
 
     @Autowired
-    private IBCModelService modelService;
+    private IBCDictionaryService dictionaryService;
 
     @GetMapping("/list")
-    public ResponseEntity<Object> listCarModel(@RequestParam(value = "brandId") Long brandId) {
+    public ResponseEntity<Object> listDictionary(@RequestParam(value = "tenantNo") String tenantNo,
+                                                 @RequestParam(value = "dictType") String dictType) {
         try {
-            return ResponseEntity.ok(modelService.listForWechat(brandId));
+            return ResponseEntity.ok(dictionaryService.list(dictType, tenantNo));
         } catch (Exception e) {
-            log.error("查询汽车型号失败：", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询汽车型号失败");
+            log.error("查询字典失败：", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询字典失败");
         }
     }
 }
