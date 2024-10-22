@@ -41,7 +41,7 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level ${PID:-} --- [%t] %logger{50} - %msg%n</pattern>
         </encoder>
     </appender>
-
+    <logger name="com.yeem.car.mapper" level="DEBUG"/>
     <!-- 默认日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />

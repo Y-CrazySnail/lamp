@@ -7,5 +7,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 public interface ICFQualityService extends IService<CFQuality> {
-    List<CFQuality> list(String tenantNo, String queryKey);
+    List<CFQuality> listForWechat(String tenantNo, String queryKey);
 }

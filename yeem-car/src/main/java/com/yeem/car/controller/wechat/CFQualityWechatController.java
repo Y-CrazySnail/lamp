@@ -34,7 +34,7 @@ public class CFQualityWechatController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询质保失败");
         }
         try {
-            List<CFQuality> qualityList = qualityService.list(tenantNo, queryKey);
+            List<CFQuality> qualityList = qualityService.listForWechat(tenantNo, queryKey);
             return ResponseEntity.ok(qualityList);
         } catch (Exception e) {
             log.error("查询质保失败", e);
