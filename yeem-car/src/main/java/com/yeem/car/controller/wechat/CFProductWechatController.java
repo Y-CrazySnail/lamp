@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 public class CFProductWechatController {
 
     @Autowired
-    @Qualifier(value = "wechatCFProductService")
     private WechatCFProductService productService;
 
     /**

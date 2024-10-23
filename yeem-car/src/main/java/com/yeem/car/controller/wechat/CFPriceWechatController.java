@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class CFPriceWechatController {
 
     @Autowired
-    @Qualifier(value = "wechatCFPriceService")
     private WechatCFPriceService priceService;
 
     /**
@@ -25,8 +24,8 @@ public class CFPriceWechatController {
      * @return 登录信息
      * @apiNote 小程序登录
      */
-    @GetMapping("list")
-    public ResponseEntity<Object> list(@RequestParam(value = "tenantNo") String tenantNo,
+    @GetMapping("get")
+    public ResponseEntity<Object> get(@RequestParam(value = "tenantNo") String tenantNo,
                                        @RequestParam(value = "productType") String productType,
                                        @RequestParam(value = "productNo") String productNo,
                                        @RequestParam(value = "levelNo") String levelNo) {

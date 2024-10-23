@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BCDictionaryWechatController {
 
     @Autowired
-    @Qualifier(value = "wechatBCDictionaryService")
     private WechatBCDictionaryService dictionaryService;
 
     @GetMapping("/list")

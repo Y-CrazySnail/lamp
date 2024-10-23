@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 public class CFProductController {
 
     @Autowired
-    @Qualifier(value = "manageCFProductService")
     private ManageCFProductService productService;
 
     @OperateLog(operateModule = "产品模块", operateType = "查询", operateDesc = "分页查询产品信息")

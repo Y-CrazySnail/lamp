@@ -19,7 +19,6 @@ import java.util.List;
 public class CFQualityWechatController {
 
     @Autowired
-    @Qualifier(value = "wechatCFQualityService")
     private WechatCFQualityService qualityService;
 
     /**

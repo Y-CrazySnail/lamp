@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class BCBrandWechatController {
 
     @Autowired
-    @Qualifier(value = "wechatBCBrandService")
     private WechatBCBrandService brandService;
 
     @GetMapping("/list")

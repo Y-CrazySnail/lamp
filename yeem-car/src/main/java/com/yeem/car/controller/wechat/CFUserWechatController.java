@@ -31,7 +31,6 @@ public class CFUserWechatController {
 
 
     @Autowired
-    @Qualifier(value = "wechatCFUserService")
     private WechatCFUserService userService;
 
     /**

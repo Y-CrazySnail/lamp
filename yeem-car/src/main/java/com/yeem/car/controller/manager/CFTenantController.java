@@ -20,7 +20,6 @@ import java.util.List;
 public class CFTenantController {
 
     @Autowired
-    @Qualifier(value = "manageCFTenantService")
     private ManageCFTenantService tenantService;
 
     @OperateLog(operateModule = "租户模块", operateType = "查询", operateDesc = "分页查询租户信息")
