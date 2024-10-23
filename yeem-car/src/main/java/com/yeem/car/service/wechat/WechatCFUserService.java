@@ -54,8 +54,9 @@ public class WechatCFUserService extends ServiceImpl<CFUserMapper, CFUser> {
         CFUser checkUser = get(user.getTenantNo(), openId);
         if (Objects.isNull(checkUser) || Objects.isNull(checkUser.getId())) {
             user.setOpenId(openId);
-            userMapper.insert(user);
+            this.save(user);
         }
+        user = get(user.getTenantNo(), openId);
         String token = WechatJWTUtils.generateJWT(user.getTenantNo(), user.getId(), user.getOpenId());
         user.setToken(token);
         return user;
