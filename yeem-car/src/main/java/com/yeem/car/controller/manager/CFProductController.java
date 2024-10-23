@@ -5,9 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.car.entity.CFProduct;
 import com.yeem.car.log.OperateLog;
-import com.yeem.car.service.ICFProductService;
+import com.yeem.car.service.manage.ManageCFProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class CFProductController {
 
     @Autowired
-    private ICFProductService productService;
+    @Qualifier(value = "manageCFProductService")
+    private ManageCFProductService productService;
 
     @OperateLog(operateModule = "产品模块", operateType = "查询", operateDesc = "分页查询产品信息")
     @GetMapping("/page")

@@ -5,9 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.car.entity.CFTenant;
 import com.yeem.car.log.OperateLog;
-import com.yeem.car.service.ICFTenantService;
+import com.yeem.car.service.manage.ManageCFTenantService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,8 @@ import java.util.List;
 public class CFTenantController {
 
     @Autowired
-    private ICFTenantService tenantService;
+    @Qualifier(value = "manageCFTenantService")
+    private ManageCFTenantService tenantService;
 
     @OperateLog(operateModule = "租户模块", operateType = "查询", operateDesc = "分页查询租户信息")
     @GetMapping("/page")

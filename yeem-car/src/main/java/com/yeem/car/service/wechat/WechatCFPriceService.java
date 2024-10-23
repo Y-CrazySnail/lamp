@@ -1,4 +1,4 @@
-package com.yeem.car.service.impl;
+package com.yeem.car.service.wechat;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
@@ -7,9 +7,6 @@ import com.yeem.car.entity.BCDictionary;
 import com.yeem.car.entity.CFPrice;
 import com.yeem.car.entity.CFProduct;
 import com.yeem.car.mapper.CFPriceMapper;
-import com.yeem.car.service.IBCDictionaryService;
-import com.yeem.car.service.ICFPriceService;
-import com.yeem.car.service.ICFTenantService;
 import com.yeem.common.entity.BaseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,18 +21,31 @@ import java.util.stream.Collectors;
 import static com.yeem.car.entity.BCDictionary.DICT_CAR_LEVEL;
 
 @Service
-public class CFPriceServiceImpl extends ServiceImpl<CFPriceMapper, CFPrice> implements ICFPriceService {
+public class WechatCFPriceService extends ServiceImpl<CFPriceMapper, CFPrice> {
 
     @Autowired
-    private IBCDictionaryService dictionaryService;
+    private WechatBCDictionaryService dictionaryService;
 
     @Autowired
-    private ICFTenantService tenantService;
+    private WechatCFTenantService tenantService;
+
+    @Autowired
+    private WechatCFPriceConfigService priceConfigService;
 
     @Autowired
     private CFPriceMapper priceMapper;
 
-    @Override
+    public CFPrice get(String tenantNo, String productType, String productNo, String levelNo) {
+        LambdaQueryWrapper<CFPrice> queryWrapper = Wrappers.lambdaQuery(CFPrice.class);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        queryWrapper.eq(CFPrice::getTenantNo, tenantNo);
+        queryWrapper.eq(CFPrice::getProductNo, productNo);
+        queryWrapper.eq(CFPrice::getLevelNo, levelNo);
+        CFPrice price = priceMapper.selectOne(queryWrapper);
+        priceConfigService.setPriceConfigList(price, productType);
+        return price;
+    }
+
     public void setPriceList(CFProduct product) {
         LambdaQueryWrapper<CFPrice> queryWrapper = Wrappers.lambdaQuery(CFPrice.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
@@ -62,7 +72,6 @@ public class CFPriceServiceImpl extends ServiceImpl<CFPriceMapper, CFPrice> impl
         product.setPriceList(templatePriceList);
     }
 
-    @Override
     public void savePriceList(CFProduct product) {
         List<CFPrice> priceList = product.getPriceList();
         for (CFPrice price : priceList) {

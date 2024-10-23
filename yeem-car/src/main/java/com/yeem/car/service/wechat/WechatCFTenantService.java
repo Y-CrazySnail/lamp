@@ -1,4 +1,4 @@
-package com.yeem.car.service.impl;
+package com.yeem.car.service.wechat;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -9,8 +9,6 @@ import com.yeem.car.config.Constant;
 import com.yeem.car.entity.BaseCF;
 import com.yeem.car.entity.CFTenant;
 import com.yeem.car.mapper.CFTenantMapper;
-import com.yeem.car.service.ICFProductService;
-import com.yeem.car.service.ICFTenantService;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.common.utils.OauthUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +22,13 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class CFTenantServiceImpl extends ServiceImpl<CFTenantMapper, CFTenant> implements ICFTenantService {
+public class WechatCFTenantService extends ServiceImpl<CFTenantMapper, CFTenant> {
 
     @Autowired
     private CFTenantMapper tenantMapper;
 
     @Autowired
-    private ICFProductService productService;
+    private WechatCFProductService productService;
 
     @Override
     public <E extends IPage<CFTenant>> E page(E page) {
@@ -97,7 +95,6 @@ public class CFTenantServiceImpl extends ServiceImpl<CFTenantMapper, CFTenant> i
      * @param updateWrapper 更新包装
      * @param <T>           租户
      */
-    @Override
     public <T extends BaseCF> void auth(LambdaUpdateWrapper<T> updateWrapper) {
         String username = OauthUtils.getUsername();
         LambdaQueryWrapper<CFTenant> tenantLambdaQueryWrapper = new LambdaQueryWrapper<>();
@@ -116,7 +113,6 @@ public class CFTenantServiceImpl extends ServiceImpl<CFTenantMapper, CFTenant> i
      * @param t   租户
      * @param <T> 租户
      */
-    @Override
     public <T extends BaseCF> void auth(T t) {
         String username = OauthUtils.getUsername();
         LambdaQueryWrapper<CFTenant> tenantLambdaQueryWrapper = new LambdaQueryWrapper<>();

@@ -1,10 +1,10 @@
 package com.yeem.car.controller.wechat;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.car.service.IBCDictionaryService;
-import com.yeem.car.service.IBCModelService;
+import com.yeem.car.service.wechat.WechatBCDictionaryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class BCDictionaryWechatController {
 
     @Autowired
-    private IBCDictionaryService dictionaryService;
+    @Qualifier(value = "wechatBCDictionaryService")
+    private WechatBCDictionaryService dictionaryService;
 
     @GetMapping("/list")
-    public ResponseEntity<Object> listDictionary(@RequestParam(value = "tenantNo") String tenantNo,
+    public ResponseEntity<Object> list(@RequestParam(value = "tenantNo") String tenantNo,
                                                  @RequestParam(value = "dictType") String dictType) {
         try {
             return ResponseEntity.ok(dictionaryService.list(dictType, tenantNo));

@@ -4,9 +4,10 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car.entity.CFQuality;
 import com.yeem.car.security.WechatAuthInterceptor;
-import com.yeem.car.service.ICFQualityService;
+import com.yeem.car.service.wechat.WechatCFQualityService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +19,8 @@ import java.util.List;
 public class CFQualityWechatController {
 
     @Autowired
-    private ICFQualityService qualityService;
+    @Qualifier(value = "wechatCFQualityService")
+    private WechatCFQualityService qualityService;
 
     /**
      * 查询质保信息
@@ -34,7 +36,7 @@ public class CFQualityWechatController {
             return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询质保失败");
         }
         try {
-            List<CFQuality> qualityList = qualityService.listForWechat(tenantNo, queryKey);
+            List<CFQuality> qualityList = qualityService.list(tenantNo, queryKey);
             return ResponseEntity.ok(qualityList);
         } catch (Exception e) {
             log.error("查询质保失败", e);

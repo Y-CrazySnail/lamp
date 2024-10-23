@@ -36,5 +36,5 @@ public class CFPrice extends BaseCF {
      */
     private BigDecimal price;
     @TableField(exist = false)
-    private List<CFPriceConfig> cfPriceConfigList;
+    private List<CFPriceConfig> priceConfigList;
 }

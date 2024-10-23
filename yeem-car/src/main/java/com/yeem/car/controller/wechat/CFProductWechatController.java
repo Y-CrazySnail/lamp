@@ -1,22 +1,20 @@
 package com.yeem.car.controller.wechat;
 
-import com.yeem.car.entity.CarFilmUser;
-import com.yeem.car.service.ICarFilmUserService;
+import com.yeem.car.service.wechat.WechatCFProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/wechat/user")
+@RequestMapping("/wechat/product")
 public class CFProductWechatController {
 
     @Autowired
-    private ICarFilmUserService carFilmUserService;
+    @Qualifier(value = "wechatCFProductService")
+    private WechatCFProductService productService;
 
     /**
      * 小程序登录
@@ -24,10 +22,10 @@ public class CFProductWechatController {
      * @return 登录信息
      * @apiNote 小程序登录
      */
-    @PostMapping("login")
-    public ResponseEntity<Object> login(@RequestBody CarFilmUser carFilmUser) {
+    @GetMapping("list")
+    public ResponseEntity<Object> list(@RequestParam(value = "tenantNo") String tenantNo) {
         try {
-            return ResponseEntity.ok(carFilmUserService.login(carFilmUser));
+            return ResponseEntity.ok(productService.list(tenantNo));
         } catch (Exception e) {
             log.error("wx login api error：", e);
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
