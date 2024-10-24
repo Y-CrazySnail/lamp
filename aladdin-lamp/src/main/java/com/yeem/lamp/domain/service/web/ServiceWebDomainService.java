@@ -59,6 +59,10 @@ public class ServiceWebDomainService {
             if (!serviceMonthList.isEmpty()) {
                 services.setCurrentServiceMonth(serviceMonthList.get(0));
                 services.setServiceMonthList(serviceMonthList);
+            } else {
+                ServiceMonth serviceMonth = services.generateServiceMonth(DateUtil.year(current), DateUtil.month(current) + 1);
+                services.setCurrentServiceMonth(serviceMonth);
+                services.setServiceMonthList(Collections.singletonList(serviceMonth));
             }
         } else {
             services.setServiceMonthList(serviceMonthList);

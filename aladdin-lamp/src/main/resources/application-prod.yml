@@ -65,7 +65,7 @@ oauth-client-details:
     client-secret: 123456
 
 merchant:
-  api: https://www.yubopay.com/mapi.php
+  api: https://www.sailapay.com/mapi.php
   id: 1067
   key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
   notify-url: https://aladdinslamp.cc/aladdin-api/web/order/finish
