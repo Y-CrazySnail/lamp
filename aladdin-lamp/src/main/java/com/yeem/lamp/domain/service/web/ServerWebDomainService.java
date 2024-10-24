@@ -2,7 +2,7 @@ package com.yeem.lamp.domain.service.web;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Server;
-import com.yeem.lamp.domain.repository.ServerRepository;
+import com.yeem.lamp.infrastructure.persistence.repository.web.ServerWebRepository;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XInbound;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ServerWebDomainService {
 
     @Autowired
-    private ServerRepository serverRepository;
+    private ServerWebRepository serverRepository;
 
     public Server getById(Long id) {
         return serverRepository.getById(id);
@@ -24,22 +24,6 @@ public class ServerWebDomainService {
 
     public List<Server> list() {
         return serverRepository.list();
-    }
-
-    public IPage<Server> pages(int current, int size) {
-        return serverRepository.pages(current, size);
-    }
-
-    public void updateById(Server server) {
-        serverRepository.updateById(server);
-    }
-
-    public void save(Server server) {
-        serverRepository.save(server);
-    }
-
-    public void removeById(Long id) {
-        serverRepository.removeById(id);
     }
 
     /**

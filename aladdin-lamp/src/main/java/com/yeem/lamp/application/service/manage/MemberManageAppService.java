@@ -3,14 +3,10 @@ package com.yeem.lamp.application.service.manage;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.MemberDTO;
-import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.domain.entity.Member;
-import com.yeem.lamp.domain.objvalue.Token;
 import com.yeem.lamp.domain.service.manage.MemberManageDomainService;
 import com.yeem.lamp.domain.service.manage.ServiceManageDomainService;
-import com.yeem.lamp.infrastructure.exception.YeemException;
 import com.yeem.lamp.infrastructure.message.TelegramMessage;
-import com.yeem.lamp.presentation.request.LoginRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,15 +58,5 @@ public class MemberManageAppService {
     public void removeById(Long id) {
         memberDomainService.removeById(id);
         serviceDomainService.removeByMemberId(id);
-    }
-
-    public TokenDTO login(LoginRequest loginRequest) {
-        Member member = loginRequest.convertMember();
-        Token token = memberDomainService.login(member);
-        if (token == null) {
-            throw new YeemException("login error");
-        }
-        telegramMessage.sendLoginNotice(member);
-        return new TokenDTO(token);
     }
 }

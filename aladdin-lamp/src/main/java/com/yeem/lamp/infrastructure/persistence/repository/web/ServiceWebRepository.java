@@ -1,4 +1,4 @@
-package com.yeem.lamp.infrastructure.persistence.repository;
+package com.yeem.lamp.infrastructure.persistence.repository.web;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,11 +7,9 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.objvalue.ServiceRecord;
 import com.yeem.lamp.domain.objvalue.Subscription;
-import com.yeem.lamp.domain.repository.ServiceRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.*;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class ServiceRepositoryImpl implements ServiceRepository {
+public class ServiceWebRepository {
 
     @Autowired
     private ServiceMapper serviceMapper;
@@ -35,7 +33,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     @Autowired
     private SubscriptionMapper subscriptionMapper;
 
-    @Override
     public Services getByUUID(String uuid) {
         LambdaQueryWrapper<ServiceDo> serviceDoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         serviceDoLambdaQueryWrapper.eq(ServiceDo::getDeleteFlag, false);
@@ -44,7 +41,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceDo.convertService();
     }
 
-    @Override
     public List<Services> listService(Services services) {
         LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceDo::getDeleteFlag, false);
@@ -55,7 +51,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
     }
 
-    @Override
     public List<ServiceMonth> listServiceMonth(ServiceMonth serviceMonth) {
         LambdaQueryWrapper<ServiceMonthDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceMonthDo::getDeleteFlag, false);
@@ -72,7 +67,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceMonthDoList.stream().map(ServiceMonthDo::convertServiceMonth).collect(Collectors.toList());
     }
 
-    @Override
     public List<ServiceRecord> listServiceRecord(ServiceRecord serviceRecord, Date current) {
         LambdaQueryWrapper<ServiceRecordDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceRecordDo::getDeleteFlag, false);
@@ -88,7 +82,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceRecordDoList.stream().map(ServiceRecordDo::convertServiceRecord).collect(Collectors.toList());
     }
 
-    @Override
     public List<Subscription> listSubscription() {
         LambdaQueryWrapper<SubscriptionDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SubscriptionDo::getDeleteFlag, false);
@@ -97,13 +90,11 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return subscriptionDoList.stream().map(SubscriptionDo::convertSubscription).collect(Collectors.toList());
     }
 
-    @Override
     public Services getServiceById(Long serviceId) {
         ServiceDo serviceDo = serviceMapper.selectById(serviceId);
         return serviceDo.convertService();
     }
 
-    @Override
     public void save(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
         if (null == services.getId()) {
@@ -140,13 +131,11 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         }
     }
 
-    @Override
     public void updateById(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
         serviceMapper.updateById(serviceDo);
     }
 
-    @Override
     public void removeById(Long id) {
         LambdaUpdateWrapper<ServiceDo> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(ServiceDo::getDeleteFlag, true);
@@ -154,7 +143,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         serviceMapper.update(null, updateWrapper);
     }
 
-    @Override
     public void removeByMemberId(Long memberId) {
         LambdaUpdateWrapper<ServiceDo> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(ServiceDo::getDeleteFlag, true);
@@ -168,7 +156,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
      * @param memberId 会员ID
      * @return 服务列表
      */
-    @Override
     public List<Services> listByMemberId(Long memberId) {
         LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServiceDo::getMemberId, memberId);
@@ -177,8 +164,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
     }
 
-
-    @Override
     public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {
         IPage<ServiceDo> page = new Page<>(current, size);
         page = serviceMapper.selectPages(page, memberId, status, wechat, email);

@@ -2,7 +2,7 @@ package com.yeem.lamp.domain.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Server;
-import com.yeem.lamp.domain.repository.ServerRepository;
+import com.yeem.lamp.infrastructure.persistence.repository.manage.ServerManageRepository;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XInbound;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ import java.util.List;
 public class ServerManageDomainService {
 
     @Autowired
-    private ServerRepository serverRepository;
+    private ServerManageRepository serverRepository;
 
     public Server getById(Long id) {
         return serverRepository.getById(id);

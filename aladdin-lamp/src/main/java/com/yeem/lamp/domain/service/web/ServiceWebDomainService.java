@@ -8,7 +8,7 @@ import com.yeem.lamp.domain.objvalue.NodeVmess;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.objvalue.ServiceRecord;
 import com.yeem.lamp.domain.objvalue.Subscription;
-import com.yeem.lamp.domain.repository.ServiceRepository;
+import com.yeem.lamp.infrastructure.persistence.repository.web.ServiceWebRepository;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class ServiceWebDomainService {
 
     @Autowired
-    private ServiceRepository serviceRepository;
+    private ServiceWebRepository serviceRepository;
     @Autowired
     private ResourceLoader resourceLoader;
 

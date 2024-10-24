@@ -2,8 +2,7 @@ package com.yeem.lamp.domain.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Member;
-import com.yeem.lamp.domain.objvalue.Token;
-import com.yeem.lamp.domain.repository.MemberRepository;
+import com.yeem.lamp.infrastructure.persistence.repository.manage.MemberManageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,27 +12,7 @@ import java.util.List;
 public class MemberManageDomainService {
 
     @Autowired
-    private MemberRepository memberRepository;
-
-    /**
-     * 登录
-     *
-     * @param member 会员信息
-     * @return 登录token
-     */
-    public Token login(Member member) {
-        List<Member> memberList = memberRepository.list(member);
-        if (memberList.isEmpty()) {
-            return null;
-        }
-        Member resMember = memberList.get(0);
-        if (!member.getPassword().equals(resMember.getPassword())) {
-            return null;
-        }
-        Token token = new Token();
-        token.setToken(resMember.getId());
-        return token;
-    }
+    private MemberManageRepository memberRepository;
 
     public Member getById(Long id) {
         Member member = memberRepository.getById(id);

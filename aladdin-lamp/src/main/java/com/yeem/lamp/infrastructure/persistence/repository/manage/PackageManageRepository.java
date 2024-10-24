@@ -1,4 +1,4 @@
-package com.yeem.lamp.infrastructure.persistence.repository;
+package com.yeem.lamp.infrastructure.persistence.repository.manage;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.domain.entity.Product;
-import com.yeem.lamp.domain.repository.PackageRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.ProductDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.PackageMapper;
 import com.yeem.lamp.security.Constant;
@@ -18,12 +17,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Repository
-public class PackageRepositoryImpl implements PackageRepository {
+public class PackageManageRepository {
 
     @Autowired
     private PackageMapper packageMapper;
 
-    @Override
     public List<Product> list() {
         LambdaQueryWrapper<ProductDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ProductDo::getDeleteFlag, false);
@@ -31,7 +29,6 @@ public class PackageRepositoryImpl implements PackageRepository {
         return productDoList.stream().map(ProductDo::convertProduct).collect(Collectors.toList());
     }
 
-    @Override
     public IPage<Product> pages(int current, int size) {
         QueryWrapper<ProductDo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);
@@ -46,7 +43,6 @@ public class PackageRepositoryImpl implements PackageRepository {
         return res;
     }
 
-    @Override
     public Product getById(Long id) {
         ProductDo productDo = packageMapper.selectById(id);
         return productDo.convertProduct();

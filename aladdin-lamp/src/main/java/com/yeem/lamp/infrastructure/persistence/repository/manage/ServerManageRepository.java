@@ -1,4 +1,4 @@
-package com.yeem.lamp.infrastructure.persistence.repository;
+package com.yeem.lamp.infrastructure.persistence.repository.manage;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.domain.entity.Server;
-import com.yeem.lamp.domain.repository.ServerRepository;
 import com.yeem.lamp.infrastructure.persistence.entity.ServerDo;
 import com.yeem.lamp.infrastructure.persistence.repository.mapper.ServerMapper;
 import com.yeem.lamp.security.Constant;
@@ -20,12 +19,11 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Repository
-public class ServerRepositoryImpl implements ServerRepository {
+public class ServerManageRepository {
 
     @Autowired
     private ServerMapper serverMapper;
 
-    @Override
     public List<Server> list() {
         LambdaQueryWrapper<ServerDo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(ServerDo::getDeleteFlag, false);
@@ -33,25 +31,21 @@ public class ServerRepositoryImpl implements ServerRepository {
         return serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
     }
 
-    @Override
     public Server getById(Long id) {
         ServerDo serverDo = serverMapper.selectById(id);
         return serverDo.convertServer();
     }
 
-    @Override
     public void save(Server server) {
         ServerDo serverDo = ServerDo.init(server);
         serverMapper.insert(serverDo);
     }
 
-    @Override
     public void updateById(Server server) {
         ServerDo serverDo = ServerDo.init(server);
         serverMapper.updateById(serverDo);
     }
 
-    @Override
     public void removeById(Long id) {
         LambdaUpdateWrapper<ServerDo> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(ServerDo::getDeleteFlag, true);
@@ -59,7 +53,6 @@ public class ServerRepositoryImpl implements ServerRepository {
         serverMapper.update(null, updateWrapper);
     }
 
-    @Override
     public IPage<Server> pages(int current, int size) {
         QueryWrapper<ServerDo> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.FALSE_NUMBER);

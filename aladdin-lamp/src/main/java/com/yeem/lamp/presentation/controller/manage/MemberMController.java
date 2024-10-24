@@ -18,7 +18,7 @@ public class MemberMController {
     private MemberManageAppService memberAppService;
 
     /**
-     * 列表查询
+     * 会员-列表查询
      *
      * @return 列表信息
      */
@@ -27,13 +27,13 @@ public class MemberMController {
         try {
             return ResponseEntity.ok(memberAppService.list(new MemberDTO()));
         } catch (Exception e) {
-            log.error("list方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
+            log.error("会员-列表查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-列表查询失败");
         }
     }
 
     /**
-     * 分页查询
+     * 会员-分页查询
      *
      * @param current 页码
      * @param size    页容量
@@ -42,20 +42,20 @@ public class MemberMController {
      * @return 分页信息
      */
     @GetMapping("/pages")
-    public ResponseEntity<Object> pages(@RequestParam("current") int current,
-                                        @RequestParam("size") int size,
-                                        @RequestParam(value = "email", required = false) String email,
-                                        @RequestParam(value = "wechat", required = false) String wechat) {
+    public ResponseEntity<Object> page(@RequestParam("current") int current,
+                                       @RequestParam("size") int size,
+                                       @RequestParam(value = "email", required = false) String email,
+                                       @RequestParam(value = "wechat", required = false) String wechat) {
         try {
             return ResponseEntity.ok(memberAppService.pages(current, size, email, wechat));
         } catch (Exception e) {
-            log.error("page方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
+            log.error("会员-分页查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-分页查询失败");
         }
     }
 
     /**
-     * 根据ID查询
+     * 会员-根据ID查询
      *
      * @param id ID
      * @return 会员信息
@@ -64,19 +64,19 @@ public class MemberMController {
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
             if (null == id) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-根据ID查询失败：ID为空");
             }
             return ResponseEntity.ok(memberAppService.getById(id));
         } catch (Exception e) {
-            log.error("getById方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
+            log.error("会员-根据ID查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-根据ID查询失败");
         }
     }
 
     /**
-     * 更改
+     * 会员-更新
      *
-     * @param memberDTO aladdinMember
+     * @param memberDTO 会员信息
      * @return 更新结果
      */
     @PutMapping("/update")
@@ -85,15 +85,15 @@ public class MemberMController {
             memberAppService.updateById(memberDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
-            log.error("update方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
+            log.error("会员-更新失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-更新失败");
         }
     }
 
     /**
-     * 新增
+     * 会员-新增
      *
-     * @param memberDTO aladdinMember
+     * @param memberDTO 会员信息
      * @return 新增结果
      */
     @PostMapping("/save")
@@ -102,28 +102,28 @@ public class MemberMController {
             memberAppService.save(memberDTO);
             return ResponseEntity.ok("");
         } catch (Exception e) {
-            log.error("save方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
+            log.error("会员-新增失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-新增失败");
         }
     }
 
     /**
-     * 删除
+     * 会员-删除
      *
-     * @param memberDo aladdinMember
+     * @param memberDo 会员信息
      * @return 删除结果
      */
     @DeleteMapping("/delete")
     public ResponseEntity<Object> delete(@RequestBody MemberDo memberDo) {
         try {
             if (null == memberDo.getId()) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-删除失败");
             }
             memberAppService.removeById(memberDo.getId());
             return ResponseEntity.ok("");
         } catch (Exception e) {
-            log.error("delete方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+            log.error("会员-删除失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("会员-删除失败");
         }
     }
 }

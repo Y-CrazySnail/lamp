@@ -22,7 +22,7 @@ public class PackageManageAppService {
         return productList.stream().map(PackageDTO::new).collect(Collectors.toList());
     }
 
-    public IPage<PackageDTO> pages(int current, int size) {
+    public IPage<PackageDTO> page(int current, int size) {
         IPage<Product> page = packageDomainService.pages(current, size);
         IPage<PackageDTO> pageDTO = new Page<>();
         pageDTO.setPages(page.getPages());

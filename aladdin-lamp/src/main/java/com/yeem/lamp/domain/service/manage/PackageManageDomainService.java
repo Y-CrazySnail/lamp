@@ -2,7 +2,7 @@ package com.yeem.lamp.domain.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Product;
-import com.yeem.lamp.domain.repository.PackageRepository;
+import com.yeem.lamp.infrastructure.persistence.repository.manage.PackageManageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ import java.util.List;
 public class PackageManageDomainService {
 
     @Autowired
-    private PackageRepository packageRepository;
+    private PackageManageRepository packageRepository;
 
     public List<Product> list() {
         return packageRepository.list();

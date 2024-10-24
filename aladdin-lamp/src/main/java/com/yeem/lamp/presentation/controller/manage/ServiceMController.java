@@ -26,12 +26,12 @@ public class ServiceMController {
      * @return 分页信息
      */
     @GetMapping("/pages")
-    public ResponseEntity<Object> pages(@RequestParam("current") int current,
-                                        @RequestParam("size") int size,
-                                        @RequestParam(value = "memberId", required = false) Long memberId,
-                                        @RequestParam(value = "status", required = false) String status,
-                                        @RequestParam(value = "wechat", required = false) String wechat,
-                                        @RequestParam(value = "email", required = false) String email) {
+    public ResponseEntity<Object> page(@RequestParam("current") int current,
+                                       @RequestParam("size") int size,
+                                       @RequestParam(value = "memberId", required = false) Long memberId,
+                                       @RequestParam(value = "status", required = false) String status,
+                                       @RequestParam(value = "wechat", required = false) String wechat,
+                                       @RequestParam(value = "email", required = false) String email) {
         try {
             return ResponseEntity.ok(serviceAppService.pageService(current, size, memberId, status, wechat, email));
         } catch (Exception e) {

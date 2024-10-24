@@ -17,7 +17,7 @@ public class ServerMController {
     private ServerManageAppService serverAppService;
 
     /**
-     * 列表查询
+     * 服务器-列表查询
      *
      * @return 列表信息
      */
@@ -26,13 +26,13 @@ public class ServerMController {
         try {
             return ResponseEntity.ok(serverAppService.list());
         } catch (Exception e) {
-            log.error("list方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("查询列表失败");
+            log.error("服务器-列表查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-列表查询失败");
         }
     }
 
     /**
-     * 分页查询
+     * 服务器-分页查询
      *
      * @param current 页码
      * @param size    页容量
@@ -44,32 +44,32 @@ public class ServerMController {
         try {
             return ResponseEntity.ok(serverAppService.pages(current, size));
         } catch (Exception e) {
-            log.error("page方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("分页查询失败");
+            log.error("服务器-分页查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-分页查询失败");
         }
     }
 
     /**
-     * 根据ID查询
+     * 服务器-根据ID查询
      *
      * @param id ID
-     * @return 会员信息
+     * @return 服务器信息
      */
     @GetMapping("/getById")
     public ResponseEntity<Object> getById(@RequestParam("id") Long id) {
         try {
             if (null == id) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询 id为空");
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-根据ID查询查询失败：ID为空");
             }
             return ResponseEntity.ok(serverAppService.getById(id));
         } catch (Exception e) {
-            log.error("getById方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("按id查询失败");
+            log.error("服务器-根据ID查询查询失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-根据ID查询查询失败");
         }
     }
 
     /**
-     * 新增
+     * 服务器-新增
      *
      * @param serverDTO serverDTO
      * @return 新增结果
@@ -78,15 +78,15 @@ public class ServerMController {
     public ResponseEntity<Object> save(@RequestBody ServerDTO serverDTO) {
         try {
             serverAppService.save(serverDTO);
-            return ResponseEntity.ok(" ");
+            return ResponseEntity.ok("服务器-新增成功");
         } catch (Exception e) {
-            log.error("save方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("新增失败");
+            log.error("服务器-新增失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-新增失败");
         }
     }
 
     /**
-     * 更改
+     * 服务器-更新
      *
      * @param serverDTO serverDTO
      * @return 更新结果
@@ -95,15 +95,15 @@ public class ServerMController {
     public ResponseEntity<Object> update(@RequestBody ServerDTO serverDTO) {
         try {
             serverAppService.updateById(serverDTO);
-            return ResponseEntity.ok(" ");
+            return ResponseEntity.ok("服务器-更新成功");
         } catch (Exception e) {
-            log.error("update方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("更新失败");
+            log.error("服务器-更新失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-更新失败");
         }
     }
 
     /**
-     * 删除
+     * 服务器-删除
      *
      * @param serverDTO serverDTO
      * @return 删除结果
@@ -112,13 +112,13 @@ public class ServerMController {
     public ResponseEntity<Object> delete(@RequestBody ServerDTO serverDTO) {
         try {
             if (null == serverDTO.getId()) {
-                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+                return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-删除失败：ID为空");
             }
             serverAppService.removeById(serverDTO.getId());
-            return ResponseEntity.ok("删除");
+            return ResponseEntity.ok("服务器-删除成功");
         } catch (Exception e) {
-            log.error("delete方法", e);
-            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("删除失败");
+            log.error("服务器-删除失败", e);
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("服务器-删除失败");
         }
     }
 }
