@@ -4,7 +4,7 @@ import cn.hutool.http.HttpStatus;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yeem.common.entity.BaseEntity;
 import com.yeem.lamp.application.dto.OrderDTO;
-import com.yeem.lamp.application.service.OrderAppService;
+import com.yeem.lamp.application.service.manage.OrderManageAppService;
 import com.yeem.lamp.security.Constant;
 import com.yeem.lamp.infrastructure.persistence.entity.OrderDo;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderMController {
 
     @Autowired
-    private OrderAppService orderAppService;
+    private OrderManageAppService orderAppService;
 
     /**
      * 列表查询

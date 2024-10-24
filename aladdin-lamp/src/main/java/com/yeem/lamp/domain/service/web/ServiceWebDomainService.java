@@ -1,11 +1,10 @@
-package com.yeem.lamp.domain.service;
+package com.yeem.lamp.domain.service.web;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.NodeVmess;
-import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.objvalue.ServiceRecord;
 import com.yeem.lamp.domain.objvalue.Subscription;
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ServiceDomainService {
+public class ServiceWebDomainService {
 
     @Autowired
     private ServiceRepository serviceRepository;
@@ -189,7 +188,7 @@ public class ServiceDomainService {
             template = configuration.getTemplate("v2ray.ftl");
             for (NodeVmess nodeVmess : services.getNodeVmessList()) {
                 stringBuilder.append("vmess://")
-                        .append(cn.hutool.core.codec.Base64.encode(FreeMarkerTemplateUtils.processTemplateIntoString(template, nodeVmess)))
+                        .append(Base64.encode(FreeMarkerTemplateUtils.processTemplateIntoString(template, nodeVmess)))
                         .append("\n");
             }
         } catch (IOException | TemplateException e) {

@@ -1,16 +1,14 @@
-package com.yeem.lamp.application.service;
+package com.yeem.lamp.application.service.web;
 
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
 import com.yeem.lamp.domain.objvalue.ServiceRecord;
-import com.yeem.lamp.domain.service.MemberDomainService;
-import com.yeem.lamp.domain.service.ServerDomainService;
-import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.domain.service.web.MemberWebDomainService;
+import com.yeem.lamp.domain.service.web.ServerWebDomainService;
+import com.yeem.lamp.domain.service.web.ServiceWebDomainService;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XClientStat;
 import com.yeem.lamp.infrastructure.x.model.XInbound;
@@ -19,55 +17,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ServiceAppService {
+public class ServiceWebAppService {
 
     @Autowired
-    private MemberDomainService memberDomainService;
+    private MemberWebDomainService memberDomainService;
     @Autowired
-    private ServiceDomainService serviceDomainService;
+    private ServiceWebDomainService serviceDomainService;
     @Autowired
-    private ServerDomainService serverDomainService;
+    private ServerWebDomainService serverDomainService;
     @Autowired
     private ResourceLoader resourceLoader;
-
-    public ServiceDTO getServiceById(Long id) {
-        Services services = serviceDomainService.getById(id);
-        return ServiceDTO.init(services);
-    }
 
     public List<ServiceDTO> listServiceByMemberId(Long memberId) {
         List<Services> servicesList = serviceDomainService.listByMemberId(memberId);
         return servicesList.stream().map(ServiceDTO::init).collect(Collectors.toList());
-    }
-
-    public IPage<ServiceDTO> pageService(int current, int size, Long memberId, String status, String wechat, String email) {
-        IPage<Services> page = serviceDomainService.pages(current, size, memberId, status, wechat, email);
-        IPage<ServiceDTO> pageDTO = new Page<>();
-        pageDTO.setPages(page.getPages());
-        pageDTO.setTotal(page.getTotal());
-        pageDTO.setSize(page.getSize());
-        pageDTO.setCurrent(page.getCurrent());
-        pageDTO.setRecords(page.getRecords().stream().map(ServiceDTO::init).collect(Collectors.toList()));
-        return pageDTO;
-    }
-
-    public void saveService(ServiceDTO serviceDTO) {
-        Services services = serviceDTO.convertService();
-        serviceDomainService.save(services);
-    }
-
-    public void updateServiceById(ServiceDTO serviceDTO) {
-        Services services = serviceDTO.convertService();
-        serviceDomainService.updateById(services);
-    }
-
-    public void removeServiceById(Long id) {
-        serviceDomainService.removeById(id);
     }
 
     public String clash(String uuid) {

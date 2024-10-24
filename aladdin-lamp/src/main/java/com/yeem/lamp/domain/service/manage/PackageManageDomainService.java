@@ -1,4 +1,4 @@
-package com.yeem.lamp.domain.service;
+package com.yeem.lamp.domain.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Product;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PackageDomainService {
+public class PackageManageDomainService {
 
     @Autowired
     private PackageRepository packageRepository;

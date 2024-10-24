@@ -2,7 +2,7 @@ package com.yeem.lamp.presentation.controller.web;
 
 import com.yeem.lamp.application.dto.MemberDTO;
 import com.yeem.lamp.application.dto.TokenDTO;
-import com.yeem.lamp.application.service.MemberAppService;
+import com.yeem.lamp.application.service.web.MemberWebAppService;
 import com.yeem.lamp.presentation.request.LoginRequest;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberWebController {
 
     @Autowired
-    private MemberAppService memberAppService;
+    private MemberWebAppService memberAppService;
 
     /**
      * 登录

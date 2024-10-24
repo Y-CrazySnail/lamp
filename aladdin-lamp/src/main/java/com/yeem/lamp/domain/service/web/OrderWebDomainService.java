@@ -1,4 +1,4 @@
-package com.yeem.lamp.domain.service;
+package com.yeem.lamp.domain.service.web;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Order;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class OrderDomainService {
+public class OrderWebDomainService {
 
     @Autowired
     private OrderRepository orderRepository;

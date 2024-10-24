@@ -2,7 +2,7 @@ package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.dto.ServiceDTO;
-import com.yeem.lamp.application.service.ServiceAppService;
+import com.yeem.lamp.application.service.manage.ServiceManageAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 public class ServiceMController {
 
     @Autowired
-    private ServiceAppService serviceAppService;
+    private ServiceManageAppService serviceAppService;
 
     /**
      * 分页查询

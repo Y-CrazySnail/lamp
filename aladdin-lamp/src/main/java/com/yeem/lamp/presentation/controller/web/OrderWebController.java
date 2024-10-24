@@ -3,7 +3,7 @@ package com.yeem.lamp.presentation.controller.web;
 import cn.hutool.http.HttpStatus;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.yeem.lamp.application.dto.OrderDTO;
-import com.yeem.lamp.application.service.OrderAppService;
+import com.yeem.lamp.application.service.web.OrderWebAppService;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class OrderWebController {
 
     @Autowired
-    private OrderAppService orderAppService;
+    private OrderWebAppService orderAppService;
 
     /**
      * 列表查询

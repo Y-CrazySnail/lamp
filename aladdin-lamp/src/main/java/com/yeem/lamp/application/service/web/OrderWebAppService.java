@@ -1,9 +1,6 @@
-package com.yeem.lamp.application.service;
+package com.yeem.lamp.application.service.web;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.UUID;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.yeem.im.dto.SysTelegramSendDTO;
 import com.yeem.im.service.ISysTelegramService;
@@ -12,9 +9,9 @@ import com.yeem.lamp.domain.entity.Order;
 import com.yeem.lamp.domain.entity.Product;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
-import com.yeem.lamp.domain.service.OrderDomainService;
-import com.yeem.lamp.domain.service.PackageDomainService;
-import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.domain.service.web.OrderWebDomainService;
+import com.yeem.lamp.domain.service.web.PackageWebDomainService;
+import com.yeem.lamp.domain.service.web.ServiceWebDomainService;
 import com.yeem.lamp.infrastructure.payment.EPaymentProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,46 +26,25 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class OrderAppService {
+public class OrderWebAppService {
 
     @Autowired
-    private OrderDomainService orderDomainService;
+    private OrderWebDomainService orderDomainService;
     @Autowired
-    private PackageDomainService packageDomainService;
+    private PackageWebDomainService packageDomainService;
     @Autowired
     private EPaymentProcessor ePaymentProcessor;
     @Autowired
-    private ServiceDomainService serviceDomainService;
+    private ServiceWebDomainService serviceDomainService;
     @Autowired
     private ISysTelegramService sysTelegramService;
     @Autowired
-    private ServerAppService serverAppService;
-
-    public OrderDTO getOrderById(Long id) {
-        Order order = orderDomainService.getById(id);
-        return new OrderDTO(order);
-    }
+    private ServerWebAppService serverAppService;
 
     public List<OrderDTO> listOrder(OrderDTO orderDTO) {
         Order order = orderDTO.convertOrder();
         List<Order> orderList = orderDomainService.list(order);
         return orderList.stream().map(OrderDTO::new).collect(Collectors.toList());
-    }
-
-    public IPage<OrderDTO> pageOrder(int current, int size) {
-        IPage<Order> page = orderDomainService.pages(current, size);
-        IPage<OrderDTO> res = new Page<>();
-        res.setPages(page.getPages());
-        res.setCurrent(page.getCurrent());
-        res.setRecords(page.getRecords().stream().map(OrderDTO::new).collect(Collectors.toList()));
-        res.setSize(page.getSize());
-        res.setTotal(page.getTotal());
-        return res;
-    }
-
-    public void updateOrderById(OrderDTO orderDTO) {
-        Order order = orderDTO.convertOrder();
-        orderDomainService.updateById(order);
     }
 
     public void place(OrderDTO orderDTO) {

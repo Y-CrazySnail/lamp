@@ -1,4 +1,4 @@
-package com.yeem.lamp.domain.service;
+package com.yeem.lamp.domain.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Server;
@@ -13,7 +13,7 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class ServerDomainService {
+public class ServerManageDomainService {
 
     @Autowired
     private ServerRepository serverRepository;

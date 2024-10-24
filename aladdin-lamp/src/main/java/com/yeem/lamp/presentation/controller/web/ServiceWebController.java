@@ -6,8 +6,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.yeem.lamp.application.dto.ServiceDTO;
-import com.yeem.lamp.application.service.ServiceAppService;
+import com.yeem.lamp.application.service.web.ServiceWebAppService;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class ServiceWebController {
 
     @Autowired
-    private ServiceAppService serviceAppService;
+    private ServiceWebAppService serviceAppService;
 
     /**
      * 列表查询

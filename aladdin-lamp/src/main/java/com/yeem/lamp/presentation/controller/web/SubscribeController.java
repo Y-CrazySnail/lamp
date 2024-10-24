@@ -1,9 +1,9 @@
-package com.yeem.lamp.presentation.controller;
+package com.yeem.lamp.presentation.controller.web;
 
-import com.yeem.lamp.application.service.MemberAppService;
-import com.yeem.lamp.application.service.ServerAppService;
-import com.yeem.lamp.application.service.ServiceAppService;
-import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.application.service.web.MemberWebAppService;
+import com.yeem.lamp.application.service.web.ServerWebAppService;
+import com.yeem.lamp.application.service.web.ServiceWebAppService;
+import com.yeem.lamp.domain.service.web.ServiceWebDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 public class SubscribeController {
 
     @Autowired
-    private ServerAppService serverAppService;
+    private ServerWebAppService serverAppService;
     @Autowired
-    private ServiceAppService serviceAppService;
+    private ServiceWebAppService serviceAppService;
     @Autowired
-    private MemberAppService memberAppService;
+    private MemberWebAppService memberAppService;
 
     @Autowired
-    private ServiceDomainService serviceDomainService;
+    private ServiceWebDomainService serviceDomainService;
 
     @GetMapping("/syncServer/{id}")
     public String syncRemoteServer(@PathVariable("id") Long id) {

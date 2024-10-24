@@ -2,7 +2,6 @@ package com.yeem.lamp.domain.repository;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.yeem.lamp.domain.entity.Member;
-import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 
 import java.util.List;
 

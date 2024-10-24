@@ -104,12 +104,6 @@ public class ServiceRepositoryImpl implements ServiceRepository {
     }
 
     @Override
-    public Server getServerById(Long serverId) {
-        ServerDo serverDo = serverMapper.selectById(serverId);
-        return serverDo.convertServer();
-    }
-
-    @Override
     public void save(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
         if (null == services.getId()) {
@@ -197,25 +191,4 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         return res;
     }
 
-    @Override
-    public List<Server> listServer() {
-        LambdaQueryWrapper<ServerDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServerDo::getDeleteFlag, false);
-        List<ServerDo> serverDoList = serverMapper.selectList(queryWrapper);
-        return serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
-    }
-
-    @Override
-    public void updateService(Services services) {
-        ServiceDo serviceDo = ServiceDo.init(services);
-        serviceMapper.updateById(serviceDo);
-    }
-
-    @Override
-    public void batchSaveServiceMonth(List<ServiceMonth> serviceMonthList) {
-        List<ServiceMonthDo> serviceMonthDoList = serviceMonthList.stream().map(ServiceMonthDo::init).collect(Collectors.toList());
-        for (ServiceMonthDo serviceMonthDo : serviceMonthDoList) {
-            serviceMonthMapper.insert(serviceMonthDo);
-        }
-    }
 }

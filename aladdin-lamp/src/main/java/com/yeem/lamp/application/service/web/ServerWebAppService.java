@@ -1,4 +1,4 @@
-package com.yeem.lamp.application.service;
+package com.yeem.lamp.application.service.web;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.ServerDTO;
 import com.yeem.lamp.domain.entity.Server;
 import com.yeem.lamp.domain.entity.Services;
-import com.yeem.lamp.domain.service.ServerDomainService;
-import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.domain.service.web.ServerWebDomainService;
+import com.yeem.lamp.domain.service.web.ServiceWebDomainService;
 import com.yeem.lamp.infrastructure.x.XUIClient;
 import com.yeem.lamp.infrastructure.x.model.XClientStat;
 import com.yeem.lamp.infrastructure.x.model.XInbound;
@@ -23,12 +23,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class ServerAppService {
+public class ServerWebAppService {
 
     @Autowired
-    private ServerDomainService serverDomainService;
+    private ServerWebDomainService serverDomainService;
     @Autowired
-    private ServiceDomainService serviceDomainService;
+    private ServiceWebDomainService serviceDomainService;
 
     public ServerDTO getById(Long id) {
         Server server = serverDomainService.getById(id);

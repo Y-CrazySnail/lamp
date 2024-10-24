@@ -1,14 +1,13 @@
-package com.yeem.lamp.application.service;
+package com.yeem.lamp.application.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.MemberDTO;
 import com.yeem.lamp.application.dto.TokenDTO;
 import com.yeem.lamp.domain.entity.Member;
-import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.Token;
-import com.yeem.lamp.domain.service.MemberDomainService;
-import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.domain.service.manage.MemberManageDomainService;
+import com.yeem.lamp.domain.service.manage.ServiceManageDomainService;
 import com.yeem.lamp.infrastructure.exception.YeemException;
 import com.yeem.lamp.infrastructure.message.TelegramMessage;
 import com.yeem.lamp.presentation.request.LoginRequest;
@@ -19,22 +18,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MemberAppService {
+public class MemberManageAppService {
 
     @Autowired
-    private MemberDomainService memberDomainService;
+    private MemberManageDomainService memberDomainService;
     @Autowired
-    private ServiceDomainService serviceDomainService;
+    private ServiceManageDomainService serviceDomainService;
     @Autowired
     private TelegramMessage telegramMessage;
-
-    public MemberDTO getByIdWithService(Long id) {
-        Member member = memberDomainService.getById(id);
-        MemberDTO memberDTO = MemberDTO.init(member);
-        List<Services> servicesList = serviceDomainService.listByMemberId(id);
-        memberDTO.setServicesList(servicesList);
-        return memberDTO;
-    }
 
     public List<MemberDTO> list(MemberDTO memberDTO) {
         Member member = memberDTO.convertMember();
@@ -82,13 +73,4 @@ public class MemberAppService {
         telegramMessage.sendLoginNotice(member);
         return new TokenDTO(token);
     }
-
-    public void updatePassword(Long id, String password) {
-
-    }
-
-    public void updateReferralCode(Long id, String referralCode) {
-
-    }
-
 }

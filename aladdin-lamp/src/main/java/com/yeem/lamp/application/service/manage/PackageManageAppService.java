@@ -1,10 +1,10 @@
-package com.yeem.lamp.application.service;
+package com.yeem.lamp.application.service.manage;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.application.dto.PackageDTO;
 import com.yeem.lamp.domain.entity.Product;
-import com.yeem.lamp.domain.service.PackageDomainService;
+import com.yeem.lamp.domain.service.manage.PackageManageDomainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,10 +12,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class PackageAppService {
+public class PackageManageAppService {
 
     @Autowired
-    private PackageDomainService packageDomainService;
+    private PackageManageDomainService packageDomainService;
 
     public List<PackageDTO> list() {
         List<Product> productList = packageDomainService.list();

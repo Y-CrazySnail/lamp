@@ -1,10 +1,10 @@
 package com.yeem.lamp.application.schedule;
 
 import com.yeem.im.service.ISysTelegramService;
-import com.yeem.lamp.application.service.ServerAppService;
-import com.yeem.lamp.application.service.ServiceAppService;
-import com.yeem.lamp.domain.service.ServerDomainService;
-import com.yeem.lamp.domain.service.ServiceDomainService;
+import com.yeem.lamp.application.service.web.ServerWebAppService;
+import com.yeem.lamp.application.service.web.ServiceWebAppService;
+import com.yeem.lamp.domain.service.web.ServerWebDomainService;
+import com.yeem.lamp.domain.service.web.ServiceWebDomainService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,13 +17,13 @@ public class XUISchedule {
     @Autowired
     private ISysTelegramService sysTelegramService;
     @Autowired
-    private ServiceAppService serviceAppService;
+    private ServiceWebAppService serviceAppService;
     @Autowired
-    private ServerAppService serverAppService;
+    private ServerWebAppService serverAppService;
     @Autowired
-    private ServerDomainService serverDomainService;
+    private ServerWebDomainService serverDomainService;
     @Autowired
-    private ServiceDomainService serviceDomainService;
+    private ServiceWebDomainService serviceDomainService;
 
     /**
      * 每天0点重置当日流量

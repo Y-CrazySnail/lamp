@@ -1,7 +1,7 @@
 package com.yeem.lamp.presentation.controller.web;
 
 import cn.hutool.http.HttpStatus;
-import com.yeem.lamp.application.service.PackageAppService;
+import com.yeem.lamp.application.service.web.PackageWebAppService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 public class PackageWebController {
 
     @Autowired
-    private PackageAppService packageAppService;
+    private PackageWebAppService packageAppService;
 
     /**
      * 列表查询

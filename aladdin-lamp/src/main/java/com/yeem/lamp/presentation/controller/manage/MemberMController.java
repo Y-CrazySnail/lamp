@@ -2,7 +2,7 @@ package com.yeem.lamp.presentation.controller.manage;
 
 import cn.hutool.http.HttpStatus;
 import com.yeem.lamp.application.dto.MemberDTO;
-import com.yeem.lamp.application.service.MemberAppService;
+import com.yeem.lamp.application.service.manage.MemberManageAppService;
 import com.yeem.lamp.infrastructure.persistence.entity.MemberDo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberMController {
 
     @Autowired
-    private MemberAppService memberAppService;
+    private MemberManageAppService memberAppService;
 
     /**
      * 列表查询
