@@ -20,7 +20,6 @@ public class ServerWebRepository {
 
     public List<Server> list() {
         LambdaQueryWrapper<ServerDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServerDo::getDeleteFlag, false);
         List<ServerDo> serverDoList = serverMapper.selectList(queryWrapper);
         return serverDoList.stream().map(ServerDo::convertServer).collect(Collectors.toList());
     }

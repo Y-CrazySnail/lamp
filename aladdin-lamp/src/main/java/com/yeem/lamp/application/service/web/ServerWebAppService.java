@@ -83,6 +83,7 @@ public class ServerWebAppService {
                 XInbound xInbound = xuiClient.getInbound();
                 for (Services services : servicesList) {
                     if (services.isValid() && null != services.getCurrentServiceMonth() && services.getCurrentServiceMonth().isValid()) {
+                        log.info("服务生效中：{}", services.getId());
                         boolean exist = false;
                         for (XClientStat clientStat : xInbound.getClientStats()) {
                             if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
@@ -95,6 +96,7 @@ public class ServerWebAppService {
                             xuiClient.addVmessClient(xInbound, services.getUuid(), services.getId());
                         }
                     } else {
+                        log.info("服务已失效：{}", services.getId());
                         for (XClientStat clientStat : xInbound.getClientStats()) {
                             if (clientStat.getEmail().equals(String.valueOf(services.getId()))) {
                                 log.info("delete vmess client service id:{}, uuid:{}", services.getId(), services.getUuid());

@@ -47,7 +47,6 @@ public class EPaymentProcessor {
                 + "&return_url=" + returnUrl
                 + "&type=" + "alipay" + merchantKey;
         String md5Hex = MD5.create().digestHex(sign);
-        Map<String, String> form = new HashMap<>();
         HttpResponse response = HttpRequest.post(merchantApi)
                 .form("pid", merchantId)
                 .form("type", "alipay")

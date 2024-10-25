@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yeem.lamp.domain.entity.Services;
 import com.yeem.lamp.domain.objvalue.ServiceMonth;
@@ -33,6 +34,18 @@ public class ServiceWebRepository {
     @Autowired
     private SubscriptionMapper subscriptionMapper;
 
+    /**
+     * 查询服务列表
+     *
+     * @return 服务列表
+     */
+    public List<Services> list() {
+        LambdaQueryWrapper<ServiceDo> queryWrapper = Wrappers.lambdaQuery(ServiceDo.class);
+        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
+        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
+    }
+
+
     public Services getByUUID(String uuid) {
         LambdaQueryWrapper<ServiceDo> serviceDoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         serviceDoLambdaQueryWrapper.eq(ServiceDo::getDeleteFlag, false);
@@ -41,12 +54,8 @@ public class ServiceWebRepository {
         return serviceDo.convertService();
     }
 
-    public List<Services> listService(Services services) {
+    public List<Services> listService() {
         LambdaQueryWrapper<ServiceDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServiceDo::getDeleteFlag, false);
-        if (StrUtil.isNotEmpty(services.getUuid())) {
-            queryWrapper.eq(ServiceDo::getUuid, services.getUuid());
-        }
         List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
     }

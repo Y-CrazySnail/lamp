@@ -48,6 +48,34 @@ public class ServiceWebAppService {
     }
 
     /**
+     * 同步服务器节点
+     *
+     * @param serverId 服务器ID
+     */
+    public void syncServer(Long serverId) {
+        sync(serverId, null);
+    }
+
+    /**
+     * 同步服务节点
+     *
+     * @param serviceId 服务ID
+     */
+    public void syncService(Long serviceId) {
+        sync(null, serviceId);
+    }
+
+    public void sync(Long serverId, Long serviceId) {
+        Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
+        // 获取服务器列表
+        List<Server> serverList = serverDomainService.list();
+        // 获取服务列表
+        List<Services> servicesList = serviceDomainService.listService();
+        // 设置月度服务
+        serviceDomainService.setServiceMonth(servicesList, currentDate);
+    }
+
+    /**
      * 同步远程流量至本地
      */
     public void syncServiceRecord() {

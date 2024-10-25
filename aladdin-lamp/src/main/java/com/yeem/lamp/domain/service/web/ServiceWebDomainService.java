@@ -33,34 +33,49 @@ public class ServiceWebDomainService {
     @Autowired
     private ResourceLoader resourceLoader;
 
-    public List<Services> listByMemberId(Long memberId) {
-        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
-        List<Services> servicesList = serviceRepository.listByMemberId(memberId);
-        servicesList.forEach(services -> {
-            this.setServiceMonth(services, current);
-            this.setServiceRecord(services.getCurrentServiceMonth(), current);
-        });
-        return servicesList;
-    }
-
     public List<Services> listService() {
-        return serviceRepository.listService(new Services());
+        return serviceRepository.listService();
     }
 
-    public void setServiceMonth(Services services, Date current) {
+    public void sync(Services services) {
+        // todo 判断
+    }
+
+    /**
+     * 设置-月度服务
+     *
+     * @param servicesList 服务列表
+     */
+    public void setServiceMonth(List<Services> servicesList) {
+        setServiceMonth(servicesList, null);
+    }
+
+    /**
+     * 设置-月度服务
+     *
+     * @param servicesList 服务列表
+     * @param date         日期
+     */
+    public void setServiceMonth(List<Services> servicesList, Date date) {
+        for (Services services : servicesList) {
+            setServiceMonth(services, date);
+        }
+    }
+
+    public void setServiceMonth(Services services, Date date) {
         ServiceMonth serviceMonthParam = new ServiceMonth();
         serviceMonthParam.setServiceId(services.getId());
-        if (null != current) {
-            serviceMonthParam.setServiceYear(DateUtil.year(current));
-            serviceMonthParam.setServiceMonth(DateUtil.month(current) + 1);
+        if (null != date) {
+            serviceMonthParam.setServiceYear(DateUtil.year(date));
+            serviceMonthParam.setServiceMonth(DateUtil.month(date) + 1);
         }
         List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(serviceMonthParam);
-        if (null != current) {
+        if (null != date) {
             if (!serviceMonthList.isEmpty()) {
                 services.setCurrentServiceMonth(serviceMonthList.get(0));
                 services.setServiceMonthList(serviceMonthList);
             } else {
-                ServiceMonth serviceMonth = services.generateServiceMonth(DateUtil.year(current), DateUtil.month(current) + 1);
+                ServiceMonth serviceMonth = services.generateServiceMonth(DateUtil.year(date), DateUtil.month(date) + 1);
                 services.setCurrentServiceMonth(serviceMonth);
                 services.setServiceMonthList(Collections.singletonList(serviceMonth));
             }
@@ -78,6 +93,17 @@ public class ServiceWebDomainService {
         serviceRecordParam.setServiceMonthId(serviceMonth.getId());
         List<ServiceRecord> serviceRecordList = serviceRepository.listServiceRecord(serviceRecordParam, current);
         serviceMonth.setServiceRecordList(serviceRecordList);
+    }
+
+
+    public List<Services> listByMemberId(Long memberId) {
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        List<Services> servicesList = serviceRepository.listByMemberId(memberId);
+        servicesList.forEach(services -> {
+            this.setServiceMonth(services, current);
+            this.setServiceRecord(services.getCurrentServiceMonth(), current);
+        });
+        return servicesList;
     }
 
     public void setSubscription(Services services) {
@@ -117,7 +143,7 @@ public class ServiceWebDomainService {
         Integer year = DateUtil.year(current);
         Integer month = DateUtil.month(current) + 1;
         log.info("generate service month, year:{} month:{}", year, month);
-        List<Services> servicesList = serviceRepository.listService(new Services());
+        List<Services> servicesList = serviceRepository.listService();
         ServiceMonth serviceMonthParam = new ServiceMonth();
         serviceMonthParam.setServiceYear(year);
         serviceMonthParam.setServiceMonth(month);

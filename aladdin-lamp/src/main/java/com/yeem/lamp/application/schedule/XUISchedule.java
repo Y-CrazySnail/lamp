@@ -1,6 +1,5 @@
 package com.yeem.lamp.application.schedule;
 
-import com.yeem.im.service.ISysTelegramService;
 import com.yeem.lamp.application.service.web.ServerWebAppService;
 import com.yeem.lamp.application.service.web.ServiceWebAppService;
 import com.yeem.lamp.domain.service.web.ServerWebDomainService;
@@ -14,8 +13,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class XUISchedule {
 
-    @Autowired
-    private ISysTelegramService sysTelegramService;
     @Autowired
     private ServiceWebAppService serviceAppService;
     @Autowired

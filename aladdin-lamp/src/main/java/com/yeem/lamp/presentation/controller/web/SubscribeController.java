@@ -35,7 +35,7 @@ public class SubscribeController {
         return "ok";
     }
 
-    @GetMapping("/syncService/{id}")
+    @GetMapping("/syncService")
     public String syncRemoteService(@RequestParam(value = "id", required = false) Long id) {
         serverAppService.syncRemoteService(id);
         return "ok";
