@@ -25,21 +25,4 @@ public class ServerWebDomainService {
     public List<Server> list() {
         return serverRepository.list();
     }
-
-    /**
-     * 重重所有客户端流量
-     */
-    public void resetClientTraffic() {
-        List<Server> serverList = serverRepository.list();
-        for (Server server : serverList) {
-            try {
-                XUIClient xuiClient = XUIClient.init(server);
-                XInbound xInbound = xuiClient.getInbound();
-                xuiClient.resetClientTraffic(xInbound.getId());
-            } catch (Exception e) {
-                log.error("服务器：{}-{}异常：", server.getApiIp(), server.getRegion(), e);
-            }
-        }
-    }
-
 }

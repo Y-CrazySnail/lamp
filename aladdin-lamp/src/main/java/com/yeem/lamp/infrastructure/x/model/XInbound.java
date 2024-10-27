@@ -1,11 +1,17 @@
 package com.yeem.lamp.infrastructure.x.model;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Data
+@Slf4j
 public class XInbound {
     private int id;
     private long up;
@@ -22,6 +28,18 @@ public class XInbound {
     private String tag;
     private String sniffing;
     private List<XClientStat> clientStats;
+    private List<XClientSetting> clientSettings;
+
+    public void initClientSettings() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            Map<String, List<XClientSetting>> clients = objectMapper.readValue(this.settings.replace("\n", ""), new TypeReference<Map<String, List<XClientSetting>>>() {
+            });
+            this.clientSettings = clients.get("clients");
+        } catch (IOException e) {
+            log.error("setting反序列化异常");
+        }
+    }
 
     public void initSteamSettings() {
         this.streamSettings = "{\n" +

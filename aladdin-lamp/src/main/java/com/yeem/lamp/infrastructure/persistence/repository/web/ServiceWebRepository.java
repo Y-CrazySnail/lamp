@@ -34,18 +34,6 @@ public class ServiceWebRepository {
     @Autowired
     private SubscriptionMapper subscriptionMapper;
 
-    /**
-     * 查询服务列表
-     *
-     * @return 服务列表
-     */
-    public List<Services> list() {
-        LambdaQueryWrapper<ServiceDo> queryWrapper = Wrappers.lambdaQuery(ServiceDo.class);
-        List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
-        return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
-    }
-
-
     public Services getByUUID(String uuid) {
         LambdaQueryWrapper<ServiceDo> serviceDoLambdaQueryWrapper = new LambdaQueryWrapper<>();
         serviceDoLambdaQueryWrapper.eq(ServiceDo::getDeleteFlag, false);
@@ -72,18 +60,18 @@ public class ServiceWebRepository {
         if (null != serviceMonth.getServiceMonth()) {
             queryWrapper.eq(ServiceMonthDo::getServiceMonth, serviceMonth.getServiceMonth());
         }
+        queryWrapper.orderByDesc(ServiceMonthDo::getId);
         List<ServiceMonthDo> serviceMonthDoList = serviceMonthMapper.selectList(queryWrapper);
         return serviceMonthDoList.stream().map(ServiceMonthDo::convertServiceMonth).collect(Collectors.toList());
     }
 
-    public List<ServiceRecord> listServiceRecord(ServiceRecord serviceRecord, Date current) {
+    public List<ServiceRecord> listServiceRecord(ServiceRecord serviceRecord, Date date) {
         LambdaQueryWrapper<ServiceRecordDo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ServiceRecordDo::getDeleteFlag, false);
         queryWrapper.eq(ServiceRecordDo::getServiceId, serviceRecord.getServiceId());
         queryWrapper.eq(ServiceRecordDo::getServiceMonthId, serviceRecord.getServiceMonthId());
-        if (null != current) {
-            Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(current)).toJdkDate();
-            Date end = DateUtil.beginOfDay(DateUtil.endOfMonth(current)).toJdkDate();
+        if (null != date) {
+            Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(date)).toJdkDate();
+            Date end = DateUtil.endOfDay(DateUtil.endOfMonth(date)).toJdkDate();
             queryWrapper.ge(ServiceRecordDo::getServiceDate, begin);
             queryWrapper.le(ServiceRecordDo::getServiceDate, end);
         }
@@ -140,23 +128,40 @@ public class ServiceWebRepository {
         }
     }
 
-    public void updateById(Services services) {
+    public void saveService(Services services) {
         ServiceDo serviceDo = ServiceDo.init(services);
-        serviceMapper.updateById(serviceDo);
+        if (null == services.getId()) {
+            serviceMapper.insert(serviceDo);
+            services.setId(serviceDo.getId());
+        } else {
+            serviceMapper.updateById(serviceDo);
+        }
     }
 
-    public void removeById(Long id) {
-        LambdaUpdateWrapper<ServiceDo> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(ServiceDo::getDeleteFlag, true);
-        updateWrapper.eq(ServiceDo::getId, id);
-        serviceMapper.update(null, updateWrapper);
-    }
-
-    public void removeByMemberId(Long memberId) {
-        LambdaUpdateWrapper<ServiceDo> updateWrapper = new LambdaUpdateWrapper<>();
-        updateWrapper.set(ServiceDo::getDeleteFlag, true);
-        updateWrapper.eq(ServiceDo::getMemberId, memberId);
-        serviceMapper.update(null, updateWrapper);
+    public void saveServiceMonth(ServiceMonth serviceMonth) {
+        serviceMonth.syncBandwidth();
+        ServiceMonthDo serviceMonthDo = ServiceMonthDo.init(serviceMonth);
+        if (null == serviceMonth.getId()) {
+            serviceMonthMapper.insert(serviceMonthDo);
+        } else {
+            serviceMonthMapper.updateById(serviceMonthDo);
+        }
+        List<ServiceRecord> serviceRecordList = serviceMonth.getServiceRecordList();
+        if (null == serviceRecordList) {
+            return;
+        }
+        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
+        for (ServiceRecord record : serviceRecordList) {
+            if (!current.equals(record.getServiceDate())) {
+                continue;
+            }
+            ServiceRecordDo serviceRecordDo = ServiceRecordDo.init(record);
+            if (null == record.getId()) {
+                serviceRecordMapper.insert(serviceRecordDo);
+            } else {
+                serviceRecordMapper.updateById(serviceRecordDo);
+            }
+        }
     }
 
     /**
@@ -171,18 +176,6 @@ public class ServiceWebRepository {
         queryWrapper.eq(ServiceDo::getDeleteFlag, false);
         List<ServiceDo> serviceDoList = serviceMapper.selectList(queryWrapper);
         return serviceDoList.stream().map(ServiceDo::convertService).collect(Collectors.toList());
-    }
-
-    public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {
-        IPage<ServiceDo> page = new Page<>(current, size);
-        page = serviceMapper.selectPages(page, memberId, status, wechat, email);
-        IPage<Services> res = new Page<>();
-        res.setPages(page.getPages());
-        res.setCurrent(page.getCurrent());
-        res.setRecords(page.getRecords().stream().map(ServiceDo::convertService).collect(Collectors.toList()));
-        res.setSize(page.getSize());
-        res.setTotal(page.getTotal());
-        return res;
     }
 
 }

@@ -12,6 +12,7 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @Slf4j
@@ -28,6 +29,7 @@ public class Services {
     private String uuid;
     private Date beginDate;
     private Date endDate;
+    private Date lastSyncTime;
     private ServiceMonth currentServiceMonth;
     private List<ServiceMonth> serviceMonthList;
     private List<ServiceRecord> serviceRecordList;
@@ -141,6 +143,13 @@ public class Services {
         this.nodeVmessList.add(nodeVmessDoForWebsite);
     }
 
+    /**
+     * 根据年份、月份生成月度服务
+     *
+     * @param year  年份
+     * @param month 月份
+     * @return 月度服务
+     */
     public ServiceMonth generateServiceMonth(Integer year, Integer month) {
         Date begin = DateUtil.beginOfDay(DateUtil.beginOfMonth(new Date())).toJdkDate();
         Date end = DateUtil.beginOfDay(DateUtil.endOfMonth(new Date())).toJdkDate();
@@ -169,5 +178,45 @@ public class Services {
         serviceMonth.setBandwidthUp(0L);
         serviceMonth.setBandwidthDown(0L);
         return serviceMonth;
+    }
+
+    /**
+     * 赋值当期月度服务
+     *
+     * @param serviceMonthList 月度服务列表
+     */
+    public void assignCurrentServiceMonth(List<ServiceMonth> serviceMonthList, Date date) {
+        if (Objects.isNull(date)) {
+            return;
+        }
+        Integer year = DateUtil.year(date);
+        Integer month = DateUtil.month(date) + 1;
+        if (Objects.isNull(serviceMonthList) || serviceMonthList.isEmpty()) {
+            ServiceMonth currentServiceMonth = this.generateServiceMonth(year, month);
+            this.setCurrentServiceMonth(currentServiceMonth);
+        } else {
+            ServiceMonth currentServiceMonth = null;
+            for (ServiceMonth serviceMonth : serviceMonthList) {
+                if (Objects.equals(year, serviceMonth.getServiceYear())
+                        && Objects.equals(month, serviceMonth.getServiceMonth())) {
+                    currentServiceMonth = serviceMonth;
+                }
+            }
+            if (Objects.nonNull(currentServiceMonth)) {
+                this.setCurrentServiceMonth(currentServiceMonth);
+            } else {
+                currentServiceMonth = generateServiceMonth(year, month);
+                this.setCurrentServiceMonth(currentServiceMonth);
+            }
+        }
+    }
+
+    /**
+     * 将指定日期服务记录流量进行重置
+     *
+     * @param date 日期
+     */
+    public void resetRecordBandwidth(Date date) {
+        this.currentServiceMonth.resetRecordBandwidth(date);
     }
 }

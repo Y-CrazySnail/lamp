@@ -7,6 +7,9 @@ public class XClientStat {
     private int id;
     private int inboundId;
     private boolean enable;
+    /**
+     * 对应service id
+     */
     private String email;
     private long up;
     private long down;

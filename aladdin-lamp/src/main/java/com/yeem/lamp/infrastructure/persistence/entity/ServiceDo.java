@@ -24,6 +24,10 @@ public class ServiceDo extends BaseDo {
     private Integer period;
     private BigDecimal price;
     private String uuid;
+    /**
+     * 最后同步时间
+     */
+    private Date lastSyncTime;
 
     public static ServiceDo init(Services services) {
         ServiceDo serviceDo = new ServiceDo();

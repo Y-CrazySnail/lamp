@@ -50,5 +50,4 @@ public class MemberWebAppService {
     public void updateReferralCode(Long id, String referralCode) {
 
     }
-
 }

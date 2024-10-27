@@ -1,8 +1,10 @@
 package com.yeem.lamp.domain.objvalue;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * 服务记录
@@ -20,6 +22,13 @@ public class ServiceRecord {
     public void resetTodayBandwidth() {
         this.bandwidthUp = 0L;
         this.bandwidthDown = 0L;
+    }
+
+    public void resetBandwidth(Date date) {
+        if (DateUtil.isSameDay(date, serviceDate)) {
+            this.bandwidthUp = 0L;
+            this.bandwidthDown = 0L;
+        }
     }
 
     public void addBandwidthUp(Long bandwidthUp) {

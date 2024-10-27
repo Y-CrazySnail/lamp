@@ -37,64 +37,50 @@ public class ServiceWebDomainService {
         return serviceRepository.listService();
     }
 
-    public void sync(Services services) {
-        // todo 判断
-    }
-
-    /**
-     * 设置-月度服务
-     *
-     * @param servicesList 服务列表
-     */
-    public void setServiceMonth(List<Services> servicesList) {
-        setServiceMonth(servicesList, null);
-    }
-
-    /**
-     * 设置-月度服务
-     *
-     * @param servicesList 服务列表
-     * @param date         日期
-     */
-    public void setServiceMonth(List<Services> servicesList, Date date) {
-        for (Services services : servicesList) {
-            setServiceMonth(services, date);
+    public ServiceMonth getServiceMonth(Services services, Integer year, Integer month) {
+        ServiceMonth serviceMonthParam = new ServiceMonth();
+        serviceMonthParam.setServiceId(services.getId());
+        serviceMonthParam.setServiceYear(year);
+        serviceMonthParam.setServiceMonth(month);
+        List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(serviceMonthParam);
+        if (serviceMonthList.isEmpty()) {
+            return services.generateServiceMonth(year, month);
+        } else {
+            return serviceMonthList.get(0);
         }
     }
 
+    /**
+     * 设置 月度服务
+     *
+     * @param services 服务
+     * @param date     日期
+     */
     public void setServiceMonth(Services services, Date date) {
         ServiceMonth serviceMonthParam = new ServiceMonth();
         serviceMonthParam.setServiceId(services.getId());
-        if (null != date) {
-            serviceMonthParam.setServiceYear(DateUtil.year(date));
-            serviceMonthParam.setServiceMonth(DateUtil.month(date) + 1);
-        }
         List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(serviceMonthParam);
-        if (null != date) {
-            if (!serviceMonthList.isEmpty()) {
-                services.setCurrentServiceMonth(serviceMonthList.get(0));
-                services.setServiceMonthList(serviceMonthList);
-            } else {
-                ServiceMonth serviceMonth = services.generateServiceMonth(DateUtil.year(date), DateUtil.month(date) + 1);
-                services.setCurrentServiceMonth(serviceMonth);
-                services.setServiceMonthList(Collections.singletonList(serviceMonth));
-            }
-        } else {
-            services.setServiceMonthList(serviceMonthList);
-        }
+        // 赋值 当前月度服务
+        services.assignCurrentServiceMonth(serviceMonthList, date);
+        services.setServiceMonthList(serviceMonthList);
     }
 
-    public void setServiceRecord(ServiceMonth serviceMonth, Date current) {
-        if (null == serviceMonth) {
+    /**
+     * 设置 服务记录
+     *
+     * @param serviceMonth 月度服务
+     * @param date  日期
+     */
+    public void setServiceRecord(ServiceMonth serviceMonth, Date date) {
+        if (Objects.isNull(serviceMonth) || Objects.isNull(serviceMonth.getId())) {
             return;
         }
         ServiceRecord serviceRecordParam = new ServiceRecord();
         serviceRecordParam.setServiceId(serviceMonth.getServiceId());
         serviceRecordParam.setServiceMonthId(serviceMonth.getId());
-        List<ServiceRecord> serviceRecordList = serviceRepository.listServiceRecord(serviceRecordParam, current);
+        List<ServiceRecord> serviceRecordList = serviceRepository.listServiceRecord(serviceRecordParam, date);
         serviceMonth.setServiceRecordList(serviceRecordList);
     }
-
 
     public List<Services> listByMemberId(Long memberId) {
         Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
@@ -115,66 +101,16 @@ public class ServiceWebDomainService {
         return serviceRepository.getServiceById(id);
     }
 
-    public IPage<Services> pages(int current, int size, Long memberId, String status, String wechat, String email) {
-        return serviceRepository.pages(current, size, memberId, status, wechat, email);
-    }
-
-    public void updateById(Services services) {
-        serviceRepository.updateById(services);
-    }
-
     public void save(Services services) {
         serviceRepository.save(services);
     }
 
-    public void removeById(Long id) {
-        serviceRepository.removeById(id);
+    public void saveService(Services services) {
+        serviceRepository.saveService(services);
     }
 
-    public void removeByMemberId(Long memberId) {
-        serviceRepository.removeByMemberId(memberId);
-    }
-
-    /**
-     * 生成当月服务
-     */
-    public void generateServiceMonth() {
-        Date current = DateUtil.beginOfDay(new Date()).toJdkDate();
-        Integer year = DateUtil.year(current);
-        Integer month = DateUtil.month(current) + 1;
-        log.info("generate service month, year:{} month:{}", year, month);
-        List<Services> servicesList = serviceRepository.listService();
-        ServiceMonth serviceMonthParam = new ServiceMonth();
-        serviceMonthParam.setServiceYear(year);
-        serviceMonthParam.setServiceMonth(month);
-        List<ServiceMonth> serviceMonthList = serviceRepository.listServiceMonth(serviceMonthParam);
-        Set<Long> serviceIdSet = serviceMonthList.stream().map(ServiceMonth::getServiceId).collect(Collectors.toSet());
-        for (Services services : servicesList) {
-            if (!services.isValid()) {
-                log.info("service has expired:{}", services.getEndDate());
-                continue;
-            }
-            if (serviceIdSet.contains(services.getId())) {
-                log.info("service month has exist, serviceId:{}", services.getId());
-                continue;
-            }
-            ServiceMonth serviceMonth = services.generateServiceMonth(year, month);
-            services.setCurrentServiceMonth(serviceMonth);
-            log.info("generate service month, service id:{}", services.getId());
-            serviceRepository.save(services);
-        }
-    }
-
-    public void syncService(List<Services> servicesList) {
-        for (Services services : servicesList) {
-            ServiceMonth serviceMonth = services.getCurrentServiceMonth();
-            if (null == serviceMonth) {
-                continue;
-            } else {
-                serviceMonth.syncBandwidth();
-            }
-            serviceRepository.save(services);
-        }
+    public void saveServiceMonth(ServiceMonth serviceMonth) {
+        serviceRepository.saveServiceMonth(serviceMonth);
     }
 
     public String clash(String uuid) {

@@ -36,7 +36,7 @@ public class OrderWebAppService {
     @Autowired
     private ISysTelegramService sysTelegramService;
     @Autowired
-    private ServerWebAppService serverAppService;
+    private ServiceWebAppService serviceWebAppService;
 
     public List<OrderDTO> listOrder(OrderDTO orderDTO) {
         Order order = orderDTO.convertOrder();
@@ -132,6 +132,6 @@ public class OrderWebAppService {
         }
         order.finish();
         orderDomainService.updateById(order);
-        serverAppService.syncRemoteService(order.getServiceId());
+        serviceWebAppService.sync();
     }
 }

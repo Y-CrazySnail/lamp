@@ -14,30 +14,11 @@ import org.springframework.web.bind.annotation.*;
 public class SubscribeController {
 
     @Autowired
-    private ServerWebAppService serverAppService;
-    @Autowired
     private ServiceWebAppService serviceAppService;
-    @Autowired
-    private MemberWebAppService memberAppService;
-
-    @Autowired
-    private ServiceWebDomainService serviceDomainService;
-
-    @GetMapping("/syncServer/{id}")
-    public String syncRemoteServer(@PathVariable("id") Long id) {
-        serverAppService.syncRemoteServer(id);
-        return "ok";
-    }
 
     @GetMapping("/test")
     public String test() {
-        serviceAppService.syncServiceRecord();
-        return "ok";
-    }
-
-    @GetMapping("/syncService")
-    public String syncRemoteService(@RequestParam(value = "id", required = false) Long id) {
-        serverAppService.syncRemoteService(id);
+        serviceAppService.sync();
         return "ok";
     }
 
