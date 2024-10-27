@@ -23,7 +23,7 @@ public class XUISchedule {
     private ServiceWebDomainService serviceDomainService;
 
     /**
-     * 每天0点重置当日流量
+     * 每小时执行
      */
     @Scheduled(cron = "0 0 * * * ?")
     public void reset() {
