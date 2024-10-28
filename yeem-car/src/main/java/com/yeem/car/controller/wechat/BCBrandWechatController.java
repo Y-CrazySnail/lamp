@@ -18,7 +18,7 @@ public class BCBrandWechatController {
     private WechatBCBrandService brandService;
 
     @GetMapping("/list")
-    public ResponseEntity<Object> listCarBrand() {
+    public ResponseEntity<Object> list() {
         try {
             return ResponseEntity.ok(brandService.list());
         } catch (Exception e) {

@@ -43,9 +43,6 @@ public class WechatController {
     @Autowired
     private ICarFilmStoreService carFilmStoreService;
 
-
-
-
     @Value("${tencent.cos.bucket-name}")
     private String TENCENT_COS_BUCKET_NAME;
     @Value("${tencent.cos.secret-id}")

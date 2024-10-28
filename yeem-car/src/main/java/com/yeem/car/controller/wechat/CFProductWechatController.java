@@ -25,7 +25,7 @@ public class CFProductWechatController {
         try {
             return ResponseEntity.ok(productService.list(tenantNo));
         } catch (Exception e) {
-            log.error("wx login api error：", e);
+            log.error("查询产品信息列表失败：", e);
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

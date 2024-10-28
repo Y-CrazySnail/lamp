@@ -81,7 +81,6 @@ public class ServiceWebAppService {
                 Map<String, XClientStat> xClientStatMap = xClientStatList.stream()
                         .collect(Collectors.toMap(XClientStat::getEmail, xClientStat -> xClientStat));
                 for (Services services : servicesList) {
-
                     log.info("开始同步服务流量：{}---{}", services.getId(), services.getUuid());
                     XClientStat xClientStat = xClientStatMap.get(String.valueOf(services.getId()));
                     if (Objects.isNull(xClientStat)) {

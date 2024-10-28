@@ -17,12 +17,6 @@ public class CFPriceWechatController {
     @Autowired
     private WechatCFPriceService priceService;
 
-    /**
-     * 小程序登录
-     *
-     * @return 登录信息
-     * @apiNote 小程序登录
-     */
     @GetMapping("get")
     public ResponseEntity<Object> get(@RequestParam(value = "tenantNo") String tenantNo,
                                        @RequestParam(value = "productType") String productType,
@@ -31,7 +25,7 @@ public class CFPriceWechatController {
         try {
             return ResponseEntity.ok(priceService.get(tenantNo, productType, productNo, levelNo));
         } catch (Exception e) {
-            log.error("wx login api error：", e);
+            log.error("查询价格失败：", e);
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
