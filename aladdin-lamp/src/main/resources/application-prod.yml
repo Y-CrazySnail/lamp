@@ -74,3 +74,6 @@ merchant:
 telegram:
   token: 7774570406:AAHR777wjXDkaUohYnEnCgKVfuQooAp9VdA
   chat-id: -4548154185
+
+apple:
+  control: https://yunduo.shop/shareapi/xMgucyCshW

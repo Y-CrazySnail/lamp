@@ -10,6 +10,7 @@ import com.yeem.lamp.application.service.web.ServiceWebAppService;
 import com.yeem.lamp.presentation.interceptor.LocalAuthInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/web/service")
 public class ServiceWebController {
+
+    @Value("${apple.control}")
+    private String APPLE_CONTROL;
 
     @Autowired
     private ServiceWebAppService serviceAppService;
@@ -45,7 +49,7 @@ public class ServiceWebController {
     @GetMapping("/apple")
     public ResponseEntity<Object> apple() {
         try {
-            HttpResponse response = HttpUtil.createRequest(Method.GET, "https://xyid.me/shareapi/aladdin").execute();
+            HttpResponse response = HttpUtil.createRequest(Method.GET, APPLE_CONTROL).execute();
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.body());
             return ResponseEntity.ok(jsonNode.get("accounts").get(0));
