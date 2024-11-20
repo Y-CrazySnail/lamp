@@ -1,6 +1,7 @@
 package com.yeem.lamp.application.service.web;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.entity.Server;
@@ -82,43 +83,48 @@ public class ServiceWebAppService {
                 Map<String, XClientStat> xClientStatMap = xClientStatList.stream()
                         .collect(Collectors.toMap(XClientStat::getEmail, xClientStat -> xClientStat));
                 for (Services services : servicesList) {
-                    log.info("开始同步服务流量：{}---{}", services.getId(), services.getUuid());
-                    XClientStat xClientStat = xClientStatMap.get(String.valueOf(services.getId()));
-                    if (Objects.isNull(xClientStat)) {
-                        log.info("服务：{}未使用流量，忽略处理", services.getId());
-                        continue;
-                    }
-                    // 同步流量至本地
-                    Date lastSyncTime = services.getLastSyncTime();
-                    lastSyncDate = services.getLastSyncTime();
-                    Integer lastYear = DateUtil.year(lastSyncTime);
-                    Integer lastMonth = DateUtil.month(lastSyncTime) + 1;
-                    ServiceMonth lastServiceMonth = serviceDomainService.getServiceMonth(services, lastYear, lastMonth);
-                    serviceDomainService.setServiceRecord(lastServiceMonth, lastSyncTime);
-                    // 重置同步日期的流量记录
-                    lastServiceMonth.resetRecordBandwidth(lastSyncTime);
-                    String region = server.getRegion();
-                    // 过滤当前地区、当天的服务记录
-                    ServiceRecord lastServiceRecord = null;
-                    for (ServiceRecord serviceRecord : lastServiceMonth.getServiceRecordList()) {
-                        if (Objects.equals(region, serviceRecord.getRegion())
-                                && DateUtil.isSameDay(lastSyncTime, serviceRecord.getServiceDate())) {
-                            lastServiceRecord = serviceRecord;
+                    try {
+                        log.info("开始同步服务流量：{}---{}", services.getId(), services.getUuid());
+                        XClientStat xClientStat = xClientStatMap.get(String.valueOf(services.getId()));
+                        if (Objects.isNull(xClientStat)) {
+                            log.info("服务：{}未使用流量，忽略处理", services.getId());
+                            continue;
                         }
+                        // 同步流量至本地
+                        Date lastSyncTime = services.getLastSyncTime();
+                        Integer lastYear = DateUtil.year(lastSyncTime);
+                        Integer lastMonth = DateUtil.month(lastSyncTime) + 1;
+                        ServiceMonth lastServiceMonth = serviceDomainService.getServiceMonth(services, lastYear, lastMonth);
+                        serviceDomainService.setServiceRecord(lastServiceMonth, lastSyncTime);
+                        // 重置同步日期的流量记录
+                        lastServiceMonth.resetRecordBandwidth(lastSyncTime);
+                        String region = server.getRegion();
+                        // 过滤当前地区、当天的服务记录
+                        ServiceRecord lastServiceRecord = null;
+                        if (!Objects.isNull(lastServiceMonth.getServiceRecordList())) {
+                            for (ServiceRecord serviceRecord : lastServiceMonth.getServiceRecordList()) {
+                                if (Objects.equals(region, serviceRecord.getRegion())
+                                        && DateUtil.isSameDay(lastSyncTime, serviceRecord.getServiceDate())) {
+                                    lastServiceRecord = serviceRecord;
+                                }
+                            }
+                        }
+                        // 当前地区、当天服务记录为空
+                        if (Objects.isNull(lastServiceRecord)) {
+                            lastServiceRecord = lastServiceMonth.generateServiceRecord(lastSyncTime, region);
+                            lastServiceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
+                            lastServiceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
+                            lastServiceMonth.getServiceRecordList().add(lastServiceRecord);
+                        } else {
+                            lastServiceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
+                            lastServiceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
+                        }
+                        services.setLastSyncTime(current);
+                        serviceDomainService.saveService(services);
+                        serviceDomainService.saveServiceMonth(lastServiceMonth);
+                    } catch (Exception e) {
+                        log.error("同步服务流量异常：{}---{}", services.getId(), services.getUuid(), e);
                     }
-                    // 当前地区、当天服务记录为空
-                    if (Objects.isNull(lastServiceRecord)) {
-                        lastServiceRecord = lastServiceMonth.generateServiceRecord(lastSyncTime, region);
-                        lastServiceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
-                        lastServiceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
-                        lastServiceMonth.getServiceRecordList().add(lastServiceRecord);
-                    } else {
-                        lastServiceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
-                        lastServiceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
-                    }
-                    services.setLastSyncTime(current);
-                    serviceDomainService.saveService(services);
-                    serviceDomainService.saveServiceMonth(lastServiceMonth);
                     log.info("结束同步服务流量：{}---{}", services.getId(), services.getUuid());
                 }
                 if (DateUtil.hour(current, true) == 0) {
