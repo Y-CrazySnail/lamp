@@ -121,12 +121,12 @@ public class ServiceWebAppService {
                     serviceDomainService.saveServiceMonth(lastServiceMonth);
                     log.info("结束同步服务流量：{}---{}", services.getId(), services.getUuid());
                 }
-                if (!DateUtil.isSameDay(current, lastSyncDate)) {
+                if (DateUtil.hour(current, true) == 0) {
                     log.info("已跨日期，重置流量");
                     xuiClient.resetClientTraffic(xInbound.getId());
                 }
             } catch (Exception e) {
-                log.error("同步服务器流量异常：{}---{}", server.getId(), server.getRegion());
+                log.error("同步服务器流量异常：{}---{}", server.getId(), server.getRegion(), e);
             }
             log.info("结束同步服务器流量：{}---{}", server.getId(), server.getRegion());
         }
@@ -181,7 +181,7 @@ public class ServiceWebAppService {
                     xuiClient.delVmessClient(xInbound.getId(), xClientSettingMap.get(serviceId).getId());
                 });
             } catch (Exception e) {
-                log.info("同步服务器节点异常：{}---{}", server.getId(), server.getRegion());
+                log.info("同步服务器节点异常：{}---{}", server.getId(), server.getRegion(), e);
             }
             log.info("结束同步服务器节点：{}---{}", server.getId(), server.getRegion());
         }
