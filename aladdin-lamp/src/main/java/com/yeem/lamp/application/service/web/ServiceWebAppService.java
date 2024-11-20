@@ -92,7 +92,7 @@ public class ServiceWebAppService {
                         }
                         // 同步流量至本地
                         Date lastSyncTime = services.getLastSyncTime();
-                        if (lastSyncTime.before(DateUtil.beginOfDay(DateUtil.yesterday()))) {
+                        if (null == lastSyncTime || lastSyncTime.before(DateUtil.beginOfDay(DateUtil.yesterday()))) {
                             lastSyncTime = current;
                         }
                         Integer lastYear = DateUtil.year(lastSyncTime);
