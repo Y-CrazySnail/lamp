@@ -92,6 +92,9 @@ public class ServiceWebAppService {
                         }
                         // 同步流量至本地
                         Date lastSyncTime = services.getLastSyncTime();
+                        if (lastSyncTime.before(DateUtil.beginOfDay(DateUtil.yesterday()))) {
+                            lastSyncTime = current;
+                        }
                         Integer lastYear = DateUtil.year(lastSyncTime);
                         Integer lastMonth = DateUtil.month(lastSyncTime) + 1;
                         ServiceMonth lastServiceMonth = serviceDomainService.getServiceMonth(services, lastYear, lastMonth);
