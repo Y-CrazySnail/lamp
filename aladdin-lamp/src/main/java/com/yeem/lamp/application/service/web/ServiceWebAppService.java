@@ -55,6 +55,7 @@ public class ServiceWebAppService {
     }
 
     public void sync() {
+        Date current = new Date();
         // 获取服务器列表
         List<Server> serverList = serverDomainService.list();
         // 获取服务列表
@@ -115,12 +116,12 @@ public class ServiceWebAppService {
                         lastServiceRecord.addBandwidthUp(xClientStat.getUp() * server.getMultiplyingPower());
                         lastServiceRecord.addBandwidthDown(xClientStat.getDown() * server.getMultiplyingPower());
                     }
-                    services.setLastSyncTime(new Date());
+                    services.setLastSyncTime(current);
                     serviceDomainService.saveService(services);
                     serviceDomainService.saveServiceMonth(lastServiceMonth);
                     log.info("结束同步服务流量：{}---{}", services.getId(), services.getUuid());
                 }
-                if (!DateUtil.isSameDay(lastSyncDate, new Date())) {
+                if (!DateUtil.isSameDay(current, lastSyncDate)) {
                     log.info("已跨日期，重置流量");
                     xuiClient.resetClientTraffic(xInbound.getId());
                 }
@@ -146,7 +147,7 @@ public class ServiceWebAppService {
                     String serviceIdStr = String.valueOf(services.getId());
                     log.info("开始同步服务节点：{}---{}", services.getId(), services.getUuid());
                     if (services.isValid()) {
-                        Date currentDate = DateUtil.beginOfDay(new Date()).toJdkDate();
+                        Date currentDate = DateUtil.beginOfDay(current).toJdkDate();
                         Integer year = DateUtil.year(currentDate);
                         Integer month = DateUtil.month(currentDate) + 1;
                         ServiceMonth serviceMonth = serviceDomainService.getServiceMonth(services, year, month);
