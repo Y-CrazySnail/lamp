@@ -42,6 +42,7 @@ public class WechatCFPriceService extends ServiceImpl<CFPriceMapper, CFPrice> {
         queryWrapper.eq(CFPrice::getProductNo, productNo);
         queryWrapper.eq(CFPrice::getLevelNo, levelNo);
         CFPrice price = priceMapper.selectOne(queryWrapper);
+        price.setTenantNo(tenantNo);
         priceConfigService.setPriceConfigList(price, productType);
         return price;
     }

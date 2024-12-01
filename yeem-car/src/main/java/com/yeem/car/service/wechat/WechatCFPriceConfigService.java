@@ -33,7 +33,7 @@ public class WechatCFPriceConfigService extends ServiceImpl<CFPriceConfigMapper,
         queryWrapper.orderByAsc(CFPriceConfig::getSort);
         List<CFPriceConfig> priceConfigList = priceConfigMapper.selectList(queryWrapper);
         for (CFPriceConfig priceConfig : priceConfigList) {
-            priceConfig.setPrice(price.getPrice().multiply(priceConfig.getPercent()));
+            priceConfig.setPrice(price.getPrice().multiply(priceConfig.getPercent()).divide(new BigDecimal(100), RoundingMode.HALF_UP));
             priceConfig.setPrice(priceConfig.getPrice().subtract(priceConfig.getPrice().remainder(new BigDecimal("10"))));
         }
         price.setPriceConfigList(priceConfigList);

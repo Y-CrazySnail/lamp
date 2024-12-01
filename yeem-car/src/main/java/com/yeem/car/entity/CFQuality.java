@@ -110,7 +110,9 @@ public class CFQuality extends BaseCF {
      * 审核标识
      */
     private String approveFlag;
-    @TableField(exist = false)
+    /**
+     * 产品类型
+     */
     private String productType;
 
     public enum State {
