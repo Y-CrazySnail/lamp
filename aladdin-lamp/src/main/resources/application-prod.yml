@@ -65,11 +65,14 @@ oauth-client-details:
     client-secret: 123456
 
 merchant:
-  api: https://www.sailapay.com/mapi.php
-  id: 1067
-  key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
-  notify-url: https://aladdinslamp.cc/aladdin-api/web/order/finish
-  return-url: https://aladdinslamp.cc/order/index
+  api: https://zhi.niuniuhua.cn/mapi.php
+  id: 1002
+  key: 4Z4PoPyVPPCypB3k3zypPVDYPtPWpRwv
+  # api: https://www.sailapay.com/mapi.php
+  # id: 1067
+  # key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
+  notify-url: https://alamp.cc/aladdin-api/web/order/finish
+  return-url: https://alamp.cc/order/index
 
 telegram:
   token: 7774570406:AAHR777wjXDkaUohYnEnCgKVfuQooAp9VdA

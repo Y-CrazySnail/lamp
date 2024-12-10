@@ -37,7 +37,7 @@ public class EPaymentProcessor {
         String merchantKey = environment.getProperty("merchant.key");
         String notifyUrl = environment.getProperty("merchant.notify-url");
         String returnUrl = environment.getProperty("merchant.return-url");
-        String sign = "clientip=" + "aladdinslamp.cc"
+        String sign = "clientip=" + "alamp.cc"
                 + "&device=" + "pc"
                 + "&money=" + price
                 + "&name=" + "VIP会员"
@@ -55,7 +55,7 @@ public class EPaymentProcessor {
                 .form("return_url", returnUrl)
                 .form("name", "VIP会员")
                 .form("money", price)
-                .form("clientip", "aladdinslamp.cc")
+                .form("clientip", "alamp.cc")
                 .form("device", "pc")
                 .form("sign", md5Hex)
                 .form("sign_type", "MD5")

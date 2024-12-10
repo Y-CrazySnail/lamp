@@ -25,12 +25,12 @@ public class XUISchedule {
     /**
      * 每小时执行
      */
-    @Scheduled(cron = "0 0 * * * ?")
+    @Scheduled(cron = "0 0 0/4 * * ?")
     public void reset() {
         try {
             serviceAppService.sync();
         } catch (Exception e) {
-            log.error("reset client data traffic schedule error", e);
+            log.error("sync error", e);
         }
     }
 }

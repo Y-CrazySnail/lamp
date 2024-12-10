@@ -1,7 +1,6 @@
 package com.yeem.lamp.application.service.web;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.StrUtil;
 import com.yeem.lamp.application.dto.ServiceDTO;
 import com.yeem.lamp.domain.entity.Member;
 import com.yeem.lamp.domain.entity.Server;
@@ -19,6 +18,7 @@ import com.yeem.lamp.infrastructure.x.model.XInbound;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -55,6 +55,7 @@ public class ServiceWebAppService {
         return serviceDomainService.v2ray(uuid);
     }
 
+    @Async
     public void sync() {
         Date current = new Date();
         // 获取服务器列表
