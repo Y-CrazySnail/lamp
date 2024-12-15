@@ -3,6 +3,8 @@ package com.yeem.car.controller.wechat;
 import cn.hutool.core.lang.UUID;
 import cn.hutool.http.HttpStatus;
 import com.yeem.car.entity.CFUser;
+import com.yeem.car.entity.CarFilmUser;
+import com.yeem.car.security.WechatAuthInterceptor;
 import com.yeem.car.service.wechat.WechatCFUserService;
 import com.yeem.common.utils.TencentFileUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +46,22 @@ public class CFUserWechatController {
             return ResponseEntity.ok(userService.login(user));
         } catch (Exception e) {
             log.error("小程序登录异常：", e);
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("update")
+    public ResponseEntity<Object> update(@RequestBody CFUser user) {
+        Long userId = WechatAuthInterceptor.getUserId();
+        if (null == userId) {
+            return ResponseEntity.status(HttpStatus.HTTP_INTERNAL_ERROR).body("鉴权失败");
+        }
+        user.setId(userId);
+        try {
+            userService.updateById(user);
+            return ResponseEntity.ok(user);
+        } catch (Exception e) {
+            log.error("update user info error：", e);
             return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

@@ -26,8 +26,8 @@ public class WechatCFQualityService extends ServiceImpl<CFQualityMapper, CFQuali
                 wrapper.eq(CFQuality::getPhone, queryKey).or().eq(CFQuality::getVin, queryKey).or().eq(CFQuality::getQualityCardNo, queryKey)
         );
         List<CFQuality> qualityList = qualityMapper.selectList(queryWrapper);
-        if (!qualityList.isEmpty()) {
-
+        for (CFQuality quality : qualityList) {
+            quality.setState();
         }
         return qualityList;
     }

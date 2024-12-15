@@ -13,6 +13,8 @@ public class LocalInterceptorConfig implements WebMvcConfigurer {
         registry.addInterceptor(new LocalAuthInterceptor())
                 .addPathPatterns("/web/**")
                 .excludePathPatterns("/web/member/login")
-                .excludePathPatterns("/web/order/finish");
+                .excludePathPatterns("/web/order/finish")
+                .excludePathPatterns("/web/lamp-member/login")
+                .excludePathPatterns("/web/lamp-order/finish");
     }
 }
