@@ -1,5 +1,0 @@
-permit-url:
-  - /wechat/**
-  - /manage/spu/upload
-  - /test/test
-  - /game/data/upload

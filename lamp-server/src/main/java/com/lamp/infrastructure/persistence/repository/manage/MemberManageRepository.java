@@ -1,0 +1,68 @@
+package com.lamp.infrastructure.persistence.repository.manage;
+
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.lamp.common.entity.BaseEntity;
+import com.lamp.domain.entity.Member;
+import com.lamp.infrastructure.persistence.entity.MemberDo;
+import com.lamp.infrastructure.persistence.repository.mapper.MemberMapper;
+import com.lamp.security.Constant;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Repository
+public class MemberManageRepository {
+
+    @Autowired
+    private MemberMapper memberMapper;
+
+    public Member getById(Long id) {
+        MemberDo memberDo = memberMapper.selectById(id);
+        return memberDo.convertMember();
+    }
+
+    public List<Member> list(Member member) {
+        LambdaQueryWrapper<MemberDo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(MemberDo::getDeleteFlag, false);
+        if (StrUtil.isNotEmpty(member.getEmail())) {
+            queryWrapper.eq(MemberDo::getEmail, member.getEmail());
+        }
+        List<MemberDo> memberDoList = memberMapper.selectList(queryWrapper);
+        return memberDoList.stream().map(MemberDo::convertMember).collect(Collectors.toList());
+    }
+
+    public IPage<Member> pages(int current, int size, String email, String wechat) {
+        IPage<MemberDo> page = new Page<>(current, size);
+        page = memberMapper.pages(page, wechat, email);
+        IPage<Member> res = new Page<>();
+        res.setPages(page.getPages());
+        res.setCurrent(page.getCurrent());
+        res.setRecords(page.getRecords().stream().map(MemberDo::convertMember).collect(Collectors.toList()));
+        res.setSize(page.getSize());
+        res.setTotal(page.getTotal());
+        return res;
+    }
+
+    public void save(Member member) {
+        MemberDo memberDo = MemberDo.init(member);
+        memberMapper.insert(memberDo);
+    }
+
+    public void updateById(Member member) {
+        MemberDo memberDo = MemberDo.init(member);
+        memberMapper.updateById(memberDo);
+    }
+
+    public void removeById(Long id) {
+        UpdateWrapper<MemberDo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.set(BaseEntity.BaseField.DELETE_FLAG.getName(), Constant.TRUE_NUMBER);
+        updateWrapper.eq(BaseEntity.BaseField.ID.getName(), id);
+        memberMapper.update(null, updateWrapper);
+    }
+}

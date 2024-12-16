@@ -1,0 +1,63 @@
+server:
+  port: 80
+  servlet:
+    context-path: /server
+  address: 0.0.0.0
+
+spring:
+  autoconfigure:
+    exclude: com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    dynamic:
+      primary: proxy
+      datasource:
+        proxy:
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          url: jdbc:mysql://38.181.57.145:3306/aladdin?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&connectTimeout=30000&socketTimeout=60000
+          username: aladdin
+          password: aladdin202401
+
+mybatis-plus:
+  mapper-locations: classpath*:mappers/lamp/*.xml
+  type-aliases-package: com.lamp.entity
+
+access-token-converter:
+  signing-key: signingKey
+
+security:
+  oauth2:
+    login-uri: http://127.0.0.1:8080/server/oauth/token
+    client:
+      user-authorization-uri: http://127.0.0.1:8080/server/oauth/authorize
+    resource:
+      jwt:
+        key-uri: http://127.0.0.1:8080/server/oauth/token_key
+        key-value: signingKey
+    authorization:
+      check-token-access: http://127.0.0.1:8080/server/oauth/check_token
+
+#oauth-client-details:
+#  zero:
+#    client-id: zero_dev
+#    client-secret: 123456
+#  zero-dev:
+#    client-id: zero
+#    client-secret: 123456
+
+merchant:
+  api: https://zhi.niuniuhua.cn/mapi.php
+  id: 1002
+  key: 4Z4PoPyVPPCypB3k3zypPVDYPtPWpRwv
+  # api: https://www.sailapay.com/mapi.php
+  # id: 1067
+  # key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
+  notify-url: https://alamp.cc/aladdin-api/web/order/finish
+  return-url: https://alamp.cc/order/index
+
+telegram:
+  token: 7774570406:AAHR777wjXDkaUohYnEnCgKVfuQooAp9VdA
+  chat-id: -4548154185
+
+apple:
+  control: https://yunduo.shop/shareapi/xMgucyCshW

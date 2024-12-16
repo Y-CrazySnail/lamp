@@ -1,6 +1,0 @@
-tencent:
-  secret-id: AKIDb9UbVAcomW1HI5edPyKT4QXQ6XkjY9Vc
-  secret-key: 00mJcgV5QWN0OYBdrqeHhtseBTXLtDHA
-  cos:
-    bucket-name: yeem-cloud-1301197907
-    region: ap-beijing

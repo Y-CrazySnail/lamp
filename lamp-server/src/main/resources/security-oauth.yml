@@ -1,0 +1,4 @@
+permit-url:
+  - /subscribe/**
+  - /web/**
+  - /**
