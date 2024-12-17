@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 public class LampClientTraffic extends BaseEntity {
 
     private Long inboundId; // 入站ID
+    private Long serviceMonthId;
 
     private Long clientId; // xui客户ID
 

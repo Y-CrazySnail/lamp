@@ -1,9 +1,14 @@
 package com.lamp.entity;
 
+import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -20,4 +25,35 @@ public class LampServiceMonth extends BaseEntity {
     private Long bandwidthUp; // 上行流量
 
     private Long bandwidthDown; // 下行流量
+
+    @TableField(exist = false)
+    private List<LampClientTraffic> clientTrafficList;
+
+    /**
+     * 计算流量
+     */
+    public void calculateClientTraffic() {
+        bandwidthUp = 0L;
+        bandwidthDown = 0L;
+        if (clientTrafficList != null) {
+            for (LampClientTraffic clientTraffic : clientTrafficList) {
+                bandwidthUp += clientTraffic.getClientUp();
+                bandwidthDown += clientTraffic.getClientDown();
+            }
+        }
+    }
+
+    public static LampServiceMonth generate(LampService service) {
+        Date current = new Date();
+        LampServiceMonth serviceMonth = new LampServiceMonth();
+        serviceMonth.setServiceId(service.getId());
+        serviceMonth.setServiceYear(DateUtil.year(current));
+        serviceMonth.setServiceMonth(DateUtil.month(current) + 1);
+        int lengthOfMonth = DateUtil.lengthOfMonth(DateUtil.month(current) + 1, false);
+        int remainingDay = DateUtil.lengthOfMonth(DateUtil.month(current) + 1, false) - lengthOfMonth;
+        serviceMonth.setBandwidth(service.getBandwidth() * remainingDay / lengthOfMonth);
+        serviceMonth.setBandwidthUp(0L);
+        serviceMonth.setBandwidthDown(0L);
+        return serviceMonth;
+    }
 }

@@ -1,5 +1,7 @@
 package com.lamp.entity;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
@@ -28,4 +30,15 @@ public class LampService extends BaseEntity {
 
     @TableField(exist = false)
     private List<LampServiceMonth> serviceMonthList;
+
+    public static LampService generate(LampMember member) {
+        Date current = new Date();
+        LampService service = new LampService();
+        service.setMemberId(member.getId());
+        service.setUuid(UUID.randomUUID().toString());
+        service.setEndDate(current);
+        service.setBandwidth(0L);
+        service.setPeriod(0);
+        return service;
+    }
 }
