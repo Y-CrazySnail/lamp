@@ -82,114 +82,76 @@
         </el-form-item>
       </el-col>
     </el-form>
-    <el-form
-      ref="service"
-      :model="service"
-      label-width="80px"
-      size="mini"
-      :inline="true"
-      style="margin-left: 10px"
-    >
-      <el-col :span="24">
-        <el-form-item label="UUID" prop="uuid">
-          <el-input v-model="service.uuid" style="width: 300px" disabled />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="开始日期" prop="beginDate">
-          <el-date-picker
-            v-model="service.beginDate"
-            type="date"
-            style="width: 200px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="结束日期" prop="endDate">
-          <el-date-picker
-            v-model="service.endDate"
-            type="date"
-            style="width: 200px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="流量/月" prop="bandwidth">
-          <el-input-number
-            v-model="service.bandwidth"
-            :precision="2"
-            :step="1"
-            :max="500"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="周期(月)" prop="period">
-          <el-input-number v-model="service.period" :step="1" :max="60" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="价格(元)" prop="price">
-          <el-input-number v-model="service.price" :step="1" :max="1000" />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item
-          label="当月流量"
-          prop="bandwidth"
-          v-if="service.currentServiceMonth"
+
+    <div v-for="(service, index) in member.serviceList" :key="index">
+      <div style="margin: 0 0 10px 30px; font-weight: bold">
+        服务{{ index + 1 }}
+      </div>
+      <el-form
+        ref="service"
+        :model="service"
+        label-width="80px"
+        size="mini"
+        :inline="true"
+        style="margin-left: 10px"
+      >
+        <el-col :span="24">
+          <el-form-item label="UUID" prop="id">
+            <el-input
+              v-model="service.uuid"
+              placeholder="uuid"
+              style="width: 300px"
+              disabled
+            />
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="每月流量" prop="bandwidth">
+            <el-input
+              v-model="service.bandwidth"
+              placeholder="流量（月）"
+              style="width: 200px"
+            />
+            <span style="margin-left: 10px; font-weight: bold">
+              {{ (service.bandwidth / 1024 / 1024 / 1024).toFixed(2) }}GB
+            </span>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item label="结束日期" prop="endDate">
+            <el-input
+              v-model="service.endDate"
+              placeholder="结束日期"
+              style="width: 300px"
+            />
+          </el-form-item>
+        </el-col>
+        <el-col
+          :span="24"
+          v-for="(serviceMonth, index) in service.serviceMonthList"
+          :key="index"
         >
-          <el-input
-            v-model="service.currentServiceMonth.bandwidth"
-            style="width: 200px"
-          />
-          <el-tag type="info" size="small" style="margin-left: 5px"
-            >{{
-              Number(
-                service.currentServiceMonth.bandwidth / 1024 / 1024 / 1024
-              ).toFixed(2)
-            }}GB</el-tag
+          <el-form-item
+            :label="serviceMonth.serviceYear + '-' + serviceMonth.serviceMonth"
           >
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item
-          label="上行流量"
-          prop="bandwidthUp"
-          v-if="
-            service.currentServiceMonth &&
-            service.currentServiceMonth.bandwidthUp
-          "
-        >
-          <el-tag type="info" size="small" style="margin-left: 5px"
+            <span>上行流量：</span
+            >{{ (serviceMonth.bandwidthUp / 1024 / 1024 / 1024).toFixed(2) }}GB
+            <span>下行流量：</span
             >{{
-              Number(
-                service.currentServiceMonth.bandwidthUp / 1024 / 1024 / 1024
-              ).toFixed(2)
-            }}GB</el-tag
-          >
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item
-          label="下行流量"
-          prop="bandwidthDown"
-          v-if="
-            service.currentServiceMonth &&
-            service.currentServiceMonth.bandwidthDown
-          "
-        >
-          <el-tag type="info" size="small" style="margin-left: 5px"
-            >{{
-              Number(
-                service.currentServiceMonth.bandwidthDown / 1024 / 1024 / 1024
-              ).toFixed(2)
-            }}GB</el-tag
-          >
-        </el-form-item>
-      </el-col>
-    </el-form>
-    <div style="margin-left: 30px">
+              (serviceMonth.bandwidthDown / 1024 / 1024 / 1024).toFixed(2)
+            }}GB
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </div>
+
+    <div style="margin-left: 30px; margin-bottom: 20px">
+      <el-button type="primary" size="small" @click="onAddService">
+        新增服务
+      </el-button>
+    </div>
+
+    <div style="margin-left: 30px; margin-bottom: 20px">
       <el-button size="small" @click="onCancle" style="margin-right: 10px">
         取消
       </el-button>
@@ -212,50 +174,55 @@ export default {
     },
   },
   mounted() {
-    console.log(this.id);
     this.$store
       .dispatch("aladdin_member/getById", { id: this.id })
       .then((member) => {
         this.member = member;
-        console.log(this.member);
-        this.$store
-          .dispatch("aladdin_service/getByMemberId", {
-            memberId: this.id,
-          })
-          .then((serviceList) => {
-            if (serviceList && serviceList.length > 0) {
-              this.service = serviceList[0];
-              console.log(this.service);
-            } else {
-              this.service = {};
-            }
-            this.loading = false;
-          });
+        this.loading = false;
       });
   },
   data() {
     return {
       loading: true,
       member: {},
-      service: {},
     };
   },
   methods: {
     onSubmit() {
+      this.loading = true;
       this.$store.dispatch("aladdin_member/update", this.member).then(() => {
-        this.$store.dispatch("aladdin_service/update", this.service).then(() => {
-          this.$message.success("更新成功");
-          this.$emit("update:editDrawerVisible", false);
-        });
+        this.$message.success("更新成功");
+        this.loading = false;
+        this.$emit("update:editDrawerVisible", false);
       });
     },
     onCancle() {
       this.$emit("update:editDrawerVisible", false);
     },
+    onAddService() {
+      const { v4: uuidv4 } = require("uuid");
+      const currentDate = new Date();
+      const year = currentDate.getFullYear(); // 获取年份
+      const month = currentDate.getMonth() + 1; // 获取月份，月份从0开始，所以加1
+      const day = currentDate.getDate(); // 获取日期
+      // 将月份和日期格式化为两位数
+      const formattedMonth = month < 10 ? "0" + month : month;
+      const formattedDay = day < 10 ? "0" + day : day;
+      // 拼接成 yyyy-mm-dd 格式
+      const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
+      let service = {
+        uuid: uuidv4(),
+        bandwidth: 0,
+        endDate: formattedDate,
+      };
+      this.member.serviceList.push(service);
+    },
+    onDeleteService(index) {
+      this.member.serviceList.splice(index, 1);
+    },
   },
   destroyed() {
     this.member = {};
-    this.service = {};
   },
 };
 </script>

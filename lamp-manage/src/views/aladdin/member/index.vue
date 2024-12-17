@@ -70,13 +70,13 @@
         </el-popconfirm>
       </template>
     </v-table>
-    <el-drawer title="创建" :visible.sync="addDrawerVisible" size="400">
+    <el-drawer title="创建" :visible.sync="addDrawerVisible" size="420px">
       <v-add
         v-if="addDrawerVisible"
         :add-drawer-visible.sync="addDrawerVisible"
       />
     </el-drawer>
-    <el-drawer title="编辑" :visible.sync="editDrawerVisible" size="400px">
+    <el-drawer title="编辑" :visible.sync="editDrawerVisible" size="420px">
       <v-edit
         v-if="editDrawerVisible"
         :id.sync="editId"
@@ -103,67 +103,42 @@ export default {
         {
           prop: "id",
           label: "编号",
-          width: "50px",
+          width: "100px",
         },
         {
           prop: "wechat",
           label: "微信",
-          width: "150px",
+          width: "200px",
         },
         {
           prop: "email",
           label: "邮箱",
-          width: "150px",
+          width: "200px",
         },
         {
           prop: "password",
           label: "密码",
-          width: "150px",
-        },
-        {
-          prop: "endDate",
-          label: "结束时间",
-          width: "100px",
-        },
-        {
-          prop: "bandwidth",
-          label: "流量",
-          width: "60px",
-        },
-        {
-          prop: "period",
-          label: "周期",
-          width: "60px",
-        },
-        {
-          prop: "price",
-          label: "价格",
-          width: "60px",
-        },
-        {
-          prop: "uuid",
-          label: "UUID",
-          width: "270px",
+          width: "200px",
         },
         {
           prop: "referralCode",
           label: "推荐码",
-          width: "70px",
+          width: "200px",
         },
         {
           prop: "referrerCode",
           label: "推荐人",
-          width: "70px",
+          width: "200px",
         },
         {
           prop: "level",
           label: "会员等级",
-          width: "50px",
+          width: "150px",
         },
         {
           prop: "remark",
           label: "备注",
-          width: "100px",
+          width: "150px",
         },
       ],
       queryParams: {
