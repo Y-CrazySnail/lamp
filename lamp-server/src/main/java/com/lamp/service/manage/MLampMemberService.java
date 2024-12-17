@@ -46,8 +46,10 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
     @Override
     public boolean save(LampMember entity) {
         super.save(entity);
-        LampService service = LampService.generate(entity);
-        serviceService.save(service);
+        if (Objects.nonNull(entity.getServiceList()) && !entity.getServiceList().isEmpty()) {
+            entity.getServiceList().forEach(service -> service.setMemberId(entity.getId()));
+            serviceService.saveOrUpdateBatch(entity.getServiceList());
+        }
         return true;
     }
 
@@ -55,7 +57,8 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
     public boolean updateById(LampMember entity) {
         super.updateById(entity);
         if (Objects.nonNull(entity.getServiceList()) && !entity.getServiceList().isEmpty()) {
-            serviceService.updateBatchById(entity.getServiceList());
+            entity.getServiceList().forEach(service -> service.setMemberId(entity.getId()));
+            serviceService.saveOrUpdateBatch(entity.getServiceList());
         }
         return true;
     }

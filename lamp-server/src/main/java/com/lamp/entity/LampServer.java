@@ -1,9 +1,12 @@
 package com.lamp.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -16,4 +19,7 @@ public class LampServer extends BaseEntity {
     private String apiUsername; // x-ui用户名
 
     private String apiPassword; // x-ui密码
+
+    @TableField(exist = false)
+    private List<LampInbound> inboundList;
 }

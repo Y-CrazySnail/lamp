@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class MLampServiceService extends ServiceImpl<LampServiceMapper, LampService> {
@@ -29,6 +30,15 @@ public class MLampServiceService extends ServiceImpl<LampServiceMapper, LampServ
         LampServiceMonth serviceMonth = LampServiceMonth.generate(entity);
         serviceMonthService.save(serviceMonth);
         return true;
+    }
+
+    @Override
+    public boolean saveOrUpdateBatch(Collection<LampService> entityList) {
+        List<LampService> saveList = entityList.stream().filter(service -> Objects.isNull(service.getId())).collect(Collectors.toList());
+        saveBatch(saveList);
+        List<LampService> updateList = entityList.stream().filter(service -> Objects.nonNull(service.getId())).collect(Collectors.toList());
+        updateBatchById(updateList);
+        return super.saveOrUpdateBatch(entityList);
     }
 
     @Override
