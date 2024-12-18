@@ -2,83 +2,37 @@
   <div class="app-container">
     <div style="margin: 0px 0px 15px 0px">
       <el-row>
-        <el-form
-          ref="queryParams"
-          :model="queryParams"
-          :inline="true"
-          size="mini"
-        >
+        <el-form ref="queryParams" :model="queryParams" :inline="true" size="mini">
           <el-form-item>
-            <el-button
-              size="mini"
-              type="primary"
-              icon="el-icon-plus"
-              @click="add"
-            >
+            <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">
               创建
             </el-button>
-            <el-button
-              size="mini"
-              type="primary"
-              icon="el-icon-search"
-              @click="handleQuery"
-            >
+            <el-button size="mini" type="primary" icon="el-icon-search" @click="handleQuery">
               查询
             </el-button>
-            <el-button
-              size="mini"
-              type="info"
-              icon="el-icon-refresh"
-              @click="handleReset"
-            >
+            <el-button size="mini" type="info" icon="el-icon-refresh" @click="handleReset">
               重置
             </el-button>
           </el-form-item>
         </el-form>
       </el-row>
     </div>
-    <v-table
-      :table-property.sync="tableProperty"
-      :table-data.sync="tableData"
-      @fetchData="fetchData"
-    >
+    <v-table :table-property.sync="tableProperty" :table-data.sync="tableData" @fetchData="fetchData">
       <template v-slot:operation="scope">
+        <el-button size="mini" @click="sync(scope.scope.row)">同步</el-button>
         <el-button size="mini" @click="edit(scope.scope.row)">编辑</el-button>
-        <el-popconfirm
-          confirm-button-text="确认"
-          cancel-button-text="取消"
-          icon="el-icon-info"
-          icon-color="red"
-          title="确认删除？"
-          @confirm="remove(scope.scope.row)"
-        >
+        <el-popconfirm confirm-button-text="确认" cancel-button-text="取消" icon="el-icon-info" icon-color="red"
+          title="确认删除？" @confirm="remove(scope.scope.row)">
           <el-button size="mini" slot="reference">删除</el-button>
         </el-popconfirm>
       </template>
     </v-table>
-    <el-dialog
-      class="snail_dialog"
-      title="创建"
-      :visible.sync="addDialogVisible"
-      width="50%"
-    >
-      <v-add
-        v-if="addDialogVisible"
-        :add-dialog-visible.sync="addDialogVisible"
-      />
-    </el-dialog>
-    <el-dialog
-      class="snail_dialog"
-      title="编辑"
-      :visible.sync="editDialogVisible"
-      width="50%"
-    >
-      <v-edit
-        v-if="editDialogVisible"
-        :form.sync="editForm"
-        :edit-dialog-visible.sync="editDialogVisible"
-      />
-    </el-dialog>
+    <el-drawer class="snail_dialog" title="创建" :visible.sync="addDialogVisible" size="420px">
+      <v-add v-if="addDialogVisible" :add-dialog-visible.sync="addDialogVisible" />
+    </el-drawer>
+    <el-drawer class="snail_dialog" title="编辑" :visible.sync="editDialogVisible" size="420px">
+      <v-edit v-if="editDialogVisible" :id.sync="editId" :edit-dialog-visible.sync="editDialogVisible" />
+    </el-drawer>
   </div>
 </template>
 
@@ -99,57 +53,27 @@ export default {
         {
           prop: "id",
           label: "编号",
-          width: "50px",
+          width: "100px",
         },
         {
           prop: "apiIp",
-          label: "会员ID",
-          width: "150px",
+          label: "API地址",
+          width: "200px",
         },
         {
           prop: "apiPort",
           label: "API端口",
-          width: "100px",
+          width: "200px",
         },
         {
           prop: "apiUsername",
           label: "API用户名",
-          width: "100px",
+          width: "200px",
         },
         {
           prop: "apiPassword",
           label: "API密码",
-          width: "150px",
-        },
-        {
-          prop: "nodeRemark",
-          label: "节点名称",
-          width: "100px",
-        },
-        {
-          prop: "nodePort",
-          label: "节点端口",
-          width: "100px",
-        },
-        {
-          prop: "subscribeIp",
-          label: "订阅地址",
-          width: "150px",
-        },
-        {
-          prop: "subscribePort",
-          label: "订阅端口",
-          width: "100px",
-        },
-        {
-          prop: "subscribeNamePrefix",
-          label: "订阅名称前缀",
-          width: "150px",
-        },
-        {
-          prop: "postscript",
-          label: "说明",
-          width: "400px",
+          width: "200px",
         },
       ],
       queryParams: {
@@ -159,7 +83,7 @@ export default {
       tableData: {},
       addDialogVisible: false,
       editDialogVisible: false,
-      editForm: null,
+      editId: null,
     };
   },
   created() {
@@ -201,7 +125,7 @@ export default {
       this.addDialogVisible = true;
     },
     edit(row) {
-      this.editForm = row;
+      this.editId = row.id;
       this.editDialogVisible = true;
     },
     remove(row) {
@@ -210,9 +134,19 @@ export default {
         .then((response) => {
           this.fetchData(this.tableData.current, this.tableData.size);
         })
-        .catch(() => {});
+        .catch(() => { });
     },
-    server(row) {},
+    sync(row) {
+      this.$store
+        .dispatch("aladdin_server/sync", { id: row.id })
+        .then((response) => {
+          this.$message({
+            message: "同步成功",
+            type: "success",
+          });
+        })
+        .catch(() => { });
+    },
   },
 };
 </script>

@@ -14,7 +14,7 @@
     },
     "dependencies": {
         "axios": "0.18.1",
-        "core-js": "3.6.5",
+        "core-js": "^3.39.0",
         "dateformat-util": "^1.0.5",
         "element-ui": "2.15.14",
         "js-base64": "^3.7.2",

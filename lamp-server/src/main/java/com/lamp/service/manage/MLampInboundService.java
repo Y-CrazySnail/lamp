@@ -26,12 +26,16 @@ public class MLampInboundService extends ServiceImpl<LampInboundMapper, LampInbo
     private MLampClientTrafficService clientTrafficService;
 
     @Override
-    public boolean saveBatch(Collection<LampInbound> entityList) {
-        super.saveBatch(entityList);
+    public boolean saveOrUpdateBatch(Collection<LampInbound> entityList) {
+        super.saveOrUpdateBatch(entityList);
         for (LampInbound inbound : entityList) {
             if (Objects.nonNull(inbound.getSubscriptionList()) && !inbound.getSubscriptionList().isEmpty()) {
                 inbound.getSubscriptionList().forEach(subscription -> subscription.setInboundId(inbound.getId()));
-                subscriptionService.saveBatch(inbound.getSubscriptionList());
+                subscriptionService.saveOrUpdateBatch(inbound.getSubscriptionList());
+            }
+            if (Objects.nonNull(inbound.getClientTrafficList()) && !inbound.getClientTrafficList().isEmpty()) {
+                inbound.getClientTrafficList().forEach(clientTraffic -> clientTraffic.setInboundId(inbound.getId()));
+                clientTrafficService.saveOrUpdateBatch(inbound.getClientTrafficList());
             }
         }
         return true;

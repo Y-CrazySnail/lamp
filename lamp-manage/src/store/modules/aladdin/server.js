@@ -1,4 +1,4 @@
-import { page, all, save, update, remove, getById } from '@/api/aladdin/server'
+import { page, all, save, update, remove, getById, sync } from '@/api/aladdin/server'
 
 const state = {}
 
@@ -14,7 +14,7 @@ const actions = {
             })
         })
     },
-    all({ commit, state }, params) {
+    getById({ commit, state }, params) {
         return new Promise((resolve, reject) => {
             getById(params).then(response => {
                 resolve(response)
@@ -58,7 +58,16 @@ const actions = {
                 reject(error)
             })
         })
-    }
+    },
+    sync({ commit, state }, params) {
+        return new Promise((resolve, reject) => {
+            sync(params).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
 }
 
 export default {

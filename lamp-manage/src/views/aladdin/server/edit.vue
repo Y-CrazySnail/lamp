@@ -1,115 +1,34 @@
 <template>
-  <div>
-    <el-form
-      ref="form"
-      :model="form"
-      label-width="auto"
-      size="mini"
-      :inline="true"
-    >
+  <div v-loading="loading">
+    <el-form ref="server" :model="server" label-width="80px" size="mini" :inline="true" style="margin-left: 10px">
       <el-col :span="24">
         <el-form-item label="ID:" prop="id">
-          <el-input
-            v-model="form.id"
-            placeholder="ID"
-            style="width: 300px"
-            disabled
-          />
+          <el-input v-model="server.id" placeholder="ID" style="width: 300px" disabled />
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="APIID:" prop="apiIp">
-          <el-input
-            v-model="form.apiIp"
-            placeholder="APIID"
-            style="width: 300px"
-          />
+        <el-form-item label="API地址:" prop="API地址">
+          <el-input v-model="server.apiIp" placeholder="API地址" style="width: 300px" />
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="API端口:" prop="apiPort">
-          <el-input
-            v-model="form.apiPort"
-            placeholder="API端口"
-            style="width: 300px"
-          />
+        <el-form-item label="API端口:" prop="API端口">
+          <el-input v-model="server.apiPort" placeholder="API端口" style="width: 300px" />
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="API用户名:" prop="apiUsername">
-          <el-input
-            v-model="form.apiUsername"
-            placeholder="API用户名"
-            style="width: 300px"
-          />
+        <el-form-item label="API用户:" prop="apiUsername">
+          <el-input v-model="server.apiUsername" placeholder="API用户名" style="width: 300px" />
         </el-form-item>
       </el-col>
       <el-col :span="24">
         <el-form-item label="API密码:" prop="apiPassword">
-          <el-input
-            v-model="form.apiPassword"
-            placeholder="API密码"
-            style="width: 300px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="节点名称:" prop="nodeRemark">
-          <el-input
-            v-model="form.nodeRemark"
-            placeholder="节点名称"
-            style="width: 300px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="节点端口:" prop="nodePort">
-          <el-input
-            v-model="form.nodePort"
-            placeholder="节点端口"
-            style="width: 300px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="订阅地址:" prop="subscribeIp">
-          <el-input
-            v-model="form.subscribeIp"
-            placeholder="订阅地址"
-            style="width: 300px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="订阅端口:" prop="subscribePort">
-          <el-input
-            v-model="form.subscribePort"
-            placeholder="订阅端口"
-            style="width: 300px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="订阅名称前缀:" prop="subscribeNamePrefix">
-          <el-input
-            v-model="form.subscribeNamePrefix"
-            placeholder="订阅名称前缀"
-            style="width: 300px"
-          />
-        </el-form-item>
-      </el-col>
-      <el-col :span="24">
-        <el-form-item label="说明:" prop="postscript">
-          <el-input
-            v-model="form.postscript"
-            placeholder="说明"
-            style="width: 300px"
-          />
+          <el-input v-model="server.apiPassword" placeholder="API密码" style="width: 300px" />
         </el-form-item>
       </el-col>
       <el-col :span="24" />
     </el-form>
-    <div class="dialog-footer">
+    <div style="margin-left: 30px; margin-bottom: 20px">
       <el-button size="small" @click="onCancle" style="margin-right: 10px">
         取消
       </el-button>
@@ -122,26 +41,33 @@
 export default {
   name: "AladdinserverEdit",
   props: {
-    form: {},
+    id: {
+      type: Number,
+      require: true,
+    },
     editDialogVisible: {
       type: Boolean,
       required: true,
     },
   },
   mounted() {
-    this.form.uuid = this.$uuid.v4();
+    this.$store
+      .dispatch("aladdin_server/getById", { id: this.id })
+      .then((server) => {
+        this.server = server;
+        this.loading = false;
+      });
   },
   data() {
     return {
-      form: {
-        uuid: "",
-      },
+      loading: true,
+      server: {}
     };
   },
   methods: {
     onSubmit() {
       this.$store
-        .dispatch("aladdin_server/update", this.form)
+        .dispatch("aladdin_server/update", this.server)
         .then((response) => {
           this.$message.success("更新成功");
           this.$emit("update:editDialogVisible", false);
@@ -157,5 +83,4 @@ export default {
 };
 </script>
 
-<style>
-</style>
+<style></style>

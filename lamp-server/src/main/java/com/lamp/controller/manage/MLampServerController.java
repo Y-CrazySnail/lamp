@@ -74,8 +74,19 @@ public class MLampServerController {
             serverService.removeById(server.getId());
             return ResponseEntity.ok("服务器删除成功");
         } catch (Exception e) {
-            log.error("服务器会员失败：", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("服务器会员失败");
+            log.error("服务器删除失败:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("服务器删除失败");
+        }
+    }
+
+    @PostMapping("/sync")
+    public ResponseEntity<Object> sync(@RequestBody LampServer server) {
+        try {
+            serverService.syncToLocal(server);
+            return ResponseEntity.ok("服务器同步成功");
+        } catch (Exception e) {
+            log.error("服务器同步失败:", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("服务器同步失败");
         }
     }
 }

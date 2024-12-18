@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function page(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/server/pages',
+        url: '/manage/lamp-server/page',
         method: 'get',
         params
     })
@@ -12,7 +12,7 @@ export function page(params) {
 export function getById(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/server/getById',
+        url: '/manage/lamp-server/get',
         method: 'get',
         params
     })
@@ -21,7 +21,7 @@ export function getById(params) {
 export function all(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/server/list',
+        url: '/manage/lamp-server/list',
         method: 'get',
         params
     })
@@ -30,7 +30,7 @@ export function all(params) {
 export function save(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/server/save',
+        url: '/manage/lamp-server/save',
         method: 'post',
         data: params
     })
@@ -39,7 +39,7 @@ export function save(params) {
 export function update(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/server/update',
+        url: '/manage/lamp-server/update',
         method: 'put',
         data: params
     })
@@ -48,8 +48,17 @@ export function update(params) {
 export function remove(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/server/delete',
+        url: '/manage/lamp-server/delete',
         method: 'delete',
+        data: params
+    })
+}
+
+export function sync(params) {
+    return request({
+        baseURL: 'aladdin',
+        url: '/manage/lamp-server/sync',
+        method: 'post',
         data: params
     })
 }
