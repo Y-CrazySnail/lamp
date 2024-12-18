@@ -120,6 +120,27 @@ public class XClient {
         }
     }
 
+    public void addInbound(Integer inboundPort, String protocol, String remark, List<XVmessClient> xVmessClientList) {
+        XInbound xInbound = new XInbound();
+        xInbound.setUp(0);
+        xInbound.setDown(0);
+        xInbound.setTotal(0);
+        xInbound.setRemark(remark);
+        xInbound.setEnable(true);
+        xInbound.setExpiryTime(0);
+        xInbound.setListen(null);
+        xInbound.setPort(inboundPort);
+        xInbound.setProtocol(Objects.isNull(protocol) ? "vmess" : protocol);
+        xInbound.initSteamSettings();
+        xInbound.initSniffing();
+        xInbound.initVmessSetting(xVmessClientList);
+        Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
+        HttpRequest.post("http://" + this.host + ":" + this.port + INBOUND_ADD)
+                .cookie(this.cookie)
+                .form(formData)
+                .execute();
+    }
+
     public List<XInbound> getInbound() {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + INBOUND_LIST)
@@ -139,8 +160,8 @@ public class XClient {
         }
     }
 
-    public void delInbound(XInbound xInbound) {
-        String path = String.format(INBOUND_DEL, xInbound.getId());
+    public void delInbound(Long xInboundId) {
+        String path = String.format(INBOUND_DEL, xInboundId);
         HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + path)
                 .cookie(this.cookie)
                 .execute();
