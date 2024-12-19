@@ -1,5 +1,6 @@
 package com.lamp.service.manage;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lamp.common.entity.BaseEntity;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,6 +22,16 @@ public class MLampServiceMonthService extends ServiceImpl<LampServiceMonthMapper
 
     @Autowired
     private MLampClientTrafficService clientTrafficService;
+
+    public List<LampServiceMonth> list(Date current) {
+        int year = DateUtil.year(current);
+        int month = DateUtil.month(current) + 1;
+        LambdaQueryWrapper<LampServiceMonth> queryWrapper = new LambdaQueryWrapper<>(LampServiceMonth.class);
+        queryWrapper.eq(LampServiceMonth::getServiceYear, year);
+        queryWrapper.eq(LampServiceMonth::getServiceMonth, month);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        return serviceMonthMapper.selectList(queryWrapper);
+    }
 
     @Override
     public boolean updateBatchById(Collection<LampServiceMonth> entityList) {
