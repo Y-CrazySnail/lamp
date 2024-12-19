@@ -6,9 +6,12 @@ import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampInbound;
 import com.lamp.entity.LampServer;
 import com.lamp.mapper.LampInboundMapper;
+import com.lamp.xui.XServer;
+import com.lamp.xui.entity.XuiInbound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
@@ -20,24 +23,38 @@ public class MLampInboundService extends ServiceImpl<LampInboundMapper, LampInbo
     private LampInboundMapper inboundMapper;
 
     @Autowired
+    private MLampServerService serverService;
+
+    @Autowired
     private MLampSubscriptionService subscriptionService;
 
     @Autowired
     private MLampClientTrafficService clientTrafficService;
 
     @Override
-    public boolean saveOrUpdateBatch(Collection<LampInbound> entityList) {
-        super.saveOrUpdateBatch(entityList);
-        for (LampInbound inbound : entityList) {
-            if (Objects.nonNull(inbound.getSubscriptionList()) && !inbound.getSubscriptionList().isEmpty()) {
-                inbound.getSubscriptionList().forEach(subscription -> subscription.setInboundId(inbound.getId()));
-                subscriptionService.saveOrUpdateBatch(inbound.getSubscriptionList());
-            }
-            if (Objects.nonNull(inbound.getClientTrafficList()) && !inbound.getClientTrafficList().isEmpty()) {
-                inbound.getClientTrafficList().forEach(clientTraffic -> clientTraffic.setInboundId(inbound.getId()));
-                clientTrafficService.saveOrUpdateBatch(inbound.getClientTrafficList());
-            }
+    public LampInbound getById(Serializable id) {
+        LampInbound inbound = getById(id);
+        LampServer server = serverService.getById(inbound.getServerId());
+        XServer xServer = XServer.init(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
+        List<XuiInbound> xuiInboundList = xServer.inboundList(inbound.getXuiId());
+        if (xuiInboundList.isEmpty()) {
+            return null;
         }
+        return inbound;
+    }
+
+    @Override
+    public boolean save(LampInbound inbound) {
+        super.save(inbound);
+        LampServer server = serverService.getById(inbound.getServerId());
+        XServer xServer = XServer.init(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
+//        xServer.inboundAdd();
+        return true;
+    }
+
+    @Override
+    public boolean removeById(Serializable id) {
+        super.removeById(id);
         return true;
     }
 

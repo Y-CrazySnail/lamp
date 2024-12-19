@@ -4,9 +4,11 @@ import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
+import com.lamp.xui.entity.XuiVmessSetting;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,8 +39,8 @@ public class LampServiceMonth extends BaseEntity {
         bandwidthDown = 0L;
         if (clientTrafficList != null) {
             for (LampClientTraffic clientTraffic : clientTrafficList) {
-                bandwidthUp += clientTraffic.getClientUp();
-                bandwidthDown += clientTraffic.getClientDown();
+                bandwidthUp += clientTraffic.getXuiUp();
+                bandwidthDown += clientTraffic.getXuiDown();
             }
         }
     }
