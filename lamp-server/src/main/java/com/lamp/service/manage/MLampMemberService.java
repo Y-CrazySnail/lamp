@@ -12,6 +12,7 @@ import com.lamp.mapper.LampMemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
@@ -43,6 +44,7 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
         return member;
     }
 
+    @Transactional
     @Override
     public boolean save(LampMember entity) {
         super.save(entity);
@@ -53,6 +55,7 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
         return true;
     }
 
+    @Transactional
     @Override
     public boolean updateById(LampMember entity) {
         super.updateById(entity);
@@ -63,11 +66,15 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
         return true;
     }
 
+    @Transactional
     @Override
     public boolean removeById(Serializable id) {
+        LampMember member = memberMapper.selectById(id);
         LambdaUpdateWrapper<LampMember> updateWrapper = new LambdaUpdateWrapper<>(LampMember.class);
         updateWrapper.set(LampMember::getDeleteFlag, 1);
         updateWrapper.eq(LampMember::getId, id);
-        return SqlHelper.retBool(memberMapper.update(null, updateWrapper));
+        memberMapper.update(null, updateWrapper);
+        serviceService.removeByMemberId(member.getId());
+        return true;
     }
 }

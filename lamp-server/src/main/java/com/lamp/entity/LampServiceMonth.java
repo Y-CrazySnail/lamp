@@ -18,6 +18,8 @@ import java.util.List;
 public class LampServiceMonth extends BaseEntity {
     private Long serviceId; // 服务ID
 
+    private String uuid;
+
     private Integer serviceYear; // 年份
 
     private Integer serviceMonth; // 月份
@@ -49,6 +51,7 @@ public class LampServiceMonth extends BaseEntity {
         Date current = new Date();
         LampServiceMonth serviceMonth = new LampServiceMonth();
         serviceMonth.setServiceId(service.getId());
+        serviceMonth.setUuid(service.getUuid());
         serviceMonth.setServiceYear(DateUtil.year(current));
         serviceMonth.setServiceMonth(DateUtil.month(current) + 1);
         int lengthOfMonth = DateUtil.lengthOfMonth(DateUtil.month(current) + 1, false);

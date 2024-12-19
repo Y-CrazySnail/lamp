@@ -1,9 +1,9 @@
-package com.lamp.xui.model;
+package com.lamp.xui.entity;
 
 import lombok.Data;
 
 @Data
-public class XResponse<T> {
+public class XuiResponse<T> {
     private boolean success;
     private String msg;
     private T obj;

@@ -3,7 +3,9 @@ package com.lamp.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
+import com.lamp.xui.entity.XuiClientTraffic;
 import com.lamp.xui.entity.XuiInbound;
+import com.lamp.xui.entity.XuiSettings;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -32,9 +34,9 @@ public class LampInbound extends BaseEntity {
 
     private int xuiEnable;
 
-    private int xuiExpireTime;
+    private long xuiExpiryTime;
 
-    private int xuiListen;
+    private String xuiListen;
 
     private int xuiPort;
 
@@ -53,4 +55,21 @@ public class LampInbound extends BaseEntity {
 
     @TableField(exist = false)
     private List<LampClientTraffic> clientTrafficList; // 客户端流量列表
+
+    public void setXuiInbound(XuiInbound xuiInbound) {
+        this.xuiId = xuiInbound.getId();
+        this.xuiUp = xuiInbound.getUp();
+        this.xuiDown = xuiInbound.getDown();
+        this.xuiTotal = xuiInbound.getTotal();
+        this.xuiRemark = xuiInbound.getRemark();
+        this.xuiEnable = xuiInbound.isEnable() ? 1 : 0;
+        this.xuiExpiryTime = xuiInbound.getExpiryTime();
+        this.xuiListen = xuiInbound.getListen();
+        this.xuiPort = xuiInbound.getPort();
+        this.xuiProtocol = xuiInbound.getProtocol();
+        this.xuiTag = xuiInbound.getTag();
+        this.xuiSettings = xuiInbound.getSettings();
+        this.xuiStreamSettings = xuiInbound.getStreamSettings();
+        this.xuiSniffing = xuiInbound.getSniffing();
+    }
 }

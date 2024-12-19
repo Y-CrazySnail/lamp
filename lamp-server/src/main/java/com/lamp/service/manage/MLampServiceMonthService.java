@@ -2,6 +2,7 @@ package com.lamp.service.manage;
 
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampService;
@@ -36,6 +37,13 @@ public class MLampServiceMonthService extends ServiceImpl<LampServiceMonthMapper
     @Override
     public boolean updateBatchById(Collection<LampServiceMonth> entityList) {
         return super.updateBatchById(entityList);
+    }
+
+    public void removeByServiceId(Long serviceId) {
+        LambdaUpdateWrapper<LampServiceMonth> updateWrapper = new LambdaUpdateWrapper<>(LampServiceMonth.class);
+        updateWrapper.set(LampServiceMonth::getDeleteFlag, true);
+        updateWrapper.eq(LampServiceMonth::getServiceId, serviceId);
+        serviceMonthMapper.update(null, updateWrapper);
     }
 
     public void setServiceMonthList(LampService service) {

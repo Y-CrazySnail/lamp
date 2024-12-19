@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export function page(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/lamp-member/page',
+        url: '/manage/lamp-inbound/page',
         method: 'get',
         params
     })
@@ -12,16 +12,7 @@ export function page(params) {
 export function getById(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/lamp-member/get',
-        method: 'get',
-        params
-    })
-}
-
-export function all(params) {
-    return request({
-        baseURL: 'aladdin',
-        url: '/manage/lamp-member/list',
+        url: '/manage/lamp-inbound/get',
         method: 'get',
         params
     })
@@ -30,17 +21,8 @@ export function all(params) {
 export function save(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/lamp-member/save',
+        url: '/manage/lamp-inbound/save',
         method: 'post',
-        data: params
-    })
-}
-
-export function update(params) {
-    return request({
-        baseURL: 'aladdin',
-        url: '/manage/lamp-member/update',
-        method: 'put',
         data: params
     })
 }
@@ -48,8 +30,9 @@ export function update(params) {
 export function remove(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/lamp-member/remove',
+        url: '/manage/lamp-inbound/remove',
         method: 'delete',
         data: params
     })
 }
+

@@ -249,6 +249,14 @@ export const constantRoutes = [{
             hidden: !permission.includes("/aladdin/member")
         },
         {
+            path: 'server',
+            name: 'Server',
+            component: () =>
+                import('@/views/aladdin/server/index'),
+            meta: { title: '服务器', icon: 'el-icon-s-help' },
+            hidden: !permission.includes("/aladdin/server")
+        },
+        {
             path: 'service',
             name: 'Service',
             component: () =>
@@ -263,14 +271,6 @@ export const constantRoutes = [{
                 import('@/views/aladdin/order/index'),
             meta: { title: '订单', icon: 'el-icon-s-data' },
             hidden: !permission.includes("/aladdin/order")
-        },
-        {
-            path: 'server',
-            name: 'Server',
-            component: () =>
-                import('@/views/aladdin/server/index'),
-            meta: { title: '服务器', icon: 'el-icon-s-help' },
-            hidden: !permission.includes("/aladdin/server")
         },
         {
             path: 'package',

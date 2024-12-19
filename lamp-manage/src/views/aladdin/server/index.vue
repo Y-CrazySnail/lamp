@@ -19,7 +19,7 @@
     </div>
     <v-table :table-property.sync="tableProperty" :table-data.sync="tableData" @fetchData="fetchData">
       <template v-slot:operation="scope">
-        <el-button size="mini" @click="sync(scope.scope.row)">同步</el-button>
+        <el-button size="mini" @click="inbound(scope.scope.row)">入站</el-button>
         <el-button size="mini" @click="edit(scope.scope.row)">编辑</el-button>
         <el-popconfirm confirm-button-text="确认" cancel-button-text="取消" icon="el-icon-info" icon-color="red"
           title="确认删除？" @confirm="remove(scope.scope.row)">
@@ -27,6 +27,9 @@
         </el-popconfirm>
       </template>
     </v-table>
+    <el-drawer class="snail_dialog" title="入站" :visible.sync="inboundDialogVisible" size="420px">
+      <v-inbound v-if="inboundDialogVisible" :id.sync="editId" :inbound-dialog-visible.sync="inboundDialogVisible" />
+    </el-drawer>
     <el-drawer class="snail_dialog" title="创建" :visible.sync="addDialogVisible" size="420px">
       <v-add v-if="addDialogVisible" :add-dialog-visible.sync="addDialogVisible" />
     </el-drawer>
@@ -40,12 +43,14 @@
 import Table from "@/components/Table/index";
 import Add from "@/views/aladdin/server/add";
 import Edit from "@/views/aladdin/server/edit";
+import Inbound from "@/views/aladdin/server/inbound";
 export default {
   name: "AladdinServer",
   components: {
     "v-table": Table,
     "v-edit": Edit,
     "v-add": Add,
+    "v-inbound": Inbound
   },
   data() {
     return {
@@ -83,6 +88,7 @@ export default {
       tableData: {},
       addDialogVisible: false,
       editDialogVisible: false,
+      inboundDialogVisible: false,
       editId: null,
     };
   },
@@ -136,16 +142,9 @@ export default {
         })
         .catch(() => { });
     },
-    sync(row) {
-      this.$store
-        .dispatch("aladdin_server/sync", { id: row.id })
-        .then((response) => {
-          this.$message({
-            message: "同步成功",
-            type: "success",
-          });
-        })
-        .catch(() => { });
+    inbound(row) {
+      this.editId = row.id;
+      this.inboundDialogVisible = true;
     },
   },
 };

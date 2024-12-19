@@ -1,15 +1,18 @@
 package com.lamp.xui.builder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lamp.entity.LampInbound;
 import com.lamp.entity.LampServiceMonth;
 import com.lamp.xui.entity.XuiInbound;
 import com.lamp.xui.entity.XuiVmessSetting;
+import com.lamp.xui.entity.XuiVmessSettings;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class XuiInboundBuilder {
-    public static XuiInbound convert(LampInbound inbound) {
+    public static XuiInbound build(LampInbound inbound, List<LampServiceMonth> serviceMonthList) {
         XuiInbound xuiInbound = new XuiInbound();
         xuiInbound.setUp(0);
         xuiInbound.setDown(0);
@@ -19,10 +22,29 @@ public class XuiInboundBuilder {
         xuiInbound.setExpiryTime(0);
         xuiInbound.setPort(inbound.getXuiPort());
         xuiInbound.setProtocol("vmess");
-//
-//        settings: {
-//            "clients":
-//        }
+        XuiInboundBuilder.initSniffing(xuiInbound);
+        XuiInboundBuilder.initSteamSettings(xuiInbound);
+        List<XuiVmessSetting> xuiVmessSettingList = new ArrayList<>();
+        for (LampServiceMonth serviceMonth : serviceMonthList) {
+            XuiVmessSetting xuiVmessSetting = new XuiVmessSetting();
+            xuiVmessSetting.setId(serviceMonth.getUuid());
+            xuiVmessSetting.setEmail("i" + "_" + inbound.getId() + "_s_" + serviceMonth.getId());
+            xuiVmessSetting.setLimitIp(0);
+            xuiVmessSetting.setTotalGB(0);
+            xuiVmessSetting.setExpiryTime(0);
+            xuiVmessSetting.setEnable(true);
+            xuiVmessSetting.setSubId("");
+            xuiVmessSetting.setReset(0);
+            xuiVmessSettingList.add(xuiVmessSetting);
+        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        XuiVmessSettings xuiVmessSettings = new XuiVmessSettings();
+        xuiVmessSettings.setClients(xuiVmessSettingList);
+        try {
+            xuiInbound.setSettings(objectMapper.writeValueAsString(xuiVmessSettings));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return xuiInbound;
     }
 
@@ -52,35 +74,5 @@ public class XuiInboundBuilder {
                 "  \"metadataOnly\": false,\n" +
                 "  \"routeOnly\": false" +
                 "}");
-    }
-
-    public static List<XuiVmessSetting> convert(List<LampServiceMonth> serviceMonthList) {
-        List<XuiVmessSetting> xuiVmessSettingList = new ArrayList<>();
-        for (LampServiceMonth serviceMonth : serviceMonthList) {
-            XuiVmessSetting xuiVmessSetting = new XuiVmessSetting();
-            xuiVmessSetting.setId("uuid");
-            xuiVmessSetting.setEmail("");
-            xuiVmessSetting.setLimitIp(0);
-            xuiVmessSetting.setTotalGB(0);
-            xuiVmessSetting.setExpiryTime(0);
-            xuiVmessSetting.setEnable(true);
-            xuiVmessSetting.setSubId("");
-            xuiVmessSetting.setReset(0);
-            xuiVmessSettingList.add(xuiVmessSetting);
-        }
-        return xuiVmessSettingList;
-//        [
-//        {
-//            "id": "715af18a-cde6-445a-aef0-499221b2851f",
-//                "email": "p6kvfwz8",
-//                "limitIp": 0,
-//                "totalGB": 0,
-//                "expiryTime": 0,
-//                "enable": true,
-//                "tgId": "",
-//                "subId": "h9n9lhrga84612vb",
-//                "reset": 0
-//        }
-//            ]
     }
 }

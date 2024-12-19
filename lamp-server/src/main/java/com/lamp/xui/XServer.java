@@ -8,6 +8,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lamp.xui.entity.XuiInbound;
+import com.lamp.xui.entity.XuiResponse;
 import com.lamp.xui.entity.XuiVmessSettings;
 import com.lamp.xui.model.*;
 import com.lamp.xui.parser.SettingParser;
@@ -104,9 +105,9 @@ public class XServer {
             throw new RuntimeException(e);
         }
         try {
-            XResponse<Object> xResponse = objectMapper.readValue(response.body(), new TypeReference<XResponse<Object>>() {
+            XuiResponse<Object> xuiResponse = objectMapper.readValue(response.body(), new TypeReference<XuiResponse<Object>>() {
             });
-            if (null != xResponse && xResponse.isSuccess()) {
+            if (null != xuiResponse && xuiResponse.isSuccess()) {
                 XServer xServer = new XServer();
                 xServer.setHost(host);
                 xServer.setPort(port);
@@ -138,10 +139,10 @@ public class XServer {
                 .execute();
         String body = response.body();
         try {
-            XResponse<List<XuiInbound>> xResponse = objectMapper.readValue(body, new TypeReference<XResponse<List<XuiInbound>>>() {
+            XuiResponse<List<XuiInbound>> xuiResponse = objectMapper.readValue(body, new TypeReference<XuiResponse<List<XuiInbound>>>() {
             });
-            if (xResponse.isSuccess()) {
-                List<XuiInbound> xuiInboundList = xResponse.getObj();
+            if (xuiResponse.isSuccess()) {
+                List<XuiInbound> xuiInboundList = xuiResponse.getObj();
                 if (Objects.isNull(xuiInboundList) || xuiInboundList.isEmpty()) {
                     return new ArrayList<>();
                 }
@@ -170,12 +171,29 @@ public class XServer {
                 .execute();
     }
 
-    public void inboundAdd(XuiInbound xuiInbound) {
+    public XuiInbound inboundAdd(XuiInbound xuiInbound) {
         Map<String, Object> formData = BeanUtil.beanToMap(xuiInbound);
-        HttpRequest.post("http://" + this.host + ":" + this.port + INBOUND_ADD)
+        HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + INBOUND_ADD)
                 .cookie(this.cookie)
                 .form(formData)
                 .execute();
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            XuiResponse<XuiInbound> xuiResponse = objectMapper.readValue(response.body(), new TypeReference<XuiResponse<XuiInbound>>() {
+            });
+            if (xuiResponse.isSuccess()) {
+                xuiInbound = xuiResponse.getObj();
+                if (Objects.equals("vmess", xuiInbound.getProtocol())) {
+                    SettingParser parser = new VmessSettingParser();
+                    parser.parse(xuiInbound);
+                }
+                return xuiInbound;
+            } else {
+                throw new RuntimeException();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException();
+        }
     }
 
     public void addClient(XInbound inbound, String uuid, Long serviceId) {

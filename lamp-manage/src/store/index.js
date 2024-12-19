@@ -32,6 +32,7 @@ import one_user from './modules/one/user'
 import aladdin_member from './modules/aladdin/member'
 import aladdin_service from './modules/aladdin/service'
 import aladdin_server from './modules/aladdin/server'
+import aladdin_inbound from './modules/aladdin/inbound'
 import aladdin_package from './modules/aladdin/package'
 import aladdin_order from './modules/aladdin/order'
 
@@ -70,6 +71,7 @@ const store = new Vuex.Store({
         aladdin_member,
         aladdin_service,
         aladdin_server,
+        aladdin_inbound,
         aladdin_package,
         aladdin_order
     },
