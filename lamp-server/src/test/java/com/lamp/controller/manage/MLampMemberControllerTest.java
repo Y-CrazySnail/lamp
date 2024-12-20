@@ -1,6 +1,7 @@
 package com.lamp.controller.manage;
 
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lamp.entity.LampMember;
 import com.lamp.entity.LampService;
@@ -17,6 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.Date;
 
@@ -90,7 +93,7 @@ public class MLampMemberControllerTest {
         LampService service = new LampService();
         service.setId(2L);
         service.setUuid("4460efbb-ef23-4ffc-b4fc-9c39cac51c0c");
-        service.setEndDate(DateUtil.offsetMonth(new Date(), 1));
+//        service.setExpiryDate(LocalDateTimeUtil.offset(LocalDateTime.now(), 1, ChronoUnit.MONTHS));
         service.setBandwidth(0L);
         service.setPeriod(1);
 

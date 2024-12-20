@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -25,6 +26,13 @@ public class MLampServiceService extends ServiceImpl<LampServiceMapper, LampServ
 
     @Autowired
     private MLampServiceMonthService serviceMonthService;
+
+    @Override
+    public List<LampService> list() {
+        LambdaQueryWrapper<LampService> queryWrapper = new LambdaQueryWrapper<>(LampService.class);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        return serviceMapper.selectList(queryWrapper);
+    }
 
     @Override
     public boolean save(LampService entity) {
@@ -79,13 +87,13 @@ public class MLampServiceService extends ServiceImpl<LampServiceMapper, LampServ
         }
     }
 
-    public void setServiceList(LampMember member) {
+    public void setServiceList(LampMember member, Date current) {
         LambdaQueryWrapper<LampService> queryWrapper = new LambdaQueryWrapper<>(LampService.class);
         queryWrapper.eq(LampService::getMemberId, member.getId());
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         List<LampService> serviceList = serviceMapper.selectList(queryWrapper);
-        for (LampService service : serviceList) {
-            serviceMonthService.setServiceMonthList(service);
+        if (!serviceList.isEmpty()) {
+            serviceList.forEach(service -> serviceMonthService.setServiceMonthList(service, current));
         }
         member.setServiceList(serviceList);
     }

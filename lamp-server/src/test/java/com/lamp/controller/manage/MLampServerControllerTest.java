@@ -84,7 +84,7 @@ public class MLampServerControllerTest {
         LampService service = new LampService();
         service.setId(2L);
         service.setUuid("4460efbb-ef23-4ffc-b4fc-9c39cac51c0c");
-        service.setEndDate(DateUtil.offsetMonth(new Date(), 1));
+//        service.setExpiryDate(DateUtil.offsetMonth(new Date(), 1));
         service.setBandwidth(0L);
         service.setPeriod(1);
 

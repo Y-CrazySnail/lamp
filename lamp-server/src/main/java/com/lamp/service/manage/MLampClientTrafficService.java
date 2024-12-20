@@ -20,18 +20,16 @@ public class MLampClientTrafficService extends ServiceImpl<LampClientTrafficMapp
     private LampClientTrafficMapper clientTrafficMapper;
 
     @Override
-    public boolean saveOrUpdateBatch(Collection<LampClientTraffic> entityList) {
-        for (LampClientTraffic clientTraffic : entityList) {
-            LambdaQueryWrapper<LampClientTraffic> queryWrapper = new LambdaQueryWrapper<>(LampClientTraffic.class);
-            BaseEntity.setDeleteFlagCondition(queryWrapper);
-            queryWrapper.eq(LampClientTraffic::getInboundId, clientTraffic.getInboundId());
-            queryWrapper.eq(LampClientTraffic::getServiceMonthId, clientTraffic.getServiceMonthId());
-            int count = clientTrafficMapper.selectCount(queryWrapper);
-            if (count == 0) {
-                clientTrafficMapper.insert(clientTraffic);
-            } else {
-                clientTrafficMapper.update(clientTraffic, queryWrapper);
-            }
+    public boolean saveOrUpdate(LampClientTraffic clientTraffic) {
+        LambdaQueryWrapper<LampClientTraffic> queryWrapper = new LambdaQueryWrapper<>(LampClientTraffic.class);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        queryWrapper.eq(LampClientTraffic::getInboundId, clientTraffic.getInboundId());
+        queryWrapper.eq(LampClientTraffic::getServiceMonthId, clientTraffic.getServiceMonthId());
+        int count = clientTrafficMapper.selectCount(queryWrapper);
+        if (count == 0) {
+            clientTrafficMapper.insert(clientTraffic);
+        } else {
+            clientTrafficMapper.update(clientTraffic, queryWrapper);
         }
         return true;
     }

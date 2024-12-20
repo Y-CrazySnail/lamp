@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/subscribe")
+//@RequestMapping("/subscribe")
 public class SubscribeController {
 
     @Autowired

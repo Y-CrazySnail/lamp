@@ -2,6 +2,7 @@ package com.lamp.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
+import com.lamp.xui.entity.XuiClientTraffic;
 import com.lamp.xui.model.XClientStat;
 import com.lamp.xui.model.XInbound;
 import lombok.Data;
@@ -37,26 +38,22 @@ public class LampClientTraffic extends BaseEntity {
 
     private Integer xuiReset;
 
-    public static List<LampClientTraffic> batchConvert(List<XClientStat> xClientStatList) {
-        if (Objects.isNull(xClientStatList) || xClientStatList.isEmpty()) {
-            return null;
-        }
-        return xClientStatList.stream().map(LampClientTraffic::convert).collect(Collectors.toList());
-    }
-
-    public static LampClientTraffic convert(XClientStat xClientStat) {
+    public static LampClientTraffic convert(XuiClientTraffic xuiClientTraffic) {
         LampClientTraffic clientTraffic = new LampClientTraffic();
-//        clientTraffic.setClientId((long) xClientStat.getId());
-//        clientTraffic.setClientEnable(xClientStat.isEnable());
-//        clientTraffic.setClientEmail(xClientStat.getEmail());
-//        clientTraffic.setClientUp(xClientStat.getUp());
-//        clientTraffic.setClientDown(xClientStat.getDown());
-//        clientTraffic.setExpiryTime((long) xClientStat.getExpiryTime());
-        String[] split = xClientStat.getEmail().split("_");
-        if (split.length == 2) {
-            clientTraffic.setInboundId(Long.valueOf(xClientStat.getEmail().split("_")[0]));
-            clientTraffic.setServiceMonthId(Long.valueOf(xClientStat.getEmail().split("_")[1]));
-        }
+        String[] param = xuiClientTraffic.getEmail().split("_");
+        Long inboundId = Long.valueOf(param[1]);
+        Long serviceMonthId = Long.valueOf(param[3]);
+        clientTraffic.setInboundId(inboundId);
+        clientTraffic.setServiceMonthId(serviceMonthId);
+        clientTraffic.setXuiId(xuiClientTraffic.getId());
+        clientTraffic.setXuiInboundId(xuiClientTraffic.getInboundId());
+        clientTraffic.setXuiEnable(xuiClientTraffic.getEnable() ? 1 : 0);
+        clientTraffic.setXuiEmail(xuiClientTraffic.getEmail());
+        clientTraffic.setXuiUp(xuiClientTraffic.getUp());
+        clientTraffic.setXuiDown(xuiClientTraffic.getDown());
+        clientTraffic.setXuiTotal(xuiClientTraffic.getTotal());
+        clientTraffic.setXuiExpiryTime(xuiClientTraffic.getExpiryTime());
+        clientTraffic.setXuiReset(xuiClientTraffic.getReset());
         return clientTraffic;
     }
 }

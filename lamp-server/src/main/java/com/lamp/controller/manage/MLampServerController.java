@@ -79,7 +79,7 @@ public class MLampServerController {
     @PostMapping("/sync")
     public ResponseEntity<Object> sync(@RequestBody LampServer server) {
         try {
-//            serverService.syncToLocal(server);
+            serverService.sync(server, null);
             return ResponseEntity.ok("服务器同步成功");
         } catch (Exception e) {
             log.error("服务器同步失败:", e);

@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Objects;
+
 @Slf4j
 @RestController
 @RequestMapping("/manage/lamp-member")
@@ -26,6 +28,13 @@ public class MLampMemberController {
             IPage<LampMember> page = new Page<>();
             LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
             BaseEntity.setDeleteFlagCondition(queryWrapper);
+            if (Objects.nonNull(member.getKeywords())) {
+                queryWrapper.and(LambdaQueryWrapper -> LambdaQueryWrapper
+                        .like(LampMember::getWechat, member.getKeywords())
+                        .or()
+                        .like(LampMember::getEmail, member.getKeywords())
+                );
+            }
             return ResponseEntity.ok(memberService.page(page, queryWrapper));
         } catch (Exception e) {
             log.error("获取会员列表失败：", e);

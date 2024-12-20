@@ -37,5 +37,8 @@ public class LampMember extends BaseEntity {
     private String token; // token
 
     @TableField(exist = false)
+    private String keywords;
+
+    @TableField(exist = false)
     private List<LampService> serviceList;
 }

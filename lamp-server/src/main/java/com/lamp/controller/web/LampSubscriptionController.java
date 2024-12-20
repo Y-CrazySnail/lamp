@@ -8,10 +8,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/web/lamp-subscription")
+@RequestMapping("/subscribe")
 public class LampSubscriptionController {
 
     @Autowired
-    private LampSubscriptionService lampSubscriptionService;
+    private LampSubscriptionService subscriptionService;
+
+    @GetMapping("/clash/{uuid}")
+    public String clash(@PathVariable("uuid") String uuid) {
+        return subscriptionService.clash(uuid);
+    }
+
+    @GetMapping("/shadowrocket/{uuid}")
+    public String shadowrocket(@PathVariable("uuid") String uuid) {
+        return subscriptionService.v2ray(uuid);
+    }
 
 }

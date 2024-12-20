@@ -9,6 +9,8 @@ import com.lamp.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class LampService extends BaseEntity {
     private String uuid; // UUID
 
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
-    private Date endDate; // 结束日期
+    private LocalDate expiryDate; // 结束日期
 
     private Long bandwidth; // 流量（月）
 
@@ -33,14 +35,11 @@ public class LampService extends BaseEntity {
     @TableField(exist = false)
     private List<LampServiceMonth> serviceMonthList;
 
-    public static LampService generate(LampMember member) {
-        Date current = new Date();
-        LampService service = new LampService();
-        service.setMemberId(member.getId());
-        service.setUuid(UUID.randomUUID().toString());
-        service.setEndDate(current);
-        service.setBandwidth(0L);
-        service.setPeriod(0);
-        return service;
+    /**
+     * 已过期
+     * @return 是 否
+     */
+    public boolean isNotExpired() {
+        return expiryDate.isAfter(LocalDate.now());
     }
 }

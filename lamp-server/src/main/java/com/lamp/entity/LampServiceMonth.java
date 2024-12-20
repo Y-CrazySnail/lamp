@@ -3,11 +3,14 @@ package com.lamp.entity;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.xui.entity.XuiVmessSetting;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +26,9 @@ public class LampServiceMonth extends BaseEntity {
     private Integer serviceYear; // 年份
 
     private Integer serviceMonth; // 月份
+
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+    private LocalDate expiryDate; // 结束日期
 
     private Long bandwidth; // 流量
 
@@ -47,6 +53,10 @@ public class LampServiceMonth extends BaseEntity {
         }
     }
 
+    public boolean isNotDeplete() {
+        return bandwidthUp + bandwidthDown < bandwidth;
+    }
+
     public static LampServiceMonth generate(LampService service) {
         Date current = new Date();
         LampServiceMonth serviceMonth = new LampServiceMonth();
@@ -54,8 +64,9 @@ public class LampServiceMonth extends BaseEntity {
         serviceMonth.setUuid(service.getUuid());
         serviceMonth.setServiceYear(DateUtil.year(current));
         serviceMonth.setServiceMonth(DateUtil.month(current) + 1);
+        serviceMonth.setExpiryDate(service.getExpiryDate());
         int lengthOfMonth = DateUtil.lengthOfMonth(DateUtil.month(current) + 1, false);
-        int remainingDay = DateUtil.lengthOfMonth(DateUtil.month(current) + 1, false) - lengthOfMonth;
+        int remainingDay = lengthOfMonth - DateUtil.dayOfMonth(current) + 1;
         serviceMonth.setBandwidth(service.getBandwidth() * remainingDay / lengthOfMonth);
         serviceMonth.setBandwidthUp(0L);
         serviceMonth.setBandwidthDown(0L);

@@ -7,26 +7,23 @@
             <el-button size="mini" type="primary" icon="el-icon-plus" @click="add">
               创建
             </el-button>
-            <el-button size="mini" type="primary" icon="el-icon-search" @click="handleQuery">
-              查询
-            </el-button>
-            <el-button size="mini" type="info" icon="el-icon-refresh" @click="handleReset">
-              重置
-            </el-button>
           </el-form-item>
         </el-form>
       </el-row>
     </div>
-    <v-table :table-property.sync="tableProperty" :table-data.sync="tableData" @fetchData="fetchData">
+    <v-table :table-property.sync="tableProperty" :table-data.sync="tableData" @fetchData="fetchData"
+      :operateWidth="'300px'">
       <template v-slot:operation="scope">
+        <el-button size="mini" @click="sync(scope.scope.row)">同步</el-button>
         <el-button size="mini" @click="inbound(scope.scope.row)">入站</el-button>
         <el-button size="mini" @click="edit(scope.scope.row)">编辑</el-button>
         <el-popconfirm confirm-button-text="确认" cancel-button-text="取消" icon="el-icon-info" icon-color="red"
-          title="确认删除？" @confirm="remove(scope.scope.row)">
+          style="margin-left: 10px;" title="确认删除？" @confirm="remove(scope.scope.row)">
           <el-button size="mini" slot="reference">删除</el-button>
         </el-popconfirm>
       </template>
     </v-table>
+
     <el-drawer class="snail_dialog" title="入站" :visible.sync="inboundDialogVisible" size="420px">
       <v-inbound v-if="inboundDialogVisible" :id.sync="editId" :inbound-dialog-visible.sync="inboundDialogVisible" />
     </el-drawer>
@@ -79,6 +76,21 @@ export default {
           prop: "apiPassword",
           label: "API密码",
           width: "200px",
+        },
+        {
+          prop: "expiryDate",
+          label: "续费时间",
+          width: "200px",
+        },
+        {
+          prop: "region",
+          label: "地区",
+          width: "200px",
+        },
+        {
+          prop: "remark",
+          label: "备注",
+          width: "300px",
         },
       ],
       queryParams: {
@@ -145,6 +157,13 @@ export default {
     inbound(row) {
       this.editId = row.id;
       this.inboundDialogVisible = true;
+    },
+    sync(row) {
+      this.$store
+        .dispatch("aladdin_server/sync", row)
+        .then((response) => {
+          console.log(response);
+        });
     },
   },
 };

@@ -118,9 +118,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="24">
-          <el-form-item label="结束日期" prop="endDate">
+          <el-form-item label="结束日期" prop="expiryDate">
             <el-input
-              v-model="service.endDate"
+              v-model="service.expiryDate"
               placeholder="结束日期"
               style="width: 300px"
             />
@@ -215,7 +215,7 @@ export default {
       let service = {
         uuid: uuidv4(),
         bandwidth: 0,
-        endDate: formattedDate,
+        expiryDate: formattedDate,
       };
       this.member.serviceList.push(service);
     },

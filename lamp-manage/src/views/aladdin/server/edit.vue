@@ -54,49 +54,35 @@
           />
         </el-form-item>
       </el-col>
+      <el-col :span="24">
+        <el-form-item label="到期时间:" prop="expiryDate">
+          <el-input
+            v-model="server.expiryDate"
+            placeholder="到期时间"
+            style="width: 300px"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="地区:" prop="region">
+          <el-input
+            v-model="server.region"
+            placeholder="地区"
+            style="width: 300px"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="备注:" prop="remark">
+          <el-input
+            v-model="server.remark"
+            placeholder="备注"
+            style="width: 300px"
+          />
+        </el-form-item>
+      </el-col>
       <el-col :span="24" />
     </el-form>
-
-    <div v-for="(inbound, index) in server.inboundList" :key="index">
-      <div style="margin: 0 0 10px 30px; font-weight: bold">
-        入站（Vmess）{{ index + 1 }}
-      </div>
-      <el-form
-        ref="inbound"
-        :model="inbound"
-        label-width="80px"
-        size="mini"
-        :inline="true"
-        style="margin-left: 10px"
-      >
-        <el-col :span="24">
-          <el-form-item label="入站端口" prop="inboundPort">
-            <el-input
-              v-model="inbound.inboundPort"
-              placeholder="入站端口"
-              style="width: 300px"
-              disabled
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="入站备注" prop="remark">
-            <el-input
-              v-model="inbound.remark"
-              placeholder="入站备注"
-              style="width: 300px"
-            />
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </div>
-
-    <div style="margin-left: 30px; margin-bottom: 20px">
-      <el-button type="primary" size="small" @click="onAddInbound">
-        新增入站
-      </el-button>
-    </div>
-
     <div style="margin-left: 30px; margin-bottom: 20px">
       <el-button size="small" @click="onCancle" style="margin-right: 10px">
         取消

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lamp.xui.entity.XuiInbound;
 import com.lamp.xui.entity.XuiResponse;
+import com.lamp.xui.entity.XuiSettings;
 import com.lamp.xui.entity.XuiVmessSettings;
 import com.lamp.xui.model.*;
 import com.lamp.xui.parser.SettingParser;
@@ -196,13 +197,8 @@ public class XServer {
         }
     }
 
-    public void addClient(XInbound inbound, String uuid, Long serviceId) {
-        XInbound xInbound = new XInbound();
-        xInbound.setId(inbound.getId());
-        XVmessClient xVmessClient = new XVmessClient(uuid, serviceId);
-        List<XVmessClient> xVmessClientList = Collections.singletonList(xVmessClient);
-        xInbound.initVmessSetting(xVmessClientList);
-        Map<String, Object> formData = BeanUtil.beanToMap(xInbound);
+    public void addClient(XuiInbound xuiInbound) {
+        Map<String, Object> formData = BeanUtil.beanToMap(xuiInbound);
         HttpRequest.post("http://" + this.host + ":" + this.port + CLIENT_ADD)
                 .cookie(this.cookie)
                 .form(formData)
