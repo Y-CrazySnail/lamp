@@ -125,17 +125,11 @@ export default {
     device() {
       return this.$store.state.app.device;
     },
+    member() {
+      return this.$store.state.member.member;
+    },
   },
-  created() {
-    const loading = this.$loading({
-      lock: true,
-      text: "加载中...",
-      spinner: "el-icon-loading",
-    });
-    this.$store.dispatch("service/list").then((res) => {
-      loading.close();
-    });
-  },
+  created() {},
   methods: {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");

@@ -48,7 +48,7 @@ export function update(params) {
 export function remove(params) {
     return request({
         baseURL: 'aladdin',
-        url: '/manage/lamp-server/delete',
+        url: '/manage/lamp-server/remove',
         method: 'delete',
         data: params
     })

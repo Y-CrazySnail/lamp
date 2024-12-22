@@ -46,6 +46,63 @@
         </el-form-item>
       </el-col>
       <el-col :span="24">
+        <el-form-item label="uuid" prop="uuid">
+          <el-input
+            v-model="member.uuid"
+            placeholder="uuid"
+            style="width: 300px"
+            disabled
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="每月流量" prop="bandwidth">
+          <el-input
+            v-model="member.bandwidth"
+            placeholder="流量（月）"
+            style="width: 200px"
+          />
+          <span style="margin-left: 10px; font-weight: bold">
+            {{ (member.bandwidth / 1024 / 1024 / 1024).toFixed(2) }}GB
+          </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="结束日期" prop="expiryDate">
+          <el-input
+            v-model="member.expiryDate"
+            placeholder="结束日期"
+            style="width: 300px"
+          />
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="本月流量" prop="monthBandwidth">
+          <el-input
+            v-model="member.monthBandwidth"
+            placeholder="本月流量"
+            style="width: 200px"
+          />
+          <span style="margin-left: 10px; font-weight: bold">
+            {{ (member.monthBandwidth / 1024 / 1024 / 1024).toFixed(2) }}GB
+          </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="本月上行" prop="monthBandwidthUp">
+          <span style="margin-left: 10px; font-weight: bold">
+            {{ (member.monthBandwidthUp / 1024 / 1024 / 1024).toFixed(2) }}GB
+          </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
+        <el-form-item label="本月下行" prop="monthBandwidthDown">
+          <span style="margin-left: 10px; font-weight: bold">
+            {{ (member.monthBandwidthDown / 1024 / 1024 / 1024).toFixed(2) }}GB
+          </span>
+        </el-form-item>
+      </el-col>
+      <el-col :span="24">
         <el-form-item label="备注" prop="remark">
           <el-input
             v-model="member.remark"
@@ -82,75 +139,6 @@
         </el-form-item>
       </el-col>
     </el-form>
-
-    <div v-for="(service, index) in member.serviceList" :key="index">
-      <div style="margin: 0 0 10px 30px; font-weight: bold">
-        服务{{ index + 1 }}
-      </div>
-      <el-form
-        ref="service"
-        :model="service"
-        label-width="80px"
-        size="mini"
-        :inline="true"
-        style="margin-left: 10px"
-      >
-        <el-col :span="24">
-          <el-form-item label="UUID" prop="id">
-            <el-input
-              v-model="service.uuid"
-              placeholder="uuid"
-              style="width: 300px"
-              disabled
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="每月流量" prop="bandwidth">
-            <el-input
-              v-model="service.bandwidth"
-              placeholder="流量（月）"
-              style="width: 200px"
-            />
-            <span style="margin-left: 10px; font-weight: bold">
-              {{ (service.bandwidth / 1024 / 1024 / 1024).toFixed(2) }}GB
-            </span>
-          </el-form-item>
-        </el-col>
-        <el-col :span="24">
-          <el-form-item label="结束日期" prop="expiryDate">
-            <el-input
-              v-model="service.expiryDate"
-              placeholder="结束日期"
-              style="width: 300px"
-            />
-          </el-form-item>
-        </el-col>
-        <el-col
-          :span="24"
-          v-for="(serviceMonth, index) in service.serviceMonthList"
-          :key="index"
-        >
-          <el-form-item
-            :label="serviceMonth.serviceYear + '-' + serviceMonth.serviceMonth"
-          >
-            <span>上行流量：</span
-            >{{ (serviceMonth.bandwidthUp / 1024 / 1024 / 1024).toFixed(2) }}GB
-            <span>下行流量：</span
-            >{{
-              (serviceMonth.bandwidthDown / 1024 / 1024 / 1024).toFixed(2)
-            }}GB
-          </el-form-item>
-        </el-col>
-      </el-form>
-    </div>
-
-    <div style="margin-left: 30px; margin-bottom: 20px">
-      <el-button type="primary" size="small" @click="onAddService">
-        新增服务
-      </el-button>
-    </div>
-
     <div style="margin-left: 30px; margin-bottom: 20px">
       <el-button size="small" @click="onCancle" style="margin-right: 10px">
         取消

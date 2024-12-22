@@ -257,14 +257,6 @@ export const constantRoutes = [{
             hidden: !permission.includes("/aladdin/server")
         },
         {
-            path: 'service',
-            name: 'Service',
-            component: () =>
-                import('@/views/aladdin/service/index'),
-            meta: { title: '服务', icon: 'el-icon-s-data' },
-            hidden: !permission.includes("/aladdin/service")
-        },
-        {
             path: 'order',
             name: 'Order',
             component: () =>

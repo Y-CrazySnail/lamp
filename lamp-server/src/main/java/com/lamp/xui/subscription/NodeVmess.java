@@ -3,7 +3,7 @@ package com.lamp.xui.subscription;
 import cn.hutool.core.date.DatePattern;
 import cn.hutool.core.date.DateUtil;
 import com.lamp.domain.objvalue.Subscription;
-import com.lamp.entity.LampServiceMonth;
+import com.lamp.entity.LampMember;
 import com.lamp.entity.LampSubscription;
 import lombok.Data;
 
@@ -74,14 +74,13 @@ public class NodeVmess {
         return nodeVmessList;
     }
 
-    public static List<NodeVmess> generateSubscriptionVmessNode(LampServiceMonth serviceMonth) {
+    public static List<NodeVmess> generateSubscriptionVmessNode(LampMember member) {
         List<NodeVmess> nodeVmessList = new ArrayList<>();
-        String endDateStr = "到期:" + serviceMonth.getExpiryDate().toString();
+        String endDateStr = "到期:" + member.getExpiryDate().toString();
         NodeVmess nodeVmessDoForTime = NodeVmess.initInformation(endDateStr);
         nodeVmessList.add(nodeVmessDoForTime);
-        BigDecimal surplus = BigDecimal.valueOf(serviceMonth.getBandwidth() - serviceMonth.getBandwidthUp() - serviceMonth.getBandwidthDown());
-        surplus = surplus.divide(BigDecimal.valueOf(GB), RoundingMode.HALF_UP)
-                .setScale(2, RoundingMode.HALF_UP);
+        BigDecimal surplus = BigDecimal.valueOf(member.getMonthBandwidth() - member.getMonthBandwidthUp() - member.getMonthBandwidthDown());
+        surplus = surplus.divide(BigDecimal.valueOf(GB), 2, RoundingMode.HALF_UP);
         String surplusStr = "本月流量剩余:" + surplus + "GB";
         NodeVmess nodeVmessDoForAll = NodeVmess.initInformation(surplusStr);
         nodeVmessList.add(nodeVmessDoForAll);

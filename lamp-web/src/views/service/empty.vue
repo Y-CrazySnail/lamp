@@ -10,12 +10,12 @@
     >
       <el-empty
         description="您还没有生效中的服务，请前往会员商店购买"
-        v-if="serviceList && serviceList.length == 0"
+        v-if="member.expiryDate < new Date().getTime()"
       >
         <el-button
           type="primary"
           @click="toPackage"
-          style="background-color: #000000; border-color: #000000;"
+          style="background-color: #000000; border-color: #000000"
         >
           会员商店
         </el-button>
@@ -36,17 +36,11 @@ export default {
     device() {
       return this.$store.state.app.device;
     },
+    member() {
+      return this.$store.state.member.member;
+    },
   },
-  created() {
-    const loading = this.$loading({
-      lock: true,
-      text: "加载中...",
-      spinner: "el-icon-loading",
-    });
-    this.$store.dispatch("service/list").then((res) => {
-      loading.close();
-    });
-  },
+  created() {},
   methods: {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");

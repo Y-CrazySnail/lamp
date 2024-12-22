@@ -28,7 +28,7 @@ export default {
       text: "加载中...",
       spinner: "el-icon-loading",
     });
-    this.$store.dispatch("service/list").then((res) => {
+    this.$store.dispatch("member/get").then((res) => {
       loading.close();
     });
   },

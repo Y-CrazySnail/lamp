@@ -5,8 +5,16 @@ import com.lamp.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("lamp_product")
 public class LampProduct extends BaseEntity {
+    private String type;
+    private Long bandwidth;
+    private Integer period;
+    private BigDecimal price;
+    private String title;
+    private String introduce;
 }

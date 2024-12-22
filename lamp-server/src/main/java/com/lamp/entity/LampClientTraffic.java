@@ -3,14 +3,8 @@ package com.lamp.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.xui.entity.XuiClientTraffic;
-import com.lamp.xui.model.XClientStat;
-import com.lamp.xui.model.XInbound;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -18,7 +12,7 @@ import java.util.stream.Collectors;
 public class LampClientTraffic extends BaseEntity {
 
     private Long inboundId; // 入站ID
-    private Long serviceMonthId; // 当月服务ID
+    private Long memberId; // 会员ID
 
     private Long xuiId; // xui客户ID
 
@@ -42,9 +36,9 @@ public class LampClientTraffic extends BaseEntity {
         LampClientTraffic clientTraffic = new LampClientTraffic();
         String[] param = xuiClientTraffic.getEmail().split("_");
         Long inboundId = Long.valueOf(param[1]);
-        Long serviceMonthId = Long.valueOf(param[3]);
+        Long memberId = Long.valueOf(param[3]);
         clientTraffic.setInboundId(inboundId);
-        clientTraffic.setServiceMonthId(serviceMonthId);
+        clientTraffic.setMemberId(memberId);
         clientTraffic.setXuiId(xuiClientTraffic.getId());
         clientTraffic.setXuiInboundId(xuiClientTraffic.getInboundId());
         clientTraffic.setXuiEnable(xuiClientTraffic.getEnable() ? 1 : 0);

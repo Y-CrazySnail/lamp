@@ -52,7 +52,7 @@ merchant:
   # api: https://www.sailapay.com/mapi.php
   # id: 1067
   # key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
-  notify-url: https://alamp.cc/aladdin-api/web/order/finish
+  notify-url: https://alamp.cc/aladdin-api/web/lamp-order/finish
   return-url: https://alamp.cc/order/index
 
 telegram:

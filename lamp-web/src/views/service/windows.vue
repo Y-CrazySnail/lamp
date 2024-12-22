@@ -2,45 +2,38 @@
   <div v-show="device !== 'mobile'">
     <div style="display: flex">
       <div style="width: 60%; height: 100vh">
-        <div
-          class="container"
-          v-for="(service, index) in serviceList"
-          :key="index"
-        >
+        <div class="container">
           <div class="package-container">
-            <span class="package-title" v-if="service.dataTraffic < 50">
-              入门套餐
-            </span>
-            <span
-              class="package-title"
-              v-if="service.dataTraffic >= 50 && service.dataTraffic < 100"
-            >
-              中级套餐
-            </span>
-            <span class="package-title" v-if="service.dataTraffic >= 100">
-              高级套餐
-            </span>
-            <div class="package-description">
-              {{ service.price }}元 {{ service.period }}个月 - 流量：
-              {{ service.bandwidth }}GB/月
+            <div class="infomation-container">
+              <div class="infomation-title">服务信息</div>
+              <div class="infomation-option" @click="toPackage">
+                <img class="img-16" src="./img/renew.png" />
+                <span style="margin-left: 3px; font-size: 14px">续费</span>
+              </div>
             </div>
           </div>
           <div class="hr-like" />
-          <div class="infomation-container">
-            <div class="infomation-title">服务信息</div>
-            <div class="infomation-option" @click="toPackage">
-              <img class="img-16" src="./img/renew.png" />
-              <span style="margin-left: 3px; font-size: 14px">续费</span>
-            </div>
+          <div class="infomation-item">
+            <img class="img-20" src="./img/data.png" />
+            <span style="color: #0f0f0f" class="infomation-item-content">
+              每月流量：{{
+                parseFloat(
+                  (Number(member.bandwidth)) /
+                    1024 /
+                    1024 /
+                    1024
+                ).toFixed(2)
+              }}GB<span style="color: #5f5f5f;">（每月1号0点刷新流量）</span>
+            </span>
           </div>
           <div class="infomation-item">
             <img class="img-20" src="./img/data.png" />
             <span style="color: #0f0f0f" class="infomation-item-content">
-              剩余流量：{{
+              本月剩余：{{
                 parseFloat(
-                  (Number(service.currentServiceMonth.bandwidth) -
-                    (Number(service.currentServiceMonth.bandwidthDown) +
-                      Number(service.currentServiceMonth.bandwidthUp))) /
+                  (Number(member.monthBandwidth) -
+                    (Number(member.monthBandwidthDown) +
+                      Number(member.monthBandwidthUp))) /
                     1024 /
                     1024 /
                     1024
@@ -51,7 +44,7 @@
           <div class="infomation-item">
             <img class="img-20" src="./img/end.png" />
             <span style="color: #0f0f0f" class="infomation-item-content">
-              到期时间：{{ service.endDate }}
+              到期时间：{{ member.expiryDate }}
             </span>
           </div>
           <div class="infomation-item">
@@ -64,7 +57,7 @@
                 src="./img/copy.png"
                 v-clipboard:copy="
                   'http://aladdinslamp.cc:80/server/subscribe/clash/' +
-                  service.uuid
+                  member.uuid
                 "
                 v-clipboard:success="onCopySuccess"
               />
@@ -77,7 +70,7 @@
                 "
                 v-clipboard:copy="
                   'http://aladdinslamp.cc:80/server/subscribe/clash/' +
-                  service.uuid
+                  member.uuid
                 "
                 v-clipboard:success="onCopySuccess"
               >
@@ -87,15 +80,13 @@
           </div>
           <div class="subsbription-container">
             <div class="subscription-content">
-              http://aladdinslamp.cc:80/server/subscribe/clash/{{
-                service.uuid
-              }}
+              http://aladdinslamp.cc:80/server/subscribe/clash/{{ member.uuid }}
             </div>
           </div>
           <div style="padding-bottom: 30px"></div>
         </div>
       </div>
-      <div style="width: 40%; height: 100vh" v-show="serviceList.length != 0">
+      <div style="width: 40%; height: 100vh" v-show="member">
         <div class="guide-container" @click="toIOS()">
           <img class="img-20" src="./img/apple.png" />
           <div style="margin-left: 5px; font-size: 18px; font-weight: 600">
@@ -131,23 +122,14 @@ export default {
   name: "Service",
   components: { VueQr },
   computed: {
-    serviceList() {
-      return this.$store.state.service.serviceList;
-    },
     device() {
       return this.$store.state.app.device;
     },
+    member() {
+      return this.$store.state.member.member;
+    },
   },
-  created() {
-    const loading = this.$loading({
-      lock: true,
-      text: "加载中...",
-      spinner: "el-icon-loading",
-    });
-    this.$store.dispatch("service/list").then((res) => {
-      loading.close();
-    });
-  },
+  created() {},
   methods: {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");
@@ -211,7 +193,7 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 20px;
+  margin-left: 10px;
 
   .infomation-title {
     font-size: 17px;
@@ -284,7 +266,7 @@ export default {
 
 .hr-like::before {
   content: "";
-  margin: 20px 0 27px 0;
+  margin: 10px 0 27px 0;
   display: block;
   width: 100%;
   height: 1px;

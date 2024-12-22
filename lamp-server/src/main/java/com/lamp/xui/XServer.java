@@ -133,7 +133,7 @@ public class XServer {
         return response.body();
     }
 
-    public List<XuiInbound> inboundList(Long id) {
+    public List<XuiInbound> inboundList() {
         ObjectMapper objectMapper = new ObjectMapper();
         HttpResponse response = HttpRequest.post("http://" + this.host + ":" + this.port + INBOUND_LIST)
                 .cookie(this.cookie)
@@ -146,9 +146,6 @@ public class XServer {
                 List<XuiInbound> xuiInboundList = xuiResponse.getObj();
                 if (Objects.isNull(xuiInboundList) || xuiInboundList.isEmpty()) {
                     return new ArrayList<>();
-                }
-                if (Objects.nonNull(id)) {
-                    xuiInboundList = xuiInboundList.stream().filter(xuiInbound -> xuiInbound.getId() == id).collect(Collectors.toList());
                 }
                 for (XuiInbound xuiInbound : xuiInboundList) {
                     if ("vmess".equals(xuiInbound.getProtocol())) {
@@ -212,7 +209,7 @@ public class XServer {
                 .execute();
     }
 
-    public void resetClientTraffic(int xInboundId) {
+    public void resetClientTraffic(long xInboundId) {
         String path = String.format(CLIENT_RESET_TRAFFIC, xInboundId);
         HttpRequest.post("http://" + this.host + ":" + this.port + path)
                 .cookie(this.cookie)
@@ -223,20 +220,20 @@ public class XServer {
         ObjectMapper objectMapper = new ObjectMapper();
         XServer xServer = XServer.init("136.175.177.16", 9999, "aladdin-tw", "aladdin-tw");
         String status = objectMapper.writeValueAsString(xServer.serverStatus());
-        List<XuiInbound> xuiInboundList = xServer.inboundList(null);
+        List<XuiInbound> xuiInboundList = xServer.inboundList();
         for (XuiInbound xuiInbound : xuiInboundList) {
             if (!"vmess".equals(xuiInbound.getProtocol())) {
                 xServer.inboundDelete(xuiInbound.getId());
             }
         }
-        xuiInboundList = xServer.inboundList(null);
+        xuiInboundList = xServer.inboundList();
         for (XuiInbound xuiInbound : xuiInboundList) {
             if (xuiInbound.getClientStats().size() == 2) {
                 XuiVmessSettings xuiVmessSettings = (XuiVmessSettings) xuiInbound.getSettingsObject();
                 xServer.deleteClient(xuiInbound.getId(), xuiVmessSettings.getClients().get(0).getId());
             }
         }
-        xuiInboundList = xServer.inboundList(null);
+        xuiInboundList = xServer.inboundList();
         System.out.println(objectMapper.writeValueAsString(xuiInboundList));
     }
 }

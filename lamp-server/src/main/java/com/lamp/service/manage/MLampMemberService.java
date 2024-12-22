@@ -1,14 +1,10 @@
 package com.lamp.service.manage;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.baomidou.mybatisplus.extension.toolkit.SqlHelper;
-import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampMember;
-import com.lamp.entity.LampService;
 import com.lamp.mapper.LampMemberMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -29,26 +23,6 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
 
     @Autowired
     private MLampServiceService serviceService;
-
-    /**
-     * 查询会员列表 携带服务信息、月服务信息
-     *
-     * @param member 会员条件 为空时查全部
-     * @return 会员列表
-     */
-    public List<LampMember> list(LampMember member, Date current) {
-        LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
-        if (Objects.nonNull(member) && Objects.nonNull(member.getId())) {
-            queryWrapper.eq(LampMember::getId, member.getId());
-        }
-        BaseEntity.setDeleteFlagCondition(queryWrapper);
-        List<LampMember> memberList = memberMapper.selectList(queryWrapper);
-        if (memberList.isEmpty()) {
-            return memberList;
-        }
-        memberList.forEach(m -> serviceService.setServiceList(m, current));
-        return memberList;
-    }
 
     @Override
     public <E extends IPage<LampMember>> E page(E page, Wrapper<LampMember> queryWrapper) {
@@ -62,41 +36,38 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
         if (Objects.isNull(member)) {
             return null;
         }
-        serviceService.setServiceList(member, null);
+        serviceService.setServiceList(member);
         return member;
     }
 
     @Transactional
     @Override
     public boolean save(LampMember entity) {
-        super.save(entity);
-        if (Objects.nonNull(entity.getServiceList()) && !entity.getServiceList().isEmpty()) {
-            entity.getServiceList().forEach(service -> service.setMemberId(entity.getId()));
-            serviceService.saveOrUpdateBatch(entity.getServiceList());
-        }
-        return true;
+        entity.calculateMonthBandwidth();
+        return super.save(entity);
     }
 
     @Transactional
     @Override
     public boolean updateById(LampMember entity) {
-        super.updateById(entity);
-        if (Objects.nonNull(entity.getServiceList()) && !entity.getServiceList().isEmpty()) {
-            entity.getServiceList().forEach(service -> service.setMemberId(entity.getId()));
-            serviceService.saveOrUpdateBatch(entity.getServiceList());
-        }
-        return true;
+        return super.updateById(entity);
     }
 
     @Transactional
     @Override
     public boolean removeById(Serializable id) {
-        LampMember member = memberMapper.selectById(id);
         LambdaUpdateWrapper<LampMember> updateWrapper = new LambdaUpdateWrapper<>(LampMember.class);
         updateWrapper.set(LampMember::getDeleteFlag, 1);
         updateWrapper.eq(LampMember::getId, id);
         memberMapper.update(null, updateWrapper);
-        serviceService.removeByMemberId(member.getId());
         return true;
+    }
+
+    public void syncBandwidth(Long memberId) {
+        if (Objects.nonNull(memberId)) {
+            memberMapper.syncBandwidth(memberId);
+        } else {
+            memberMapper.syncBandwidth(null);
+        }
     }
 }

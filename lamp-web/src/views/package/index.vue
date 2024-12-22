@@ -17,7 +17,7 @@
             <el-button
               type="info"
               size="mini"
-              style="background-color: #000000; border-color: #000000;"
+              style="background-color: #000000; border-color: #000000"
               @click="placeOrder(packages.id)"
             >
               购买
@@ -34,8 +34,17 @@
               <span style="">套餐流量</span>
             </template>
             <div style="margin: 5px">
-              <el-tag type="info" effect="plain" size="small" style="color: #606266;">
-                {{ packages.dataTraffic }}GB/月
+              <el-tag
+                type="info"
+                effect="plain"
+                size="small"
+                style="color: #606266"
+              >
+                {{
+                  parseFloat(packages.bandwidth / 1024 / 1024 / 1024).toFixed(
+                    0
+                  )
+                }}GB/月
               </el-tag>
             </div>
           </el-descriptions-item>
@@ -44,7 +53,12 @@
               <span style="">套餐时长</span>
             </template>
             <div style="margin: 5px">
-              <el-tag type="info" effect="plain" size="small" style="color: #606266;">
+              <el-tag
+                type="info"
+                effect="plain"
+                size="small"
+                style="color: #606266"
+              >
                 {{ packages.period }}个月
               </el-tag>
             </div>
@@ -54,7 +68,12 @@
               <span style="">套餐价格</span>
             </template>
             <div style="margin: 5px">
-              <el-tag type="info" effect="plain" size="small" style="color: #606266;">
+              <el-tag
+                type="info"
+                effect="plain"
+                size="small"
+                style="color: #606266"
+              >
                 {{ packages.price }}元
               </el-tag>
             </div>

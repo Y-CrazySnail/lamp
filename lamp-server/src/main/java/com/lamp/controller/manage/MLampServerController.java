@@ -21,7 +21,7 @@ public class MLampServerController {
     private MLampServerService serverService;
 
     @GetMapping("/page")
-    public ResponseEntity<Object> page(LampServer server) {
+    public ResponseEntity<Object> page() {
         try {
             IPage<LampServer> page = new Page<>();
             LambdaQueryWrapper<LampServer> queryWrapper = new LambdaQueryWrapper<>(LampServer.class);

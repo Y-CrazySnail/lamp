@@ -25,7 +25,7 @@ public class XUISchedule {
     /**
      * 每小时执行
      */
-    @Scheduled(cron = "0 0 0/4 * * ?")
+//    @Scheduled(cron = "0 0 0/4 * * ?")
     public void reset() {
         try {
             serviceAppService.sync();

@@ -1,8 +1,8 @@
 <template>
   <div v-loading="loading">
-    <el-form ref="form" :model="form" label-width="auto" size="mini" :inline="true">
+    <el-form ref="form" :model="form" label-width="80px" size="mini" :inline="true">
       <el-col :span="24">
-        <el-form-item label="APIID:" prop="apiIp">
+        <el-form-item label="API地址:" prop="apiIp">
           <el-input v-model="form.apiIp" placeholder="APIID" style="width: 300px" />
         </el-form-item>
       </el-col>
@@ -12,7 +12,7 @@
         </el-form-item>
       </el-col>
       <el-col :span="24">
-        <el-form-item label="API用户名:" prop="apiUsername">
+        <el-form-item label="API用户:" prop="apiUsername">
           <el-input v-model="form.apiUsername" placeholder="API用户名" style="width: 300px" />
         </el-form-item>
       </el-col>
@@ -38,7 +38,7 @@
       </el-col>
       <el-col :span="24" />
     </el-form>
-    <div class="dialog-footer">
+    <div style="margin-left: 10px;">
       <el-button size="small" @click="onCancle" style="margin-right: 10px">
         取消
       </el-button>

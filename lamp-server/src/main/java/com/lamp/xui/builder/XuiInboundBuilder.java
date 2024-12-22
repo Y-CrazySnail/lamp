@@ -1,24 +1,18 @@
 package com.lamp.xui.builder;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.date.LocalDateTimeUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lamp.entity.LampInbound;
-import com.lamp.entity.LampServiceMonth;
+import com.lamp.entity.LampMember;
 import com.lamp.xui.entity.XuiInbound;
 import com.lamp.xui.entity.XuiVmessSetting;
 import com.lamp.xui.entity.XuiVmessSettings;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.List;
 
 public class XuiInboundBuilder {
-    public static XuiInbound build(LampInbound inbound, List<LampServiceMonth> serviceMonthList) {
+    public static XuiInbound build(LampInbound inbound, List<LampMember> memberList) {
         XuiInbound xuiInbound = new XuiInbound();
         xuiInbound.setUp(0);
         xuiInbound.setDown(0);
@@ -31,13 +25,12 @@ public class XuiInboundBuilder {
         XuiInboundBuilder.initSniffing(xuiInbound);
         XuiInboundBuilder.initSteamSettings(xuiInbound);
         List<XuiVmessSetting> xuiVmessSettingList = new ArrayList<>();
-        for (LampServiceMonth serviceMonth : serviceMonthList) {
+        for (LampMember member : memberList) {
             XuiVmessSetting xuiVmessSetting = new XuiVmessSetting();
-            xuiVmessSetting.setId(serviceMonth.getUuid());
-            xuiVmessSetting.setEmail("i" + "_" + inbound.getId() + "_s_" + serviceMonth.getId());
+            xuiVmessSetting.setId(member.getUuid());
+            xuiVmessSetting.setEmail("i" + "_" + inbound.getId() + "_m_" + member.getId());
             xuiVmessSetting.setLimitIp(0);
             xuiVmessSetting.setTotalGB(0);
-            // xuiVmessSetting.setExpiryTime(serviceMonth.getExpiryDate().atStartOfDay().toInstant(ZoneOffset.of("+8")).toEpochMilli());
             xuiVmessSetting.setExpiryTime(0);
             xuiVmessSetting.setEnable(true);
             xuiVmessSetting.setSubId("");
@@ -55,16 +48,15 @@ public class XuiInboundBuilder {
         return xuiInbound;
     }
 
-    public static XuiInbound build(LampInbound inbound, LampServiceMonth serviceMonth) {
+    public static XuiInbound build(LampInbound inbound, LampMember member) {
         XuiInbound xuiInbound = new XuiInbound();
         xuiInbound.setId(inbound.getXuiId());
         List<XuiVmessSetting> xuiVmessSettingList = new ArrayList<>();
         XuiVmessSetting xuiVmessSetting = new XuiVmessSetting();
-        xuiVmessSetting.setId(serviceMonth.getUuid());
-        xuiVmessSetting.setEmail("i" + "_" + inbound.getId() + "_s_" + serviceMonth.getId());
+        xuiVmessSetting.setId(member.getUuid());
+        xuiVmessSetting.setEmail("i_" + inbound.getId() + "_m_" + member.getId());
         xuiVmessSetting.setLimitIp(0);
         xuiVmessSetting.setTotalGB(0);
-        // xuiVmessSetting.setExpiryTime(serviceMonth.getExpiryDate().atStartOfDay().toInstant(ZoneOffset.of("+8")).toEpochMilli());
         xuiVmessSetting.setExpiryTime(0);
         xuiVmessSetting.setEnable(true);
         xuiVmessSetting.setSubId("");

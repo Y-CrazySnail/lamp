@@ -12,7 +12,9 @@
         border
       >
         <template slot="title">
-          <span style="font-size: 14px; font-weight: 600;">{{ order.orderNo }}</span>
+          <span style="font-size: 14px; font-weight: 600">{{
+            order.orderNo
+          }}</span>
         </template>
         <template slot="extra">
           <el-button
@@ -44,7 +46,9 @@
           <template slot="label">
             <span style="">套餐流量</span>
           </template>
-          <div style="margin: 5px">{{ order.dataTraffic }}GB</div>
+          <div style="margin: 5px">
+            {{ parseFloat(order.bandwidth / 1024 / 1024 / 1024).toFixed(0) }}GB
+          </div>
         </el-descriptions-item>
         <el-descriptions-item>
           <template slot="label">

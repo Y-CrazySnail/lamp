@@ -35,4 +35,11 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         member.setToken(token.getToken());
         return member;
     }
+
+    public LampMember getByUUID(String uuid) {
+        LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
+        queryWrapper.eq(LampMember::getUuid, uuid);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        return getOne(queryWrapper);
+    }
 }

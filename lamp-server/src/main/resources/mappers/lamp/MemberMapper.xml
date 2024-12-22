@@ -1,41 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lamp.infrastructure.persistence.repository.mapper.MemberMapper">
+<mapper namespace="com.lamp.mapper.LampMemberMapper">
 
-    <select id="pages" resultType="com.lamp.infrastructure.persistence.entity.MemberDo">
-        SELECT
-            m.id,
-            m.create_user,
-            m.create_time,
-            m.update_user,
-            m.update_time,
-            m.delete_flag,
-            m.wechat,
-            m.email,
-            m.password,
-            m.referral_code,
-            m.referrer_code,
-            m.level,
-            m.remark,
-            s.begin_date,
-            s.end_date,
-            s.bandwidth,
-            s.period,
-            s.price,
-            s.uuid
-        FROM aladdin_member m
-        LEFT JOIN aladdin_service s ON m.id = s.member_id
-        <where>
-            m.delete_flag != 1
-            and (s.delete_flag != 1 or s.delete_flag is null)
-            <if test="wechat != null and wechat != ''">
-                and m.wechat like concat('%', #{wechat}, '%')
-            </if>
-            <if test="email != null and email != ''">
-                and m.email like concat('%', #{email}, '%')
-            </if>
-        </where>
-        ORDER BY s.end_date
-    </select>
+    <update id="syncBandwidth">
+        update lamp_member m
+        set
+            month_bandwidth_up = (select sum(c.xui_up) from lamp_client_traffic c where c.member_id = m.id),
+            month_bandwidth_down = (select sum(c.xui_down) from lamp_client_traffic c where c.member_id = m.id)
+        where delete_flag = 0
+        <if test="memberId != null and memberId != ''">
+            and m.id = #{memberId}
+        </if>
+    </update>
 
 </mapper>
