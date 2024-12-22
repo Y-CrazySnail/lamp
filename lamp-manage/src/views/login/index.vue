@@ -57,11 +57,6 @@
         >登录</el-button
       >
     </el-form>
-    <div style="width: 100%; position: absolute; bottom: 10px; text-align: center;">
-      <a href="https://beian.miit.gov.cn/" target="_blank"
-        >吉ICP备2021008123号-3</a
-      >
-    </div>
   </div>
 </template>
 

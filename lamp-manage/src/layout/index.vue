@@ -21,14 +21,6 @@
             flex-wrap: wrap;
           "
         >
-          <div style="color: gray; font-size: 13px; width: 100%; text-align: center;">
-            <a href="https://beian.miit.gov.cn/" target="_blank">
-              吉ICP备2021008123号-4
-            </a>
-          </div>
-          <div style="color: gray; font-size: 13px; width: 100%; text-align: center;">
-            Copyright © 2021-2023 以梦网络工作室. All Rights Reserved.
-          </div>
         </div>
       </el-footer>
     </div>
