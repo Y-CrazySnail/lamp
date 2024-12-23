@@ -154,7 +154,7 @@ export default {
       text: "加载中...",
       spinner: "el-icon-loading",
     });
-    this.$store.dispatch("service/list").then((res) => {
+    this.$store.dispatch("member/get").then((res) => {
       loading.close();
     });
     this.$store.dispatch("service/apple").then((res) => {
@@ -167,11 +167,8 @@ export default {
     };
   },
   computed: {
-    service() {
-      return this.$store.state.service.serviceList[0];
-    },
-    serviceList() {
-      return this.$store.state.service.serviceList;
+    member() {
+      return this.$store.state.member.member;
     },
     apple() {
       return this.$store.state.service.apple;
@@ -186,7 +183,7 @@ export default {
         "clash://install-config?url=" +
         encodeURIComponent(
           "http://aladdinslamp.cc:80/server/subscribe/clash/" +
-            this.service.uuid
+            this.member.uuid
         ) +
         "&name=" +
         encodeURIComponent("aladdinslamp.cc");
