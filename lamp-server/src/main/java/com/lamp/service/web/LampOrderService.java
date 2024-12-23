@@ -120,9 +120,19 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
             sysTelegramSendDTO.setTemplateName("purchase");
             sysTelegramSendDTO.setTemplateType("telegram");
             Map<String, Object> replaceMap = new HashMap<>();
-            // 用户购买了【时长：#{period}】-【流量：#{dataTraffic}】的【#{price}】元套餐，请注意Crisp客服消息！
+            // 常规套餐购买：
+            // 微信：#{wechat}
+            // 邮箱：#{email}
+            // 到期：#{expiryDate}
+            // 时长：#{period}个月
+            // 价格：#{price}元
+            // 流量：#{bandwidth}GB
+            // 请留意Crisp客服消息！
+            replaceMap.put("wechat", member.getWechat());
+            replaceMap.put("email", member.getEmail());
+            replaceMap.put("expiryDate", member.getExpiryDate());
             replaceMap.put("period", order.getPeriod());
-            replaceMap.put("dataTraffic", order.getBandwidth());
+            replaceMap.put("bandwidth", order.getBandwidth() / 1024 / 1024 / 1024);
             replaceMap.put("price", order.getPrice());
             sysTelegramSendDTO.setReplaceMap(replaceMap);
             sysTelegramService.send(sysTelegramSendDTO);
