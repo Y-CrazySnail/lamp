@@ -27,6 +27,17 @@ public class LampMemberController {
         }
     }
 
+    @PostMapping("/signUp")
+    public ResponseEntity<Object> signUp(@RequestBody LampMember member) {
+        try {
+            memberService.signUp(member);
+            return ResponseEntity.ok("注册成功");
+        } catch (Exception e) {
+            log.error("注册失败：", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("注册失败");
+        }
+    }
+
     @GetMapping("/get")
     public ResponseEntity<Object> get() {
         try {

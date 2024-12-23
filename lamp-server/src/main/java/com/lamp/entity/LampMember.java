@@ -42,7 +42,7 @@ public class LampMember extends BaseEntity {
 
     private String referrerCode; // 推荐人
 
-    private String referralCode; // 推荐码
+    private String referralCode; // 推荐码(本人)
 
     private String remark; // 备注
 
@@ -78,9 +78,5 @@ public class LampMember extends BaseEntity {
         calculateMonthBandwidth();
         monthBandwidthUp = 0L;
         monthBandwidthDown = 0L;
-    }
-
-    public void addMonth() {
-
     }
 }
