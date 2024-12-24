@@ -1,6 +1,5 @@
 package com.lamp.infrastructure.xui.subscription;
 
-import com.lamp.domain.objvalue.Subscription;
 import com.lamp.entity.LampMember;
 import com.lamp.entity.LampSubscription;
 import lombok.Data;

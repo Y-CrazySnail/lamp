@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.lamp.common.entity.BaseEntity;
-import com.lamp.domain.entity.Order;
 import com.lamp.entity.LampMember;
 import com.lamp.entity.LampOrder;
 import com.lamp.entity.LampProduct;
@@ -87,7 +86,7 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
     @Transactional
     public void finish(LampOrder order) {
         order = getByOrderNo(order.getOrderNo());
-        if (Order.STATUS.ED.getValue().equals(order.getStatus())) {
+        if (LampOrder.STATUS.ED.getValue().equals(order.getStatus())) {
             // 已支付
             return;
         }

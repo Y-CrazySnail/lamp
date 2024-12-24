@@ -12,7 +12,6 @@ import com.lamp.infrastructure.xui.entity.XuiResponse;
 import com.lamp.infrastructure.xui.parser.SettingParser;
 import com.lamp.infrastructure.xui.parser.VmessSettingParser;
 import com.lamp.infrastructure.xui.entity.XuiVmessSettings;
-import com.lamp.xui.model.*;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
