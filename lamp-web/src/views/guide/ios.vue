@@ -103,6 +103,7 @@
         >
           一键导入
         </el-button>
+        点击当前教程页【一键导入】按钮（点击后弹出尝试打开stash软件）
       </el-card>
       <el-card style="margin-top: 10px">
         <span style="font-weight: 600"> 第十一步： </span>

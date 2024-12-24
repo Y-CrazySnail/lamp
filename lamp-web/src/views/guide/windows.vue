@@ -12,12 +12,12 @@
         <span>下载Clash软件</span>
         <br />
         <div style="margin-top: 10px">
-          地址：https://wwo.lanzn.com/iqdQx233isuf
+          地址：https://www.clashverge.dev/install.html
           <el-button
             style="background-color: black; border-color: black; color: white"
             type="info"
             size="mini"
-            v-clipboard:copy="'https://wwo.lanzn.com/iqdQx233isuf'"
+            v-clipboard:copy="'https://www.clashverge.dev/install.html'"
             v-clipboard:success="onCopySuccess"
             plain
           >
@@ -31,19 +31,6 @@
             @click="download()"
           >
             下载
-          </el-button>
-        </div>
-        <div style="margin-top: 5px">
-          密码：lamp
-          <el-button
-            style="background-color: black; border-color: black; color: white"
-            type="info"
-            size="mini"
-            v-clipboard:copy="'lamp'"
-            v-clipboard:success="onCopySuccess"
-            plain
-          >
-            复制
           </el-button>
         </div>
       </el-card>
@@ -62,6 +49,7 @@
         >
           一键导入
         </el-button>
+        点击当前教程页【一键导入】按钮（点击后弹出尝试打开clash软件）
       </el-card>
       <el-card style="margin-top: 10px">
         <span style="font-weight: 600"> 第四步： </span>
@@ -158,7 +146,7 @@ export default {
       window.location.href = url;
     },
     download() {
-      window.open("https://wwo.lanzn.com/iqdQx233isuf", "_blank");
+      window.open("https://www.clashverge.dev/install.html", "_blank");
     },
   },
 };

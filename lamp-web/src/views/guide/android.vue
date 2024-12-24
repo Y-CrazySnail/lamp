@@ -64,7 +64,7 @@
       <el-card style="margin-top: 10px">
         <span style="font-weight: 600"> 第六步： </span>
         <br />
-        <span>URL-填入订阅地址</span>
+        <span style="width: 230px; word-wrap: break-word;">1、URL-填入订阅地址 {{ 'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid }}</span>
         <el-button
           style="
             background-color: black;
@@ -83,9 +83,9 @@
           复制
         </el-button>
         <br />
-        <span style="margin-top: 5px">自动更新-选择15分钟</span>
+        <span style="margin-top: 5px">2、自动更新-选择15分钟</span>
         <br />
-        <span style="margin-top: 5px">完成后点击右上角【保存】</span>
+        <span style="margin-top: 5px">3、完成后点击右上角【保存】</span>
         <br />
         <img src="./android-input.jpg" style="width: 230px; margin-top: 5px" />
       </el-card>
