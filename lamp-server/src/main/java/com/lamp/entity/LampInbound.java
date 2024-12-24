@@ -3,9 +3,7 @@ package com.lamp.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
-import com.lamp.xui.entity.XuiClientTraffic;
-import com.lamp.xui.entity.XuiInbound;
-import com.lamp.xui.entity.XuiSettings;
+import com.lamp.infrastructure.xui.entity.XuiInbound;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

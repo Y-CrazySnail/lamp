@@ -1,7 +1,7 @@
 package com.lamp.controller.web;
 
 import com.lamp.entity.LampMember;
-import com.lamp.presentation.interceptor.LocalAuthInterceptor;
+import com.lamp.security.LocalAuthInterceptor;
 import com.lamp.service.web.LampMemberService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

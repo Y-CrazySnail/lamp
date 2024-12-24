@@ -2,7 +2,7 @@ package com.lamp.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.lamp.common.entity.BaseEntity;
-import com.lamp.xui.entity.XuiClientTraffic;
+import com.lamp.infrastructure.xui.entity.XuiClientTraffic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

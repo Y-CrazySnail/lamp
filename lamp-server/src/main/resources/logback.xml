@@ -1,7 +1,7 @@
 <!-- Logback configuration. See http://logback.qos.ch/manual/index.html -->
 <configuration scan="true" scanPeriod="2 seconds">
     <!--定义日志文件的存储地址 -->
-    <property name="LOG_PATH" value="../logs/aladdin-lamp" />
+    <property name="LOG_PATH" value="../logs" />
     <!-- 控制台输出 -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
@@ -42,7 +42,7 @@
         </encoder>
     </appender>
     <!--  打印SQL日志  -->
-    <!-- <logger name="com.lamp.lamp.infrastructure.persistence.repository.mapper" level="DEBUG"/>-->
+     <logger name="com.lamp.mapper" level="DEBUG"/>
     <!-- 默认日志输出级别 -->
     <root level="INFO">
         <appender-ref ref="STDOUT" />

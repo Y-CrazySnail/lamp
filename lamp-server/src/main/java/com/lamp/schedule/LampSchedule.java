@@ -6,7 +6,7 @@ import com.lamp.entity.LampMember;
 import com.lamp.entity.LampServer;
 import com.lamp.entity.LampService;
 import com.lamp.service.manage.*;
-import com.lamp.xui.XServer;
+import com.lamp.infrastructure.xui.XServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;

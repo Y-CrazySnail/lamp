@@ -7,7 +7,4 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MLampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
-
-    // 可以在这里添加自定义的业务逻辑方法
-
 }

@@ -6,7 +6,7 @@ import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampMember;
 import com.lamp.entity.LampSubscription;
 import com.lamp.mapper.LampSubscriptionMapper;
-import com.lamp.xui.subscription.NodeVmess;
+import com.lamp.infrastructure.xui.subscription.NodeVmess;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;

@@ -7,15 +7,14 @@ import com.lamp.entity.LampInbound;
 import com.lamp.entity.LampMember;
 import com.lamp.entity.LampServer;
 import com.lamp.mapper.LampInboundMapper;
-import com.lamp.xui.XServer;
-import com.lamp.xui.builder.XuiInboundBuilder;
-import com.lamp.xui.entity.XuiInbound;
+import com.lamp.infrastructure.xui.XServer;
+import com.lamp.infrastructure.xui.builder.XuiInboundBuilder;
+import com.lamp.infrastructure.xui.entity.XuiInbound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;

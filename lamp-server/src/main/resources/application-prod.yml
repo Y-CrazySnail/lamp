@@ -37,14 +37,6 @@ security:
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
 
-#oauth-client-details:
-#  zero:
-#    client-id: zero_dev
-#    client-secret: 123456
-#  zero-dev:
-#    client-id: zero
-#    client-secret: 123456
-
 merchant:
   api: https://zhi.niuniuhua.cn/mapi.php
   id: 1002
