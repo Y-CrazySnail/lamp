@@ -113,7 +113,10 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
         memberService.updateById(member);
         // 计算奖励机制
         // 当前用户推荐人
-        LampMember referrerMember = memberService.getByReferralCode(member.getReferrerCode());
+        LampMember referrerMember = null;
+        if (Objects.nonNull(member.getReferrerCode())) {
+            referrerMember = memberService.getByReferralCode(member.getReferrerCode());
+        }
         if (Objects.nonNull(referrerMember)) {
             if (order.getPeriod() == 6) {
                 referrerMember.addDays(15);
