@@ -66,6 +66,13 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         return getOne(queryWrapper);
     }
 
+    public LampMember getByReferralCode(String referralCode) {
+        LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
+        queryWrapper.eq(LampMember::getReferralCode, referralCode);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        return getOne(queryWrapper);
+    }
+
     public void generateCode(LampMember member) {
         // 定义推荐码的字符集
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

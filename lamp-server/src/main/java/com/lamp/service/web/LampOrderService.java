@@ -95,24 +95,33 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
             // 增值服务-数据包
             member.setMonthBandwidth(order.getBandwidth() + member.getMonthBandwidth());
         } else {
-            if (Objects.isNull(member.getExpiryDate()) || member.getExpiryDate().isBefore(LocalDate.now())) {
-                member.setExpiryDate(LocalDate.now());
-            }
             // 基础服务
             if (member.getBandwidth().equals(order.getBandwidth())) {
                 log.info("套餐流量:{}相同, 增加时间", order.getBandwidth());
                 // 计划相同
-                member.setExpiryDate(member.getExpiryDate().plusMonths(order.getPeriod()));
+                member.addMonths(order.getPeriod());
             } else {
                 // 计划不同
                 log.info("套餐流量不相同, 从:{}转换为:{}", member.getBandwidth(), order.getBandwidth());
                 member.setExpiryDate(member.getExpiryDate().plusMonths(order.getPeriod()));
             }
             member.setBandwidth(order.getBandwidth());
-            member.setMonthBandwidth(order.getBandwidth());
             member.resetBandwidth();
         }
+        member.setTotalSpent(member.getTotalSpent().add(order.getPrice()));
+        member.calculateLevel();
         memberService.updateById(member);
+        // 计算奖励机制
+        // 当前用户推荐人
+        LampMember referrerMember = memberService.getByReferralCode(member.getReferrerCode());
+        if (Objects.nonNull(referrerMember)) {
+            if (order.getPeriod() == 6) {
+                referrerMember.addDays(15);
+            }
+            if (order.getPeriod() == 12) {
+                referrerMember.addDays(30);
+            }
+        }
         // TG消息通知
         try {
             SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
@@ -141,5 +150,8 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
         order.finish();
         super.updateById(order);
         serverService.sync(null, member);
+        if (Objects.nonNull(referrerMember)) {
+            serverService.sync(null, referrerMember);
+        }
     }
 }

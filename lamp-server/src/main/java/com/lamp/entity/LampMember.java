@@ -13,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -46,6 +47,8 @@ public class LampMember extends BaseEntity {
 
     private String remark; // 备注
 
+    private BigDecimal totalSpent; // 总消费金额
+
     private BigDecimal balance; // 余额
 
     private Long monthBandwidth; // 本月剩余流量
@@ -78,5 +81,34 @@ public class LampMember extends BaseEntity {
         calculateMonthBandwidth();
         monthBandwidthUp = 0L;
         monthBandwidthDown = 0L;
+    }
+
+    /**
+     * 计算会员等级
+     * 大于100元为2级会员
+     * 大于500元为3级会员
+     */
+    public void calculateLevel() {
+        this.level = 1;
+        if (this.totalSpent.doubleValue() >= 100) {
+            this.level = 2;
+        }
+        if (this.totalSpent.doubleValue() >= 500) {
+            this.level = 3;
+        }
+    }
+
+    public void addDays(int days) {
+        if (Objects.isNull(expiryDate) || expiryDate.isBefore(LocalDate.now())) {
+            expiryDate = LocalDate.now();
+        }
+        this.expiryDate = this.expiryDate.plusDays(days);
+    }
+
+    public void addMonths(int months) {
+        if (Objects.isNull(expiryDate) || expiryDate.isBefore(LocalDate.now())) {
+            expiryDate = LocalDate.now();
+        }
+        this.expiryDate = this.expiryDate.plusMonths(months);
     }
 }
