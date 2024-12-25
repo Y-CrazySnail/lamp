@@ -1,4 +1,4 @@
-import { login, get } from '@/api/lamp/member'
+import { login, get, updatePassword } from '@/api/lamp/member'
 
 const state = {
     member: {}
@@ -24,6 +24,15 @@ const actions = {
     login({ commit, state }, params) {
         return new Promise((resolve, reject) => {
             login(params).then(response => {
+                resolve(response)
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
+    updatePassword({ commit, state }, params) {
+        return new Promise((resolve, reject) => {
+            updatePassword(params).then(response => {
                 resolve(response)
             }).catch(error => {
                 reject(error)

@@ -14,16 +14,46 @@
           </div>
           <div class="hr-like" />
           <div class="infomation-item">
+            <img class="img-20" src="./img/username.png" />
+            <span style="color: #0f0f0f" class="infomation-item-content">
+              账号：{{ member.email }}
+            </span>
+          </div>
+          <div class="infomation-item">
+            <img class="img-20" src="./img/password.png" />
+            <span style="color: #0f0f0f" class="infomation-item-content">
+              密码：
+            </span>
+            <el-input
+              style="width: 150px"
+              size="mini"
+              placeholder="请输入密码"
+              v-model="member.password"
+              show-password
+            ></el-input>
+            <el-button
+              style="
+                background-color: #000000;
+                border-color: #000000;
+                color: white;
+                margin-left: 10px;
+              "
+              type="info"
+              size="mini"
+              @click="updatePassword"
+              plain
+            >
+              修改密码
+            </el-button>
+          </div>
+          <div class="infomation-item">
             <img class="img-20" src="./img/data.png" />
             <span style="color: #0f0f0f" class="infomation-item-content">
               每月流量：{{
                 parseFloat(
-                  (Number(member.bandwidth)) /
-                    1024 /
-                    1024 /
-                    1024
+                  Number(member.bandwidth) / 1024 / 1024 / 1024
                 ).toFixed(2)
-              }}GB<span style="color: #5f5f5f;">（每月1号0点刷新流量）</span>
+              }}GB<span style="color: #5f5f5f">（每月1号0点刷新流量）</span>
             </span>
           </div>
           <div class="infomation-item">
@@ -134,12 +164,12 @@ export default {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");
     },
-    updateUUID(id) {
-      let param = {};
-      param.uuid = this.$uuid.v4();
-      param.id = id;
-      this.$store.dispatch("service/updateUUID", param).then((e) => {
-        this.$store.dispatch("service/list");
+    updatePassword() {
+      let param = {
+        password: this.member.password,
+      };
+      this.$store.dispatch("member/updatePassword", param).then((res) => {
+        this.$message.success("修改密码成功");
       });
     },
     toPackage() {
@@ -163,7 +193,7 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  background-color: #fbfbfb;
+  background-color: #f7f7f7;
   margin: 20px 30px 0 30px;
   border-radius: 3px 3px 0 0;
   border-width: 1px;

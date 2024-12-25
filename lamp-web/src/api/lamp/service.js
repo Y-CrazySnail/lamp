@@ -12,7 +12,7 @@ export function all(params) {
 export function apple(params) {
     return request({
         baseURL: 'lamp',
-        url: '/web/service/apple',
+        url: '/web/lamp-member/apple',
         method: 'get',
         params
     })

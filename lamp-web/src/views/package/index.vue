@@ -76,6 +76,17 @@
               >
                 {{ packages.price }}元
               </el-tag>
+              <el-tag
+                type="info"
+                effect="plain"
+                size="small"
+                style="color: #606266; margin-left: 10px"
+                v-show="packages.beforePrice"
+              >
+                <span style="text-decoration: line-through">
+                  {{ packages.beforePrice }}元
+                </span>
+              </el-tag>
             </div>
           </el-descriptions-item>
         </el-descriptions>

@@ -3,6 +3,7 @@ package com.lamp.service.web;
 import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lamp.common.entity.BaseEntity;
@@ -25,6 +26,13 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
 
     @Autowired
     private LampMemberMapper memberMapper;
+
+    public void updatePassword(Long id, String password) {
+        LambdaUpdateWrapper<LampMember> updateWrapper = new LambdaUpdateWrapper<>(LampMember.class);
+        updateWrapper.set(LampMember::getPassword, password);
+        updateWrapper.eq(LampMember::getId, id);
+        memberMapper.update(null, updateWrapper);
+    }
 
     public LampMember login(LampMember member) {
         LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);

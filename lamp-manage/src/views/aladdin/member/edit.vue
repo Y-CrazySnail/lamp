@@ -178,6 +178,7 @@ export default {
   methods: {
     onSubmit() {
       this.loading = true;
+      this.member.lastSyncTime = null;
       this.$store.dispatch("aladdin_member/update", this.member).then(() => {
         this.$message.success("更新成功");
         this.loading = false;
@@ -186,27 +187,6 @@ export default {
     },
     onCancle() {
       this.$emit("update:editDrawerVisible", false);
-    },
-    onAddService() {
-      const { v4: uuidv4 } = require("uuid");
-      const currentDate = new Date();
-      const year = currentDate.getFullYear(); // 获取年份
-      const month = currentDate.getMonth() + 1; // 获取月份，月份从0开始，所以加1
-      const day = currentDate.getDate(); // 获取日期
-      // 将月份和日期格式化为两位数
-      const formattedMonth = month < 10 ? "0" + month : month;
-      const formattedDay = day < 10 ? "0" + day : day;
-      // 拼接成 yyyy-mm-dd 格式
-      const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
-      let service = {
-        uuid: uuidv4(),
-        bandwidth: 0,
-        expiryDate: formattedDate,
-      };
-      this.member.serviceList.push(service);
-    },
-    onDeleteService(index) {
-      this.member.serviceList.splice(index, 1);
     },
   },
   destroyed() {
