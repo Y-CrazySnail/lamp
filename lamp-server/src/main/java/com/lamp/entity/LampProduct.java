@@ -12,9 +12,11 @@ import java.math.BigDecimal;
 @TableName("lamp_product")
 public class LampProduct extends BaseEntity {
     private String type;
+    private String memberLevel;
     private Long bandwidth;
     private Integer period;
     private BigDecimal price;
+    private BigDecimal beforePrice;
     private String title;
     private String introduce;
 }
