@@ -138,6 +138,14 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
                     if (!remoteServiceMonthIdSet.contains(member.getId())) {
                         XuiInbound x = XuiInboundBuilder.build(inbound, member);
                         xServer.addClient(x);
+                        SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+                        sysTelegramSendDTO.setTemplateName("add_client");
+                        sysTelegramSendDTO.setTemplateType("telegram");
+                        Map<String, Object> replaceMap = new HashMap<>();
+                        replaceMap.put("member", member.getEmail());
+                        replaceMap.put("inbound", server.getApiIp() + ":" + server.getRegion() + ":" + server.getRemark());
+                        sysTelegramSendDTO.setReplaceMap(replaceMap);
+                        sysTelegramService.send(sysTelegramSendDTO);
                     }
                 }
 
@@ -147,6 +155,15 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
                     for (XuiVmessSetting xuiVmessSetting : xuiVmessSettings.getClients()) {
                         if (!validMemberIdSet.contains(Long.valueOf(xuiVmessSetting.getEmail().split("_")[3]))) {
                             xServer.deleteClient(xuiInbound.getId(), xuiVmessSetting.getId());
+                            LampMember member = memberService.getById(Long.valueOf(xuiVmessSetting.getEmail().split("_")[3]));
+                            SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+                            sysTelegramSendDTO.setTemplateName("del_client");
+                            sysTelegramSendDTO.setTemplateType("telegram");
+                            Map<String, Object> replaceMap = new HashMap<>();
+                            replaceMap.put("member", member.getEmail());
+                            replaceMap.put("inbound", server.getApiIp() + ":" + server.getRegion() + ":" + server.getRemark());
+                            sysTelegramSendDTO.setReplaceMap(replaceMap);
+                            sysTelegramService.send(sysTelegramSendDTO);
                         }
                     }
                 }

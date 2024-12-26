@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampMember;
+import com.lamp.im.dto.SysTelegramSendDTO;
+import com.lamp.im.service.ISysTelegramService;
 import com.lamp.mapper.LampMemberMapper;
 import com.lamp.security.LampToken;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +19,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Slf4j
@@ -26,6 +30,9 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
 
     @Autowired
     private LampMemberMapper memberMapper;
+
+    @Autowired
+    private ISysTelegramService sysTelegramService;
 
     public void updatePassword(Long id, String password) {
         LambdaUpdateWrapper<LampMember> updateWrapper = new LambdaUpdateWrapper<>(LampMember.class);
@@ -48,6 +55,13 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         LampToken token = new LampToken();
         token.setToken(member.getId());
         member.setToken(token.getToken());
+        SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+        sysTelegramSendDTO.setTemplateName("del_client");
+        sysTelegramSendDTO.setTemplateType("telegram");
+        Map<String, Object> replaceMap = new HashMap<>();
+        replaceMap.put("email", member.getEmail());
+        sysTelegramSendDTO.setReplaceMap(replaceMap);
+        sysTelegramService.send(sysTelegramSendDTO);
         return member;
     }
 
