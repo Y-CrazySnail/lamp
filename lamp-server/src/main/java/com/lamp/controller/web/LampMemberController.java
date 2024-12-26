@@ -5,6 +5,7 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lamp.common.service.DictService;
 import com.lamp.entity.LampMember;
 import com.lamp.security.LocalAuthInterceptor;
 import com.lamp.service.web.LampMemberService;
@@ -25,6 +26,9 @@ public class LampMemberController {
 
     @Autowired
     private LampMemberService memberService;
+
+    @Autowired
+    private DictService dictService;
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody LampMember member) {
@@ -78,7 +82,8 @@ public class LampMemberController {
     @GetMapping("/apple")
     public ResponseEntity<Object> apple() {
         try {
-            HttpResponse response = HttpUtil.createRequest(Method.GET, APPLE_CONTROL).execute();
+            String appleControl = dictService.getValueByTypeAndKey("apple", "share_url", "");
+            HttpResponse response = HttpUtil.createRequest(Method.GET, appleControl).execute();
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode jsonNode = objectMapper.readTree(response.body());
             return ResponseEntity.ok(jsonNode.get("accounts").get(0));

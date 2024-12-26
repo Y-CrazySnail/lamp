@@ -38,6 +38,18 @@ public class LampSchedule {
     /**
      * 每小时执行
      */
+    @Scheduled(cron = "0 20 0/1 * * ?")
+    public void serverExpirationReminder() {
+        try {
+            serverService.expirationReminder();
+        } catch (Exception e) {
+            log.error("remind error", e);
+        }
+    }
+
+    /**
+     * 每小时执行
+     */
     @Scheduled(cron = "0 40 0/1 * * ?")
     public void sync() {
         try {

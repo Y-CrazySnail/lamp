@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.*;
+import com.lamp.im.dto.SysTelegramSendDTO;
+import com.lamp.im.service.ISysTelegramService;
 import com.lamp.mapper.LampServerMapper;
 import com.lamp.infrastructure.xui.XServer;
 import com.lamp.infrastructure.xui.builder.XuiInboundBuilder;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -33,11 +36,21 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
     @Autowired
     private MLampClientTrafficService clientTrafficService;
 
+    @Autowired
+    private ISysTelegramService sysTelegramService;
+
     @Override
     public LampServer getById(Serializable id) {
         LampServer server = super.getById(id);
         inboundService.setInboundList(server);
         return server;
+    }
+
+    @Override
+    public List<LampServer> list() {
+        LambdaQueryWrapper<LampServer> queryWrapper = new LambdaQueryWrapper<>(LampServer.class);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        return baseMapper.selectList(queryWrapper);
     }
 
     @Override
@@ -137,6 +150,24 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
                         }
                     }
                 }
+            }
+        }
+    }
+
+    public void expirationReminder() {
+        List<LampServer> serverList = list();
+        for (LampServer server : serverList) {
+            if (server.getExpiryDate().minusMonths(1).isBefore(LocalDate.now())) {
+                SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+                sysTelegramSendDTO.setTemplateName("server_expiration_reminder");
+                sysTelegramSendDTO.setTemplateType("telegram");
+                Map<String, Object> replaceMap = new HashMap<>();
+                replaceMap.put("remark", server.getRemark());
+                replaceMap.put("region", server.getRegion());
+                replaceMap.put("ip", server.getApiIp());
+                replaceMap.put("expiryDate", server.getExpiryDate());
+                sysTelegramSendDTO.setReplaceMap(replaceMap);
+                sysTelegramService.send(sysTelegramSendDTO);
             }
         }
     }

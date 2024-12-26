@@ -37,19 +37,6 @@ security:
     authorization:
       check-token-access: http://127.0.0.1:8080/server/oauth/check_token
 
-merchant:
-  api: https://zhi.niuniuhua.cn/mapi.php
-  id: 1002
-  key: 4Z4PoPyVPPCypB3k3zypPVDYPtPWpRwv
-  # api: https://www.sailapay.com/mapi.php
-  # id: 1067
-  # key: je5EjGgJodDejG7Ejj77jJEEJe7TZ5a2
-  notify-url: https://alamp.cc/aladdin-api/web/lamp-order/finish
-  return-url: https://alamp.cc/order/index
-
 telegram:
   token: 7774570406:AAHR777wjXDkaUohYnEnCgKVfuQooAp9VdA
   chat-id: -4548154185
-
-apple:
-  control: https://aunlock.laomaos.com/shareapi/lamp

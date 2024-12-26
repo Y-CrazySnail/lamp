@@ -6,9 +6,9 @@ import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpResponse;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lamp.common.service.DictService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -19,22 +19,22 @@ import java.math.BigDecimal;
 public class EPaymentProcessor {
 
     @Autowired
-    private Environment environment;
+    private DictService dictService;
 
     public JsonNode prepay(BigDecimal price, String orderNo) {
-        String merchantApi = environment.getProperty("merchant.api");
+        String merchantApi = dictService.getValueByTypeAndKey("merchant", "api", "");
         if (StrUtil.isEmpty(merchantApi)) {
             log.error("未获取到商户API");
             return null;
         }
-        String merchantId = environment.getProperty("merchant.id");
+        String merchantId = dictService.getValueByTypeAndKey("merchant", "id", "");
         if (StrUtil.isEmpty(merchantId)) {
             log.error("未获取到商户ID");
             return null;
         }
-        String merchantKey = environment.getProperty("merchant.key");
-        String notifyUrl = environment.getProperty("merchant.notify-url");
-        String returnUrl = environment.getProperty("merchant.return-url");
+        String merchantKey = dictService.getValueByTypeAndKey("merchant", "key", "");
+        String notifyUrl = dictService.getValueByTypeAndKey("merchant", "notify-url", "");
+        String returnUrl = dictService.getValueByTypeAndKey("merchant", "return-url", "");
         String sign = "clientip=" + "alamp.cc"
                 + "&device=" + "pc"
                 + "&money=" + price
