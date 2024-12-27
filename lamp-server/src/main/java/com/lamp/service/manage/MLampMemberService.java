@@ -43,7 +43,7 @@ public class MLampMemberService extends ServiceImpl<LampMemberMapper, LampMember
     @Transactional
     @Override
     public boolean save(LampMember entity) {
-        entity.calculateMonthBandwidth();
+        entity.resetBandwidth();
         return super.save(entity);
     }
 
