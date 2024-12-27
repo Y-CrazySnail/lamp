@@ -12,6 +12,7 @@ import com.lamp.im.service.ISysTemplateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -27,6 +28,7 @@ public class SysTelegramServiceImpl extends ServiceImpl<SysTelegramMapper, SysTe
     @Autowired
     private ISysTemplateService sysTemplateService;
 
+    @Async
     @Override
     public void send(SysTelegramSendDTO sysTelegramSendDTO) {
         SysTemplate sysTemplate = sysTemplateService.get(sysTelegramSendDTO.getTemplateType(), sysTelegramSendDTO.getTemplateName());
