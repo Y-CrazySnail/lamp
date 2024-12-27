@@ -36,9 +36,9 @@ public class LampSchedule {
     private MLampClientTrafficService clientTrafficService;
 
     /**
-     * 每小时执行
+     * 早8点执行
      */
-    @Scheduled(cron = "0 20 0/1 * * ?")
+    @Scheduled(cron = "0 0 8 * * ?")
     public void serverExpirationReminder() {
         try {
             serverService.expirationReminder();

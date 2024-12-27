@@ -56,7 +56,7 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         token.setToken(member.getId());
         member.setToken(token.getToken());
         SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
-        sysTelegramSendDTO.setTemplateName("del_client");
+        sysTelegramSendDTO.setTemplateName("login");
         sysTelegramSendDTO.setTemplateType("telegram");
         Map<String, Object> replaceMap = new HashMap<>();
         replaceMap.put("email", member.getEmail());
