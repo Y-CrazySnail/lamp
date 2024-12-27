@@ -115,6 +115,82 @@
           </div>
           <div style="padding-bottom: 30px"></div>
         </div>
+        <div
+          style="
+            background-color: #f1f1f1;
+            margin: 20px 30px 0 30px;
+            padding: 10px;
+            border-radius: 3px;
+            border-width: 1px;
+            border-color: #ffffff;
+            border-style: none;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              justify-content: left;
+              align-items: center;
+              font-size: 15px;
+              font-weight: 600;
+            "
+          >
+            推荐给朋友，复制下面链接发送给朋友
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: left;
+              align-items: center;
+              font-size: 13px;
+              font-weight: 500;
+            "
+          >
+            被推荐人注册成功并购买<br />
+            买一年赠一个月时长<br />
+            买半年赠半个月时长
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: left;
+              align-items: center;
+              font-size: 13px;
+              margin-top: 5px;
+            "
+            v-clipboard:copy="
+              'https://alamp.cc/signup?referrerCode=' + member.referralCode
+            "
+            v-clipboard:success="onCopySuccess"
+          >
+            {{ "https://alamp.cc/signup?referrerCode=" + member.referralCode }}
+          </div>
+          <div
+            style="
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-top: 5px;
+            "
+          >
+            <el-button
+              style="
+                background-color: #000000;
+                border-color: #000000;
+                color: white;
+              "
+              type="info"
+              size="mini"
+              plain
+              v-clipboard:copy="
+                'https://alamp.cc/signup?referrerCode=' + member.referralCode
+              "
+              v-clipboard:success="onCopySuccess"
+            >
+              复制邀请链接
+            </el-button>
+          </div>
+        </div>
       </div>
       <div style="width: 40%; height: 100vh" v-show="member">
         <div class="guide-container" @click="toIOS()">

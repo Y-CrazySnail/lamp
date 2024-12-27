@@ -18,36 +18,31 @@
           :rules="loginRules"
           style="width: 80%"
         >
-          <el-form-item label="账号" prop="pass">
+          <el-form-item label="邮箱" prop="pass">
             <el-input type="text" v-model="loginForm.username"></el-input>
           </el-form-item>
           <el-form-item label="密码" prop="checkPass">
             <el-input type="password" v-model="loginForm.password"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="checkPass">
+            <el-input
+              type="password"
+              v-model="loginForm.checkPassword"
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="推荐码">
+            <el-input type="text" v-model="loginForm.referrerCode"></el-input>
           </el-form-item>
           <el-form-item>
             <el-button
               :loading="loading"
               type="primary"
               style="width: 100%; margin-top: 30px"
-              @click.native.prevent="handleLogin"
+              @click.native.prevent="handleSignup"
             >
-              登录
+              注册
             </el-button>
           </el-form-item>
-          <div
-            style="
-              display: flex;
-              justify-content: space-between;
-              margin: 20px 0 10px 0;
-            "
-          >
-            <el-link :underline="false" type="primary" @click="signup">
-              注册账号
-            </el-link>
-            <el-link :underline="false" type="info">
-              出现问题联系右下角客服
-            </el-link>
-          </div>
         </el-form>
       </div>
     </div>
@@ -119,6 +114,10 @@ import { validUsername } from "@/utils/validate";
 
 export default {
   name: "Login",
+  mounted() {
+    let referrerCode = this.$route.query.referrerCode;
+    this.loginForm.referrerCode = referrerCode;
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -139,6 +138,8 @@ export default {
       loginForm: {
         username: "",
         password: "",
+        checkPassword: "",
+        referrerCode: "",
       },
       loginRules: {
         username: [
@@ -187,34 +188,24 @@ export default {
         this.$refs.password.focus();
       });
     },
-    handleLogin() {
-      this.$refs.loginForm.validate(async (valid) => {
-        if (valid) {
-          this.loading = true;
-          console.log(this.loginForm);
-          await this.$store
-            .dispatch("auth/login", this.loginForm)
-            .then(() => {
-              this.$router.push({ path: this.redirect || "/" });
-              this.loading = false;
-            })
-            .catch((err) => {
-              this.$message({
-                message: "账号或密码错误",
-                type: "error",
-              });
-              this.loading = false;
-            });
-          await this.$store.dispatch("auth/getInfo");
-          location.reload();
-        } else {
-          console.log("error submit!!");
-          return false;
-        }
-      });
-    },
-    signup() {
-      this.$router.push({ path: "/signup" });
+    handleSignup() {
+      if (this.loginForm.password !== this.loginForm.checkPassword) {
+        this.$message.error("密码输入不一致，请重新输入");
+        return;
+      }
+      if (!this.loginForm.referrerCode) {
+        this.$message.error("请输入推荐码");
+        return;
+      }
+      this.$store
+        .dispatch("auth/signup", this.loginForm)
+        .then(() => {
+          this.$message.success("注册成功");
+          this.$router.push({ path: "/login" });
+        })
+        .catch((e) => {
+          this.$message.error(e.response.data);
+        });
     },
     /**
      * 获取验证码

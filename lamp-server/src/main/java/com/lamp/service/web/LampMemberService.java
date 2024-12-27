@@ -1,6 +1,7 @@
 package com.lamp.service.web;
 
 import cn.hutool.core.lang.UUID;
+import cn.hutool.core.lang.Validator;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -16,13 +17,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -32,7 +31,17 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
     private LampMemberMapper memberMapper;
 
     @Autowired
+    private LampRewardRecordService rewardRecordService;
+
+    @Autowired
     private ISysTelegramService sysTelegramService;
+
+    @Override
+    public LampMember getById(Serializable id) {
+        LampMember member = memberMapper.selectById(id);
+        rewardRecordService.setRewardRecordList(member);
+        return member;
+    }
 
     public void updatePassword(Long id, String password) {
         LambdaUpdateWrapper<LampMember> updateWrapper = new LambdaUpdateWrapper<>(LampMember.class);
@@ -65,20 +74,34 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         return member;
     }
 
-    public boolean signUp(LampMember member) {
+    public String signup(LampMember member) {
+        LampMember referrer = getByReferralCode(member.getReferrerCode());
+        if (Objects.isNull(referrer)) {
+            log.error("推荐码无效！");
+            return "推荐码无效";
+        }
+        if (!Validator.isEmail(member.getUsername())) {
+            log.error("邮箱格式错误！");
+            return "邮箱格式错误";
+        }
+        LampMember exist = getByEmail(member.getUsername());
+        if (Objects.nonNull(exist)) {
+            return "邮箱已注册";
+        }
         member.setEmail(member.getUsername());
         member.setUuid(UUID.fastUUID().toString());
         member.setBandwidth(0L);
         member.setLastSyncTime(LocalDateTime.now());
         member.setExpiryDate(LocalDate.now().minusDays(1));
-        member.setLevel(0);
+        member.setLevel(1);
         generateCode(member);
         member.setRemark("");
         member.setBalance(new BigDecimal(0));
         member.setMonthBandwidth(0L);
         member.setMonthBandwidthUp(0L);
         member.setMonthBandwidthDown(0L);
-        return save(member);
+        save(member);
+        return null;
     }
 
     public LampMember getByUUID(String uuid) {
@@ -91,6 +114,13 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
     public LampMember getByReferralCode(String referralCode) {
         LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
         queryWrapper.eq(LampMember::getReferralCode, referralCode);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        return getOne(queryWrapper);
+    }
+
+    public LampMember getByEmail(String email) {
+        LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
+        queryWrapper.eq(LampMember::getEmail, email);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         return getOne(queryWrapper);
     }

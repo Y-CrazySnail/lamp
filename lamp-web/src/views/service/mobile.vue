@@ -2,43 +2,46 @@
   <div v-show="device === 'mobile'">
     <div class="container">
       <div class="package-container">
-        <span class="package-title" v-if="parseFloat(
-          (Number(member.bandwidth)) /
-          1024 /
-          1024 /
-          1024
-        ).toFixed(2) < 50">
+        <span
+          class="package-title"
+          v-if="
+            parseFloat(Number(member.bandwidth) / 1024 / 1024 / 1024).toFixed(
+              2
+            ) < 50
+          "
+        >
           入门套餐
         </span>
-        <span class="package-title" v-if="parseFloat(
-          (Number(member.bandwidth)) /
-          1024 /
-          1024 /
-          1024
-        ).toFixed(2) >= 50 && parseFloat(
-          (Number(member.bandwidth)) /
-          1024 /
-          1024 /
-          1024
-        ).toFixed(2) < 100">
+        <span
+          class="package-title"
+          v-if="
+            parseFloat(Number(member.bandwidth) / 1024 / 1024 / 1024).toFixed(
+              2
+            ) >= 50 &&
+            parseFloat(Number(member.bandwidth) / 1024 / 1024 / 1024).toFixed(
+              2
+            ) < 100
+          "
+        >
           中级套餐
         </span>
-        <span class="package-title" v-if="parseFloat(
-          (Number(member.bandwidth)) /
-          1024 /
-          1024 /
-          1024
-        ).toFixed(2) >= 100">
+        <span
+          class="package-title"
+          v-if="
+            parseFloat(Number(member.bandwidth) / 1024 / 1024 / 1024).toFixed(
+              2
+            ) >= 100
+          "
+        >
           高级套餐
         </span>
         <div class="package-description">
           流量：
-          {{ parseFloat(
-                  (Number(member.bandwidth)) /
-                    1024 /
-                    1024 /
-                    1024
-                ).toFixed(2) }}GB/月
+          {{
+            parseFloat(Number(member.bandwidth) / 1024 / 1024 / 1024).toFixed(
+              2
+            )
+          }}GB/月
         </div>
       </div>
       <div class="hr-like" />
@@ -57,9 +60,9 @@
               (Number(member.monthBandwidth) -
                 (Number(member.monthBandwidthDown) +
                   Number(member.monthBandwidthUp))) /
-              1024 /
-              1024 /
-              1024
+                1024 /
+                1024 /
+                1024
             ).toFixed(2)
           }}GB
         </span>
@@ -74,15 +77,27 @@
         <img class="img-20" src="./img/clash.png" />
         <span style="color: #0f0f0f" class="infomation-item-content">
           Clash订阅地址：
-          <img style="margin-left: 5px" class="img-16" src="./img/copy.png" v-clipboard:copy="'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid
-            " v-clipboard:success="onCopySuccess" />
-          <span style="
+          <img
+            style="margin-left: 5px"
+            class="img-16"
+            src="./img/copy.png"
+            v-clipboard:copy="
+              'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid
+            "
+            v-clipboard:success="onCopySuccess"
+          />
+          <span
+            style="
               font-size: 12px;
               margin-left: 5px;
               font-weight: 600;
               cursor: pointer;
-            " v-clipboard:copy="'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid
-              " v-clipboard:success="onCopySuccess">
+            "
+            v-clipboard:copy="
+              'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid
+            "
+            v-clipboard:success="onCopySuccess"
+          >
             复制
           </span>
         </span>
@@ -120,10 +135,83 @@
         </div>
       </div>
     </div>
+    <div
+      style="
+        background-color: #f1f1f1;
+        margin: 20px 30px 0 30px;
+        padding: 10px;
+        border-radius: 3px;
+        border-width: 1px;
+        border-color: #ffffff;
+        border-style: none;
+      "
+    >
+      <div
+        style="
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          font-size: 14px;
+          font-weight: 600;
+        "
+      >
+        推荐给朋友，复制下面链接发送给朋友
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          font-size: 12px;
+          font-weight: 500;
+        "
+      >
+        被推荐人注册成功并购买<br />
+        买一年赠一个月时长<br />
+        买半年赠半个月时长
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          font-size: 12px;
+          margin-top: 5px;
+        "
+        v-clipboard:copy="
+          'https://alamp.cc/signup?referrerCode=' + member.referralCode
+        "
+        v-clipboard:success="onCopySuccess"
+      >
+        {{ "https://alamp.cc/signup?referrerCode=" + member.referralCode }}
+      </div>
+      <div
+        style="
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 5px;
+        "
+      >
+        <el-button
+          style="background-color: #000000; border-color: #000000; color: white"
+          type="info"
+          size="mini"
+          plain
+          v-clipboard:copy="
+            'https://alamp.cc/signup?referrerCode=' + member.referralCode
+          "
+          v-clipboard:success="onCopySuccess"
+        >
+          复制邀请链接
+        </el-button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import member from "@/store/modules/lamp/member";
 import VueQr from "vue-qr";
 export default {
   name: "Service",
@@ -136,7 +224,7 @@ export default {
       return this.$store.state.member.member;
     },
   },
-  created() { },
+  created() {},
   methods: {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");
@@ -170,9 +258,9 @@ export default {
 
 <style lang="scss" scoped>
 .container {
-  background-color: #fbfbfb;
+  background-color: #f1f1f1;
   margin: 20px 30px 0 30px;
-  border-radius: 3px 3px 0 0;
+  border-radius: 3px;
   border-width: 1px;
   border-color: #ffffff;
   border-style: none;

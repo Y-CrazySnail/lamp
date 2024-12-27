@@ -1,5 +1,6 @@
 package com.lamp.controller.web;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpResponse;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.http.Method;
@@ -40,10 +41,13 @@ public class LampMemberController {
         }
     }
 
-    @PostMapping("/signUp")
-    public ResponseEntity<Object> signUp(@RequestBody LampMember member) {
+    @PostMapping("/signup")
+    public ResponseEntity<Object> signup(@RequestBody LampMember member) {
         try {
-            memberService.signUp(member);
+            String flag = memberService.signup(member);
+            if (StrUtil.isNotEmpty(flag)) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(flag);
+            }
             return ResponseEntity.ok("注册成功");
         } catch (Exception e) {
             log.error("注册失败：", e);

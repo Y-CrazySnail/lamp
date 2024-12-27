@@ -1,4 +1,4 @@
-import { login, get } from '@/api/lamp/member'
+import { login, get, signup } from '@/api/lamp/member'
 import { getToken, setToken, removeToken, getPermission, setPermission, removePermission } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
@@ -41,7 +41,17 @@ const actions = {
             })
         })
     },
-
+    signup({ commit }, userInfo) {
+        const { username, password, referrerCode } = userInfo
+        return new Promise((resolve, reject) => {
+            signup({ username: username.trim(), password: password, referrerCode: referrerCode }).then(response => {
+                console.log(response.token)
+                resolve()
+            }).catch(error => {
+                reject(error)
+            })
+        })
+    },
     // get user info
     getInfo({ commit, state }) {
         return new Promise((resolve, reject) => {

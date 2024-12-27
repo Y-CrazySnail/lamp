@@ -9,6 +9,15 @@ export function login(data) {
   })
 }
 
+export function signup(data) {
+  return request({
+    baseURL: 'lamp',
+    url: '/web/lamp-member/signup',
+    method: 'post',
+    data
+  })
+}
+
 export function get() {
   return request({
     baseURL: 'lamp',

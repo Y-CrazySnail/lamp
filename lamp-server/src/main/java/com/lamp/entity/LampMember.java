@@ -66,6 +66,9 @@ public class LampMember extends BaseEntity {
     @TableField(exist = false)
     private List<LampService> serviceList;
 
+    @TableField(exist = false)
+    private List<LampRewardRecord> rewardRecordList;
+
     public boolean isValid() {
         return this.expiryDate.isAfter(LocalDate.now()) && monthBandwidth > monthBandwidthDown + monthBandwidthUp;
     }
