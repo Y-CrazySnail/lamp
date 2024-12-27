@@ -1,5 +1,6 @@
 package com.lamp.service.web;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -102,7 +103,7 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
             } else {
                 // 计划不同
                 log.info("套餐流量不相同, 从:{}转换为:{}", member.getBandwidth(), order.getBandwidth());
-                member.setExpiryDate(member.getExpiryDate().plusMonths(order.getPeriod()));
+                member.addMonths(order.getPeriod());
             }
             member.setBandwidth(order.getBandwidth());
             member.resetBandwidth();
@@ -113,7 +114,7 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
         // 计算奖励机制
         // 当前用户推荐人
         LampMember referrerMember = null;
-        if (Objects.nonNull(member.getReferrerCode())) {
+        if (StrUtil.isNotEmpty(member.getReferrerCode())) {
             referrerMember = memberService.getByReferralCode(member.getReferrerCode());
         }
         if (Objects.nonNull(referrerMember)) {
