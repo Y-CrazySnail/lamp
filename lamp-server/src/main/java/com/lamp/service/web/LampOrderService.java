@@ -8,6 +8,7 @@ import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampMember;
 import com.lamp.entity.LampOrder;
 import com.lamp.entity.LampProduct;
+import com.lamp.entity.LampRewardRecord;
 import com.lamp.im.dto.SysTelegramSendDTO;
 import com.lamp.im.service.ISysTelegramService;
 import com.lamp.infrastructure.payment.EPaymentProcessor;
@@ -32,6 +33,9 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
 
     @Autowired
     private LampMemberService memberService;
+
+    @Autowired
+    private LampRewardRecordService rewardRecordService;
 
     @Autowired
     private MLampServerService serverService;
@@ -118,12 +122,16 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
             referrerMember = memberService.getByReferralCode(member.getReferrerCode());
         }
         if (Objects.nonNull(referrerMember)) {
+            int addDays = 0;
             if (order.getPeriod() == 6) {
-                referrerMember.addDays(15);
+                addDays = 15;
             }
             if (order.getPeriod() == 12) {
-                referrerMember.addDays(30);
+                addDays = 30;
             }
+            referrerMember.addDays(addDays);
+            LampRewardRecord rewardRecord = LampRewardRecord.init(referrerMember, member, order, addDays);
+            rewardRecordService.save(rewardRecord);
         }
         // TG消息通知
         try {
