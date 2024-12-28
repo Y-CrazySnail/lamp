@@ -22,9 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/web/lamp-member")
 public class LampMemberController {
 
-    @Value("${apple.control}")
-    private String APPLE_CONTROL;
-
     @Autowired
     private LampMemberService memberService;
 

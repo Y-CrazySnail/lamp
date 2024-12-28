@@ -70,7 +70,10 @@ public class BaseEntity implements Serializable {
     private List<Long> idList;
 
     @TableField(exist = false)
-    private Page<BaseEntity> page;
+    private Integer current;
+
+    @TableField(exist = false)
+    private Integer size;
 
     public enum BaseField {
         ID("id"),

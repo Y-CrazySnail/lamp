@@ -26,6 +26,8 @@ public class MLampMemberController {
     public ResponseEntity<Object> page(LampMember member) {
         try {
             IPage<LampMember> page = new Page<>();
+            page.setSize(member.getSize());
+            page.setCurrent(member.getCurrent());
             LambdaQueryWrapper<LampMember> queryWrapper = new LambdaQueryWrapper<>(LampMember.class);
             BaseEntity.setDeleteFlagCondition(queryWrapper);
             if (Objects.nonNull(member.getKeywords())) {
