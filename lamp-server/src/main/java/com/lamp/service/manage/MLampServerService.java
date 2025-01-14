@@ -97,67 +97,54 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
 
         // 开始同步流量 远程->本地
         for (LampServer server : serverList) {
-            XServer xServer = XServer.init(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
-            List<XuiInbound> xuiInboundList = xServer.inboundList();
-            for (XuiInbound xuiInbound : xuiInboundList) {
-                List<XuiClientTraffic> xuiClientTrafficList = xuiInbound.getClientStats();
-                for (XuiClientTraffic xuiClientTraffic : xuiClientTrafficList) {
-                    String[] param = xuiClientTraffic.getEmail().split("_");
-                    if (param.length != 4) {
-                        continue;
+            try {
+                XServer xServer = XServer.init(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
+                List<XuiInbound> xuiInboundList = xServer.inboundList();
+                for (XuiInbound xuiInbound : xuiInboundList) {
+                    List<XuiClientTraffic> xuiClientTrafficList = xuiInbound.getClientStats();
+                    for (XuiClientTraffic xuiClientTraffic : xuiClientTrafficList) {
+                        String[] param = xuiClientTraffic.getEmail().split("_");
+                        if (param.length != 4) {
+                            continue;
+                        }
+                        LampClientTraffic clientTraffic = LampClientTraffic.convert(xuiClientTraffic);
+                        clientTrafficService.saveOrUpdate(clientTraffic);
                     }
-                    LampClientTraffic clientTraffic = LampClientTraffic.convert(xuiClientTraffic);
-                    clientTrafficService.saveOrUpdate(clientTraffic);
                 }
+            } catch (Exception e) {
+                log.error("服务器：{}同步流量 远程->本地异常：", server.getRemark(), e);
             }
         }
 
         // 开始同步节点 本地->远程
         for (LampServer server : serverList) {
-            inboundService.setInboundList(server);
-            XServer xServer = XServer.init(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
-            List<XuiInbound> xuiInboundList = xServer.inboundList();
-            for (XuiInbound xuiInbound : xuiInboundList) {
-                LampInbound inbound = null;
-                for (LampInbound i : server.getInboundList()) {
-                    if (i.getXuiId().equals(xuiInbound.getId())) {
-                        inbound = i;
-                        break;
+            try {
+                inboundService.setInboundList(server);
+                XServer xServer = XServer.init(server.getApiIp(), server.getApiPort(), server.getApiUsername(), server.getApiPassword());
+                List<XuiInbound> xuiInboundList = xServer.inboundList();
+                for (XuiInbound xuiInbound : xuiInboundList) {
+                    LampInbound inbound = null;
+                    for (LampInbound i : server.getInboundList()) {
+                        if (i.getXuiId().equals(xuiInbound.getId())) {
+                            inbound = i;
+                            break;
+                        }
                     }
-                }
-                if (Objects.isNull(inbound)) {
-                    log.warn("本地无该入站配置，忽略不处理：{}", xuiInbound);
-                    continue;
-                }
-
-                // 新增节点
-                Set<Long> remoteServiceMonthIdSet = xuiInbound.getClientStats().stream()
-                        .map(x -> Long.valueOf(x.getEmail().split("_")[3]))
-                        .collect(Collectors.toSet());
-                for (LampMember member : validMemberList) {
-                    if (!remoteServiceMonthIdSet.contains(member.getId())) {
-                        XuiInbound x = XuiInboundBuilder.build(inbound, member);
-                        xServer.addClient(x);
-                        SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
-                        sysTelegramSendDTO.setTemplateName("add_client");
-                        sysTelegramSendDTO.setTemplateType("telegram");
-                        Map<String, Object> replaceMap = new HashMap<>();
-                        replaceMap.put("member", member.getEmail());
-                        replaceMap.put("inbound", server.getApiIp() + ":" + server.getRegion() + ":" + server.getRemark());
-                        sysTelegramSendDTO.setReplaceMap(replaceMap);
-                        sysTelegramService.send(sysTelegramSendDTO);
+                    if (Objects.isNull(inbound)) {
+                        log.warn("本地无该入站配置，忽略不处理：{}", xuiInbound);
+                        continue;
                     }
-                }
 
-                if (Objects.isNull(memberParam) || Objects.isNull(memberParam.getId())) {
-                    // 删除节点
-                    XuiVmessSettings xuiVmessSettings = (XuiVmessSettings) xuiInbound.getSettingsObject();
-                    for (XuiVmessSetting xuiVmessSetting : xuiVmessSettings.getClients()) {
-                        if (!validMemberIdSet.contains(Long.valueOf(xuiVmessSetting.getEmail().split("_")[3]))) {
-                            xServer.deleteClient(xuiInbound.getId(), xuiVmessSetting.getId());
-                            LampMember member = memberService.getById(Long.valueOf(xuiVmessSetting.getEmail().split("_")[3]));
+                    // 新增节点
+                    Set<Long> remoteServiceMonthIdSet = xuiInbound.getClientStats().stream()
+                            .map(x -> Long.valueOf(x.getEmail().split("_")[3]))
+                            .collect(Collectors.toSet());
+                    for (LampMember member : validMemberList) {
+                        if (!remoteServiceMonthIdSet.contains(member.getId())) {
+                            XuiInbound x = XuiInboundBuilder.build(inbound, member);
+                            xServer.addClient(x);
                             SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
-                            sysTelegramSendDTO.setTemplateName("del_client");
+                            sysTelegramSendDTO.setTemplateName("add_client");
                             sysTelegramSendDTO.setTemplateType("telegram");
                             Map<String, Object> replaceMap = new HashMap<>();
                             replaceMap.put("member", member.getEmail());
@@ -166,7 +153,28 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
                             sysTelegramService.send(sysTelegramSendDTO);
                         }
                     }
+
+                    if (Objects.isNull(memberParam) || Objects.isNull(memberParam.getId())) {
+                        // 删除节点
+                        XuiVmessSettings xuiVmessSettings = (XuiVmessSettings) xuiInbound.getSettingsObject();
+                        for (XuiVmessSetting xuiVmessSetting : xuiVmessSettings.getClients()) {
+                            if (!validMemberIdSet.contains(Long.valueOf(xuiVmessSetting.getEmail().split("_")[3]))) {
+                                xServer.deleteClient(xuiInbound.getId(), xuiVmessSetting.getId());
+                                LampMember member = memberService.getById(Long.valueOf(xuiVmessSetting.getEmail().split("_")[3]));
+                                SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+                                sysTelegramSendDTO.setTemplateName("del_client");
+                                sysTelegramSendDTO.setTemplateType("telegram");
+                                Map<String, Object> replaceMap = new HashMap<>();
+                                replaceMap.put("member", member.getEmail());
+                                replaceMap.put("inbound", server.getApiIp() + ":" + server.getRegion() + ":" + server.getRemark());
+                                sysTelegramSendDTO.setReplaceMap(replaceMap);
+                                sysTelegramService.send(sysTelegramSendDTO);
+                            }
+                        }
+                    }
                 }
+            } catch (Exception e) {
+                log.error("服务器：{}-同步节点 本地->远程", server.getRemark(), e);
             }
         }
     }
