@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
@@ -53,10 +54,34 @@ public class LampSchedule {
     @Scheduled(cron = "0 40 0/1 * * ?")
     public void sync() {
         try {
-            serverService.sync(null, null);
-            memberService.syncBandwidth(null);
+            SyncParam syncParam = new SyncParam();
+            GlobalData.SYNC_QUEUE.add(syncParam);
         } catch (Exception e) {
             log.error("sync error", e);
+        }
+    }
+
+    /**
+     * 每13秒执行一次
+     */
+    @Scheduled(cron = "0/13 * * * * ?")
+    public void execute() {
+        if (!GlobalData.SYNC_QUEUE.isEmpty() && !GlobalData.SYNCING) {
+            try {
+                GlobalData.SYNCING = true;
+                SyncParam syncParam = GlobalData.SYNC_QUEUE.poll();
+                log.info("同步队列中存在待执行任务, 开始执行:{}", syncParam);
+                if (Objects.isNull(syncParam)) {
+                    log.warn("待执行人任务为空，跳过不执行");
+                    return;
+                }
+                serverService.sync(syncParam.getServer(), syncParam.getMember());
+            } catch (Exception e) {
+                log.error("sync error", e);
+            } finally {
+                log.info("同步队列中待执行任务执行结束");
+                GlobalData.SYNCING = false;
+            }
         }
     }
 

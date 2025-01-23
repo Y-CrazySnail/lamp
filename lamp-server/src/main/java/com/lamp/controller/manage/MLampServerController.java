@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampServer;
+import com.lamp.schedule.GlobalData;
+import com.lamp.schedule.SyncParam;
 import com.lamp.service.manage.MLampServerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +81,9 @@ public class MLampServerController {
     @PostMapping("/sync")
     public ResponseEntity<Object> sync(@RequestBody LampServer server) {
         try {
-            serverService.sync(server, null);
+            SyncParam syncParam = new SyncParam();
+            syncParam.setServer(server);
+            GlobalData.SYNC_QUEUE.add(syncParam);
             return ResponseEntity.ok("服务器同步成功");
         } catch (Exception e) {
             log.error("服务器同步失败:", e);

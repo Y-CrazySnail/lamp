@@ -13,6 +13,8 @@ import com.lamp.im.dto.SysTelegramSendDTO;
 import com.lamp.im.service.ISysTelegramService;
 import com.lamp.infrastructure.payment.EPaymentProcessor;
 import com.lamp.mapper.LampOrderMapper;
+import com.lamp.schedule.GlobalData;
+import com.lamp.schedule.SyncParam;
 import com.lamp.service.manage.MLampServerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,9 +162,8 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
         }
         order.finish();
         super.updateById(order);
-        serverService.sync(null, member);
-        if (Objects.nonNull(referrerMember)) {
-            serverService.sync(null, referrerMember);
-        }
+        SyncParam syncParam = new SyncParam();
+        syncParam.setMember(member);
+        GlobalData.SYNC_QUEUE.add(syncParam);
     }
 }

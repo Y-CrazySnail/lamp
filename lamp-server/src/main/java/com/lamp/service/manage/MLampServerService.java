@@ -177,6 +177,7 @@ public class MLampServerService extends ServiceImpl<LampServerMapper, LampServer
                 log.error("服务器：{}-同步节点 本地->远程", server.getRemark(), e);
             }
         }
+        memberService.syncBandwidth(null);
     }
 
     public void expirationReminder() {
