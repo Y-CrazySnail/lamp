@@ -20,6 +20,12 @@
             </span>
           </div>
           <div class="infomation-item">
+            <img class="img-20" src="./img/username.png" />
+            <span style="color: #0f0f0f" class="infomation-item-content">
+              余额：{{ member.balance }}
+            </span>
+          </div>
+          <div class="infomation-item">
             <img class="img-20" src="./img/password.png" />
             <span style="color: #0f0f0f" class="infomation-item-content">
               密码：

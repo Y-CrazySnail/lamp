@@ -55,6 +55,12 @@
       <div class="infomation-item">
         <img class="img-20" src="./img/data.png" />
         <span style="color: #0f0f0f" class="infomation-item-content">
+          余额：{{ member.balance }}
+        </span>
+      </div>
+      <div class="infomation-item">
+        <img class="img-20" src="./img/data.png" />
+        <span style="color: #0f0f0f" class="infomation-item-content">
           剩余流量：{{
             parseFloat(
               (Number(member.monthBandwidth) -
@@ -166,9 +172,8 @@
           font-weight: 500;
         "
       >
-        被推荐人注册成功并购买<br />
-        买一年赠一个月时长<br />
-        买半年赠半个月时长
+        被推荐人注册成功并购买后，您将获得15%的返现奖励<br />
+        余额为100的整数可兑换礼品卡
       </div>
       <div
         style="

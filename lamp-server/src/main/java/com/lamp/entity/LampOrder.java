@@ -36,6 +36,8 @@ public class LampOrder extends BaseEntity {
     private Long bandwidth;
     private Integer period;
     private BigDecimal price;
+    // 余额抵扣
+    private BigDecimal deductBalance;
     private String remark;
     private String tradeNo;
 

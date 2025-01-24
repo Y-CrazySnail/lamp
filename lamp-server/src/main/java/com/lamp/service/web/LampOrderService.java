@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +68,18 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
      *
      * @param order 订单
      */
+    @Transactional
     public void place(LampOrder order) {
         LampProduct product = productService.getById(order.getPackageId());
         order.createOrder(product.getBandwidth(), product.getPeriod(), product.getPrice(), product.getType());
+        LampMember member = memberService.getById(order.getMemberId());
+        if (Objects.nonNull(member.getBalance())) {
+            if (member.getBalance().compareTo(order.getPrice().subtract(BigDecimal.valueOf(2))) <= 0) {
+                order.setDeductBalance(member.getBalance());
+            } else {
+                order.setDeductBalance(order.getPrice().subtract(BigDecimal.valueOf(2)));
+            }
+        }
         save(order);
     }
 
@@ -81,7 +91,12 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
      */
     public JsonNode pay(LampOrder order) {
         order = getById(order.getId());
-        JsonNode payRes = ePaymentProcessor.prepay(order.getPrice(), order.getOrderNo());
+        LampMember member = memberService.getById(order.getMemberId());
+        if (member.getBalance().compareTo(order.getDeductBalance()) < 0) {
+            log.info("用户：{}-订单：{}-余额不足", member, order);
+            throw new RuntimeException("余额不足");
+        }
+        JsonNode payRes = ePaymentProcessor.prepay(order.getPrice().subtract(order.getDeductBalance()), order.getOrderNo());
         if ("1".equals(payRes.get("code").toString())) {
             order.setTradeNo(payRes.get("trade_no").toString().replace("\"", ""));
             super.updateById(order);
@@ -115,6 +130,7 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
             member.resetBandwidth();
         }
         member.setTotalSpent(member.getTotalSpent().add(order.getPrice()));
+        member.setBalance(member.getBalance().subtract(order.getDeductBalance()));
         member.calculateLevel();
         memberService.updateById(member);
         // 计算奖励机制
@@ -124,16 +140,10 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
             referrerMember = memberService.getByReferralCode(member.getReferrerCode());
         }
         if (Objects.nonNull(referrerMember)) {
-            int addDays = 0;
-            if (order.getPeriod() == 6) {
-                addDays = 15;
-            }
-            if (order.getPeriod() == 12) {
-                addDays = 30;
-            }
-            referrerMember.addDays(addDays);
-            LampRewardRecord rewardRecord = LampRewardRecord.init(referrerMember, member, order, addDays);
+            LampRewardRecord rewardRecord = LampRewardRecord.init(referrerMember, member, order);
+            referrerMember.addBalance(rewardRecord.getRewardAmount());
             rewardRecordService.save(rewardRecord);
+            memberService.updateById(referrerMember);
         }
         // TG消息通知
         try {

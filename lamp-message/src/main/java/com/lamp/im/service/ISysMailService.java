@@ -13,8 +13,8 @@ public interface ISysMailService extends IService<SysMail> {
 
     void save(SysMailSendDTO sysMailSendDTO, SysTemplate sysTemplate);
 
-   void send();
+    void send();
 
-   void send(SysMail sysMail);
+    void send(SysMail sysMail);
 
 }

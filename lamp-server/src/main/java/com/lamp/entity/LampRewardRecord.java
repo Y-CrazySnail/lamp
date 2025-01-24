@@ -5,6 +5,8 @@ import com.lamp.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Data
@@ -15,16 +17,16 @@ public class LampRewardRecord extends BaseEntity {
     private Long refereeId;
     private String refereeEmail;
     private Long orderId;
-    private Integer rewardDay;
     private LocalDate rewardDate;
+    private BigDecimal rewardAmount;
 
-    public static LampRewardRecord init(LampMember referrer, LampMember referee, LampOrder order, int rewardDays) {
+    public static LampRewardRecord init(LampMember referrer, LampMember referee, LampOrder order) {
         LampRewardRecord rewardRecord = new LampRewardRecord();
         rewardRecord.setReferrerId(referrer.getId());
         rewardRecord.setRefereeId(referee.getId());
         rewardRecord.setRefereeEmail(referee.getEmail());
         rewardRecord.setOrderId(order.getId());
-        rewardRecord.setRewardDay(rewardDays);
+        rewardRecord.setRewardAmount(order.getPrice().multiply(BigDecimal.valueOf(referrer.getCashbackRatio())).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP));
         rewardRecord.setRewardDate(LocalDate.now());
         return rewardRecord;
     }
