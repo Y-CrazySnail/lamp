@@ -9,7 +9,6 @@ import com.lamp.im.entity.SysTemplate;
 import com.lamp.im.mapper.SysMailMapper;
 import com.lamp.im.service.ISysMailService;
 import com.lamp.common.utils.FreeMakerUtils;
-import com.resend.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
