@@ -62,6 +62,12 @@
           </template>
           <div style="margin: 5px">{{ order.price }}元</div>
         </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <span style="">实付</span>
+          </template>
+          <div style="margin: 5px">{{ parseFloat(order.price - order.deductBalance).toFixed(2) }}元</div>
+          </el-descriptions-item>
       </el-descriptions>
     </el-card>
   </div>

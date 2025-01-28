@@ -40,3 +40,11 @@ security:
 telegram:
   token: 7774570406:AAHR777wjXDkaUohYnEnCgKVfuQooAp9VdA
   chat-id: -4548154185
+
+mail:
+  host: smtp.alamp.cc
+  port: 587
+  from: support@alamp.cc
+  user: support@alamp.cc
+  pass: 1357924680.aA
+

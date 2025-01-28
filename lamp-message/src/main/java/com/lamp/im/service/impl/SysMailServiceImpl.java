@@ -9,6 +9,7 @@ import com.lamp.im.entity.SysTemplate;
 import com.lamp.im.mapper.SysMailMapper;
 import com.lamp.im.service.ISysMailService;
 import com.lamp.common.utils.FreeMakerUtils;
+import com.resend.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -117,5 +118,21 @@ public class SysMailServiceImpl extends ServiceImpl<SysMailMapper, SysMail> impl
             sysMailMapper.insert(sysMail);
             this.send(sysMail);
         }
+    }
+
+    public static void main(String[] args) {
+        MailAccount account = new MailAccount();
+        account.setHost("smtp.alamp.cc");
+        account.setPort(587);
+        account.setAuth(true);
+        account.setFrom("support@alamp.cc");
+        account.setUser("support@alamp.cc");
+        account.setPass("1357924680.aA");
+        SysMail sysMail = new SysMail();
+        sysMail.setToEmail("haisong0230@outlook.com");
+        sysMail.setSubject("测试邮箱");
+        sysMail.setContent("测试内容");
+        sysMail.setHtmlFlag(true);
+        MailUtil.send(account, sysMail.getToEmail(), sysMail.getSubject(), sysMail.getContent(), sysMail.isHtmlFlag());
     }
 }

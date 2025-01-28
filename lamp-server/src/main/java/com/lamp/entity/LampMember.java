@@ -51,6 +51,8 @@ public class LampMember extends BaseEntity {
 
     private BigDecimal balance; // 余额
 
+    private Long cashbackRatio; // 返利比例%
+
     private Long monthBandwidth; // 本月剩余流量
 
     private Long monthBandwidthUp; // 本月已使用上行流量
@@ -83,7 +85,7 @@ public class LampMember extends BaseEntity {
         Date current = new Date();
         int dayOfMonth = DateUtil.dayOfMonth(current);
         int lengthOfMonth = DateUtil.lengthOfMonth(DateUtil.month(current) + 1, false);
-        this.monthBandwidth = (long) (((double) (lengthOfMonth - dayOfMonth)) / lengthOfMonth * this.bandwidth);
+        this.monthBandwidth = (long) (((double) (lengthOfMonth - dayOfMonth + 1)) / lengthOfMonth * this.bandwidth);
     }
 
     public void resetBandwidth() {
@@ -107,18 +109,11 @@ public class LampMember extends BaseEntity {
         }
     }
 
-    public void addDays(int days) {
-        if (Objects.isNull(expiryDate) || expiryDate.isBefore(LocalDate.now())) {
-            expiryDate = LocalDate.now();
-        }
-        this.expiryDate = this.expiryDate.plusDays(days);
-    }
-
     public void addBalance(BigDecimal rewardAmount) {
         if (Objects.isNull(this.balance)) {
             this.balance = rewardAmount;
         } else {
-            this.balance = this.balance.add(balance);
+            this.balance = this.balance.add(rewardAmount);
         }
     }
 
