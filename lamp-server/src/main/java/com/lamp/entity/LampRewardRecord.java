@@ -5,6 +5,7 @@ import com.lamp.common.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
@@ -16,6 +17,7 @@ public class LampRewardRecord extends BaseEntity {
     private String refereeEmail;
     private Long orderId;
     private Integer rewardDay;
+    private BigDecimal rewardAmount;
     private LocalDate rewardDate;
 
     public static LampRewardRecord init(LampMember referrer, LampMember referee, LampOrder order, int rewardDays) {
@@ -25,6 +27,7 @@ public class LampRewardRecord extends BaseEntity {
         rewardRecord.setRefereeEmail(referee.getEmail());
         rewardRecord.setOrderId(order.getId());
         rewardRecord.setRewardDay(rewardDays);
+        rewardRecord.setRewardAmount(order.getPrice().multiply(new BigDecimal("0.1")));
         rewardRecord.setRewardDate(LocalDate.now());
         return rewardRecord;
     }

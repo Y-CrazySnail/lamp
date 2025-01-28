@@ -70,6 +70,12 @@ public class LampMember extends BaseEntity {
     private List<LampRewardRecord> rewardRecordList;
 
     public boolean isValid() {
+        if (Objects.isNull(monthBandwidthDown)) {
+            monthBandwidthDown = 0L;
+        }
+        if (Objects.isNull(monthBandwidthUp)) {
+            monthBandwidthUp = 0L;
+        }
         return this.expiryDate.isAfter(LocalDate.now()) && monthBandwidth > monthBandwidthDown + monthBandwidthUp;
     }
 
@@ -106,6 +112,14 @@ public class LampMember extends BaseEntity {
             expiryDate = LocalDate.now();
         }
         this.expiryDate = this.expiryDate.plusDays(days);
+    }
+
+    public void addBalance(BigDecimal rewardAmount) {
+        if (Objects.isNull(this.balance)) {
+            this.balance = rewardAmount;
+        } else {
+            this.balance = this.balance.add(balance);
+        }
     }
 
     public void addMonths(int months) {

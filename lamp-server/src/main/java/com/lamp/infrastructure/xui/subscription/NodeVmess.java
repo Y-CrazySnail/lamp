@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * vmess节点
@@ -75,6 +76,12 @@ public class NodeVmess {
         String endDateStr = "到期:" + member.getExpiryDate().toString();
         NodeVmess nodeVmessDoForTime = NodeVmess.initInformation(endDateStr);
         nodeVmessList.add(nodeVmessDoForTime);
+        if (Objects.isNull(member.getMonthBandwidthUp())) {
+            member.setMonthBandwidthUp(0L);
+        }
+        if (Objects.isNull(member.getMonthBandwidthDown())) {
+            member.setMonthBandwidthDown(0L);
+        }
         BigDecimal surplus = BigDecimal.valueOf(member.getMonthBandwidth() - member.getMonthBandwidthUp() - member.getMonthBandwidthDown());
         surplus = surplus.divide(BigDecimal.valueOf(GB), 2, RoundingMode.HALF_UP);
         String surplusStr = "本月流量剩余:" + surplus + "GB";

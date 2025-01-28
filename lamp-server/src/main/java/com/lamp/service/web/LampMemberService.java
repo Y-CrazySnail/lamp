@@ -2,11 +2,9 @@ package com.lamp.service.web;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.lang.Validator;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lamp.common.entity.BaseEntity;
 import com.lamp.entity.LampMember;
 import com.lamp.im.dto.SysTelegramSendDTO;

@@ -5,8 +5,16 @@
     <update id="syncBandwidth">
         update lamp_member m
         set
-            month_bandwidth_up = (select sum(c.xui_up) from lamp_client_traffic c where c.member_id = m.id),
-            month_bandwidth_down = (select sum(c.xui_down) from lamp_client_traffic c where c.member_id = m.id)
+            month_bandwidth_up =
+                case
+                    when (select sum(c.xui_up) from lamp_client_traffic c where c.member_id = m.id) is null then 0
+                    else (select sum(c.xui_up) from lamp_client_traffic c where c.member_id = m.id)
+                end,
+            month_bandwidth_down =
+                case
+                    when (select sum(c.xui_down) from lamp_client_traffic c where c.member_id = m.id) is null then 0
+                    else (select sum(c.xui_down) from lamp_client_traffic c where c.member_id = m.id)
+                end
         where delete_flag = 0
         <if test="memberId != null and memberId != ''">
             and m.id = #{memberId}
