@@ -12,7 +12,7 @@
         border
       >
         <template slot="title">
-          <span style="font-size: 14px; font-weight: 600">{{
+          <span style="font-size: 13px; font-weight: 500;">{{
             order.orderNo
           }}</span>
         </template>

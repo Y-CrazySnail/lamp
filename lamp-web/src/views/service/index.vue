@@ -13,7 +13,7 @@ import Mobile from "./mobile.vue";
 import Empty from "./empty.vue";
 export default {
   name: "Service",
-  components: { VueQr, Windows, Mobile, Empty },
+  components: { VueQr, Windows, Mobile, Empty, },
   computed: {
     serviceList() {
       return this.$store.state.service.serviceList;
@@ -29,6 +29,9 @@ export default {
       spinner: "el-icon-loading",
     });
     this.$store.dispatch("member/get").then((res) => {
+      loading.close();
+    });
+    this.$store.dispatch("notice/list").then((res) => {
       loading.close();
     });
   },

@@ -43,7 +43,10 @@ public class LampSubscriptionService extends ServiceImpl<LampSubscriptionMapper,
     public String clash(String uuid) {
         LampMember member = memberService.getByUUID(uuid);
         if (member == null) {
-            return null;
+            member = memberService.getByReferralCode(uuid);
+            if (member == null) {
+                return null;
+            }
         }
         member.setLastSyncTime(LocalDateTime.now());
         memberService.updateById(member);

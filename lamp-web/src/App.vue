@@ -6,13 +6,12 @@
 
 <script>
 import { getToken, removeToken, removePermission } from "@/utils/auth";
-
 export default {
   name: "App",
+  components: {  },
   created() {
     if (!getToken()) {
       removeToken();
-      // router.push("/");
     }
   },
 };

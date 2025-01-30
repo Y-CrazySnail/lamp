@@ -43,6 +43,20 @@
               注册
             </el-button>
           </el-form-item>
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              margin: 20px 0 10px 0;
+            "
+          >
+            <el-link :underline="false" type="primary" @click="login">
+              登录
+            </el-link>
+            <el-link :underline="false" type="info">
+              出现问题联系右下角客服
+            </el-link>
+          </div>
         </el-form>
       </div>
     </div>
@@ -175,6 +189,9 @@ export default {
     },
   },
   methods: {
+    login() {
+      this.$router.push({ path: "/login" });
+    },
     switchFunctionType(type) {
       this.functionType = type;
     },

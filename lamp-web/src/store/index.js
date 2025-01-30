@@ -8,6 +8,7 @@ import member from './modules/lamp/member'
 import service from './modules/lamp/service'
 import packages from './modules/lamp/package'
 import order from './modules/lamp/order'
+import notice from './modules/lamp/notice'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ const store = new Vuex.Store({
         member,
         service,
         packages,
-        order
+        order,
+        notice
     },
     getters
 })
