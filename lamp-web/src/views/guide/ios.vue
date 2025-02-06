@@ -201,7 +201,7 @@ export default {
       let url =
         "clash://install-config?url=" +
         encodeURIComponent(
-          "http://aladdinslamp.cc:80/server/subscribe/clash/" +
+          "http://sub.alamp.cc:50230/server/subscribe/clash/" +
             this.member.uuid
         ) +
         "&name=" +

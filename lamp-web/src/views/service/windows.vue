@@ -108,7 +108,7 @@
               class="container-card-button"
               size="mini"
               v-clipboard:copy="
-                'http://alamp.cc:80/server/subscribe/clash/' +
+                'http://sub.alamp.cc:50230/server/subscribe/clash/' +
                 member.referralCode
               "
               v-clipboard:success="onCopySuccess"
@@ -128,7 +128,7 @@
           <div
             style="margin: 0 20px; width: 100%; color: #888; font-size: 0.8vw"
           >
-            http://alamp.cc:80/server/subscribe/clash/{{ member.referralCode }}
+            http://sub.alamp.cc:50230/server/subscribe/clash/{{ member.referralCode }}
           </div>
         </div>
       </div>
@@ -277,7 +277,7 @@ export default {
       let url =
         "clash://install-config?url=" +
         encodeURIComponent(
-          "http://alamp.cc:80/server/subscribe/clash/" +
+          "http://sub.alamp.cc:50230/server/subscribe/clash/" +
             this.member.referralCode
         ) +
         "&name=" +

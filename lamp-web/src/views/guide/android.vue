@@ -64,7 +64,7 @@
       <el-card style="margin-top: 10px">
         <span style="font-weight: 600"> 第六步： </span>
         <br />
-        <span style="width: 230px; word-wrap: break-word;">1、URL-填入订阅地址 {{ 'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid }}</span>
+        <span style="width: 230px; word-wrap: break-word;">1、URL-填入订阅地址 {{ 'http://sub.alamp.cc:50230/server/subscribe/clash/' + member.uuid }}</span>
         <el-button
           style="
             background-color: black;
@@ -75,7 +75,7 @@
           type="info"
           size="mini"
           v-clipboard:copy="
-            'http://aladdinslamp.cc:80/server/subscribe/clash/' + member.uuid
+            'http://sub.alamp.cc:50230/server/subscribe/clash/' + member.uuid
           "
           v-clipboard:success="onCopySuccess"
           plain
@@ -195,7 +195,7 @@ export default {
       let url =
         "clash://install-config?url=" +
         encodeURIComponent(
-          "http://aladdinslamp.cc:80/server/subscribe/clash/" +
+          "http://sub.alamp.cc:50230/server/subscribe/clash/" +
             this.member.uuid
         ) +
         "&name=" +
