@@ -99,6 +99,13 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         member.setMonthBandwidthUp(0L);
         member.setMonthBandwidthDown(0L);
         save(member);
+        SysTelegramSendDTO sysTelegramSendDTO = new SysTelegramSendDTO();
+        sysTelegramSendDTO.setTemplateName("signup");
+        sysTelegramSendDTO.setTemplateType("telegram");
+        Map<String, Object> replaceMap = new HashMap<>();
+        replaceMap.put("email", member.getEmail());
+        sysTelegramSendDTO.setReplaceMap(replaceMap);
+        sysTelegramService.send(sysTelegramSendDTO);
         return null;
     }
 
