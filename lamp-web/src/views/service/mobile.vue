@@ -4,7 +4,6 @@
     style="
       background-color: #f5f5f8;
       width: 100vw;
-      height: 84vh;
       padding: 0;
       margin: 0;
     "
