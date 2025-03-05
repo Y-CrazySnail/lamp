@@ -42,7 +42,7 @@ export default {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        // mobile: this.device === "mobile",
+        mobile: this.device === "mobile",
       };
     },
   },

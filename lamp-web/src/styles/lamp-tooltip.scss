@@ -1,0 +1,26 @@
+.tooltip {
+  position: absolute;
+  background-color: #263445;
+  color: #e5f5ff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  font-size: 14px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.tooltip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #263445 transparent transparent transparent;
+}

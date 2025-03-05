@@ -1,8 +1,7 @@
 <template>
   <div>
-    <windows></windows>
-    <mobile></mobile>
-    <empty></empty>
+    <windows v-show="device !== 'mobile'"></windows>
+    <mobile v-show="device === 'mobile'"></mobile>
   </div>
 </template>
 

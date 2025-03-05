@@ -9842,6 +9842,7 @@ rules:
   - DOMAIN-KEYWORD,apple-support.akadns.net,🍎 苹果服务
   - DOMAIN-KEYWORD,icloud.com.akadns.net,🍎 苹果服务
   - DOMAIN-SUFFIX,aladdinslamp.cc,🎯 全球直连
+  - DOMAIN-SUFFIX,alamp.cc,🎯 全球直连
   - DOMAIN-SUFFIX,flyert.com,🎯 全球直连
   - DOMAIN-SUFFIX,gandi.net,🎯 全球直连
   - DOMAIN-SUFFIX,snapdrop.net,🎯 全球直连

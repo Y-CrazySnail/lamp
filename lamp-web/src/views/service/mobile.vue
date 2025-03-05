@@ -1,13 +1,15 @@
 <template>
   <div
     v-show="device === 'mobile'"
-    style="
-      background-color: #f5f5f8;
-      width: 100vw;
-      padding: 0;
-      margin: 0;
-    "
+    style="background-color: #f5f5f8; width: 100vw; padding: 0; margin: 0"
   >
+    <div style="width: calc(100%-2rem); padding: 1rem">
+      <welcome class="welcome" />
+    </div>
+    <div style="width: calc(100%-2rem); padding: 1rem">
+      <lamp-service class="service" />
+    </div>
+
     <div class="container-card" style="height: 25vw; overflow-y: auto">
       <div class="container-card-title">通知</div>
       <div class="hr-like" />
@@ -134,7 +136,8 @@
             class="container-card-button"
             size="mini"
             v-clipboard:copy="
-              'http://sub.alamp.cc:50230/server/subscribe/clash/' + member.referralCode
+              'http://sub.alamp.cc:50230/server/subscribe/clash/' +
+              member.referralCode
             "
             v-clipboard:success="onCopySuccess"
           >
@@ -151,7 +154,9 @@
       </div>
       <div class="container-card-item">
         <div style="margin: 0 10px; width: 100%; color: #888; font-size: 3.1vw">
-          http://sub.alamp.cc:50230/server/subscribe/clash/{{ member.referralCode }}
+          http://sub.alamp.cc:50230/server/subscribe/clash/{{
+            member.referralCode
+          }}
         </div>
       </div>
     </div>
@@ -231,11 +236,12 @@
 </template>
 
 <script>
-import member from "@/store/modules/lamp/member";
+import Welcome from "./Welcome.vue";
 import VueQr from "vue-qr";
+import Service from "./Service.vue";
 export default {
   name: "Service",
-  components: { VueQr },
+  components: { VueQr, Welcome, "lamp-service": Service },
   computed: {
     device() {
       return this.$store.state.app.device;
@@ -291,6 +297,27 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@media (max-width: 768px) {
+  .welcome {
+    width: 100%;
+    height: 500px;
+    margin-right: 30px;
+  }
+}
+
+@media (min-width: 768px) {
+  .welcome {
+    width: 100%;
+    height: 300px;
+    margin-right: 30px;
+  }
+}
+
+.service {
+  width: 100%;
+  height: 300px;
+}
+
 .flex-center {
   display: flex;
   justify-content: center;

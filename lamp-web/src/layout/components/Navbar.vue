@@ -15,7 +15,7 @@
           align-items: center;
           justify-content: center;
           margin-right: 25px;
-          color: #52565e;
+          color: #fff;
           cursor: pointer;
         "
         @click="toPackage()"
@@ -34,8 +34,8 @@
       </div>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img src="./Sidebar/profile.png" class="user-avatar" />
-          <i class="el-icon-caret-bottom" />
+          <img src="./Sidebar/avatar.jpeg" class="user-avatar" />
+          <!-- <i class="el-icon-caret-bottom" /> -->
         </div>
         <el-dropdown-menu slot="dropdown" class="right-menu-item">
           <router-link to="/service">
@@ -89,7 +89,7 @@ export default {
   height: 50px;
   overflow: hidden;
   position: relative;
-  background: #fff;
+  background: #4687ff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 
   .hamburger-container {
@@ -144,16 +144,17 @@ export default {
         position: relative;
 
         .user-avatar {
+          border-radius: 50%;
           cursor: pointer;
-          width: 36px;
-          height: 45px;
+          width: 40px;
+          height: 40px;
         }
 
         .el-icon-caret-bottom {
           cursor: pointer;
           position: absolute;
           right: -15px;
-          top: 20px;
+          top: 14px;
           font-size: 14px;
         }
       }

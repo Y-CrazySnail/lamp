@@ -1,17 +1,68 @@
 // sidebar
-$menuText:#9f9f9f;
-$menuActiveText:#ffffff;
-$subMenuActiveText:ffffff;
+$menuText: #c4cdd5;
+$menuActiveText: #4687ff;
+$subMenuActiveText: ffffff;
 
-$menuBg:#000000;
-$menuHover:#263445;
+$menuBg: #191924;
+$menuHover: #263445;
 
-$subMenuBg:#000000;
-$subMenuHover:#001528;
+$subMenuBg: #000000;
+$subMenuHover: #001528;
 
-$sideBarWidth: 210px;
+// 侧边栏宽度
+$sideBarWidth: 180px;
 
-// the :export directive is the magic sauce for webpack
+
+
+$bs-blue: #007bff;
+$bs-indigo: #6610f2;
+$bs-purple: #4687ff;
+$bs-pink: #e83e8c;
+$bs-red: #ff3e1d;
+$bs-orange: #fd7e14;
+$bs-yellow: #ffab00;
+$bs-green: #71dd37;
+$bs-teal: #20c997;
+$bs-cyan: #03c3ec;
+$bs-white: #fff;
+$bs-gray: rgba(67, 89, 113, 0.6);
+$bs-gray-dark: rgba(67, 89, 113, 0.8);
+$bs-gray-25: rgba(67, 89, 113, 0.025);
+$bs-gray-50: rgba(67, 89, 113, 0.05);
+$bs-primary: #4687ff;
+$bs-secondary: #8592a3;
+$bs-success: #71dd37;
+$bs-info: #03c3ec;
+$bs-warning: #ffab00;
+$bs-danger: #ff3e1d;
+$bs-light: #fcfdfd;
+$bs-dark: #233446;
+$bs-gray: rgba(67, 89, 113, 0.1);
+$bs-primary-rgb: 105, 108, 255;
+$bs-secondary-rgb: 133, 146, 163;
+$bs-success-rgb: 113, 221, 55;
+$bs-info-rgb: 3, 195, 236;
+$bs-warning-rgb: 255, 171, 0;
+$bs-danger-rgb: 255, 62, 29;
+$bs-light-rgb: 252, 253, 253;
+$bs-dark-rgb: 35, 52, 70;
+$bs-gray-rgb: 67, 89, 113;
+$bs-white-rgb: 255, 255, 255;
+$bs-black-rgb: 67, 89, 113;
+$bs-body-color-rgb: 105, 122, 141;
+$bs-body-bg-rgb: 245, 245, 249;
+$bs-font-sans-serif: Arial, Microsoft YaHei;
+$bs-font-monospace: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+$bs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+$bs-root-font-size: 16px;
+$bs-body-font-family: var(--bs-font-sans-serif);
+$bs-body-font-size: 0.9rem;
+$bs-body-font-weight: 400;
+$bs-body-line-height: 1.53;
+$bs-body-color: #697a8d;
+$bs-body-bg: #f5f5f9;
+$bs-block-bg: #fff;
+
 // https://www.bluematador.com/blog/how-to-share-variables-between-js-and-sass
 :export {
   menuText: $menuText;
@@ -22,4 +73,51 @@ $sideBarWidth: 210px;
   subMenuBg: $subMenuBg;
   subMenuHover: $subMenuHover;
   sideBarWidth: $sideBarWidth;
+  bs-indigo: $bs-indigo;
+  bs-purple: $bs-purple;
+  bs-pink: $bs-pink;
+  bs-red: $bs-red;
+  bs-orange: $bs-orange;
+  bs-yellow: $bs-yellow;
+  bs-green: $bs-green;
+  bs-teal: $bs-teal;
+  bs-cyan: $bs-cyan;
+  bs-white: $bs-white;
+  bs-gray: $bs-gray;
+  bs-gray-dark: $bs-gray-dark;
+  bs-gray-25: $bs-gray-25;
+  bs-gray-50: $bs-gray-50;
+  bs-primary: $bs-primary;
+  bs-secondary: $bs-secondary;
+  bs-success: $bs-success;
+  bs-info: $bs-info;
+  bs-warning: $bs-warning;
+  bs-danger: $bs-danger;
+  bs-light: $bs-light;
+  bs-dark: $bs-dark;
+  bs-gray: $bs-gray;
+  bs-primary-rgb: $bs-primary-rgb;
+  bs-secondary-rgb: $bs-secondary-rgb;
+  bs-success-rgb: $bs-success-rgb;
+  bs-info-rgb: $bs-info-rgb;
+  bs-warning-rgb: $bs-warning-rgb;
+  bs-danger-rgb: $bs-danger-rgb;
+  bs-light-rgb: $bs-light-rgb;
+  bs-dark-rgb: $bs-dark-rgb;
+  bs-gray-rgb: $bs-gray-rgb;
+  bs-white-rgb: $bs-white-rgb;
+  bs-black-rgb: $bs-black-rgb;
+  bs-body-color-rgb: $bs-body-color-rgb;
+  bs-body-bg-rgb: $bs-body-bg-rgb;
+  bs-font-sans-serif: $bs-font-sans-serif;
+  bs-font-monospace: $bs-font-monospace;
+  bs-gradient: $bs-gradient;
+  bs-root-font-size: $bs-root-font-size;
+  bs-body-font-family: $bs-body-font-family;
+  bs-body-font-size: $bs-body-font-size;
+  bs-body-font-weight: $bs-body-font-weight;
+  bs-body-line-height: $bs-body-line-height;
+  bs-body-color: $bs-body-color;
+  bs-body-bg: $bs-body-bg;
+  bs-block-bg: $bs-block-bg;
 }

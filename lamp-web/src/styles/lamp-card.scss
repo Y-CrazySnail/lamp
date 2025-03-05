@@ -1,0 +1,30 @@
+.card {
+  background-clip: padding-box;
+  box-shadow: 0 2px 6px 0 rgba(67, 89, 113, .12);
+  position: relative;
+  display: flex;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: $bs-block-bg;
+  background-clip: border-box;
+  border: 0 solid #d9dee3;
+  border-radius: .5rem;
+}
+
+.card .card-separator {
+  border-right: 1px solid #d9dee3
+}
+
+@media(max-width: 768px) {
+  .card .card-separator {
+    border-bottom: 1px solid #d9dee3;
+    padding-bottom: 1.5rem;
+    border-right-width: 0
+  }
+}
+
+@media(min-width: 768px) {
+  .card .card-separator {
+    border-right: 1px solid #d9dee3;
+  }
+}

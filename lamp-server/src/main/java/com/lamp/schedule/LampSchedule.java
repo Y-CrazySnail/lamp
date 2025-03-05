@@ -85,7 +85,7 @@ public class LampSchedule {
         }
     }
 
-    @Scheduled(cron = "0 0 0 1 * ?")
+    @Scheduled(cron = "0 40 10 1 * ?")
     public void reset() {
         // 重置远程流量
         List<LampServer> serverList = serverService.list();

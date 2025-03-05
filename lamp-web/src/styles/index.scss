@@ -3,6 +3,10 @@
 @import './transition.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
+@import './lamp-card.scss';
+@import './lamp-button.scss';
+@import './lamp-layout.scss';
+@import './lamp-tooltip.scss';
 
 body {
   height: 100%;
@@ -62,4 +66,18 @@ div:focus {
 // main-container global css
 .app-container {
   padding: 20px;
+}
+
+
+
+.windows-container {
+  display: flex;
+  justify-content: center;
+}
+
+.user-avatar {
+  border-radius: 50%;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
 }
