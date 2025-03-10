@@ -37,6 +37,7 @@ public class LampSubscriptionService extends ServiceImpl<LampSubscriptionMapper,
     public List<LampSubscription> list() {
         LambdaQueryWrapper<LampSubscription> queryWrapper = new LambdaQueryWrapper<>(LampSubscription.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
+        queryWrapper.orderByDesc(LampSubscription::getSort);
         return super.list(queryWrapper);
     }
 
@@ -52,8 +53,8 @@ public class LampSubscriptionService extends ServiceImpl<LampSubscriptionMapper,
         memberService.updateById(member);
         List<LampSubscription> subscriptionList = list();
         List<NodeVmess> nodeVmessList = new ArrayList<>();
+        nodeVmessList.addAll(NodeVmess.generateSubscriptionVmessNode(member, subscriptionList.get(0)));
         nodeVmessList.addAll(NodeVmess.generateVmessNode(subscriptionList, member.getUuid()));
-        nodeVmessList.addAll(NodeVmess.generateSubscriptionVmessNode(member));
 
         SpringTemplateLoader templateLoader = new SpringTemplateLoader(resourceLoader, "classpath:template");
         Configuration configuration = new Configuration(new Version("2.3.28"));
@@ -80,8 +81,8 @@ public class LampSubscriptionService extends ServiceImpl<LampSubscriptionMapper,
         memberService.updateById(member);
         List<LampSubscription> subscriptionList = list();
         List<NodeVmess> nodeVmessList = new ArrayList<>();
+        nodeVmessList.addAll(NodeVmess.generateSubscriptionVmessNode(member, subscriptionList.get(0)));
         nodeVmessList.addAll(NodeVmess.generateVmessNode(subscriptionList, member.getUuid()));
-        nodeVmessList.addAll(NodeVmess.generateSubscriptionVmessNode(member));
 
         SpringTemplateLoader templateLoader = new SpringTemplateLoader(resourceLoader, "classpath:template");
         Configuration configuration = new Configuration(new Version("2.3.28"));
