@@ -9,6 +9,12 @@
     <div style="width: calc(100%-2rem); padding: 1rem">
       <lamp-service class="service" />
     </div>
+    <div style="width: calc(100%-2rem); padding: 1rem">
+      <mail-box class="mail-box"></mail-box>
+    </div>
+    <div style="width: calc(100%-2rem); padding: 1rem">
+      <reward class="reward" />
+    </div>
 
     <div class="container-card" style="height: 25vw; overflow-y: auto">
       <div class="container-card-title">通知</div>
@@ -239,9 +245,11 @@
 import Welcome from "./Welcome.vue";
 import VueQr from "vue-qr";
 import Service from "./Service.vue";
+import MailBox from "./MailBox.vue";
+import Reward from "./Reward.vue";
 export default {
   name: "Service",
-  components: { VueQr, Welcome, "lamp-service": Service },
+  components: { VueQr, Welcome, "lamp-service": Service, MailBox, Reward },
   computed: {
     device() {
       return this.$store.state.app.device;
@@ -300,7 +308,7 @@ export default {
 @media (max-width: 768px) {
   .welcome {
     width: 100%;
-    height: 500px;
+    height: 560px;
     margin-right: 30px;
   }
 }
@@ -316,6 +324,16 @@ export default {
 .service {
   width: 100%;
   height: 300px;
+}
+
+.mail-box {
+  width: 100%;
+  height: 400px;
+}
+
+.reward {
+  width: 100%;
+  height: 430px;
 }
 
 .flex-center {

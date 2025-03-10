@@ -1,12 +1,131 @@
 <template>
-  <lamp-card> 奖励相关 </lamp-card>
+  <lamp-card>
+    <div style="margin-left: 20px; margin-top: 20px">
+      <div
+        style="
+          color: #4687ff;
+          font-weight: 500;
+          line-height: 1.1;
+          font-size: 1.125rem;
+        "
+      >
+        邀请返利基础规则说明 🎉
+      </div>
+      <div style="color: #697a8d; margin: 10px 20px 20px 0; font-size: 0.9rem">
+        循环返利（并非只有首次反佣），通过您的邀请链接注册的用户下单时您会获得其购买金额20%的佣金奖励。
+      </div>
+      <div style="display: flex; align-items: center">
+        <el-input
+          style="width: 50%"
+          size="medium"
+          v-model="member.uuid"
+          :disabled="true"
+        >
+        </el-input>
+        <LampButton style="margin-left: 10px">复制链接</LampButton>
+      </div>
+      <div
+        style="
+          display: flex;
+          align-items: center;
+          height: 50px;
+          font-size: 0.9rem;
+        "
+      >
+        <div class="active">返利记录</div>
+        <div class="inactive" style="margin-left: 20px">邀请记录</div>
+      </div>
+      <div
+        style="
+          overflow-y: auto;
+          height: 200px;
+          width: 100%;
+          scrollbar-width: none;
+        "
+      >
+        <div
+          style="
+            display: flex;
+            height: 60px;
+            align-items: center;
+            color: #697a8d;
+            margin: 5px 0;
+          "
+        >
+          <div style="width: 40px; height: 40px">
+            <img src="./avatar.jpeg" class="user-avatar" />
+          </div>
+          <div style="height: 55px; margin-left: 10px; font-size: 0.9rem">
+            <div>用户：haisong0230@outlook.com</div>
+            <div style="margin-top: 2px">时间：2025-01-01 01:00:00</div>
+            <div style="margin-top: 2px">返利：¥ 25.00</div>
+          </div>
+        </div>
+        <div
+          style="
+            display: flex;
+            height: 60px;
+            align-items: center;
+            color: #697a8d;
+            margin: 5px 0;
+          "
+        >
+          <div style="width: 40px; height: 40px">
+            <img src="./avatar.jpeg" class="user-avatar" />
+          </div>
+          <div style="height: 55px; margin-left: 10px; font-size: 0.9rem">
+            <div>用户：haisong0230@outlook.com</div>
+            <div style="margin-top: 2px">时间：2025-01-01 01:00:00</div>
+            <div style="margin-top: 2px">返利：¥ 25.00</div>
+          </div>
+        </div>
+        <div
+          style="
+            display: flex;
+            height: 60px;
+            align-items: center;
+            color: #697a8d;
+            margin: 5px 0;
+          "
+        >
+          <div style="width: 40px; height: 40px">
+            <img src="./avatar.jpeg" class="user-avatar" />
+          </div>
+          <div style="height: 55px; margin-left: 10px; font-size: 0.9rem">
+            <div>用户：haisong0230@outlook.com</div>
+            <div style="margin-top: 2px">时间：2025-01-01 01:00:00</div>
+            <div style="margin-top: 2px">返利：¥ 25.00</div>
+          </div>
+        </div>
+        <div
+          style="
+            display: flex;
+            height: 60px;
+            align-items: center;
+            color: #697a8d;
+            margin: 5px 0;
+          "
+        >
+          <div style="width: 40px; height: 40px">
+            <img src="./avatar.jpeg" class="user-avatar" />
+          </div>
+          <div style="height: 55px; margin-left: 10px; font-size: 0.9rem">
+            <div>用户：haisong0230@outlook.com</div>
+            <div style="margin-top: 2px">时间：2025-01-01 01:00:00</div>
+            <div style="margin-top: 2px">返利：¥ 25.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </lamp-card>
 </template>
 
 <script>
 import LampCard from "@/components/LampCard/index";
+import LampButton from "@/components/LampButton/index";
 export default {
   name: "Service",
-  components: { LampCard },
+  components: { LampCard, LampButton },
   computed: {
     serviceList() {
       return this.$store.state.service.serviceList;
@@ -19,6 +138,12 @@ export default {
     },
   },
   created() {},
+  data() {
+    return {
+      // reward：返利记录 invete：邀请记录
+      menu: "reward",
+    };
+  },
   methods: {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");
@@ -43,58 +168,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.container {
-  display: flex;
-  width: 100%;
-  flex-wrap: wrap;
-  color: #566a7f;
-  line-height: 1.1;
-  padding: 2rem;
-}
-
-@media (min-width: 768px) {
-  .welcome-container {
-    width: 40%;
-  }
-
-  .info-container {
-    margin-left: 40px;
-    width: calc(60% - 40px);
-  }
-}
-
-@media (max-width: 768px) {
-  .welcome-container {
-    width: 100%;
-    height: 40%;
-  }
-
-  .info-container {
-    width: 100%;
-    height: 60%;
-    margin-top: 2rem;
-  }
-}
-
-.menu {
-  position: relative;
-  padding: 10px;
+.active {
+  color: #fff;
+  font-weight: 500;
+  background-color: #3279ff;
+  padding: 7px;
+  border-radius: 3px;
+  font-weight: 400;
   cursor: pointer;
-  background-color: #e5f5ff;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 4px;
 }
 
-.menu:hover {
-  background-color: #d4e4ff;
-}
-
-.menu:hover .tooltip {
-  opacity: 1;
-  visibility: visible;
+.inactive {
+  color: #697a8d;
+  font-weight: 500;
+  background-color: #fff;
+  padding: 7px;
+  border-radius: 3px;
+  font-weight: 400;
+  cursor: pointer;
 }
 </style>

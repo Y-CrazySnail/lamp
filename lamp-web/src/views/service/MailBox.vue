@@ -1,6 +1,6 @@
 <template>
-  <div style="display: flex; width: 100%">
-    <div style="width: 35%; height: 100%">
+  <div style="width: 100%">
+    <div style="width: 100%">
       <div
         style="
           color: #697a8d;
@@ -16,7 +16,7 @@
           color: #697a8d;
           font-size: 1rem;
           line-height: 1.1;
-          margin-top: 60px;
+          margin-top: 20px;
           font-size: 14px;
         "
       >
@@ -28,6 +28,7 @@
           font-size: 1rem;
           line-height: 1.1;
           margin-top: 10px;
+          margin-bottom: 1rem;
           font-size: 14px;
         "
       >
@@ -35,7 +36,12 @@
       </div>
     </div>
     <div
-      style="width: 65%; height: 100%; overflow-y: auto; scrollbar-width: none"
+      style="
+        width: 100%;
+        height: 300px;
+        overflow-y: auto;
+        scrollbar-width: none;
+      "
     >
       <div
         style="
@@ -68,7 +74,6 @@
               订单 ID:W2503011839YJQB 生效成功,到期时...
             </div>
           </div>
-          <a style="padding-right: 20px; color: #4687ff">查看详情</a>
         </div>
       </div>
       <div
@@ -102,7 +107,6 @@
               订单 ID:W2503011839YJQB 生效成功,到期时...
             </div>
           </div>
-          <a style="padding-right: 20px; color: #4687ff">查看详情</a>
         </div>
       </div>
       <div
@@ -136,7 +140,39 @@
               订单 ID:W2503011839YJQB 生效成功,到期时...
             </div>
           </div>
-          <a style="padding-right: 20px; color: #4687ff">查看详情</a>
+        </div>
+      </div>
+      <div
+        style="
+          height: 80px;
+          width: 100%;
+          background-color: #fff;
+          border-left: 2px solid #4687ff;
+          margin: 0 0 20px 0;
+        "
+        class="card"
+      >
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+          "
+        >
+          <div style="padding-left: 20px">
+            <div>
+              <span style="color: #4687ff">[ 系统通知 ]</span>
+              <span style="color: rgb(105, 122, 141); margin-left: 5px"
+                >生效成功</span
+              >
+            </div>
+            <div
+              style="font-size: 85%; color: rgb(105, 122, 141); margin-top: 8px"
+            >
+              订单 ID:W2503011839YJQB 生效成功,到期时...
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -14,13 +14,20 @@
       <div style="width: calc(100vw - 250px)">
         <div style="display: flex; flex-wrap: wrap; margin: 20px 0">
           <mail-box
-            style="width: calc(65% - 30px); height: 350px; margin-right: 30px"
-          />
-          <reward style="width: calc(35%); height: 350px" />
+            style="width: calc(45% - 30px); height: 400px; margin-right: 30px"
+          ></mail-box>
+          <reward style="width: calc(55%); height: 400px" />
         </div>
       </div>
     </div>
-    <div style="display: flex; justify-content: center; margin-top: 1rem; margin-bottom: 50px;">
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        margin-top: 1rem;
+        margin-bottom: 50px;
+      "
+    >
       <div
         style="
           width: calc(100vw - 250px);
@@ -33,9 +40,9 @@
           v-for="tutorial in tutorialList"
           :key="tutorial.title"
         >
-          <tutorial style="height: 100%; height: 180px" :tutorial="tutorial">
+          <Guide style="height: 100%; height: 180px" :tutorial="tutorial">
             1
-          </tutorial>
+          </Guide>
         </div>
       </div>
     </div>
@@ -50,7 +57,7 @@ import Welcome from "./Welcome.vue";
 import Service from "./Service.vue";
 import MailBox from "./MailBox.vue";
 import Reward from "./Reward.vue";
-import Tutorial from "./Tutorial.vue";
+import Guide from "./Guide.vue";
 export default {
   name: "Service",
   components: {
@@ -61,7 +68,7 @@ export default {
     "lamp-service": Service,
     MailBox,
     Reward,
-    Tutorial,
+    Guide,
   },
   computed: {
     device() {
@@ -80,22 +87,22 @@ export default {
         {
           title: "Windows",
           description: "Windows 10 或更高版本",
-          logo: require('@/assets/Windows.png'),
+          logo: require("@/assets/Windows.png"),
         },
         {
           title: "Android",
           description: "Android 9.0 或更高版本",
-          logo: require('@/assets/Android.png'),
+          logo: require("@/assets/Android.png"),
         },
         {
           title: "iOS",
           description: "iOS 12 或更高版本",
-          logo: require('@/assets/IOS.png'),
+          logo: require("@/assets/IOS.png"),
         },
         {
           title: "Mac OS",
           description: "MacOS 10.14 或更高版本",
-          logo: require('@/assets/Mac.png'),
+          logo: require("@/assets/Mac.png"),
         },
       ],
     };
