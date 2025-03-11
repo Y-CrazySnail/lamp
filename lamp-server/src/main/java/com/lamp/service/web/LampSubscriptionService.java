@@ -37,7 +37,7 @@ public class LampSubscriptionService extends ServiceImpl<LampSubscriptionMapper,
     public List<LampSubscription> list() {
         LambdaQueryWrapper<LampSubscription> queryWrapper = new LambdaQueryWrapper<>(LampSubscription.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
-        queryWrapper.orderByDesc(LampSubscription::getSort);
+        queryWrapper.orderByAsc(LampSubscription::getSort);
         return super.list(queryWrapper);
     }
 

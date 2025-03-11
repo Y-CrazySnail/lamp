@@ -46,7 +46,7 @@ public class NodeVmess {
 
     public static NodeVmess initInformation(String uuid, String remark, LampSubscription subscription) {
         NodeVmess nodeVmess = new NodeVmess();
-        nodeVmess.setNodePs(remark);
+        nodeVmess.setNodePs(subscription.getRegionEmoji() + remark);
         nodeVmess.setNodeAdd(subscription.getHost());
         nodeVmess.setNodePort(String.valueOf(subscription.getPort()));
         nodeVmess.setNodeId(uuid);
@@ -62,7 +62,7 @@ public class NodeVmess {
         for (LampSubscription subscription : subscriptionList) {
             NodeVmess nodeVmess = NodeVmess.init(
                     uuid,
-                    subscription.getName(),
+                    (subscription.getRegionEmoji() + " " + subscription.getRegionName() + " " + subscription.getCode() + " " + subscription.getIsp() + " " + subscription.getFeature()).trim(),
                     subscription.getHost(),
                     subscription.getPort()
             );
