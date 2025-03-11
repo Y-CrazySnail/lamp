@@ -1,5 +1,5 @@
 <template>
-  <div class="btn btn-primary" @click="handleClick">
+  <div class="btn btn-primary" @click="handleClick" style="display: flex; align-items: center; justify-content: center;">
     <slot></slot>
   </div>
 </template>

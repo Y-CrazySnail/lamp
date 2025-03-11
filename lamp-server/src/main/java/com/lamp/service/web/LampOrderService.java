@@ -49,6 +49,14 @@ public class LampOrderService extends ServiceImpl<LampOrderMapper, LampOrder> {
     @Autowired
     private EPaymentProcessor ePaymentProcessor;
 
+    public void setOrderList(LampMember member) {
+        LambdaQueryWrapper<LampOrder> queryWrapper = new LambdaQueryWrapper<>(LampOrder.class);
+        BaseEntity.setDeleteFlagCondition(queryWrapper);
+        queryWrapper.eq(LampOrder::getMemberId, member.getId());
+        queryWrapper.orderByDesc(LampOrder::getId);
+        member.setOrderList(list(queryWrapper));
+    }
+
     public List<LampOrder> listByMemberId(Long memberId) {
         LambdaQueryWrapper<LampOrder> queryWrapper = new LambdaQueryWrapper<>(LampOrder.class);
         queryWrapper.eq(LampOrder::getMemberId, memberId);

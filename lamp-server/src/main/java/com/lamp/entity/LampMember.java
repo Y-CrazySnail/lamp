@@ -71,6 +71,9 @@ public class LampMember extends BaseEntity {
     @TableField(exist = false)
     private List<LampRewardRecord> rewardRecordList;
 
+    @TableField(exist = false)
+    private List<LampOrder> orderList;
+
     public boolean isValid() {
         if (Objects.isNull(monthBandwidthDown)) {
             monthBandwidthDown = 0L;

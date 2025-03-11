@@ -21,6 +21,7 @@ public class LampRewardRecordService extends ServiceImpl<LampRewardRecordMapper,
         LambdaQueryWrapper<LampRewardRecord> queryWrapper = new LambdaQueryWrapper<>(LampRewardRecord.class);
         BaseEntity.setDeleteFlagCondition(queryWrapper);
         queryWrapper.eq(LampRewardRecord::getReferrerId, referrerId);
+        queryWrapper.orderByDesc(LampRewardRecord::getRewardDate);
         return baseMapper.selectList(queryWrapper);
     }
 

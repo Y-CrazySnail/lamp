@@ -32,12 +32,16 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
     private LampRewardRecordService rewardRecordService;
 
     @Autowired
+    private LampOrderService orderService;
+
+    @Autowired
     private ISysTelegramService sysTelegramService;
 
     @Override
     public LampMember getById(Serializable id) {
         LampMember member = memberMapper.selectById(id);
         rewardRecordService.setRewardRecordList(member);
+        orderService.setOrderList(member);
         return member;
     }
 
