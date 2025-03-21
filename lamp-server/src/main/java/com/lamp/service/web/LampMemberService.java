@@ -94,6 +94,7 @@ public class LampMemberService extends ServiceImpl<LampMemberMapper, LampMember>
         member.setUuid(UUID.fastUUID().toString());
         member.setBandwidth(0L);
         member.setLastSyncTime(LocalDateTime.now());
+        member.setSignupTime(LocalDateTime.now());
         member.setExpiryDate(LocalDate.now().minusDays(1));
         member.setLevel(1);
         generateCode(member);

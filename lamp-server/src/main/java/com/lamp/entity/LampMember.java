@@ -36,6 +36,9 @@ public class LampMember extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
     private LocalDateTime lastSyncTime; // 最后同步时间
 
+    @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss", timezone = "GMT+8")
+    private LocalDateTime signupTime; // 注册时间
+
     @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private LocalDate expiryDate; //过期时间
 
