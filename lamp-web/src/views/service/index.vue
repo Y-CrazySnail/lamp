@@ -14,9 +14,6 @@ export default {
   name: "Service",
   components: { VueQr, Windows, Mobile, Empty, },
   computed: {
-    serviceList() {
-      return this.$store.state.service.serviceList;
-    },
     device() {
       return this.$store.state.app.device;
     },

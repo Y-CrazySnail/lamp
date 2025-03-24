@@ -8,3 +8,12 @@ export function all(params) {
         params
     })
 }
+
+export function list(params) {
+    return request({
+        baseURL: 'lamp',
+        url: '/web/lamp-spu/list',
+        method: 'get',
+        params
+    })
+}

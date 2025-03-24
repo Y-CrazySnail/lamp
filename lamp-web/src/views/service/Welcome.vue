@@ -77,11 +77,11 @@
         <div style="margin-top: 15px">永久跳转：https://alamp.cc</div>
         <div style="margin-top: 15px">官方邮箱：i.wick@tuta.io</div>
         <div style="display: flex; margin-top: 30px">
-          <LampButton>
+          <LampButton @click="toStore">
             <img src="./cart.png" style="width: 1.1rem; height: 1.1rem; margin-right: 3px;" />
             会员商店
           </LampButton>
-          <LampButton style="margin-left: 10px">
+          <LampButton style="margin-left: 10px" @click="toOrder">
             <img src="./order.png" style="width: 1.1rem; height: 1.1rem; margin-right: 3px;" />
             订单中心
           </LampButton>
@@ -121,8 +121,11 @@ export default {
         this.$store.dispatch("service/list");
       });
     },
-    toPackage() {
+    toStore() {
       this.$router.push(`/package/index`);
+    },
+    toOrder() {
+      this.$router.push(`/order/index`);
     },
     toIOSshadowrocket(service) {
       this.$store.state.service.service = service;

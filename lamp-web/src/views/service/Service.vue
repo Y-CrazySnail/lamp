@@ -1,6 +1,26 @@
 <template>
   <lamp-card>
-    <div style="width: 100%;">
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      "
+      v-show="surplusDays == 0"
+    >
+      <h5>购买服务</h5>
+      <p style="color: #697a8d">您还没有生效中的服务，请前往会员商店购买</p>
+      <LampButton @click="toStore" style="width: 130px; margin-top: 10px">
+        <img
+          src="./cart.png"
+          style="width: 1.1rem; height: 1.1rem; margin-right: 3px"
+        />
+        会员商店
+      </LampButton>
+    </div>
+    <div style="width: 100%" v-show="surplusDays > 0">
       <div
         style="
           display: flex;
@@ -18,7 +38,7 @@
           <div style="height: 50px; margin-left: 15px">
             <div style="font-size: 15px">基础专线服务</div>
             <div style="font-size: 13px; margin-top: 5px">
-              订单号：W2503011839YJQB
+              订单号：{{ order ? order.orderNo : "-" }}
             </div>
           </div>
         </div>
@@ -30,7 +50,7 @@
               background-color: #71dd37;
               color: #fff;
               border-radius: 4px;
-              padding: 4px 6px;
+              padding: 4px 4px;
               font-weight: 600;
             "
           >
@@ -61,8 +81,10 @@
             line-height: 1.1;
           "
         >
-          <div>金额：¥59.00</div>
-          <div>实付：¥50.15</div>
+          <div>金额：¥ {{ order ? order.price : "-" }}</div>
+          <div>
+            实付：¥ {{ order ? order.price - order.deductBalance : "-" }}
+          </div>
         </div>
         <div
           style="
@@ -75,8 +97,8 @@
             line-height: 1.1;
           "
         >
-          <div>失效日期：25-03-31 18:39</div>
-          <div>生效日期：25-03-01 18:39</div>
+          <div>生效日期：{{ order ? order.orderTime : "-" }}</div>
+          <div>失效日期：{{ member.expiryDate + " 00:00:00" }}</div>
         </div>
       </div>
       <div style="margin: 10px 0">
@@ -103,7 +125,7 @@
             line-height: 1.1;
           "
         >
-          <div>已使用/总时长：0/30 天</div>
+          <div>已使用/总时长：{{ usedDays }}/{{ allDays }} 天</div>
         </div>
         <div
           style="
@@ -124,7 +146,7 @@
               font-weight: 600;
             "
           >
-            30天后到期
+            {{ surplusDays }}天后到期
           </div>
         </div>
       </div>
@@ -149,7 +171,16 @@
             line-height: 1.1;
           "
         >
-          <div>已使用/总流量：0/140 G</div>
+          <div>
+            已使用/总流量：{{
+              (
+                (member.monthBandwidthDown + member.monthBandwidthUp) /
+                1024 /
+                1024 /
+                1024
+              ).toFixed(2)
+            }}/{{ (member.monthBandwidth / 1024 / 1024 / 1024).toFixed(2) }} GB
+          </div>
         </div>
         <div
           style="
@@ -160,14 +191,32 @@
             line-height: 1.1;
           "
         >
-          剩余：40%
+          剩余：{{
+            (
+              ((member.monthBandwidth -
+                member.monthBandwidthDown +
+                member.monthBandwidthUp) /
+                member.monthBandwidth) *
+              100
+            ).toFixed(2)
+          }}%
         </div>
       </div>
       <div style="padding: 0 35px; margin: 10px 0">
         <el-progress
           :text-inside="true"
           :stroke-width="20"
-          :percentage="40"
+          :percentage="
+            member.monthBandwidth
+              ? Math.floor(
+                  ((member.monthBandwidth -
+                    member.monthBandwidthDown +
+                    member.monthBandwidthUp) /
+                    member.monthBandwidth) *
+                    100
+                )
+              : 0
+          "
           status="success"
         />
       </div>
@@ -192,7 +241,7 @@
             line-height: 1.1;
           "
         >
-          <div>重置日期：无</div>
+          <div>重置日期：{{ resetDay }}</div>
         </div>
       </div>
     </div>
@@ -201,18 +250,72 @@
 
 <script>
 import LampCard from "@/components/LampCard/index";
+import LampButton from "@/components/LampButton/index";
 export default {
   name: "Service",
-  components: { LampCard },
+  components: { LampCard, LampButton },
   computed: {
-    serviceList() {
-      return this.$store.state.service.serviceList;
+    order() {
+      let o = null;
+      let orderList = this.$store.state.member.member.orderList;
+      if (!orderList) return o;
+      for (let i = 0; i < orderList.length; i++) {
+        if (orderList[i].status == 1 && orderList[i].type == "regular") {
+          o = orderList[i];
+          break;
+        }
+      }
+      return o;
     },
     device() {
       return this.$store.state.app.device;
     },
     member() {
       return this.$store.state.member.member;
+    },
+    allDays() {
+      if (!this.order) return "-";
+      const start = new Date(this.order.orderTime.substring(0, 10));
+      const expiryDate = new Date(this.member.expiryDate);
+      const timeDifference = expiryDate - start;
+      const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      return daysDifference;
+    },
+    usedDays() {
+      if (!this.order) return "-";
+      const start = new Date(this.order.orderTime.substring(0, 10));
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const timeDifference = today - start;
+      const daysDifference =
+        Math.floor(timeDifference / (1000 * 60 * 60 * 24)) + 2;
+      return daysDifference;
+    },
+    surplusDays() {
+      const today = new Date();
+      const expiryDate = new Date(this.member.expiryDate);
+      const timeDifference = expiryDate - today;
+      const daysDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+      return daysDifference > 0 ? daysDifference : 0;
+    },
+    resetDay() {
+      // 获取当前日期
+      const today = new Date();
+
+      // 获取下个月一号的日期
+      const nextMonthFirstDay = new Date(
+        today.getFullYear(),
+        today.getMonth() + 1,
+        1
+      );
+      // 格式化为 "YYYY-MM-DD"
+      const formattedDate = `${nextMonthFirstDay.getFullYear()}-${String(
+        nextMonthFirstDay.getMonth() + 1
+      ).padStart(2, "0")}-${String(nextMonthFirstDay.getDate()).padStart(
+        2,
+        "0"
+      )}`;
+      return formattedDate;
     },
   },
   created() {},
@@ -228,12 +331,8 @@ export default {
         this.$store.dispatch("service/list");
       });
     },
-    toPackage() {
+    toStore() {
       this.$router.push(`/package/index`);
-    },
-    toIOSshadowrocket(service) {
-      this.$store.state.service.service = service;
-      this.$router.push(`/guide/ios-stash`);
     },
   },
 };

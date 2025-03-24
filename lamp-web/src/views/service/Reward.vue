@@ -12,17 +12,23 @@
         邀请返利基础规则说明 🎉
       </div>
       <div style="color: #697a8d; margin: 10px 20px 20px 0; font-size: 0.9rem">
-        循环返利（并非只有首次返利）通过您的邀请链接注册的用户下单时您会获得其购买金额20%的佣金奖励。
+        循环返利（并非只有首次消费返利）通过您的邀请链接注册的用户下单时您会获得其购买金额20%的佣金奖励。
       </div>
       <div style="display: flex; align-items: center">
         <el-input
           style="width: 50%"
           size="medium"
-          v-model="member.uuid"
+          v-model="url"
           :disabled="true"
         >
         </el-input>
-        <LampButton style="margin-left: 10px">复制链接</LampButton>
+        <LampButton
+          style="margin-left: 10px"
+          v-clipboard:copy="url"
+          v-clipboard:success="onCopySuccess"
+        >
+          复制链接
+        </LampButton>
       </div>
       <div
         style="
@@ -38,13 +44,13 @@
         >
           返利记录
         </div>
-        <div
+        <!-- <div
           :class="menu == 'invete' ? 'active' : 'inactive'"
           style="margin-left: 20px"
           @click="changeMenu('invete')"
         >
           邀请记录
-        </div>
+        </div> -->
       </div>
       <div
         style="
@@ -85,7 +91,6 @@
 <script>
 import LampCard from "@/components/LampCard/index";
 import LampButton from "@/components/LampButton/index";
-import member from "@/store/modules/lamp/member";
 export default {
   name: "Service",
   components: { LampCard, LampButton },
@@ -95,6 +100,12 @@ export default {
     },
     member() {
       return this.$store.state.member.member;
+    },
+    url() {
+      return (
+        "https://alamp.cc/signup?referrerCode=" +
+        this.$store.state.member.member.referralCode
+      );
     },
   },
   created() {},

@@ -15,227 +15,15 @@
     <div style="width: calc(100%-2rem); padding: 1rem">
       <reward class="reward" />
     </div>
-
-    <div class="container-card" style="height: 25vw; overflow-y: auto">
-      <div class="container-card-title">通知</div>
-      <div class="hr-like" />
-      <div v-for="item in noticeList" :key="item.id">
-        <div class="container-card-item">
-          <div style="margin-left: 10px; font-weight: 400">
-            {{ item.content }}
-          </div>
-        </div>
-        <div class="hr-like" />
-      </div>
-    </div>
-    <div class="container-card">
-      <div class="container-card-title">账户</div>
-      <div class="hr-like" />
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">账号</div>
-        <div style="margin-right: 10px; font-weight: 600">
-          {{ member.email }}
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">密码</div>
-        <div style="margin-right: 10px">
-          <el-input
-            class="container-card-input"
-            size="mini"
-            placeholder="请输入密码"
-            v-model="member.password"
-            show-password
-          ></el-input>
-          <el-button
-            class="container-card-button"
-            type="info"
-            size="mini"
-            @click="updatePassword"
-            plain
-          >
-            修改密码
-          </el-button>
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">余额</div>
-        <div style="margin-right: 10px; font-weight: 600">
-          ¥ {{ member.balance }}
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">推荐</div>
-        <div style="margin: 0 10px; color: #666" class="flex-center">
-          <span style="margin-right: 1px; font-size: 2.5vw">
-            {{ "https://alamp.cc/signup?referrerCode=" + member.referralCode }}
-          </span>
-          <el-button
-            class="container-card-button"
-            size="mini"
-            plain
-            v-clipboard:copy="
-              'https://alamp.cc/signup?referrerCode=' + member.referralCode
-            "
-            v-clipboard:success="onCopySuccess"
-          >
-            复制
-          </el-button>
-        </div>
-      </div>
-      <div class="container-card-item" style="height: 10vw">
-        <div
-          style="
-            margin: 0 10px;
-            color: #333;
-            font-size: 3.1vw;
-            text-align: justify;
-          "
-        >
-          推荐奖励：推荐新用户注册购买服务后，即可获得消费金额15%的奖励，后续您推荐的用户续费时，您依然可以享受15%的奖励。
-        </div>
-      </div>
-    </div>
-    <div class="container-card">
-      <div class="container-card-title">服务</div>
-      <div class="hr-like" />
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">本月流量</div>
-        <div style="margin-right: 10px; font-weight: 600">
-          {{
-            parseFloat(Number(member.bandwidth) / 1024 / 1024 / 1024).toFixed(
-              2
-            )
-          }}GB<span style="color: #5f5f5f">（每月1号0点刷新流量）</span>
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">本月剩余</div>
-        <div style="margin-right: 10px; font-weight: 600">
-          {{
-            parseFloat(
-              (Number(member.monthBandwidth) -
-                (Number(member.monthBandwidthDown) +
-                  Number(member.monthBandwidthUp))) /
-                1024 /
-                1024 /
-                1024
-            ).toFixed(2)
-          }}GB
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">到期时间</div>
-        <div style="margin-right: 10px; font-weight: 600">
-          {{ member.expiryDate }}
-          <a
-            style="margin-left: 6px; color: #0071e3; text-decoration: underline"
-            @click="toPackage()"
-            >续费</a
-          >
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 10px; font-weight: 600">Clash订阅</div>
-        <div style="margin-right: 10px; font-weight: 600">
-          <el-button
-            class="container-card-button"
-            size="mini"
-            v-clipboard:copy="
-              'http://sub.alamp.cc:50230/server/subscribe/clash/' +
-              member.referralCode
-            "
-            v-clipboard:success="onCopySuccess"
-          >
-            复制
-          </el-button>
-          <el-button
-            class="container-card-button"
-            size="mini"
-            @click="importConfig"
-          >
-            一键导入
-          </el-button>
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin: 0 10px; width: 100%; color: #888; font-size: 3.1vw">
-          http://sub.alamp.cc:50230/server/subscribe/clash/{{
-            member.referralCode
-          }}
-        </div>
-      </div>
-    </div>
-    <div class="container-card">
-      <div class="container-card-title">教程</div>
-      <div class="hr-like" />
-      <div class="container-card-item">
-        <div style="margin-left: 20px; font-weight: 600">iPhone/iPad</div>
-        <div style="margin-right: 20px; font-weight: 600">
-          <a @click="toIOS()" style="color: #0071e3; text-decoration: underline"
-            >配置教程</a
-          >
-          <a
-            style="
-              margin-left: 30px;
-              color: #0071e3;
-              text-decoration: underline;
-            "
-            >更新订阅教程</a
-          >
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 20px; font-weight: 600">Mac</div>
-        <div style="margin-right: 20px; font-weight: 600">
-          <a @click="toMac()" style="color: #0071e3; text-decoration: underline"
-            >配置教程</a
-          >
-          <a
-            style="
-              margin-left: 30px;
-              color: #0071e3;
-              text-decoration: underline;
-            "
-            >更新订阅教程</a
-          >
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 20px; font-weight: 600">Windows</div>
-        <div style="margin-right: 20px; font-weight: 600">
-          <a
-            @click="toWindows()"
-            style="color: #0071e3; text-decoration: underline"
-            >配置教程</a
-          >
-          <a
-            style="
-              margin-left: 30px;
-              color: #0071e3;
-              text-decoration: underline;
-            "
-            >更新订阅教程</a
-          >
-        </div>
-      </div>
-      <div class="container-card-item">
-        <div style="margin-left: 20px; font-weight: 600">安卓</div>
-        <div style="margin-right: 20px; font-weight: 600">
-          <a
-            @click="toAndroid()"
-            style="color: #0071e3; text-decoration: underline"
-            >配置教程</a
-          >
-          <a
-            style="
-              margin-left: 30px;
-              color: #0071e3;
-              text-decoration: underline;
-            "
-            >更新订阅教程</a
-          >
-        </div>
+    <div style="width: calc(100%-2rem); padding: 1rem">
+      <div
+        style="width: 100%; margin-bottom: 20px;"
+        v-for="tutorial in tutorialList"
+        :key="tutorial.title"
+        @click="toGuide(tutorial.url)"
+      >
+        <Guide style="height: 100%; height: 180px" :tutorial="tutorial">
+        </Guide>
       </div>
     </div>
   </div>
@@ -247,9 +35,17 @@ import VueQr from "vue-qr";
 import Service from "./Service.vue";
 import MailBox from "./MailBox.vue";
 import Reward from "./Reward.vue";
+import Guide from "./Guide.vue";
 export default {
   name: "Service",
-  components: { VueQr, Welcome, "lamp-service": Service, MailBox, Reward },
+  components: {
+    VueQr,
+    Welcome,
+    "lamp-service": Service,
+    MailBox,
+    Reward,
+    Guide,
+  },
   computed: {
     device() {
       return this.$store.state.app.device;
@@ -262,6 +58,36 @@ export default {
     },
   },
   created() {},
+  data() {
+    return {
+      tutorialList: [
+        {
+          title: "Windows",
+          description: "Windows 10 或更高版本",
+          logo: require("@/assets/Windows.png"),
+          url: "/windows/index",
+        },
+        {
+          title: "Android",
+          description: "Android 9.0 或更高版本",
+          logo: require("@/assets/Android.png"),
+          url: "/android/index",
+        },
+        {
+          title: "iOS",
+          description: "iOS 12 或更高版本",
+          logo: require("@/assets/IOS.png"),
+          url: "/ios/index",
+        },
+        {
+          title: "Mac OS",
+          description: "MacOS 10.14 或更高版本",
+          logo: require("@/assets/Mac.png"),
+          url: "/mac/index",
+        },
+      ],
+    };
+  },
   methods: {
     onCopySuccess() {
       this.$message.success("已复制至剪切板");
@@ -285,20 +111,8 @@ export default {
         encodeURIComponent("alamp.cc");
       window.location.href = url;
     },
-    toPackage() {
-      this.$router.push(`/package/index`);
-    },
-    toIOS() {
-      this.$router.push(`/ios/index`);
-    },
-    toWindows() {
-      this.$router.push(`/windows/index`);
-    },
-    toMac() {
-      this.$router.push(`/mac/index`);
-    },
-    toAndroid() {
-      this.$router.push(`/android/index`);
+    toGuide(url) {
+      this.$router.push(url);
     },
   },
 };

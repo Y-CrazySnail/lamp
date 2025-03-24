@@ -1,20 +1,24 @@
-import { all } from '@/api/lamp/package'
+import { all, list } from '@/api/lamp/package'
 
 const state = {
-    packageList: []
+    packageList: [],
+    spuList: []
 }
 
 const mutations = {
     setPackageList: (state, data) => {
         state.packageList = data
-    }
+    },
+    setSpuList: (state, data) => {
+        state.spuList = data
+    },
 }
 
 const actions = {
     list({ commit, state }, params) {
         return new Promise((resolve, reject) => {
-            all(params).then(response => {
-                commit('setPackageList', response)
+            list(params).then(response => {
+                commit('setSpuList', response)
                 resolve(response)
             }).catch(error => {
                 reject(error)

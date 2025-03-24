@@ -2,6 +2,9 @@
   <div>
     <windows v-show="device !== 'mobile'"></windows>
     <mobile v-show="device === 'mobile'"></mobile>
+    <div>
+      <h4>会员商店</h4>
+    </div>
     <div style="display: flex; flex-wrap: wrap; justify-content: center">
       <el-card
         style="width: 350px; margin: 20px"
@@ -98,11 +101,8 @@
 </template>
 
 <script>
-import Windows from "./windows.vue";
-import Mobile from "./mobile.vue";
 export default {
   name: "Package",
-  components: { Windows, Mobile},
   mounted() {
     this.$store.dispatch("packages/list");
   },
@@ -115,9 +115,6 @@ export default {
     },
     spuList() {
       return this.$store.state.packages.spuList;
-    },
-    device() {
-      return this.$store.state.app.device;
     },
   },
   methods: {

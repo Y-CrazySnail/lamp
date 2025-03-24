@@ -14,9 +14,9 @@
       <div style="width: calc(100vw - 250px)">
         <div style="display: flex; flex-wrap: wrap; margin: 20px 0">
           <mail-box
-            style="width: calc(45% - 30px); height: 400px; margin-right: 30px"
+            style="width: calc(65% - 30px); height: 400px; margin-right: 30px"
           ></mail-box>
-          <reward style="width: calc(55%); height: 400px" />
+          <reward style="width: calc(35%); height: 400px" />
         </div>
       </div>
     </div>
@@ -39,9 +39,9 @@
           style="width: 22%"
           v-for="tutorial in tutorialList"
           :key="tutorial.title"
+          @click="toGuide(tutorial.url)"
         >
           <Guide style="height: 100%; height: 180px" :tutorial="tutorial">
-            1
           </Guide>
         </div>
       </div>
@@ -88,21 +88,25 @@ export default {
           title: "Windows",
           description: "Windows 10 或更高版本",
           logo: require("@/assets/Windows.png"),
+          url: "/windows/index",
         },
         {
           title: "Android",
           description: "Android 9.0 或更高版本",
           logo: require("@/assets/Android.png"),
+          url: "/android/index",
         },
         {
           title: "iOS",
           description: "iOS 12 或更高版本",
           logo: require("@/assets/IOS.png"),
+          url: "/ios/index",
         },
         {
           title: "Mac OS",
           description: "MacOS 10.14 或更高版本",
           logo: require("@/assets/Mac.png"),
+          url: "/mac/index",
         },
       ],
     };
@@ -131,23 +135,8 @@ export default {
         encodeURIComponent("alamp.cc");
       window.location.href = url;
     },
-    toPackage() {
-      this.$router.push(`/package/index`);
-    },
-    toIOS() {
-      this.$router.push(`/ios/index`);
-    },
-    toWindows() {
-      this.$router.push(`/windows/index`);
-    },
-    toMac() {
-      this.$router.push(`/mac/index`);
-    },
-    toAndroid() {
-      this.$router.push(`/android/index`);
-    },
-    test() {
-      console.log(123);
+    toGuide(url) {
+      this.$router.push(url);
     },
   },
 };

@@ -45,13 +45,15 @@
     >
       <div
         style="
-          height: 80px;
+          min-height: 80px;
           width: 100%;
           background-color: #fff;
           border-left: 2px solid #4687ff;
           margin: 0 0 20px 0;
         "
         class="card"
+        v-for="item in noticeList"
+        :key="item.id"
       >
         <div
           style="
@@ -61,116 +63,17 @@
             align-items: center;
           "
         >
-          <div style="padding-left: 20px">
+          <div style="padding: 0 20px">
             <div>
               <span style="color: #4687ff">[ 系统通知 ]</span>
-              <span style="color: rgb(105, 122, 141); margin-left: 5px"
-                >生效成功</span
-              >
+              <span style="color: rgb(105, 122, 141); margin-left: 5px">
+                {{ item.title }}
+              </span>
             </div>
             <div
               style="font-size: 85%; color: rgb(105, 122, 141); margin-top: 8px"
             >
-              订单 ID:W2503011839YJQB 生效成功,到期时...
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        style="
-          height: 80px;
-          width: 100%;
-          background-color: #fff;
-          border-left: 2px solid #4687ff;
-          margin: 0 0 20px 0;
-        "
-        class="card"
-      >
-        <div
-          style="
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <div style="padding-left: 20px">
-            <div>
-              <span style="color: #4687ff">[ 系统通知 ]</span>
-              <span style="color: rgb(105, 122, 141); margin-left: 5px"
-                >生效成功</span
-              >
-            </div>
-            <div
-              style="font-size: 85%; color: rgb(105, 122, 141); margin-top: 8px"
-            >
-              订单 ID:W2503011839YJQB 生效成功,到期时...
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        style="
-          height: 80px;
-          width: 100%;
-          background-color: #fff;
-          border-left: 2px solid #4687ff;
-          margin: 0 0 20px 0;
-        "
-        class="card"
-      >
-        <div
-          style="
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <div style="padding-left: 20px">
-            <div>
-              <span style="color: #4687ff">[ 系统通知 ]</span>
-              <span style="color: rgb(105, 122, 141); margin-left: 5px"
-                >生效成功</span
-              >
-            </div>
-            <div
-              style="font-size: 85%; color: rgb(105, 122, 141); margin-top: 8px"
-            >
-              订单 ID:W2503011839YJQB 生效成功,到期时...
-            </div>
-          </div>
-        </div>
-      </div>
-      <div
-        style="
-          height: 80px;
-          width: 100%;
-          background-color: #fff;
-          border-left: 2px solid #4687ff;
-          margin: 0 0 20px 0;
-        "
-        class="card"
-      >
-        <div
-          style="
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-          "
-        >
-          <div style="padding-left: 20px">
-            <div>
-              <span style="color: #4687ff">[ 系统通知 ]</span>
-              <span style="color: rgb(105, 122, 141); margin-left: 5px"
-                >生效成功</span
-              >
-            </div>
-            <div
-              style="font-size: 85%; color: rgb(105, 122, 141); margin-top: 8px"
-            >
-              订单 ID:W2503011839YJQB 生效成功,到期时...
+              {{ item.content }}
             </div>
           </div>
         </div>
@@ -185,14 +88,11 @@ export default {
   name: "Service",
   components: { LampCard },
   computed: {
-    serviceList() {
-      return this.$store.state.service.serviceList;
-    },
-    device() {
-      return this.$store.state.app.device;
-    },
     member() {
       return this.$store.state.member.member;
+    },
+    noticeList() {
+      return this.$store.state.notice.noticeList;
     },
   },
   created() {},
